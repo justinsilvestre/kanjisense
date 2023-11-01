@@ -1,9 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { seedKanjidic } from "./prebuild/seedKanjidic";
+
 const prisma = new PrismaClient();
 
 async function seed() {
+  await seedKanjidic(prisma);
+
   const email = "rachel@remix.run";
 
   // cleanup the existing database

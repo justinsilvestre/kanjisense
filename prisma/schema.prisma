@@ -7,6 +7,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model ReadyTables {
+  id String @id
+}
+
+model KanjidicEntry {
+  id          String @id
+  onReadings  String[]
+  kunReadings String[]
+  tag         String?
+  definitions String[]
+  meta        Json?
+}
+
 model User {
   id    String @id @default(cuid())
   email String @unique
