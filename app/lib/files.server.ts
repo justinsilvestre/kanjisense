@@ -4,10 +4,26 @@ import path from "path";
 export const files = {
   kanjidicInput1: vendor("kanjidic/kanji_bank_1.json"),
   kanjidicInput2: vendor("kanjidic/kanji_bank_2.json"),
+  unihanReadings15: vendor("unihan/Unihan_Readings.txt"),
+  unihanVariants12: vendor("unihan/Unihan_Variants_12.txt"),
+  unihanVariants14: vendor("unihan/Unihan_Variants_14.txt"),
+  kanjiDbOldStyle: vendor("kanjiDb/jp-old-style.txt"),
+  kanjiDbHyogaiVariants: vendor("kanjiDb/hyogai-variants.txt"),
+  kanjiDbJinmeiVariants: vendor("kanjiDb/jinmei-variants.txt"),
+  kanjiDbBorrowedInput: vendor("kanjiDb/jp-borrowed.txt"),
+  kanjiDbTwEduVariants: vendor("kanjiDb/twedu-variants.txt"),
+  kanjiDbHanyuDaCidianVariants: vendor("kanjiDb/hydzd-variants.txt"),
+  kanjiDbIdsCdpTxt: vendor("kanjiDb/ids-cdp.txt"),
+  kanjiDbAnalysisTxt: vendor("kanjiDb/ids-analysis.txt"),
+  sbgyJson: dic("sbgy.json"),
+  sbgyNotesJson: dic("sbgyNotes.json"),
 };
 
 function vendor<S extends string>(string: S) {
   return path.resolve(__dirname, "vendor", string) as `${string}/vendor/${S}`;
+}
+function dic<S extends string>(string: S) {
+  return path.resolve(__dirname, "dic", string) as `${string}/vendor/${S}`;
 }
 
 function readTextFileSync<T>(filepath: string) {
