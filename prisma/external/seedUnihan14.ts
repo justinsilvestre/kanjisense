@@ -3,21 +3,25 @@ import { PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-type FieldName =
+type Unihan14VariantFieldName =
   | "kSemanticVariant"
   | "kSimplifiedVariant"
   | "kSpecializedSemanticVariant"
   | "kTraditionalVariant"
   | "kZVariant";
-const fieldNames = new Set([
+export const unihan14VariantFieldNames = new Set<Unihan14VariantFieldName>([
   "kSemanticVariant",
   "kSimplifiedVariant",
   "kSpecializedSemanticVariant",
   "kTraditionalVariant",
   "kZVariant",
 ]);
-function fieldNameIsValid(fieldName: string): fieldName is FieldName {
-  return fieldNames.has(fieldName as unknown as FieldName);
+function fieldNameIsValid(
+  fieldName: string,
+): fieldName is Unihan14VariantFieldName {
+  return unihan14VariantFieldNames.has(
+    fieldName as unknown as Unihan14VariantFieldName,
+  );
 }
 
 export async function seedUnihan14(prisma: PrismaClient, force = false) {

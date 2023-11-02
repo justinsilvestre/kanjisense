@@ -15,6 +15,9 @@ export const files = {
   kanjiDbHanyuDaCidianVariants: vendor("kanjiDb/hydzd-variants.txt"),
   kanjiDbIdsCdpTxt: vendor("kanjiDb/ids-cdp.txt"),
   kanjiDbAnalysisTxt: vendor("kanjiDb/ids-analysis.txt"),
+  nk2028GuangyunYuntu: vendor("nk2028/guangyun-yuntu-廣韻反切音韻地位表.csv"),
+  nk2028YunjingCsv: vendor("nk2028/qieyun-data-guyiconshu-yunjing.csv"),
+  scriptinAozoraFrequenciesJson: vendor("scriptin/aozora.json"),
   sbgyJson: dic("sbgy.json"),
   sbgyNotesJson: dic("sbgyNotes.json"),
 };

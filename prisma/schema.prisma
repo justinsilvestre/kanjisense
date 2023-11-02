@@ -74,6 +74,31 @@ model KanjiDbVariant {
   @@id([variant, base, variantType])
 }
 
+model SbgyXiaoyun {
+  xiaoyun        Int      @id
+  exemplars      String[]
+  fanqie         String
+  initial        String
+  cycleHead      String
+  tone           String
+  dengOrChongniu String?
+  kaihe          String?
+  note           String?
+}
+
+model ScriptinAozoraFrequency {
+  character   String @id
+  appearances Int
+  fraction    Float
+  rank        Int
+}
+
+model KanjiSenseVariantGroup {
+  // "primary" variant
+  id       String   @id
+  variants String[]
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique

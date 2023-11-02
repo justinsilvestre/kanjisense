@@ -1,0 +1,194 @@
+import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
+
+import { unihan14VariantFieldNames } from "prisma/external/seedUnihan14";
+import { baseKanji, lists } from "~/lib/baseKanji";
+import { kanjijumpSpecificVariants } from "~/lib/dic/kanjijumpSpecificVariants";
+
+const oldFormAsStandard = [
+  // joyo 2010 additions
+  ["𠮟", "叱"],
+  ["塡", "填"],
+  ["剝", "剥"],
+  ["頰", "頬"],
+  // others
+  ["俱", "倶"],
+  ["吞", "呑"],
+  ["噓", "嘘"],
+  ["姸", "妍"],
+  ["繫", "繋"],
+];
+
+export async function seedKanjisenseVariantGroups(
+  prisma: PrismaClient,
+  force = false,
+) {
+  const seeded = await prisma.readyTables.findUnique({
+    where: { id: "KanjiSenseVariantGroup" },
+  });
+  if (seeded && !force) {
+    console.log(`KanjiSenseVariantGroup already seeded. 🌱`);
+  } else {
+    console.log(`seeding KanjiSenseVariantGroup...`);
+
+    const appearances = Object.fromEntries(
+      (await prisma.scriptinAozoraFrequency.findMany()).map(
+        ({ character, appearances }) => [character, appearances],
+      ),
+    );
+
+    const baseKanjiAndVariants = new Set<string>();
+
+    // build "base variant groups" by aggregating kdb-OLD-variants of base kanji
+    let baseVariantGroups: string[][] = [];
+    for (const baseChar of baseKanji) {
+      const oldVariants = await prisma.kanjiDbVariant.findMany({
+        where: { base: baseChar, variantType: KanjiDbVariantType.OldStyle },
+      });
+      if (oldVariants.length) {
+        const variantGroup = [
+          baseChar,
+          ...oldVariants
+            .filter((o) => o.variant !== baseChar)
+            .map(({ variant }) => variant),
+        ];
+        baseVariantGroups = mergeVariants(baseVariantGroups, [variantGroup]);
+      }
+    }
+    for (const variantGroup of baseVariantGroups) {
+      for (const variant of variantGroup) {
+        baseKanjiAndVariants.add(variant);
+      }
+    }
+
+    // incorporate variants with old form as standard, preserving the old form in "primary" position
+    console.log("base + oldformAsStandard");
+    baseVariantGroups = mergeVariants(baseVariantGroups, oldFormAsStandard).map(
+      (g) => g.sort(byPriorityDescending),
+    );
+    // incorporate kanjijump-specific variants
+    console.log("base + kanjijumpSpecificVariants");
+    baseVariantGroups = mergeVariants(
+      baseVariantGroups,
+      kanjijumpSpecificVariants,
+    );
+
+    const kanjidicKanji = (
+      await prisma.kanjidicEntry.findMany({
+        select: { id: true },
+      })
+    ).map(({ id }) => id);
+
+    const kanjidicNewVariants = (
+      await prisma.kanjiDbVariant.findMany({
+        where: { variantType: KanjiDbVariantType.NewStyle },
+      })
+    ).reduce(
+      (acc, { base, variant }) => {
+        acc[base] ||= [];
+        acc[base].push(variant);
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
+    const variantsOutsideKanjijump = kanjidicKanji.reduce(
+      (allVariants, kanjidicChar) => {
+        if (baseKanjiAndVariants.has(kanjidicChar)) return allVariants;
+
+        const newVariants = kanjidicNewVariants[kanjidicChar]?.filter((v) =>
+          kanjidicKanji.includes(v),
+        );
+        if (newVariants?.length) {
+          return mergeVariants(allVariants, [[kanjidicChar, ...newVariants]]);
+        }
+
+        return allVariants;
+      },
+      [] as string[][],
+    );
+    console.log("base + outside");
+    const variants = mergeVariants(baseVariantGroups, variantsOutsideKanjijump);
+
+    await prisma.kanjiSenseVariantGroup.deleteMany({});
+
+    const repeatedIds = new Map<string, string[]>();
+    for (const group of variants) {
+      const [char] = group;
+      if (repeatedIds.has(char)) {
+        console.log(repeatedIds.get(char), group);
+      }
+      repeatedIds.set(char, group);
+    }
+
+    await prisma.kanjiSenseVariantGroup.createMany({
+      data: variants.map((group) => ({
+        id: group[0],
+        variants: group,
+      })),
+    });
+    if (
+      !(await prisma.readyTables.findUnique({
+        where: { id: "KanjiSenseVariantGroup" },
+      }))
+    )
+      await prisma.readyTables.create({
+        data: { id: "KanjiSenseVariantGroup" },
+      });
+
+    // eslint-disable-next-line no-inner-declarations
+    function byPriorityDescending(a: string, b: string) {
+      const priorityDifference = getPriority(b) - getPriority(a);
+      if (priorityDifference) return priorityDifference;
+
+      return (appearances[a] ?? 0) - (appearances[b] ?? 0);
+    }
+  }
+}
+
+function getPriority(char: string) {
+  if (lists.joyo.has(char)) return 4;
+  if (lists.jinmeiyo.has(char) && lists.hyogai.has(char)) return 3;
+  if (lists.jinmeiyo.has(char)) return 2;
+  if (lists.hyogai.has(char)) return 1;
+  return 0;
+}
+
+function mergeVariants(base: string[][], additions: string[][]): string[][] {
+  const merged = base.map((g) => [...g]);
+  for (const additionGroup of additions) {
+    const overlappingGroup = merged.find((baseGroup) =>
+      additionGroup.some((additionGroupMember) =>
+        baseGroup.includes(additionGroupMember),
+      ),
+    );
+    if (overlappingGroup) {
+      for (const member of additionGroup) {
+        if (!overlappingGroup.includes(member)) {
+          overlappingGroup.push(member);
+        }
+      }
+    } else {
+      merged.push(additionGroup);
+    }
+  }
+  for (const group of merged) {
+    const set = new Set(group);
+    if (set.size !== group.length) {
+      console.warn("duplicates in variant group detected:", group);
+    }
+  }
+  const allChars = new Map<string, string[][]>();
+  for (const group of merged) {
+    for (const char of group) {
+      allChars.set(char, allChars.get(char)?.concat(group) ?? [group]);
+    }
+  }
+  let error = false;
+  for (const [char, groups] of allChars) {
+    if (groups.length > 1) {
+      error = true;
+      console.warn("overlapping variant groups detected:", char, groups);
+    }
+  }
+  if (error) throw new Error("overlapping variant groups detected");
+  return merged;
+}

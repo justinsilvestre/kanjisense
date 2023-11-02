@@ -1,13 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-import { seedKanjiDbComposition } from "./prebuild/seedKanjiDbComposition.1";
-import { seedKanjiDbSbgyNotes } from "./prebuild/seedKanjiDbSbgyNotes";
-import { seedKanjiDbVariants } from "./prebuild/seedKanjiDbVariants";
-import { seedKanjidic } from "./prebuild/seedKanjidic";
-import { seedUnihan12 } from "./prebuild/seedUnihan12";
-import { seedUnihan14 } from "./prebuild/seedUnihan14";
-import { seedUnihan15 } from "./prebuild/seedUnihan15";
+import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
+import { seedKanjiDbSbgyNotes } from "./external/seedKanjiDbSbgyNotes";
+import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
+import { seedKanjidic } from "./external/seedKanjidic";
+import { seedSbgy } from "./external/seedSbgy";
+import { seedScriptinAozoraFrequencies } from "./external/seedScriptinAozoraFrequencies";
+import { seedUnihan12 } from "./external/seedUnihan12";
+import { seedUnihan14 } from "./external/seedUnihan14";
+import { seedUnihan15 } from "./external/seedUnihan15";
+import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +24,9 @@ async function seed() {
   await seedKanjiDbComposition(prisma);
   await seedKanjiDbVariants(prisma);
   await seedKanjiDbSbgyNotes(prisma);
+  await seedSbgy(prisma);
+  await seedScriptinAozoraFrequencies(prisma);
+  await seedKanjisenseVariantGroups(prisma);
 
   const email = "rachel@remix.run";
 
