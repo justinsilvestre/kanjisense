@@ -47,10 +47,10 @@ async function getDbInput() {
   await forEachLine(files.kanjiDbIdsCdpTxt, async (line) => {
     if (!line || /^#|^;;/.test(line)) return;
 
-    const [, figureKey, ids] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
-    if (!figureKey || !ids) throw new Error(line);
-    dbInput[figureKey] = {
-      id: figureKey,
+    const [, figureId, ids] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
+    if (!figureId || !ids) throw new Error(line);
+    dbInput[figureId] = {
+      id: figureId,
       ids,
     };
   });
@@ -58,10 +58,10 @@ async function getDbInput() {
   await forEachLine(files.kanjiDbAnalysisTxt, async (line) => {
     if (!line || /^#|^;;/.test(line)) return;
 
-    const [, figureKey, etymology] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
-    if (!figureKey || !etymology) throw new Error(line);
-    dbInput[figureKey] = {
-      id: figureKey,
+    const [, figureId, etymology] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
+    if (!figureId || !etymology) throw new Error(line);
+    dbInput[figureId] = {
+      id: figureId,
       etymology,
     };
   });

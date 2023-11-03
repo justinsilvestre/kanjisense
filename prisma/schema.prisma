@@ -101,10 +101,81 @@ model KanjisenseVariantGroup {
 model KanjisenseFigureRelation {
   id                  String   @id
   variantGroupId      String?
-  idsText             String
   directUses          String[]
   listsAsComponent    String[]
   isPriorityCandidate Boolean
+
+  idsText               String
+  selectedIdsComponents String[]
+}
+
+model KanjisenseSoundMark {
+  character       String @id
+  chain           Json
+  // ditch "active"?
+  activeSoundMark String
+}
+
+model KanjisenseFigure {
+  id               String   @id
+  keyword          String
+  componentKeyword String?
+  isPriority       Boolean
+  listsAsComponent String[]
+  listsAsCharacter String[]
+
+  aozoraAppearances Int
+
+  variantGroupId            String?
+  isInBaseKanjiVariantGroup Boolean
+  activeSoundMarkValue      String?
+
+  componentsTree Json
+  meaningfulUses String[]
+
+  ShuowenImage   ShuowenImage? @relation(fields: [shuowenImageId], references: [id])
+  shuowenImageId String?
+  KvgJson        KvgJson?      @relation(fields: [kvgJsonId], references: [id])
+  kvgJsonId      String?
+}
+
+model KanjisenseFigureReadings {
+  id String @id
+
+  guangyunYunjing           String?
+  guangyunInferredKanOn     String?
+  guangyunInferredGoOn      String?
+  kanjidicOn                String?
+  kanjidicOnInJmDictIndexes String?
+  kanjidicKun               String?
+  unihanMandarin            String?
+  kCantonese                String?
+  kHangul                   String?
+  kVietnamese               String?
+  kJapaneseOn               String?
+}
+
+model KanjisenseFigureMeanings {
+  id String @id
+
+  kanjidicEnglish      String?
+  kanjisenseHistorical String?
+  unihanDefinition     String?
+  kanjisenseMnemonic   String?
+  kanjisenseStandin    String?
+  kanjisenseReference  String?
+}
+
+model KvgJson {
+  id      String             @id
+  json    Json
+  figures KanjisenseFigure[]
+}
+
+model ShuowenImage {
+  id      String             @id
+  xml     String
+  figures KanjisenseFigure[]
 }
 
 model User {

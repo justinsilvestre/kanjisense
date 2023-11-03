@@ -387,32 +387,32 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰王",
         replacementIdsSegment: "⿰𤣩",
-        extractedFigureKey: "𤣩",
+        extractedFigureId: "𤣩",
       })
       .replaceIds("𩰊", "⿰王亅")
       .replaceIds("𩰋", "⿰王丨")
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿱人",
         replacementIdsSegment: "⿱𠆢",
-        extractedFigureKey: "𠆢",
+        extractedFigureId: "𠆢",
       })
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿱竹",
         replacementIdsSegment: "⿱⺮",
-        extractedFigureKey: "⺮",
+        extractedFigureId: "⺮",
         newCompleteIds: "⺮",
       })
 
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰阝",
         replacementIdsSegment: "⿰⻖",
-        extractedFigureKey: "⻖",
+        extractedFigureId: "⻖",
         newCompleteIds: "⻖",
       })
       .extractFigureFromIdsSegment({
         componentIdsSegment: /(\S)阝/gu,
         replacementIdsSegment: "$1⻏",
-        extractedFigureKey: "⻏",
+        extractedFigureId: "⻏",
         newCompleteIds: "⻏",
       })
       .addAtomicIdsLine("⻌")
@@ -465,7 +465,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿳𭕄冖",
         replacementIdsSegment: "⿱&GWS-U300EE;",
-        extractedFigureKey: "GWS-U300EE",
+        extractedFigureId: "GWS-U300EE",
         newCompleteIds: "⿱𭕄冖",
       })
 
@@ -528,7 +528,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: /⿲(.)育攵/g,
         replacementIdsSegment: "⿰$1&GWS-U3054E-JV;",
-        extractedFigureKey: "GWS-U3054E-JV",
+        extractedFigureId: "GWS-U3054E-JV",
         newCompleteIds: "⿰育攵",
       })
 
@@ -543,7 +543,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: /⿳(\S+)一&CDP-8CC6;/g,
         replacementIdsSegment: "⿱$1&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;",
-        extractedFigureKey: "GWS-U2FF1-U4E00-CDP-8CC6-VAR-001",
+        extractedFigureId: "GWS-U2FF1-U4E00-CDP-8CC6-VAR-001",
         newCompleteIds: "⿱一&CDP-8CC6;",
       })
       .replaceIds("辰", "⿸厂⿱一&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
@@ -556,7 +556,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: /(&CDP-8C41;(?=\S)|(?<=\S)&CDP-8C41;)/g,
         replacementIdsSegment: "&GWS-CDP-8C41-VAR-003;",
-        extractedFigureKey: "GWS-CDP-8C41-VAR-003",
+        extractedFigureId: "GWS-CDP-8C41-VAR-003",
         newCompleteIds: "⿲二丨二",
       })
 
@@ -568,7 +568,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰&CDP-8968;帚[J]",
         replacementIdsSegment: "⿰&CDP-8968;&GWS-U5E1A-G;[J]",
-        extractedFigureKey: "GWS-U5E1A-G",
+        extractedFigureId: "GWS-U5E1A-G",
         newCompleteIds: "⿳ヨ冖巾",
       })
       .replaceIds("掃", "⿰扌&GWS-U5E1A-G;")

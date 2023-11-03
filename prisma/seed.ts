@@ -6,6 +6,7 @@ import { seedKanjiDbSbgyNotes } from "./external/seedKanjiDbSbgyNotes";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
 import { seedKanjidic } from "./external/seedKanjidic";
 import { seedKanjisenseFigureRelation } from "./external/seedKanjisenseFigureRelation";
+import { seedKanjisenseSoundMarks } from "./external/seedKanjisenseSoundMarks";
 import { seedSbgy } from "./external/seedSbgy";
 import { seedScriptinAozoraFrequencies } from "./external/seedScriptinAozoraFrequencies";
 import { seedUnihan12 } from "./external/seedUnihan12";
@@ -38,6 +39,8 @@ async function seed() {
   await seedKanjisenseVariantGroups(prisma);
   console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedKanjisenseFigureRelation(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
+  await seedKanjisenseSoundMarks(prisma);
 
   const email = "rachel@remix.run";
 

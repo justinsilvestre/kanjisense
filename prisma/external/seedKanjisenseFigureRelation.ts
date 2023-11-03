@@ -16,7 +16,7 @@ import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedKanjisenseFigureRelation(
   prisma: PrismaClient,
-  force = true,
+  force = false,
 ) {
   const seeded = await prisma.readyTables.findUnique({
     where: { id: "KanjisenseFigureRelation" },
@@ -151,6 +151,7 @@ class CreateFigureRelationInput {
   id: string;
   variantGroupId?: string | null;
   idsText: string;
+  selectedIdsComponents: string[];
   directUses: Set<string>;
   listsAsComponent: Set<KanjiListCode>;
   isPriorityCandidate: boolean;
@@ -163,6 +164,7 @@ class CreateFigureRelationInput {
   ) {
     this.id = id;
     this.idsText = idsText;
+    this.selectedIdsComponents = [];
     this.directUses = new Set();
     this.listsAsComponent = new Set();
     this.isPriorityCandidate = isPriorityCandidate;
@@ -177,8 +179,9 @@ async function analyzeFiguresRelations(
   cache: Map<string, CreateFigureRelationInput>,
   patchedIds: PatchedIds,
   options: { isPriority: boolean; parentLists?: Set<KanjiListCode> },
+  verbose = false,
 ) {
-  for (const figureId of figureIds.slice(0, 100)) {
+  for (const figureId of figureIds) {
     const cached = cache.get(figureId);
     const idsText = cached?.idsText ?? patchedIds.getIds(figureId);
     const variantGroupId =
@@ -202,7 +205,7 @@ async function analyzeFiguresRelations(
     if (!cached) {
       const ids = parseIds(figureId, await idsText);
       const jLocaleIndex = ids.locales["J"];
-      if (!jLocaleIndex && ids.sequences.length > 1) {
+      if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
         console.log(`Arbitrarily choosing first sequence for ${figureId}`);
       }
 
@@ -210,7 +213,8 @@ async function analyzeFiguresRelations(
         ids.sequences[jLocaleIndex ?? 0],
       ).filter((c) => c !== figureId);
 
-      if (components.length > 1)
+      if (components.length > 1) {
+        figureRelation.selectedIdsComponents = components;
         await analyzeFiguresRelations(
           prisma,
           variantGroups,
@@ -225,6 +229,7 @@ async function analyzeFiguresRelations(
             ]),
           },
         );
+      }
       for (const componentKey of components) {
         cache.get(componentKey)!.directUses.add(figureId);
       }
