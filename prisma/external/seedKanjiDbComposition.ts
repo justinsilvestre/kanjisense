@@ -3,46 +3,17 @@ import { PrismaClient } from "@prisma/client";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-// mostly ocr and xml structure corrections
-const replacementFanqie = {
-  179: "尺隹切",
-  549: "奴還切",
-  682: "尺招切",
-  795: "敕加切",
-  1155: "符咸切",
-  1170: "蒲蠓切",
-  1444: "于罪切",
-  1509: "仄謹切",
-  1612: "方典切",
-  1795: "叉瓦切",
-  1919: "章拯切", // no homophones
-  2100: "千弄切",
-  2109: "千仲切",
-  2600: "符万切",
-  2970: "北諍切",
-  3176: "士懴切",
-  3177: "影鑑切", // no homophones
-  3791: "士七切",
-  // apparently errors in original text, cf. margin notes of ytenx scans
-  2295: "丘倨切",
-  2697: "黃練切",
-  2085: "仕檻切",
-};
-const replacementExemplars: { [xiaoyun: number]: (text: string) => string } = {
-  // probably ocr mistakes
-  522: (t) => t.replace("𢘆", "桓"),
-  // using commoner variant
-  539: (t) => t.replace("𠜂", "刪"),
-  595: (t) => t.replace("𤣥", "玄"),
-};
-
-export async function seedKanjiDbComposition(prisma: PrismaClient) {
+export async function seedKanjiDbComposition(
+  prisma: PrismaClient,
+  force = false,
+) {
   const seeded = await prisma.readyTables.findUnique({
     where: { id: "KanjiDbComposition" },
   });
-  if (seeded) console.log(`KanjiDbComposition already seeded. 🌱`);
+  if (seeded && !force) console.log(`KanjiDbComposition already seeded. 🌱`);
   else {
     console.log(`seeding KanjiDbComposition...`);
+
     const dbInput = await getDbInput();
 
     await prisma.kanjiDbComposition.createMany({
@@ -56,7 +27,12 @@ export async function seedKanjiDbComposition(prisma: PrismaClient) {
       ),
     });
 
-    await prisma.readyTables.create({ data: { id: "KanjiDbComposition" } });
+    if (
+      !(await prisma.readyTables.findUnique({
+        where: { id: "KanjiDbComposition" },
+      }))
+    )
+      await prisma.readyTables.create({ data: { id: "KanjiDbComposition" } });
   }
 
   console.log(`KanjiDbComposition seeded. 🌱`);

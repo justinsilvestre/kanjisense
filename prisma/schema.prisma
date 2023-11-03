@@ -81,9 +81,9 @@ model SbgyXiaoyun {
   initial        String
   cycleHead      String
   tone           String
-  dengOrChongniu String?
   kaihe          String?
   note           String?
+  dengOrChongniu String?
 }
 
 model ScriptinAozoraFrequency {
@@ -93,10 +93,18 @@ model ScriptinAozoraFrequency {
   rank        Int
 }
 
-model KanjiSenseVariantGroup {
-  // "primary" variant
+model KanjisenseVariantGroup {
   id       String   @id
   variants String[]
+}
+
+model KanjisenseFigureRelation {
+  id                  String   @id
+  variantGroupId      String?
+  idsText             String
+  directUses          String[]
+  listsAsComponent    String[]
+  isPriorityCandidate Boolean
 }
 
 model User {

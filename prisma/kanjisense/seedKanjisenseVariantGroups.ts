@@ -1,6 +1,5 @@
 import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
-import { unihan14VariantFieldNames } from "prisma/external/seedUnihan14";
 import { baseKanji, lists } from "~/lib/baseKanji";
 import { kanjijumpSpecificVariants } from "~/lib/dic/kanjijumpSpecificVariants";
 
@@ -23,12 +22,12 @@ export async function seedKanjisenseVariantGroups(
   force = false,
 ) {
   const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjiSenseVariantGroup" },
+    where: { id: "KanjisenseVariantGroup" },
   });
   if (seeded && !force) {
-    console.log(`KanjiSenseVariantGroup already seeded. 🌱`);
+    console.log(`KanjisenseVariantGroup already seeded. 🌱`);
   } else {
-    console.log(`seeding KanjiSenseVariantGroup...`);
+    console.log(`seeding KanjisenseVariantGroup...`);
 
     const appearances = Object.fromEntries(
       (await prisma.scriptinAozoraFrequency.findMany()).map(
@@ -61,12 +60,10 @@ export async function seedKanjisenseVariantGroups(
     }
 
     // incorporate variants with old form as standard, preserving the old form in "primary" position
-    console.log("base + oldformAsStandard");
     baseVariantGroups = mergeVariants(baseVariantGroups, oldFormAsStandard).map(
       (g) => g.sort(byPriorityDescending),
     );
     // incorporate kanjijump-specific variants
-    console.log("base + kanjijumpSpecificVariants");
     baseVariantGroups = mergeVariants(
       baseVariantGroups,
       kanjijumpSpecificVariants,
@@ -105,10 +102,9 @@ export async function seedKanjisenseVariantGroups(
       },
       [] as string[][],
     );
-    console.log("base + outside");
     const variants = mergeVariants(baseVariantGroups, variantsOutsideKanjijump);
 
-    await prisma.kanjiSenseVariantGroup.deleteMany({});
+    await prisma.kanjisenseVariantGroup.deleteMany({});
 
     const repeatedIds = new Map<string, string[]>();
     for (const group of variants) {
@@ -119,7 +115,7 @@ export async function seedKanjisenseVariantGroups(
       repeatedIds.set(char, group);
     }
 
-    await prisma.kanjiSenseVariantGroup.createMany({
+    await prisma.kanjisenseVariantGroup.createMany({
       data: variants.map((group) => ({
         id: group[0],
         variants: group,
@@ -127,11 +123,11 @@ export async function seedKanjisenseVariantGroups(
     });
     if (
       !(await prisma.readyTables.findUnique({
-        where: { id: "KanjiSenseVariantGroup" },
+        where: { id: "KanjisenseVariantGroup" },
       }))
     )
       await prisma.readyTables.create({
-        data: { id: "KanjiSenseVariantGroup" },
+        data: { id: "KanjisenseVariantGroup" },
       });
 
     // eslint-disable-next-line no-inner-declarations

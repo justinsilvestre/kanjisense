@@ -5,6 +5,7 @@ import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
 import { seedKanjiDbSbgyNotes } from "./external/seedKanjiDbSbgyNotes";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
 import { seedKanjidic } from "./external/seedKanjidic";
+import { seedKanjisenseFigureRelation } from "./external/seedKanjisenseFigureRelation";
 import { seedSbgy } from "./external/seedSbgy";
 import { seedScriptinAozoraFrequencies } from "./external/seedScriptinAozoraFrequencies";
 import { seedUnihan12 } from "./external/seedUnihan12";
@@ -18,15 +19,25 @@ async function seed() {
   const startTime = Date.now();
 
   await seedKanjidic(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedUnihan15(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedUnihan14(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedUnihan12(prisma);
   await seedKanjiDbComposition(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedKanjiDbVariants(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedKanjiDbSbgyNotes(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedSbgy(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedScriptinAozoraFrequencies(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
   await seedKanjisenseVariantGroups(prisma);
+  console.log(`✅ ${Date.now() - startTime}ms.`);
+  await seedKanjisenseFigureRelation(prisma);
 
   const email = "rachel@remix.run";
 

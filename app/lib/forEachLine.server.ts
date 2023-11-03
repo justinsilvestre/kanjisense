@@ -16,7 +16,7 @@ export async function getLineReader(filename: string): Promise<LineReader> {
 }
 export async function forEachLine(
   filename: string,
-  callback: (line: string) => void
+  callback: (line: string) => void,
 ) {
   const rl = await getLineReader(filename);
   for await (const line of rl) {

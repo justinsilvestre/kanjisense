@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-type Unihan14VariantFieldName =
+export type Unihan14VariantFieldName =
   | "kSemanticVariant"
   | "kSimplifiedVariant"
   | "kSpecializedSemanticVariant"
