@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 import { files, readJsonSync } from "~/lib/files.server";
 
+import { registerSeeded } from "../seedUtils";
+
 type KanjibankJson = [
   string,
   string,
@@ -12,8 +14,8 @@ type KanjibankJson = [
 ][];
 
 export async function seedKanjidic(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjidicEntry" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjidicEntry" },
   });
   if (seeded && !force) console.log(`kanjidic already seeded. 🌱`);
   else {
@@ -37,10 +39,7 @@ export async function seedKanjidic(prisma: PrismaClient, force = false) {
       });
     }
 
-    if (
-      !(await prisma.readyTables.findUnique({ where: { id: "KanjidicEntry" } }))
-    )
-      await prisma.readyTables.create({ data: { id: "KanjidicEntry" } });
+    await registerSeeded(prisma, "KanjidicEntry");
 
     console.log(`kanjidic seeded. 🌱`);
   }

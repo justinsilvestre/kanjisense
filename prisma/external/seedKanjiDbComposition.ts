@@ -3,12 +3,14 @@ import { PrismaClient } from "@prisma/client";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export async function seedKanjiDbComposition(
   prisma: PrismaClient,
   force = false,
 ) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjiDbComposition" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjiDbComposition" },
   });
   if (seeded && !force) console.log(`KanjiDbComposition already seeded. 🌱`);
   else {
@@ -27,12 +29,7 @@ export async function seedKanjiDbComposition(
       ),
     });
 
-    if (
-      !(await prisma.readyTables.findUnique({
-        where: { id: "KanjiDbComposition" },
-      }))
-    )
-      await prisma.readyTables.create({ data: { id: "KanjiDbComposition" } });
+    await registerSeeded(prisma, "KanjiDbComposition");
   }
 
   console.log(`KanjiDbComposition seeded. 🌱`);
@@ -60,10 +57,8 @@ async function getDbInput() {
 
     const [, figureId, etymology] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
     if (!figureId || !etymology) throw new Error(line);
-    dbInput[figureId] = {
-      id: figureId,
-      etymology,
-    };
+    if (!dbInput[figureId]) console.warn(`no id for ${figureId} in ${line}`);
+    if (dbInput[figureId]) dbInput[figureId].etymology = etymology;
   });
 
   const sbgyJson = readJsonSync<
@@ -76,15 +71,16 @@ async function getDbInput() {
     ][]
   >(files.sbgyJson);
 
-  for (const [syllableNumber, , , characters] of sbgyJson) {
+  for (const [syllableNumber, fanqie, , characters] of sbgyJson) {
     for (const character of characters.split(",")) {
-      dbInput[character] = {
-        ...dbInput[character],
-        sbgySyllables: [
-          ...(dbInput[character]?.sbgySyllables || []),
-          syllableNumber,
-        ],
+      if (!character)
+        console.warn(`no character for ${syllableNumber} ${fanqie}`);
+      dbInput[character] ||= {
+        id: character,
       };
+
+      dbInput[character].sbgySyllables ||= [];
+      dbInput[character].sbgySyllables!.push(syllableNumber);
     }
   }
   return dbInput;

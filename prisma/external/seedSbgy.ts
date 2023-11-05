@@ -3,6 +3,8 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 // mostly ocr and xml structure corrections
 const replacementFanqie = {
   179: "尺隹切",
@@ -37,8 +39,8 @@ const replacementExemplars: Record<number, (text: string) => string> = {
 };
 
 export async function seedSbgy(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "SbgyXiaoyun" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "SbgyXiaoyun" },
   });
   if (seeded && !force) console.log(`SbgyXiaoyun already seeded. 🌱`);
   else {
@@ -72,8 +74,7 @@ export async function seedSbgy(prisma: PrismaClient, force = false) {
     });
   }
 
-  if (!(await prisma.readyTables.findUnique({ where: { id: "SbgyXiaoyun" } })))
-    await prisma.readyTables.create({ data: { id: "SbgyXiaoyun" } });
+  await registerSeeded(prisma, "SbgyXiaoyun");
 
   console.log(`SbgyXiaoyun seeded. 🌱`);
 }

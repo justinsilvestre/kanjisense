@@ -3,7 +3,7 @@ import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 import {
   Unihan14VariantFieldName,
   unihan14VariantFieldNames,
-} from "./seedUnihan14";
+} from "../external/seedUnihan14";
 
 type KanjiVariant =
   | {

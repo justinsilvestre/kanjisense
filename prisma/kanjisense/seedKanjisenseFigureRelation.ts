@@ -12,14 +12,17 @@ import { PatchedIds } from "~/lib/PatchedIds.server";
 import { patchIds } from "~/lib/patchKanjiDbIds";
 import * as ParseIds from "~/lib/vendor/tomcumming/parseIds";
 
+import { registerSeeded } from "../seedUtils";
+
 import { inBatchesOf } from "./inBatchesOf";
+
 
 export async function seedKanjisenseFigureRelation(
   prisma: PrismaClient,
   force = false,
 ) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjisenseFigureRelation" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjisenseFigureRelation" },
   });
   if (seeded && !force)
     console.log(`KanjisenseFigureRelation already seeded. 🌱`);
@@ -134,14 +137,7 @@ export async function seedKanjisenseFigureRelation(
       });
     });
 
-    if (
-      !(await prisma.readyTables.findUnique({
-        where: { id: "KanjisenseFigureRelation" },
-      }))
-    )
-      await prisma.readyTables.create({
-        data: { id: "KanjisenseFigureRelation" },
-      });
+    await registerSeeded(prisma, "KanjisenseFigureRelation");
   }
 
   console.log(`KanjisenseFigureRelation seeded. 🌱`);

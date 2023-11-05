@@ -3,9 +3,11 @@ import { PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export async function seedUnihan15(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "Unihan15" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "Unihan15" },
   });
   if (seeded && !force) console.log(`unihan15 already seeded. 🌱`);
   else {
@@ -52,9 +54,8 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
       data,
     });
     console.log(`${x.count} created.`);
-    if (!(await prisma.readyTables.findUnique({ where: { id: "Unihan15" } })))
-      await prisma.readyTables.create({ data: { id: "Unihan15" } });
 
+    await registerSeeded(prisma, "Unihan15");
     console.log(`unihan15 seeded. 🌱`);
   }
 }

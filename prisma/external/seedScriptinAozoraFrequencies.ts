@@ -2,12 +2,14 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 import { files, readJsonSync } from "~/lib/files.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export async function seedScriptinAozoraFrequencies(
   prisma: PrismaClient,
   force = false,
 ) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "ScriptinAozoraFrequency" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "ScriptinAozoraFrequency" },
   });
   if (seeded && !force)
     console.log(`scriptinAozoraFrequency already seeded. 🌱`);
@@ -32,15 +34,8 @@ export async function seedScriptinAozoraFrequencies(
         rank,
       };
     }
-    if (
-      !(await prisma.readyTables.findUnique({
-        where: { id: "ScriptinAozoraFrequency" },
-      }))
-    )
-      await prisma.readyTables.create({
-        data: { id: "ScriptinAozoraFrequency" },
-      });
 
+    await registerSeeded(prisma, "ScriptinAozoraFrequency");
     console.log(`scriptinAozoraFrequency seeded. 🌱`);
   }
 }

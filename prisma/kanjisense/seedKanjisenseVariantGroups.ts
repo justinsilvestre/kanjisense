@@ -1,5 +1,6 @@
 import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
+import { registerSeeded } from "prisma/seedUtils";
 import { baseKanji, lists } from "~/lib/baseKanji";
 import { kanjijumpSpecificVariants } from "~/lib/dic/kanjijumpSpecificVariants";
 
@@ -21,8 +22,8 @@ export async function seedKanjisenseVariantGroups(
   prisma: PrismaClient,
   force = false,
 ) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjisenseVariantGroup" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjisenseVariantGroup" },
   });
   if (seeded && !force) {
     console.log(`KanjisenseVariantGroup already seeded. 🌱`);
@@ -121,14 +122,8 @@ export async function seedKanjisenseVariantGroups(
         variants: group,
       })),
     });
-    if (
-      !(await prisma.readyTables.findUnique({
-        where: { id: "KanjisenseVariantGroup" },
-      }))
-    )
-      await prisma.readyTables.create({
-        data: { id: "KanjisenseVariantGroup" },
-      });
+
+    await registerSeeded(prisma, "KanjisenseVariantGroup");
 
     // eslint-disable-next-line no-inner-declarations
     function byPriorityDescending(a: string, b: string) {

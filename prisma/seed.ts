@@ -5,13 +5,14 @@ import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
 import { seedKanjiDbSbgyNotes } from "./external/seedKanjiDbSbgyNotes";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
 import { seedKanjidic } from "./external/seedKanjidic";
-import { seedKanjisenseFigureRelation } from "./external/seedKanjisenseFigureRelation";
-import { seedKanjisenseSoundMarks } from "./external/seedKanjisenseSoundMarks";
 import { seedSbgy } from "./external/seedSbgy";
 import { seedScriptinAozoraFrequencies } from "./external/seedScriptinAozoraFrequencies";
 import { seedUnihan12 } from "./external/seedUnihan12";
 import { seedUnihan14 } from "./external/seedUnihan14";
 import { seedUnihan15 } from "./external/seedUnihan15";
+import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
+import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
+import { seedKanjisenseSoundMarks } from "./kanjisense/seedKanjisenseSoundMarks";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 
 const prisma = new PrismaClient();
@@ -20,27 +21,29 @@ async function seed() {
   const startTime = Date.now();
 
   await seedKanjidic(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedUnihan15(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedUnihan14(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedUnihan12(prisma);
   await seedKanjiDbComposition(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjiDbVariants(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjiDbSbgyNotes(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedSbgy(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedScriptinAozoraFrequencies(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjisenseVariantGroups(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjisenseFigureRelation(prisma);
-  console.log(`✅ ${Date.now() - startTime}ms.`);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjisenseSoundMarks(prisma);
+  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
+  await seedKanjisenseFigures(prisma);
 
   const email = "rachel@remix.run";
 

@@ -3,13 +3,15 @@ import { KanjiDbVariantType, Prisma, PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 // this reading isn't in modern usage,
 // i.e. the simplified form was borrowed from an existing character
 const suppressedOldVariants = new Set("糸虫万");
 
 export async function seedKanjiDbVariants(prisma: PrismaClient) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjiDbVariant" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjiDbVariant" },
   });
   if (seeded) console.log(`KanjiDbVariant already seeded. 🌱`);
   else {
@@ -26,7 +28,7 @@ export async function seedKanjiDbVariants(prisma: PrismaClient) {
     console.log("getting hanyu dacidian variants");
     await getKanjiDbHanyuDaCidianVariants(prisma);
 
-    await prisma.readyTables.create({ data: { id: "KanjiDbVariant" } });
+    await registerSeeded(prisma, "KanjiDbVariant");
 
     console.log(`KanjiDbVariant seeded. 🌱`);
   }

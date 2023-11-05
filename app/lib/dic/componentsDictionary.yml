@@ -1,0 +1,3521 @@
+一:
+  historical: one
+  tag: geo
+口:
+  historical: mouth
+  tag: body
+丿:
+  historical: (various)
+  mnemonic: swiping hand
+  tag: hands
+人:
+  historical: human
+  tag: personal
+丶:
+  historical: dot
+  tag: geo
+日:
+  historical: sun
+  tag: nature
+木:
+  historical: tree
+  tag: nature
+土:
+  historical: earth
+  tag: nature
+八:
+  historical: eight
+  mnemonic: little feet
+  tag: body
+丨:
+  historical: (various)
+  mnemonic: pole
+  tag: geo
+十:
+  historical: ten
+  mnemonic: cross
+  tag: geo
+小:
+  historical: small
+  mnemonic: baby
+  tag: null
+亅:
+  historical: hook
+  mnemonic: stake
+  tag: tools
+𠆢:
+  historical: person
+  mnemonic: umbrella
+  reference: 傘
+  tag: tools
+儿:
+  historical: person
+  mnemonic: long legs
+  tag: body
+水:
+  historical: water
+  tag: nature
+心:
+  historical: heart
+  tag: body
+田:
+  historical: rice field
+  tag: place
+勹:
+  historical: wrapping
+  tag: tools
+亠:
+  historical: lid
+  tag: tools
+厶:
+  historical: (various)
+  mnemonic: tail
+  tag: body
+刀:
+  historical: blade
+  tag: tools
+大:
+  historical: big
+  tag: geo
+目:
+  historical: eye
+  tag: body
+又:
+  historical: right hand
+  mnemonic: grabbing hand
+  tag: hands
+月:
+  historical: moon
+  mnemonic: moon/flesh
+  tag: nature
+冖:
+  historical: cap
+  tag: tools
+宀:
+  historical: house
+  tag: place
+冂:
+  historical: wrapping
+  mnemonic: cover
+  tag: tools
+幺:
+  historical: tiny
+  mnemonic: knot
+  tag: tools
+䒑:
+  historical: (various)
+  mnemonic: horns
+  tag: body
+言:
+  historical: words
+  tag: body
+立:
+  historical: stand
+  mnemonic: standing person
+  tag: personal
+⺕:
+  historical: pig snout
+  mnemonic: bristles
+  reference: 聿
+  tag: tools
+止:
+  historical: stop
+  mnemonic: footprint
+  tag: body
+手:
+  historical: hand
+  tag: body
+艹:
+  historical: grass
+  tag: nature
+彳:
+  historical: step
+  mnemonic: stepping foot
+  tag: body
+囗:
+  historical: enclosure
+  tag: place
+⻌:
+  historical: stop and go
+  mnemonic: road
+  tag: place
+火:
+  historical: fire
+  tag: nature
+女:
+  historical: woman
+  tag: personal
+卜:
+  historical: divining
+  mnemonic: fortune teller
+  tag: personal
+自:
+  historical: self
+  mnemonic: nose
+  tag: body
+艮:
+  historical: mountain/northeast/a trigram of the I Ching
+  mnemonic: silver
+  standin: 銀
+  tag: nature
+子:
+  historical: child
+  tag: personal
+乛:
+  historical: second Heavenly Stem
+  mnemonic: gasping mouth
+  tag: body
+生:
+  historical: life
+  mnemonic: plants
+  tag: nature
+乂:
+  historical: mow
+  mnemonic: shears
+  tag: body
+尸:
+  historical: corpse
+  mnemonic: roof
+  standin: 屋
+  tag: place
+士:
+  historical: gentleman
+  tag: personal
+夂:
+  historical: follow after
+  mnemonic: trail
+  tag: place
+𭕄:
+  historical: hair
+  tag: body
+几:
+  historical: table
+  tag: tools
+匕:
+  historical: spoon
+  tag: tools
+貝:
+  historical: seashell
+  tag: animals
+夕:
+  historical: dusk
+  tag: nature
+羊:
+  historical: sheep
+  tag: animals
+米:
+  historical: rice
+  tag: food
+門:
+  historical: gate
+  tag: place
+力:
+  historical: strong
+  mnemonic: strong arm
+  tag: body
+凵:
+  historical: box
+  tag: tools
+丁:
+  historical: block
+  tag: geo
+隹:
+  historical: old bird
+  mnemonic: perching bird
+  tag: animals
+巾:
+  historical: towel
+  tag: tools
+示:
+  historical: altar
+  tag: place
+广:
+  historical: cave
+  tag: place
+罒:
+  historical: net
+  tag: tools
+山:
+  historical: mountain
+  tag: nature
+皮:
+  historical: skin
+  tag: body
+牛:
+  historical: cattle
+  tag: animals
+工:
+  historical: craft
+  mnemonic: tool
+  tag: tools
+弓:
+  historical: bow
+  tag: weapons
+耳:
+  historical: ear
+  tag: body
+気:
+  historical: air
+  tag: nature
+斤:
+  historical: axe
+  tag: weapons
+肉:
+  historical: flesh
+  tag: body
+竹:
+  historical: bamboo
+  tag: plants
+邑:
+  historical: town
+  tag: place
+甲:
+  historical: shell
+  tag: body
+㐄:
+  historical: follow after (backwards)
+  mnemonic: step backwards
+  tag: action
+井:
+  historical: well
+  tag: place
+車:
+  historical: car
+  tag: tools
+母:
+  historical: mother
+  tag: personal
+龴:
+  historical: (various)
+  mnemonic: spearhead
+  tag: weapons
+廾:
+  historical: joined hands
+  tag: hands
+卩:
+  historical: kneeling person
+  tag: body
+CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-8CCF,雨,雲,需,震,雪,霜,電,雰,霧,雷,零,霊,露,屚,靄,霰,雫,霞,霸,霝,曇,儒,濡,襦,蕾,澪,漏,靈,犀,遲,懷,壞,屬,囑,CDP-85DC,隶,CDP-8D71,泰,彔,录,㳟,求,救,球,毬,康,逮,隷,糠,桼,黎,漆,膝,剝,祿,綠,錄,緑,録,禄,暴,爆,瀑,曝,薬,脊,涵
+  historical: splash
+  tag: nature
+爪:
+  historical: claw
+  tag: body
+𠃊:
+  historical: second Heavenly Stem
+  mnemonic: corner
+  tag: geo
+入:
+  historical: enter
+  tag: actions
+氷:
+  historical: ice
+  tag: nature
+豕:
+  historical: pig
+  tag: animals
+中:
+  historical: middle
+  tag: geo
+矢:
+  historical: arrow
+  tag: weapons
+臼:
+  historical: mortar
+  tag: tools
+虫:
+  historical: bug
+  tag: animals
+己:
+  historical: self
+  mnemonic: rope
+  tag: tools
+七:
+  historical: seven
+  mnemonic: criss-cross
+  tag: geo
+欠:
+  historical: gap
+  tag: geo
+文:
+  historical: pattern, design; text
+  tag: geo
+业:
+  historical: (various)
+  mnemonic: twigs
+  tag: plants
+川:
+  historical: river
+  tag: nature
+九:
+  historical: nine
+  mnemonic: crossed legs
+  tag: body
+爿:
+  historical: bed
+  tag: place
+干:
+  historical: infringe; dry; railing
+  mnemonic: trunk
+  standin: 幹
+  tag: plants
+馬:
+  historical: horse
+  tag: animals
+癶:
+  historical: legs
+  mnemonic: climbing legs
+  tag: actions
+衣:
+  historical: robe
+  tag: fabric
+𧘇:
+  historical: (various)
+  mnemonic: skirt
+  tag: fabric
+𠂤:
+  historical: (various)?
+  mnemonic: teacher
+  standin: 師
+  tag: personal
+世:
+  historical: leaf
+  standin: 葉
+  tag: plants
+石:
+  historical: stone
+  tag: nature
+巳:
+  historical: year of the Snake
+  mnemonic: snake
+  tag: animals
+西:
+  historical: west
+  tag: nature
+長:
+  historical: long
+  mnemonic: long-haired person
+  tag: personal
+也:
+  historical: modal particle
+  mnemonic: pond
+  standin: 池
+  tag: nature
+五:
+  historical: five
+  tag: null
+皿:
+  historical: plate
+  tag: tools
+氏:
+  historical: clan
+  tag: personal
+𤰔:
+  historical: spool
+  tag: tools
+乍:
+  historical: instant
+  mnemonic: create
+  standin: 作
+  tag: actions
+曲:
+  historical: turn
+  tag: geo
+覀:
+  historical: engulf
+  full: 覆
+  tag: actions
+𠃜:
+  historical: (various)
+  mnemonic: eyebrow
+  standin: 眉
+  tag: body
+巨:
+  historical: giant
+  tag: personal
+無:
+  historical: have no
+  mnemonic: dancer
+  reference: 舞
+  tag: personal
+且:
+  historical: moreover
+  mnemonic: gravestone
+  reference: 祖
+  tag: place
+比:
+  historical: compare
+  mnemonic: deer legs
+  tag: animals
+不:
+  historical: not
+  mnemonic: crossed out
+  tag: geo
+円:
+  historical: (various)
+  mnemonic: round
+  tag: geo
+匚:
+  historical: container
+  mnemonic: shelf
+  tag: place
+亜:
+  historical: lower
+  mnemonic: underground
+  tag: nature
+身:
+  historical: body
+  tag: body
+CDP-8BF5: # 介,齐,粛,弗,界,芥,堺,斎,繍,費,沸,佛,拂
+  historical: prying hands
+  tag: hands
+才:
+  historical: talent
+  mnemonic: timber
+  standin: 材
+  tag: tools
+非:
+  historical: not
+  mnemonic: sad
+  standin: 悲
+  tag: feeling
+疒:
+  historical: illness
+  mnemonic: sickbed
+  tag: feeling
+廴:
+  historical: stretch
+  tag: geo
+角:
+  historical: horn
+  tag: body
+㔾:
+  historical: seal, kneeling person
+  mnemonic: fetal position
+  tag: body
+面:
+  historical: face
+  mnemonic: mask
+  tag: fabric
+尺:
+  historical: shaku (unit of distance)
+  mnemonic: foot-long
+  tag: geo
+CDP-8CC6: # 畏,辰,喪,CDP-8CE5,猥,隈,辱,唇,娠,振,震,農,宸,蜃,賑,晨,褥,濃,膿,展
+  mnemonic: legs and cane
+  tag: body
+GWS-U2FF1-U4E00-CDP-8CC6-VAR-001:
+  mnemonic: old body
+  tag: body
+乙:
+  historical: second
+  mnemonic: hook
+  tag: tools
+羽:
+  historical: feathers
+  tag: body
+丹:
+  historical: cinnabar
+  tag: nature
+元:
+  historical: origin
+  tag: nature
+丘:
+  historical: knoll
+  tag: nature
+禺:
+  historical: long-tailed monkey
+  tag: animals
+光:
+  historical: light
+  tag: nature
+之:
+  historical: of
+  mnemonic: turf
+  standin: 芝
+  tag: nature
+CDP-876E: # CDP-8BF8,乗,垂,華,嘩,樺,剰,睡,唾,郵,錘
+  historical: (various)
+  mnemonic: ivy
+  tag: plants
+GWS-U4E29-VAR-001:
+  historical: twist
+  full: 糾
+  tag: geo
+CDP-8CBD: # 卬,兜,仰,迎,抑,昂,CDP-8C79,叚,暇,瑕,蝦,霞,假
+  historical: (various)
+  mnemonic: pennant
+  tag: fabric
+民:
+  historical: people
+  tag: personal
+冉:
+  historical: drooping
+  mnemonic: plodding tortoise
+  tag: animals
+片:
+  historical: flat piece
+  tag: geo
+斗:
+  historical: dipper
+  tag: tools
+旡:
+  historical: choke
+  tag: actions
+及:
+  historical: reach
+  mnemonic: reaching arms
+  tag: hands
+兆:
+  historical: omen
+  tag: null
+彑:
+  historical: pig snout
+  tag: animals
+而:
+  mnemonic: goatee
+  tag: body
+為:
+  historical: sake
+  tag: null
+乎:
+  historical: to
+  mnemonic: owl
+  tag: animals
+𠂆:
+  historical: (various)
+  mnemonic: shield
+  standin: 盾
+  tag: weapons
+乃:
+  historical: accordingly
+  mnemonic: chipped blade
+  tag: weapons
+央:
+  historical: center
+  tag: geo
+牙:
+  historical: fang
+  tag: body
+州:
+  historical: province
+  tag: place
+乑:
+  historical: masses
+  full: 衆
+  tag: personal
+瓜:
+  historical: melon
+  tag: food
+瓦:
+  historical: tile
+  tag: tools
+于:
+  historical: at
+  mnemonic: space
+  standin: 宇
+  tag: geo
+CDP-8D46: # 鼠,巤,臘,蠟,獵
+  historical: (various)
+  mnemonic: mouse
+  standin: 鼠
+  tag: animals
+豸:
+  historical: xiezhi
+  mnemonic: horned dog
+  tag: animals
+丑:
+  historical: year of the Ox
+  mnemonic: ox
+  tag: animals
+冊:
+  historical: volume
+  tag: tools
+凹:
+  historical: concave
+  tag: geo
+凸:
+  historical: convex
+  tag: geo
+###################################################
+###################################################
+###################################################
+# composite components
+###################################################
+###################################################
+###################################################
+弋:
+  historical: corded arrow
+  tag: weapons
+戈:
+  historical: dagger-axe
+  tag: weapons
+厓:
+  historical: cliff
+  tag: nature
+攵:
+  historical: knock
+  full: 敲
+  tag: actions
+从:
+  historical: twins
+  tag: personal
+屮:
+  historical: sprout
+  tag: plants
+殳:
+  historical: spear
+  mnemonic: throwing hand
+  reference: 投
+  tag: hands
+氺:
+  historical: water
+  mnemonic: pump
+  tag: tools
+CDP-8BF1: # 用,半,奉,𠂡,甬,備,𬎾,通,痛,踊,誦,桶,涌,樋,庸,傭,伴,判,畔,叛,袢,絆,俸,棒,捧,鼡,猟,蝋
+  historical: (various)
+  mnemonic: axels
+  tag: tools
+CDP-8B62: # 𭥴,CDP-88D4,會,曾,檜,繪,僧,層,憎,增,贈,黑,墨,熏,默,點,黨,勳,薰
+  historical: (various)
+  mnemonic: cat eyes
+  tag: body
+聿:
+  historical: brush
+  standin: 筆
+  tag: tools
+歹:
+  historical: bare bones, wicked
+  mnemonic: remains
+  reference: 残
+  tag: null
+GWS-U300EE: # 栄,営,覚,学,蛍,労,撹
+  historical: (various)
+  mnemonic: fur cap
+  tag: fabric
+丂:
+  historical: obstruct
+  mnemonic: snub-face
+  tag: body
+爻:
+  historical: I Ching hexagram line
+  mnemonic: slivers
+  tag: geo
+𢆶:
+  historical: (various)
+  mnemonic: double knot
+  tag: fabric
+刖:
+  historical: amputate
+  mnemonic: mincemeat
+  tag: food
+虍:
+  historical: tiger stripes
+  tag: animals
+𡗗:
+  historical: budding branches
+  tag: plants
+开:
+  historical: open
+  mnemonic: supporting hands
+  tag: hands
+亲:
+  historical: spicy
+  mnemonic: stand in tree
+  tag: actions
+𮥶:
+  historical: stork
+  tag: animals
+圣:
+  historical: underground watercourse
+  mnemonic: tunnel
+  tag: nature
+菐:
+  historical: thicket
+  tag: plants
+𤴓:
+  historical: (various)
+  mnemonic: ankle
+  tag: body
+昜:
+  historical: open
+  mnemonic: sunshine
+  standin: 陽
+  tag: nature
+𫩏:
+  historical: (various)
+  mnemonic: elephant head
+  standin: 象
+  tag: body
+𠄐:
+  historical: spear handle
+  tag: weapons
+CDP-8BD6: # 奥,向,CDP-8D7C,襖,奧
+  historical: (various)
+  mnemonic: domed lid
+  tag: tools
+㦮:
+  historical: narrow
+  mnemonic: coin
+  standin: 銭
+  tag: tools
+甬:
+  historical: enclosed path
+  mnemonic: spouted bucket
+  tag: tools
+冋:
+  historical: (various)
+  mnemonic: mouth covering
+  tag: fabric
+娄:
+  historical: the bond
+  mnemonic: tower
+  standin: 楼
+  tag: place
+釆:
+  historical: divide
+  mnemonic: chopping hand
+  tag: hands
+𠫓:
+  historical: upside-down child
+  tag: personal
+夭:
+  historical: calamity
+  tag: null
+CDP-8BB8: # 愛,受,舜,曖,授,綬,瞬
+  historical: (various)
+  mnemonic: crown of thorns
+  tag: fabric
+𠮛:
+  historical: (various)
+  mnemonic: opening mouth
+  tag: body
+㑒:
+  historical: all, together, unanimous
+  mnemonic: swordsman
+  reference: 剣
+  tag: personal
+坴:
+  historical: clod of earth
+  mnemonic: continent
+  standin: 陸
+  tag: place
+𠕁:
+  historical: (various)
+  mnemonic: tied hands
+  tag: hands
+咅:
+  historical: pooh
+  mnemonic: spitting mouth
+  tag: body
+𦰩:
+  historical: clay
+  mnemonic: Han
+  standin: 漢
+  tag: proper
+CDP-8BE8: # 竜,電,滝,奄,CDP-89BD,俺,庵,亀,縄
+  historical: (various)
+  mnemonic: lightning
+  standin: 電
+  tag: nature
+䜌:
+  historical: chaotic
+  mnemonic: muffled speaking
+  tag: actions
+埶:
+  historical: skill
+  mnemonic: round continent
+  tag: place
+关:
+  historical: (various)
+  mnemonic: bloom
+  standin: 咲
+  tag: plants
+𠀎:
+  historical: (various)
+  mnemonic: grating
+  tag: place
+枼:
+  historical: leafy tree
+  tag: plants
+术:
+  historical: millet
+  tag: plants
+氐:
+  historical: Di tribe
+  mnemonic: bottom
+  standin: 底
+  tag: place
+兑:
+  historical: cash
+  mnemonic: point
+  standin: 鋭
+  tag: geo
+舛:
+  historical: erroneous
+  mnemonic: dancing legs
+  reference: 舞
+  tag: body
+舞:
+  historical: dance
+  tag: personal
+CDP-8CCC: # 差,羞,着,嗟,磋,嵯,瑳
+  historical: (various)
+  mnemonic: shepherd's crook
+  tag: tools
+侖:
+  historical: reason
+  mnemonic: huddle
+  tag: actions
+GWS-U226F3-VAR-001: # 聴,徳,德,聽,廳
+  historical: moral
+  mnemonic: moral
+  standin: 徳
+  tag: feeling
+夬:
+  historical: decide
+  full: 決
+  tag: feeling
+CDP-8BA8: # 興,與,輿,擧,譽,欅,襷
+  historical: carry
+  mnemonic: lifting hands
+  tag: hands
+GWS-U2FFA-U200CA-U7C73: # 継,断,繼,斷
+  historical: patch
+  full: 継
+  tag: fabric
+戠:
+  historical: sword, potter's clay
+  mnemonic: crashing dagger-axe
+  tag: weapons
+睪:
+  historical: spy
+  tag: actions
+畐:
+  historical: fill
+  mnemonic: abundance
+  standin: 富
+  tag: geo
+罙:
+  historical: chimney?
+  mnemonic: deep
+  standin: 深
+  tag: geo
+𠀐:
+  historical: (various)
+  mnemonic: signpost
+  tag: place
+咼:
+  historical: crooked mouth
+  mnemonic: hotpot
+  standin: 鍋
+  tag: tools
+𢖻:
+  historical: love
+  mnemonic: ardent feelings
+  tag: feeling
+甶:
+  historical: (various)
+  mnemonic: ogre head
+  reference: 鬼
+  tag: body
+㐬:
+  historical: (various)
+  mnemonic: flow
+  standin: 流
+  tag: geo
+𠂢:
+  historical: tributary
+  mnemonic: vein
+  standin: 脈
+  tag: body
+亚:
+  historical: (various)
+  mnemonic: trimmed hedge
+  tag: plants
+㐭:
+  historical: granary
+  tag: place
+𢚩:
+  historical: cautious
+  mnemonic: hide
+  standin: 隠
+  tag: actions
+GWS-U5DE9-G:
+  historical: secure, solid
+  mnemonic: fright
+  standin: 恐
+  tag: feeling
+尃:
+  historical: state, announce
+  mnemonic: expert
+  standin: 博
+  tag: personal
+忩:
+  historical: hurried
+  mnemonic: window
+  reference: 窓
+  tag: place
+复:
+  historical: repeat
+  mnemonic: fold
+  tag: geo
+CDP-8BEC: # 帝,旁,締,諦,啼,蹄,傍,榜,膀,謗
+  historical: (various)
+  mnemonic: emperor's crown
+  reference: 帝
+  tag: fabric
+弗:
+  historical: not
+  mnemonic: Buddha
+  standin: 佛
+  tag: personal
+髟:
+  historical: long hair
+  tag: body
+GWS-U5F56-ITAIJI-001: # 縁,篆,緣
+  historical: divination
+  mnemonic: hem
+  standin: 縁
+  tag: fabric
+犮:
+  historical: extract
+  full: 拔
+  tag: actions
+㕣:
+  historical: marsh at foot of hill
+  mnemonic: riverside
+  standin: 沿
+  tag: nature
+𤇾:
+  historical: torchlight?
+  mnemonic: firefly
+  standin: 螢
+  tag: animals
+𠩵:
+  historical: calendar
+  mnemonic: cliffside forest
+  tag: nature
+𢦏:
+  historical: wound?
+  mnemonic: planter
+  standin: 栽
+  tag: tools
+𠬝:
+  historical: subdue
+  mnemonic: clothes
+  standin: 服
+  tag: fabric
+啚:
+  historical: lowly
+  mnemonic: bumpkin
+  standin: 鄙
+  tag: personal
+卬:
+  historical: lofty
+  mnemonic: upward-looking
+  standin: 仰
+  tag: actions
+CDP-8D56: # 慶,鹿,廌,麗,麓,塵,漉,麒,麟,薦
+  historical: (various)
+  mnemonic: deer head
+  reference: 鹿
+  tag: animals
+CDP-8CC9: # 監,覧,CDP-8D50,艦,鑑,濫,藍,檻,覽
+  historical: (various)
+  mnemonic: supervisor
+  reference: 監
+  tag: personal
+攸:
+  historical: distant
+  mnemonic: palisade
+  tag: place
+GWS-U8931-ITAIJI-004: # 壊,懐,懷,壞
+  historical: pocket
+  reference: 懷
+  tag: fabric
+录:
+  historical: engraving
+  reference: 録
+  tag: tools
+㐮:
+  historical: assist
+  mnemonic: brew
+  standin: 醸
+  tag: actions
+啇:
+  historical: stem, to stalk
+  mnemonic: vitrine
+  tag: tools
+冓:
+  historical: inner rooms of palace
+  mnemonic: gutter
+  standin: 溝
+  tag: place
+禸:
+  historical: rump
+  mnemonic: monkey body
+  reference: 禺
+  tag: animals
+GWS-U4343-VAR-001: # 揺,謡,遥,瑶,搖,遙,謠
+  historical: vase, pitcher
+  mnemonic: open jar
+  tag: tools
+GWS-U5B5A-G:
+  historical: trust
+  mnemonic: suckling babe
+  reference: 乳
+  tag: personal
+离:
+  historical: hornless dragon
+  tag: animals
+𦭝:
+  historical: (various)
+  mnemonic: grass net
+  tag: tools
+CDP-8D60:
+  historical: blind
+  mnemonic: dreamcatcher
+  reference: 夢
+豦:
+  historical: wild boar
+  tag: animals
+辟:
+  mnemonic: wicked lawmaker
+  standin: 壁
+  tag: personal
+𢆉:
+  historical: (various)
+  mnemonic: little lamb
+  reference: 羊
+  tag: animals
+隺:
+  historical: bird flying, ambition
+  mnemonic: crane
+  standin: 鶴
+  tag: animals
+迶:
+  historical: appearance of walking
+  mnemonic: follow path
+  standin: 随
+  tag: actions
+尗:
+  historical: beans
+  mnemonic: uncle
+  standin: 叔
+  tag: personal
+夗:
+  historical: turn over in sleep
+  mnemonic: insomniac
+  tag: personal
+𦰌:
+  historical: clay
+  mnemonic: salad
+  tag: food
+𤔔:
+  historical: govern
+  mnemonic: trap
+  tag: weapons
+夆:
+  historical: resist
+  mnemonic: peak
+  reference: 峰
+  tag: geo
+㒸:
+  historical: horned pig
+  tag: animals
+㒼:
+  historical: average, equal, covered
+  mnemonic: full
+  standin: 滿
+  tag: geo
+叚:
+  historical: provisional
+  mnemonic: shrimp
+  standin: 蝦
+  tag: animals
+GWS-U2FF1-U2D544-U51F6: # 悩,脳,惱,腦
+  historical: brain
+  full: 脳
+  tag: body
+夹:
+  historical: flank
+  full: 挟
+  tag: geo
+丗:
+  historical: thirty
+  tag: geo
+囱:
+  historical: chimney, top of head
+  mnemonic: skull
+  tag: body
+耑:
+  historical: edge
+  mnemonic: edge
+  standin: 端
+  tag: geo
+旁:
+  historical: beside
+  mnemonic: bystander
+  standin: 傍
+  tag: personal
+冘:
+  historical: advance
+  mnemonic: sink
+  standin: 沈
+  tag: actions
+柬:
+  historical: letter
+  tag: tools
+溥:
+  historical: pervasive
+  mnemonic: seafarer
+  tag: personal
+喿:
+  historical: birds chirping
+  tag: animals
+𡨄:
+  historical: stop up
+  mnemonic: fortress
+  standin: 塞
+  tag: place
+冏:
+  historical: jute plant
+  mnemonic: businessman
+  reference: 商
+  tag: personal
+GWS-CDP-8CA9-07: # 隋,惰,楕,遀,墮,隨,髓
+  historical: (various)
+  mnemonic: lazy
+  standin: 惰
+  tag: feelings
+舄:
+  historical: slipper
+  mnemonic: lagoon
+  standin: 潟
+  tag: place
+朿:
+  historical: thorn
+  full: 刺
+  tag: plants
+厷:
+  historical: forearm
+  mnemonic: male
+  standin: 雄
+  tag: animals
+CDP-89BD: # 亀,縄,竈,蠅,繩
+  historical: (various)
+  mnemonic: toad
+  tag: animals
+宓:
+  historical: silent
+  mnemonic: honey
+  standin: 蜜
+  tag: food
+臤:
+  historical: firm
+  full: 堅
+  tag: geo
+粦:
+  historical: neighbor
+  full: 隣
+  tag: personal
+㚘:
+  historical: walk together
+  mnemonic: husbands
+  tag: personal
+殹:
+  historical: groan
+  tag: actions
+蒦:
+  historical: huo sound
+  mnemonic: loot
+  standin: 獲
+  tag: tools
+翟:
+  historical: kind of pheasant
+  mnemonic: ruffled bird
+  tag: animals
+乇:
+  historical: blade of grass
+  tag: plants
+俞:
+  historical: consent
+  mnemonic: pleasant
+  standin: 愉
+  tag: feelings
+GWS-U595A-ITAIJI-001: # 渓,鶏,蹊,鷄,溪
+  historical: what
+  mnemonic: chicken-farmer
+  reference: 鶏
+  tag: personal
+㸚:
+  historical: two divination diagrams
+  mnemonic: shreds
+  tag: geo
+㐱:
+  historical: thick hair
+  mnemonic: bonnet
+  tag: fabric
+GWS-U66F7-VAR-005: # 謁,喝,渇,褐,掲,靄,偈,𦝲,揭,渴,謁,喝,褐,﨟
+  historical: what
+  mnemonic: awning
+  tag: place
+䦨:
+  historical: railing
+  tag: place
+显:
+  historical: exposure
+  full: 顕
+  tag: geo
+卂:
+  historical: fly rapidly
+  reference: 飛
+  tag: actions
+奞:
+  historical: stride
+  mnemonic: big bird
+屰:
+  historical: disobey
+  mnemonic: reverse
+  standin: 逆
+  tag: actions
+鼡:
+  historical: rat
+  mnemonic: mane
+  tag: body
+CDP-8D71: # 桼,黎,漆,膝
+  historical: (various)
+  mnemonic: busted umbrella
+  tag: tools
+劦:
+  historical: cooperation
+  full: 協
+  tag: personal
+GWS-U7230-G:
+  historical: here, change to
+  mnemonic: slack
+  standin: 緩
+  tag: fabric
+鬲:
+  historical: cauldron
+  tag: tools
+夋:
+  historical: dawdle
+  mnemonic: sour
+  standin: 酸
+  tag: food
+桼:
+  historical: lacquer tree
+  full: 漆
+  tag: plants
+奐:
+  historical: splendid
+  tag: feeling
+GWS-U2FF1-U2008A-U65E7: # 陥,焰,閻,陷
+  historical: pitfall
+  full: 陥
+  tag: place
+畾:
+  historical: fields divided by dikes
+  mnemonic: plantation
+  tag: place
+它:
+  historical: other
+  mnemonic: snake pole
+  reference: 蛇
+  tag: tools
+匊:
+  historical: handful, scoop
+  mnemonic: chrysanthemum
+  standin: 菊
+  tag: plants
+詹:
+  historical: prattle
+  tag: actions
+隶:
+  historical: servant
+  full: 隷
+  tag: personal
+矣:
+  historical: grammatical particle
+  mnemonic: dust
+  reference: 埃
+  tag: nature
+尞:
+  historical: fuel used for sacrifices
+  mnemonic: colleague
+  standin: 僚
+  tag: personal
+GWS-U23A8A-VAR-001: # 殻,穀,穀,殼
+  historical: husk
+  standin: 殻
+  tag: plants
+夸:
+  historical: boast
+  full: 誇
+  tag: actions
+賁:
+  historical: energetic, bright
+  mnemonic: tomb
+  standin: 墳
+  tag: place
+茲:
+  historical: here
+  mnemonic: magnet
+  standin: 磁
+  tag: tools
+𭔰:
+  historical: (various)
+  mnemonic: lima bean
+  tag: food
+GWS-U655D-G:
+  historical: worn out
+  mnemonic: cash
+  standin: 幣
+  tag: tools
+睘:
+  historical: round, stare
+  mnemonic: hoop
+  standin: 環
+  tag: geo
+朁:
+  historical: supposing, nevertheless
+  mnemonic: hiding crocodile
+  reference: 潛
+  tag: animals
+孰:
+  historical: what
+  mnemonic: ripen
+  standin: 熟
+  tag: food
+亶:
+  historical: sincere
+  mnemonic: podium
+  standin: 壇
+  tag: place
+鹵:
+  historical: alkaline salt
+  tag: nature
+盧:
+  historical: hut
+  tag: place
+厉:
+  historical: whetstone
+  tag: tools
+雔:
+  historical: (various)
+  mnemonic: twin birds
+  tag: animals
+𣶒:
+  historical: deep pool
+  full: 淵
+  tag: nature
+耒:
+  historical: plow
+  full: 耕
+  tag: tools
+𤋱:
+  historical: fumigation
+  tag: tools
+夌:
+  historical: dawdle
+  tag: actions
+玨:
+  historical: inlaid gems
+  tag: tools
+匋:
+  historical: pottery
+  full: 陶
+  tag: tools
+咢:
+  historical: drumming
+  mnemonic: chin
+  standin: 顎
+  tag: body
+豖:
+  historical: shackled pig
+  tag: animals
+聶:
+  historical: whisper
+  tag: body
+宁:
+  historical: stockpile
+  tag: tools
+妟:
+  historical: at ease
+  mnemonic: hostess
+  reference: 宴
+  tag: personal
+𣦼:
+  historical: bore
+  mnemonic: magic spell
+  tag: null
+GWS-U97F1-VAR-001: # 繊,懺,纖
+  historical: wild onions or leeks
+  mnemonic: fiber
+  standin: 繊
+  tag: plants
+貇:
+  historical: gnaw
+  mnemonic: silver horned dog
+  tag: animals
+敖:
+  mnemonic: strut
+  reference: 傲
+  tag: actions
+豈:
+  historical: question particle
+  mnemonic: armor
+  standin: 鎧
+  tag: weapons
+翏:
+  historical: sound of the wind
+  mnemonic: gust
+  tag: nature
+咠:
+  historical: whisper
+  mnemonic: gossip
+  tag: actions
+雍:
+  historical: softening, harmonious
+  mnemonic: restrained bird
+  tag: animals
+叕:
+  historical: chain together
+  mnemonic: chain
+  tag: geo
+韭:
+  historical: garlic chive
+  full: 韮
+  tag: plants
+CDP-8C6A: # 款,隷
+  historical: crabapple
+  mnemonic: dirty altar
+  tag: place
+癸:
+  historical: tenth Heavenly Stem
+  mnemonic: reach the summit
+  tag: actions
+疌:
+  historical: victory
+  mnemonic: eyelashes
+  standin: 睫
+  tag: body
+CDP-8DBF: # 廌,焉,薦
+  historical: (various)
+  mnemonic: bird legs
+  tag: animals
+圼:
+  historical: black soil
+  mnemonic: knead
+  standin: 捏
+  tag: actions
+畺:
+  historical: border
+  tag: place
+###################################################
+###################################################
+###################################################
+# composite both characters and components
+###################################################
+###################################################
+###################################################
+二:
+  historical: two
+  tag: geo
+寸:
+  historical: sun (unit of measure)
+  mnemonic: inch
+  tag: geo
+合:
+  historical: join
+  tag: geo
+糸:
+  historical: string
+  tag: fabric
+見:
+  historical: see
+  tag: actions
+老:
+  historical: elder
+  tag: personal
+禾:
+  historical: grain
+  tag: plants
+白:
+  historical: white
+  tag: feelings
+良:
+  historical: good
+  tag: feelings
+里:
+  historical: li
+  mnemonic: mile
+  tag: geo
+者:
+  historical: that which
+  mnemonic: early riser
+  tag: personal
+寺:
+  historical: temple
+  tag: place
+犬:
+  historical: dog
+  tag: animals
+方:
+  historical: square
+  tag: geo
+三:
+  historical: three
+  tag: geo
+頁:
+  historical: head
+  tag: body
+千:
+  historical: thousand
+  tag: geo
+可:
+  historical: can
+  tag: feeling
+夫:
+  historical: husband
+  tag: personal
+云:
+  historical: say
+  mnemonic: cloud
+  reference: 雲
+  tag: nature
+出:
+  historical: come out
+  tag: actions
+阜:
+  historical: mound
+  tag: geo
+廿:
+  historical: twenty
+  tag: geo
+来:
+  historical: come
+  mnemonic: wheat
+  tag: plants
+王:
+  historical: king
+  tag: personal
+戊:
+  historical: fifth Heavenly Stem
+  mnemonic: garrison
+  reference: 戌
+  tag: weapons
+豆:
+  historical: beans
+  tag: food
+勿:
+  historical: not
+  mnemonic: shawl
+  tag: fabric
+玉:
+  historical: jewel
+  tag: tools
+音:
+  historical: sound
+  tag: feelings
+古:
+  historical: old
+  tag: feelings
+行:
+  historical: go
+  mnemonic: footsteps
+  tag: actions
+少:
+  historical: few
+  tag: geo
+本:
+  historical: base
+  tag: geo
+上:
+  historical: up
+  tag: geo
+思:
+  historical: think
+  tag: feelings
+分:
+  historical: part
+  tag: geo
+旦:
+  historical: daybreak
+  tag: nature
+戸:
+  historical: door
+  tag: place
+金:
+  historical: gold
+  tag: nature
+何:
+  historical: what
+  tag: null
+時:
+  historical: time
+  tag: null
+青:
+  historical: blue
+  tag: null
+穴:
+  historical: hole
+  tag: geo
+由:
+  historical: reason
+  mnemonic: germinate
+  tag: plants
+今:
+  historical: now
+  mnemonic: clenching mouth
+  reference: 含
+  tag: body
+至:
+  historical: arrive
+  tag: actions
+食:
+  historical: eat
+  tag: food
+間:
+  historical: interval
+  tag: geo
+申:
+  historical: year of the Monkey
+  mnemonic: monkey
+  tag: animals
+曽:
+  historical: once before
+  mnemonic: monk
+  standin: 僧
+  tag: personal
+左:
+  historical: left-hand
+  tag: body
+先:
+  historical: ahead
+  tag: geo
+用:
+  historical: use
+  mnemonic: bucket
+  tag: tools
+舌:
+  historical: tongue
+  tag: body
+重:
+  historical: heaps
+  tag: geo
+尚:
+  historical: still, yet; ancient; exalt
+  mnemonic: antique
+  tag: actions
+直:
+  historical: direct
+  tag: geo
+早:
+  historical: early
+  tag: nature
+勺:
+  historical: shaku (unit of volume)
+  mnemonic: tablespoon
+  tag: tools
+各:
+  historical: each
+  mnemonic: notch
+  reference: 格
+  tag: geo
+家:
+  historical: household
+  tag: place
+前:
+  historical: front
+  tag: geo
+豊:
+  historical: abundance
+  mnemonic: piles
+  tag: geo
+午:
+  historical: noon
+  mnemonic: stallion
+  tag: animals
+辛:
+  historical: acrid
+  tag: feeling
+雨:
+  historical: rain
+  tag: nature
+巴:
+  historical: ba
+  mnemonic: leviathan
+  tag: animals
+四:
+  historical: four
+  tag: geo
+足:
+  historical: leg
+  tag: body
+下:
+  historical: down
+  tag: geo
+帚:
+  historical: broom
+  standin: 箒
+  tag: tools
+父:
+  historical: father
+  tag: personal
+主:
+  historical: chief
+  tag: personal
+毎:
+  historical: every
+  mnemonic: sea
+  standin: 海
+  tag: nature
+物:
+  historical: thing
+  tag: null
+知:
+  historical: know
+  tag: feelings
+骨:
+  historical: bone
+  tag: body
+声:
+  historical: voice
+  tag: feelings
+反:
+  historical: opposite
+  tag: geo
+共:
+  historical: together
+  tag: personal
+戌:
+  historical: year of the Dog
+  mnemonic: watchdog
+  tag: animals
+売:
+  historical: sell
+  tag: actions
+取:
+  historical: take
+  tag: hands
+天:
+  historical: heaven
+  tag: nature
+我:
+  historical: I
+  tag: personal
+与:
+  historical: with, impart
+  mnemonic: raising hands
+  reference: 挙
+  tag: hands
+酉:
+  historical: year of the Rooster
+  mnemonic: rooster
+  tag: animals
+黒:
+  historical: black
+  tag: feelings
+未:
+  historical: not yet
+  mnemonic: sapling
+  tag: plants
+其:
+  historical: its
+  mnemonic: basket
+  tag: tools
+臣:
+  historical: vassal
+  tag: personal
+正:
+  historical: proper
+  tag: feelings
+或:
+  historical: perhaps, some
+  mnemonic: territory
+  standin: 域
+  tag: place
+占:
+  historical: divination
+  tag: actions
+永:
+  historical: eternity
+  tag: null
+吉:
+  historical: fortunate
+  tag: feelings
+同:
+  historical: same
+  mnemonic: grotto
+  standin: 洞
+  tag: nature
+弔:
+  historical: condole
+  tag: feelings
+相:
+  historical: mutually
+  mnemonic: appearance
+  tag: geo
+亦:
+  historical: also
+  tag: geo
+内:
+  historical: inside
+  tag: place
+度:
+  historical: degree
+  tag: null
+会:
+  historical: meet
+  tag: geo
+次:
+  historical: next
+  tag: null
+処:
+  historical: place
+  tag: place
+成:
+  historical: become
+  tag: geo
+貫:
+  historical: pierce
+  tag: geo
+余:
+  historical: surplus
+  tag: feelings
+居:
+  historical: reside
+  tag: place
+単:
+  historical: unit
+  tag: geo
+兄:
+  historical: older brother
+  tag: personal
+彦:
+  historical: lad
+  tag: personal
+尹:
+  historical: administer
+  tag: social
+走:
+  historical: walk
+  tag: actions
+鳥:
+  historical: bird
+  tag: animals
+意:
+  historical: idea
+  tag: feelings
+巻:
+  historical: roll
+  tag: geo
+弟:
+  historical: younger brother
+  tag: personal
+首:
+  historical: head/neck
+  tag: body
+台:
+  historical: platform
+  tag: place
+屋:
+  historical: roof
+  tag: place
+丸:
+  historical: round
+  tag: geo
+束:
+  historical: bundle
+  tag: tools
+両:
+  historical: both
+  tag: geo
+代:
+  historical: generation, substitute
+  mnemonic: substitute
+  tag: actions
+化:
+  historical: change
+  tag: null
+幸:
+  historical: happy
+  tag: feelings
+林:
+  historical: woods
+  tag: plants
+卸:
+  historical: wholesale
+  tag: null
+黄:
+  historical: yellow
+  tag: color
+去:
+  historical: depart
+  tag: actions
+然:
+  historical: so
+  mnemonic: burn
+  standin: 燃
+  tag: action
+君:
+  historical: lord
+  tag: personal
+京:
+  historical: capital
+  tag: place
+予:
+  historical: beforehand
+  mnemonic: unfinished spear
+  reference: 矛
+  tag: weapons
+高:
+  historical: high
+  tag: geo
+明:
+  historical: bright
+  tag: color
+動:
+  historical: move
+  tag: actions
+咸:
+  historical: everyone
+  tag: personal
+韋:
+  historical: soft leather
+  tag: tools
+色:
+  historical: color
+  tag: color
+郎:
+  historical: son
+  tag: personal
+国:
+  historical: country
+  tag: place
+甫:
+  historical: just now
+  mnemonic: shore
+  standin: 浦
+  tag: place
+通:
+  historical: pass through
+  tag: actions
+義:
+  historical: righteous
+  tag: feelings
+具:
+  historical: ingredient
+  tag: tools
+空:
+  historical: empty
+  tag: geo
+感:
+  historical: feeling
+  tag: feeling
+亡:
+  historical: deceased
+  tag: process
+交:
+  historical: mix
+  tag: hands
+道:
+  historical: way
+  tag: place
+名:
+  historical: name
+  tag: null
+平:
+  historical: level
+  tag: geo
+右:
+  historical: right-hand
+  tag: body
+付:
+  historical: adhere
+  tag: geo
+以:
+  historical: hold
+  tag: geo
+男:
+  historical: man
+  tag: personal
+壬:
+  historical: ninth Heavenly Stem
+  mnemonic: responsible
+  standin: 任
+  tag: feelings
+谷:
+  historical: valley
+  tag: place
+考:
+  historical: consider
+  tag: feelings
+多:
+  historical: many
+  tag: geo
+風:
+  historical: wind
+  tag: nature
+回:
+  historical: around
+  tag: geo
+新:
+  historical: new
+  tag: process
+公:
+  historical: duke
+  tag: personal
+発:
+  historical: set out
+  tag: actions
+半:
+  historical: half
+  tag: geo
+品:
+  historical: wares
+  tag: tools
+真:
+  historical: truth
+  tag: feelings
+原:
+  historical: field
+  tag: place
+神:
+  historical: spirit
+  tag: process
+夜:
+  historical: night
+  tag: nature
+吾:
+  historical: me
+  mnemonic: enlightenment
+  standin: 悟
+  tag: feelings
+北:
+  historical: north
+  tag: nature
+卓:
+  historical: eminent
+  tag: feelings
+専:
+  historical: dedicated
+  tag: feelings
+争:
+  historical: dispute
+  tag: actions
+友:
+  historical: friend
+  tag: personal
+句:
+  historical: phrase
+  tag: verbal
+必:
+  historical: necessary
+  tag: feelings
+六:
+  historical: six
+  tag: quantity
+旗:
+  historical: flag
+  tag: fabric
+免:
+  historical: evening
+  standin: 晩
+  tag: nature
+百:
+  historical: hundred
+  tag: quantity
+死:
+  historical: death
+  tag: process
+有:
+  historical: be there
+  tag: process
+軍:
+  historical: army
+  tag: personal
+太:
+  historical: thick
+  tag: geo
+此:
+  historical: this
+  mnemonic: purple
+  standin: 紫
+  tag: color
+全:
+  historical: entire
+  tag: geo
+舟:
+  historical: boat
+  tag: tools
+歩:
+  historical: walk
+  tag: actions
+奇:
+  historical: strange
+  tag: feelings
+辰:
+  historical: year of the Dragon
+  mnemonic: flying dragon
+  tag: animals
+切:
+  historical: cut
+  tag: actions
+卒:
+  historical: graduate
+  tag: social
+GWS-U20B36-VAR-002:
+  mnemonic: trespasser
+  tag: personal
+支:
+  historical: arm
+  tag: body
+凶:
+  historical: bad luck
+  tag: feelings
+圭:
+  mnemonic: embankment
+  tag: place
+是:
+  historical: this
+  tag: null
+幾:
+  historical: how much
+  mnemonic: warp and weft
+  reference: 機
+  tag: fabric
+楽:
+  historical: music
+  tag: feelings
+召:
+  historical: summon
+  tag: verbal
+皆:
+  historical: step
+  reference: 階
+  tag: place
+東:
+  historical: east
+  tag: nature
+安:
+  historical: peace
+  tag: actions
+表:
+  historical: chart
+  tag: tools
+凡:
+  historical: ordinary
+  mnemonic: breeze
+  reference: 風
+  tag: nature
+能:
+  historical: talent
+  mnemonic: bear
+  standin: 熊
+  tag: animals
+要:
+  historical: need
+  tag: actions
+象:
+  historical: elephant
+  tag: animals
+登:
+  historical: climb
+  tag: actions
+周:
+  historical: circuit
+  tag: geo
+史:
+  historical: history
+  tag: verbal
+缶:
+  historical: jar
+  tag: tools
+洛:
+  historical: Luo
+  tag: proper
+斉:
+  historical: even
+  tag: geo
+告:
+  historical: revelation
+  tag: verbal
+令:
+  historical: order
+  tag: verbal
+最:
+  historical: most
+  tag: null
+孝:
+  historical: filial piety
+  tag: social
+祭:
+  historical: festival
+  tag: actions
+朝:
+  historical: morning
+  tag: nature
+莫:
+  historical: must not
+  mnemonic: sunset
+  standin: 暮
+  tag: nature
+袁:
+  historical: long robe
+  mnemonic: ape
+  standin: 猿
+  tag: animals
+若:
+  historical: young
+  tag: process
+番:
+  historical: place in order
+  tag: geo
+叩:
+  historical: strike
+  tag: actions
+達:
+  historical: attain
+  tag: actions
+活:
+  historical: active
+  tag: actions
+数:
+  historical: count
+  tag: actions
+果:
+  historical: fruit
+  tag: plants
+介:
+  historical: introduce
+  tag: geo
+官:
+  historical: office
+  tag: place
+頃:
+  historical: period
+  tag: process
+別:
+  historical: separate
+  tag: geo
+加:
+  historical: add
+  tag: geo
+升:
+  historical: rise
+  full: 昇
+  tag: geo
+将:
+  historical: commander
+  tag: personal
+列:
+  historical: rank
+  tag: geo
+蜀:
+  historical: Shu
+  tag: proper
+呂:
+  historical: backbone
+  tag: body
+朕:
+  historical: we the Emperor
+  tag: personal
+花:
+  historical: flower
+  tag: plants
+系:
+  historical: lineage
+  tag: geo
+壮:
+  historical: robust
+  tag: null
+呈:
+  historical: display
+  tag: actions
+兵:
+  historical: soldier
+  tag: personal
+愛:
+  historical: love
+  tag: feelings
+坐:
+  historical: sit
+  tag: actions
+鼓:
+  historical: drum
+  tag: tools
+式:
+  historical: rite
+  tag: social
+竜:
+  historical: dragon
+  tag: animals
+定:
+  historical: set
+  tag: actions
+丙:
+  historical: third Heavenly Stem
+  tag: geo
+敬:
+  historical: venerate
+  tag: verbal
+員:
+  historical: member
+  tag: personal
+号:
+  historical: number
+  tag: verbal
+負:
+  historical: defeated
+  tag: social
+如:
+  historical: likeness
+  tag: null
+買:
+  historical: purchase
+  tag: social
+失:
+  historical: loss
+  tag: action
+即:
+  historical: conforming
+  tag: null
+解:
+  historical: resolve
+  tag: geo
+飛:
+  historical: fly
+  tag: actions
+卯:
+  historical: year of the Hare
+  mnemonic: bunny ears
+  tag: animals
+昔:
+  historical: of old
+  tag: process
+景:
+  historical: scenery
+  tag: nature
+包:
+  historical: wrap up
+  tag: geo
+鬼:
+  historical: ogre
+  tag: animals
+旨:
+  historical: delicious
+  tag: feelings
+路:
+  historical: path
+  tag: place
+肖:
+  historical: resemblance
+  tag: null
+郷:
+  historical: countryside
+  tag: place
+助:
+  historical: help
+  tag: social
+奴:
+  historical: slave
+  tag: personal
+戻:
+  historical: return
+  tag: actions
+貴:
+  historical: value
+  tag: feelings
+弘:
+  historical: vast
+  mnemonic: stretched bow
+  tag: weapons
+市:
+  historical: market
+  tag: place
+并:
+  historical: unite
+  full: 併
+  tag: geo
+魚:
+  historical: fish
+  tag: animals
+覚:
+  historical: aware
+  tag: feelings
+区:
+  historical: ward
+  tag: place
+連:
+  historical: link
+  tag: geo
+受:
+  historical: receive
+  tag: actions
+広:
+  historical: wide
+  tag: geo
+尭:
+  historical: high, Yao
+  mnemonic: dawn
+  standin: 暁
+  tag: nature
+疋:
+  historical: roll of cloth
+  tag: fabric
+折:
+  historical: break
+  tag: geo
+利:
+  historical: benefit
+  tag: feelings
+冬:
+  historical: winter
+  tag: nature
+万:
+  historical: thousand, scorpion
+  mnemonic: scorpion
+  tag: animals
+念:
+  historical: concern
+  tag: feelings
+血:
+  historical: blood
+  tag: body
+客:
+  historical: visitor
+  tag: personal
+昭:
+  historical: illuminate
+  tag: color
+従:
+  historical: complying
+  tag: null
+頼:
+  historical: entrust
+  tag: social
+毛:
+  historical: hairs
+  tag: body
+𧈡:
+  historical: flea
+  tag: animals
+更:
+  historical: night watch
+  tag: social
+蔵:
+  historical: stow
+  tag: actions
+波:
+  historical: wave
+  tag: nature
+布:
+  historical: cloth
+  tag: fabric
+吏:
+  historical: official
+  tag: personal
+赤:
+  historical: red
+  tag: color
+旧:
+  historical: former
+  tag: process
+参:
+  historical: participate
+  tag: social
+求:
+  historical: demand
+  tag: feelings
+界:
+  historical: world
+  tag: nature
+師:
+  historical: teacher
+  tag: personal
+則:
+  historical: accordance
+  tag: null
+匹:
+  historical: small animals
+  tag: animals
+制:
+  historical: control
+  tag: actions
+玄:
+  historical: obscure
+  tag: color
+泉:
+  historical: spring
+  tag: nature
+尓:
+  historical: thus
+  tag: null
+既:
+  historical: already
+  tag: process
+並:
+  historical: along
+  tag: geo
+矛:
+  historical: spear
+  tag: weapons
+麻:
+  historical: hemp
+  tag: plants
+微:
+  historical: minuteness
+  tag: geo
+炎:
+  historical: flame
+  tag: nature
+乗:
+  historical: ride
+  tag: actions
+倉:
+  historical: storehouse
+  tag: place
+刃:
+  historical: blade edge
+  tag: weapons
+固:
+  historical: hard
+  tag: geo
+兼:
+  historical: concurrently
+  mnemonic: sickle
+  standin: 鎌
+  tag: weapons
+廷:
+  historical: court
+  tag: place
+志:
+  historical: will
+  tag: feelings
+司:
+  historical: boss
+  tag: personal
+妻:
+  historical: wife
+  tag: personal
+異:
+  historical: different
+  tag: null
+医:
+  historical: medical
+  tag: personal
+武:
+  historical: military
+  tag: weapons
+鹿:
+  historical: deer
+  tag: animals
+呑:
+  historical: swallow up
+  tag: actions
+奥:
+  historical: recesses
+  tag: place
+建:
+  historical: build
+  tag: actions
+答:
+  historical: answer
+  tag: verbal
+卉:
+  historical: grass, plants
+  mnemonic: overgrown grass
+  tag: plants
+奄:
+  historical: abrupt
+  tag: feelings
+甚:
+  historical: exceeding
+  tag: feelings
+宿:
+  historical: lodging
+  tag: actions
+完:
+  historical: whole
+  tag: null
+敢:
+  historical: dare
+  tag: actions
+虎:
+  historical: tiger
+  tag: animals
+責:
+  historical: liable
+  tag: feelings
+春:
+  historical: springtime
+  tag: nature
+難:
+  historical: difficult
+  tag: feelings
+GWS-U914B-G:
+  historical: chieftain
+  tag: personal
+疑:
+  historical: question
+  tag: feelings
+亥:
+  historical: year of the Boar
+  mnemonic: hog
+  tag: animals
+南:
+  historical: south
+  tag: nature
+段:
+  historical: grade
+  tag: null
+秋:
+  historical: autumn
+  tag: nature
+喜:
+  historical: glad
+  tag: feelings
+守:
+  historical: protect
+  tag: actions
+忍:
+  historical: abide
+  tag: feelings
+容:
+  historical: contents
+  tag: geo
+呆:
+  historical: dumbfounded
+  tag: feelings
+尤:
+  historical: outstanding
+  tag: feelings
+竟:
+  historical: finally
+  mnemonic: mirror
+  standin: 鏡
+  tag: tools
+産:
+  historical: give birth
+  tag: process
+追:
+  historical: chase
+  tag: actions
+匈:
+  historical: Hun
+  tag: proper
+久:
+  historical: long time
+  tag: process
+雁:
+  historical: goose
+  tag: animals
+静:
+  historical: quiet
+  tag: null
+充:
+  historical: supply
+  tag: null
+到:
+  historical: arrive
+  tag: action
+雲:
+  historical: cloud
+  tag: nature
+離:
+  historical: apart
+  tag: geo
+歯:
+  historical: tooth
+  tag: body
+放:
+  historical: release
+  tag: geo
+叔:
+  historical: uncle
+  tag: personal
+岡:
+  historical: hill
+  tag: nature
+喬:
+  historical: haughty
+  tag: null
+留:
+  historical: stay
+  tag: action
+那:
+  historical: phonetic &quot;na&quot;
+  tag: phonetic
+屈:
+  historical: bend
+  tag: geo
+舎:
+  historical: abode
+  tag: place
+諸:
+  historical: (various)
+  tag: null
+苗:
+  historical: seedling
+  tag: plants
+乞:
+  historical: beg
+  tag: verbal
+革:
+  historical: leather
+  tag: tools
+雑:
+  historical: miscellaneous
+  tag: null
+秀:
+  historical: excellence
+  tag: feelings
+朱:
+  historical: vermillion
+  tag: nature
+宛:
+  historical: address
+  tag: verbal
+憂:
+  historical: melancholy
+  tag: feelings
+善:
+  historical: virtuous
+  tag: feelings
+害:
+  historical: harm
+  tag: feelings
+甘:
+  historical: sweet
+  tag: null
+奉:
+  historical: observance
+  tag: social
+妾:
+  historical: concubine
+  tag: personal
+呉:
+  historical: Wu
+  tag: proper
+亘:
+  historical: span
+  tag: geo
+因:
+  historical: cause
+  tag: process
+尊:
+  historical: revered
+  tag: social
+危:
+  historical: danger
+  tag: feelings
+県:
+  historical: prefecture
+  tag: place
+斬:
+  historical: beheading
+  tag: social
+鷹:
+  historical: hawk
+  tag: animals
+帝:
+  historical: emperor
+  tag: personal
+育:
+  historical: bring up
+  tag: process
+府:
+  historical: government body
+  tag: social
+末:
+  historical: tip
+  tag: geo
+宗:
+  historical: sect
+  tag: social
+叉:
+  historical: forking
+  tag: geo
+保:
+  historical: preserve
+  tag: action
+章:
+  historical: chapter
+  tag: verbal
+扁:
+  historical: flat
+  tag: geo
+散:
+  historical: disperse
+  tag: place
+児:
+  historical: offspring
+  tag: personal
+帯:
+  historical: belt
+  tag: fabric
+屯:
+  historical: stationing
+  tag: place
+察:
+  historical: examine
+  tag: action
+差:
+  historical: variation
+  tag: geo
+殿:
+  historical: hall
+  tag: place
+務:
+  historical: duty
+  tag: social
+歳:
+  historical: years old
+  tag: process
+農:
+  historical: farming
+  tag: social
+転:
+  historical: roll
+  tag: action
+敏:
+  historical: alert
+  tag: feeling
+監:
+  historical: inspection
+  tag: social
+尾:
+  historical: tail
+  tag: body
+丈:
+  historical: zhang
+  mnemonic: ten feet
+  tag: geo
+条:
+  historical: streak
+  tag: geo
+弱:
+  historical: weak
+  tag: geo
+寅:
+  historical: year of the Tiger
+  mnemonic: captive tiger
+  tag: animals
+星:
+  historical: star
+  tag: nature
+叟:
+  historical: old man
+  tag: personal
+任:
+  historical: responsible
+  tag: social
+般:
+  historical: general
+  tag: abstract
+虚:
+  historical: void
+  tag: geo
+却:
+  historical: go back
+  tag: action
+復:
+  historical: again
+  tag: process
+隻:
+  historical: vessels
+  tag: tools
+逢:
+  historical: encounter
+  tag: action
+節:
+  historical: node
+  tag: geo
+陰:
+  historical: shadow
+  tag: color
+刑:
+  historical: punish
+  tag: social
+習:
+  historical: practice
+  tag: action
+致:
+  historical: deliver
+  tag: action
+童:
+  historical: juvenile
+  tag: personal
+退:
+  historical: withdraw
+  tag: action
+就:
+  historical: accede
+  tag: action
+夏:
+  historical: summer
+  tag: nature
+享:
+  historical: enjoy
+  tag: feeling
+匂:
+  historical: smell
+  tag: feeling
+暴:
+  historical: violence
+  tag: feeling
+采:
+  historical: gather
+  full: 採
+  tag: place
+隊:
+  historical: squadron
+  tag: social
+易:
+  historical: easy
+  tag: feeling
+荒:
+  historical: unwrought
+  tag: process
+勇:
+  historical: brave
+  tag: feeling
+昏:
+  historical: dim
+  tag: color
+厭:
+  historical: tired of
+  tag: feeling
+聴:
+  historical: listen
+  tag: feeling
+射:
+  historical: shoot
+  tag: place
+垂:
+  historical: hang
+  tag: place
+亭:
+  historical: pavilion
+  tag: place
+尽:
+  historical: deplete
+  tag: action
+寿:
+  historical: longevity
+  tag: process
+厳:
+  historical: strict
+  tag: feeling
+湯:
+  historical: hot water
+  tag: nature
+胃:
+  historical: stomach
+  tag: body
+恵:
+  historical: bless
+  tag: feeling
+沓:
+  historical: boot
+  tag: fabric
+曼:
+  historical: phonetic &quot;man&quot;
+  reference: 慢
+  tag: phonetic
+著:
+  historical: come out with
+  tag: place
+哀:
+  historical: pity
+  tag: feeling
+巫:
+  historical: sorcerer
+  tag: social
+囚:
+  historical: imprisoned
+  tag: social
+華:
+  historical: splendor
+  tag: process
+便:
+  historical: convenient
+  tag: feeling
+英:
+  historical: flourish
+  tag: feeling
+普:
+  historical: universal
+  tag: feeling
+荘:
+  historical: villa
+  tag: place
+挙:
+  historical: raise
+  tag: place
+迷:
+  historical: bewilder
+  tag: feeling
+宅:
+  historical: home
+  tag: place
+巽:
+  historical: southeast
+  mnemonic: dragon-snake
+  tag: animals
+香:
+  historical: fragrant
+  tag: feeling
+量:
+  historical: amount
+  tag: feeling
+園:
+  historical: orchard
+  tag: place
+皇:
+  historical: emperor
+  tag: personal
+朋:
+  historical: companion
+  tag: personal
+領:
+  historical: domain
+  tag: social
+卑:
+  historical: lowly
+  tag: social
+獄:
+  historical: prison
+  tag: place
+亢:
+  historical: neck
+  tag: body
+胡:
+  historical: barbarian
+  tag: social
+筑:
+  historical: chiku lute
+  tag: tools
+肋:
+  historical: rib
+  tag: body
+耶:
+  historical: phonetic &quot;ya&quot;
+  tag: phonetic
+遣:
+  historical: dispatch
+  tag: place
+益:
+  historical: gain
+  tag: geo
+尼:
+  historical: nun
+  tag: personal
+宣:
+  historical: declare
+  tag: verbal
+允:
+  historical: license
+  tag: social
+兎:
+  historical: rabbit
+  tag: animals
+票:
+  historical: ballot
+  tag: tools
+浦:
+  historical: shore
+  tag: nature
+貞:
+  historical: chaste
+  tag: social
+某:
+  historical: so-and-so
+  tag: feeling
+互:
+  historical: mutual
+  tag: place
+維:
+  historical: filament
+  tag: fabric
+灰:
+  historical: ash
+  tag: nature
+賓:
+  historical: guest
+  tag: social
+希:
+  historical: hope
+  tag: feeling
+替:
+  historical: exchange
+  tag: social
+冒:
+  historical: risk
+  tag: feeling
+昌:
+  historical: prosperous
+  tag: social
+規:
+  historical: rule
+  tag: feeling
+戒:
+  historical: guard against
+  tag: geo
+曹:
+  historical: officer
+  tag: social
+延:
+  historical: prolong
+  tag: geo
+了:
+  historical: complete
+  tag: process
+禁:
+  historical: prohibit
+  tag: social
+舜:
+  historical: Shun
+  tag: personal
+忽:
+  historical: suddenly
+  tag: feeling
+昆:
+  historical: descendant
+  tag: personal
+遂:
+  historical: follow through
+  tag: place
+泊:
+  historical: stay overnight
+  tag: social
+需:
+  historical: require
+  tag: feeling
+双:
+  historical: pair
+  tag: geo
+執:
+  historical: hold fast
+  tag: geo
+含:
+  historical: contain
+  tag: geo
+慮:
+  historical: deliberation
+  tag: feeling
+尉:
+  historical: lieutenant
+  tag: social
+唐:
+  historical: Tang dynasty
+  tag: proper
+宜:
+  historical: suitable
+  tag: feeling
+麦:
+  historical: wheat
+  tag: plants
+徴:
+  historical: sign
+  tag: feeling
+幼:
+  historical: tot
+  tag: process
+犀:
+  historical: rhinoceros
+  tag: animals
+孫:
+  historical: grandchild
+  tag: personal
+侯:
+  historical: marquis
+  tag: personal
+委:
+  historical: yield over
+  tag: geo
+盾:
+  historical: shield
+  tag: tools
+嬰:
+  historical: infant
+  tag: personal
+臭:
+  historical: stink
+  tag: feeling
+属:
+  historical: genus
+  tag: feeling
+屏:
+  historical: barrier
+  tag: tools
+柔:
+  historical: soft
+  tag: geo
+丞:
+  historical: deputy
+  tag: social
+雇:
+  historical: employ
+  tag: social
+眉:
+  historical: eyebrow
+  tag: body
+豪:
+  historical: overpowering
+  tag: feeling
+堅:
+  historical: firm
+  tag: geo
+康:
+  historical: ease
+  tag: feeling
+鮮:
+  historical: fresh
+  tag: process
+賞:
+  historical: reward
+  tag: social
+焦:
+  historical: scorch
+  tag: nature
+帛:
+  historical: silk cloth
+  tag: fabric
+斥:
+  historical: oust
+  tag: action
+曳:
+  historical: tow
+  tag: action
+沙:
+  historical: phonetic &quot;sa&quot;
+  tag: phonetic
+勅:
+  historical: imperial decree
+  tag: social
+奈:
+  historical: how, what
+  tag: null
+孔:
+  historical: slit
+  tag: geo
+栗:
+  historical: chestnut
+  tag: plants
+札:
+  historical: token
+  tag: tools
+孟:
+  historical: Mengzi
+  tag: personal
+畜:
+  historical: livestock
+  tag: animals
+賛:
+  historical: tribute
+  tag: social
+須:
+  historical: by all means
+  tag: null
+巷:
+  historical: alley
+  tag: place
+孤:
+  historical: lonely
+  tag: feeling
+季:
+  historical: season
+  tag: nature
+疾:
+  historical: rapid
+  tag: place
+署:
+  historical: signature
+  tag: social
+隋:
+  historical: Sui dynasty
+  tag: proper
+契:
+  historical: pledge
+  tag: verbal
+扇:
+  historical: fan
+  tag: tools
+畏:
+  historical: dread
+  tag: feeling
+衰:
+  historical: decline
+  tag: process
+雷:
+  historical: thunder
+  tag: nature
+奏:
+  historical: play music
+  tag: social
+躬:
+  historical: oneself
+  tag: personal
+芻:
+  historical: grass forage
+  tag: plants
+烏:
+  historical: crow
+  tag: animals
+蒙:
+  historical: ignorance
+  tag: feeling
+串:
+  historical: skewer
+  tag: tools
+粛:
+  historical: solemn
+  tag: feeling
+愈:
+  historical: increasingly
+  tag: feeling
+弯:
+  historical: curve
+  tag: geo
+后:
+  historical: empress
+  tag: personal
+辱:
+  historical: humiliate
+  tag: social
+廉:
+  historical: cheap
+  tag: feeling
+頻:
+  historical: frequent
+  tag: feeling
+伐:
+  historical: fell
+  tag: action
+郭:
+  historical: district
+  tag: place
+楚:
+  historical: Chu
+  tag: proper
+庶:
+  historical: commoner
+  tag: social
+庸:
+  historical: ordinary
+  tag: feeling
+卵:
+  historical: egg
+  tag: body
+宰:
+  historical: superintendent
+  tag: social
+魯:
+  historical: Lu
+  tag: proper
+旬:
+  historical: decameron
+  tag: null
+惟:
+  historical: ponder
+  tag: feeling
+閏:
+  historical: intercalary
+  tag: null
+彗:
+  historical: comet
+  tag: nature
+析:
+  historical: divide
+  tag: geo
+冥:
+  historical: murky
+  tag: color
+燕:
+  historical: a swallow
+  tag: animals
+累:
+  historical: implicate
+  tag: geo
+秦:
+  historical: Qin dynasty
+  tag: proper
+牟:
+  historical: moo
+  tag: phonetic
+克:
+  historical: overcome
+  tag: action
+虐:
+  historical: oppression
+  tag: feeling
+朔:
+  historical: first of the month
+  tag: null
+禽:
+  historical: fowl
+  tag: animals
+謁:
+  historical: royal audience
+  tag: social
+珀:
+  historical: amber
+  tag: nature
+稟:
+  historical: report
+  tag: verbal
+零:
+  historical: zero
+  tag: null
+函:
+  historical: envelope
+  tag: geo
+晃:
+  historical: dazzling
+  tag: color
+耆:
+  historical: senile
+  tag: process
+雉:
+  historical: pheasant
+  tag: animals
+窄:
+  historical: constricted
+  tag: geo
+旱:
+  historical: drought
+  tag: nature
+窒:
+  historical: obstruct
+  tag: geo
+GWS-U5BFD-G:
+  mnemonic: commander
+  standin: 将
+  tag: null
+臥:
+  historical: prostrate
+  tag: action
+軗:
+  mnemonic: beat
+  standin: 撃
+#######
+丱:
+  historical: tufts of hair
+  mnemonic: stitch
+  reference: 關
+  tag: fabric
+亀:
+  historical: turtle
+  tag: animals
+CDP-89EE:
+  mnemonic: tripod
+  reference: 鼎
+  tag: tools
+𠁁:
+  historical: jug
+  tag: tools

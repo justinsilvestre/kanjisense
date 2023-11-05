@@ -2,7 +2,7 @@ import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
 
 import { baseKanjiSet } from "~/lib/baseKanji";
 
-import { getFigureById } from "./getFigureById";
+import { getFigureById } from "../../app/models/getFigureById.server";
 
 export const forcedMeaninglessFiguresSet = new Set<string>([
   "亏",
@@ -16,29 +16,36 @@ export const forcedMeaninglessFiguresSet = new Set<string>([
   "𠫔",
 ]);
 
-/** checks relations to see if the figure is a character
- * or a component needing to be assigned a name in Kanjijump.
+/**
+ * checks relations to see if the given component figure
+ * should be assigned a name in kanjisense
  */
-export async function shouldBeAssignedMeaning(
+export async function shouldComponentBeAssignedMeaning(
   prisma: PrismaClient,
-  figureId: string,
-  directUses: Set<string>,
+  {
+    id: figureId,
+    directUses,
+    variantGroupId,
+  }: {
+    id: string;
+    directUses: string[];
+    variantGroupId: string | null;
+  },
 ) {
   if (forcedMeaninglessFiguresSet.has(figureId)) return false;
 
-  const figure = await prisma.kanjisenseFigureRelation.findUnique({
-    where: { id: figureId },
-  });
-  if (!figure) throw new Error(`figure ${figureId} not found`);
+  const primaryVariantIsInBaseKanji = baseKanjiSet.has(
+    variantGroupId ?? figureId,
+  );
+  if (primaryVariantIsInBaseKanji) return true;
 
-  if (await isPrimaryVariantInBaseKanji(figure)) return true;
-
-  if (!directUses.size) return false;
+  if (!directUses.length) return false;
 
   const usesInPriorityCandidates =
     await allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVariants(
       prisma,
-      figure,
+      variantGroupId,
+      directUses,
     );
   const isAtomic = false;
   const minimumUsesInPriorityCandidates = isAtomic ? 1 : 2;
@@ -48,28 +55,23 @@ export async function shouldBeAssignedMeaning(
   );
 }
 
-async function isPrimaryVariantInBaseKanji(
-  figure: KanjisenseFigureRelation,
-): Promise<boolean> {
-  return baseKanjiSet.has(figure?.variantGroupId ?? figure.id);
-}
-
 async function allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVariants(
   prisma: PrismaClient,
-  figure: KanjisenseFigureRelation,
+  variantGroupId: string | null,
+  directUses: string[],
 ) {
-  if (!figure.variantGroupId)
+  if (!variantGroupId)
     return new Set(
-      (await usesInPriorityCandidates(prisma, figure)).map(
+      (await usesInPriorityCandidates(prisma, directUses)).map(
         (u) => u.variantGroupId ?? u.id,
       ),
     );
 
   const variantGroup = await prisma.kanjisenseVariantGroup.findUnique({
-    where: { id: figure.variantGroupId },
+    where: { id: variantGroupId },
   });
   if (!variantGroup)
-    throw new Error(`variant group ${figure.variantGroupId} not found`);
+    throw new Error(`variant group ${variantGroupId} not found`);
 
   const keys = new Set<string>();
   const uses: KanjisenseFigureRelation[] = [];
@@ -77,7 +79,7 @@ async function allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVar
     const variantFigure = await getFigureById(prisma, variant);
     const variantFigureUses = await usesInPriorityCandidates(
       prisma,
-      variantFigure,
+      variantFigure.directUses,
     );
     for (const vfu of variantFigureUses) {
       if (!keys.has(vfu.id)) {
@@ -91,12 +93,12 @@ async function allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVar
 
 async function usesInPriorityCandidates(
   prisma: PrismaClient,
-  figure: KanjisenseFigureRelation,
+  directUses: string[],
 ) {
   return await prisma.kanjisenseFigureRelation.findMany({
     where: {
       id: {
-        in: figure.directUses,
+        in: directUses,
       },
       isPriorityCandidate: true,
     },

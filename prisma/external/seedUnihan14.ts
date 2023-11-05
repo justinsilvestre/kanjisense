@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export type Unihan14VariantFieldName =
   | "kSemanticVariant"
   | "kSimplifiedVariant"
@@ -25,8 +27,8 @@ function fieldNameIsValid(
 }
 
 export async function seedUnihan14(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "Unihan14" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "Unihan14" },
   });
   if (seeded && !force) console.log(`Unihan14 already seeded. 🌱`);
   else {
@@ -83,8 +85,7 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
       })),
     });
 
-    if (!(await prisma.readyTables.findUnique({ where: { id: "Unihan14" } })))
-      await prisma.readyTables.create({ data: { id: "Unihan14" } });
+    await registerSeeded(prisma, "Unihan14");
 
     console.log(`Unihan14 seeded. 🌱`);
   }

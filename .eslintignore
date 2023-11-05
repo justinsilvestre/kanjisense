@@ -8,6 +8,7 @@ node_modules
 /cypress/videos
 /postgres-data
 
-*.log
+/app/styles/tailwind.css
 
-.DS_Store
+/app/lib/vendor
+/app/lib/dic

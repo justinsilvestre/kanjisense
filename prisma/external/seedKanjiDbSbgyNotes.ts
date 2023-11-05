@@ -2,9 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 import { files, readJsonSync } from "~/lib/files.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export async function seedKanjiDbSbgyNotes(prisma: PrismaClient) {
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "KanjiDbSbgyNote" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "KanjiDbSbgyNote" },
   });
   if (seeded) console.log(`KanjiDbSbgyNote already seeded. 🌱`);
   else {
@@ -24,11 +26,7 @@ export async function seedKanjiDbSbgyNotes(prisma: PrismaClient) {
       }
     }
 
-    await prisma.kanjiDbSbgyNote.createMany({
-      data: dbInput,
-    });
-
-    await prisma.readyTables.create({ data: { id: "KanjiDbSbgyNote" } });
+    await registerSeeded(prisma, "KanjiDbSbgyNote");
 
     console.log(`KanjiDbSbgyNote seeded. 🌱`);
   }

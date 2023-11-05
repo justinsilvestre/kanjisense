@@ -2,7 +2,7 @@ import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
 
 import { baseKanjiSet } from "~/lib/baseKanji";
 
-import { shouldBeAssignedMeaning } from "./componentMeanings";
+import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
 import { isStandalone } from "./isStandalone";
 
 export async function isFigurePriority(
@@ -27,10 +27,10 @@ async function isPriorityComponent(
   prisma: PrismaClient,
   figure: KanjisenseFigureRelation,
 ): Promise<boolean> {
-  const hasMeaning = await shouldBeAssignedMeaning(
-    prisma,
-    figure.id,
-    new Set(figure.directUses),
-  );
+  const hasMeaning = await shouldComponentBeAssignedMeaning(prisma, {
+    id: figure.id,
+    directUses: figure.directUses,
+    variantGroupId: figure.variantGroupId,
+  });
   return hasMeaning && figure.isPriorityCandidate;
 }

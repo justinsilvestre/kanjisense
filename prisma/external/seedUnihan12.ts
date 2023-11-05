@@ -3,14 +3,16 @@ import { PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
+import { registerSeeded } from "../seedUtils";
+
 export async function seedUnihan12(prisma: PrismaClient, force = false) {
-  const unihan14Seeded = await prisma.readyTables.findUnique({
-    where: { id: "Unihan14" },
+  const unihan14Seeded = await prisma.setup.findUnique({
+    where: { step: "Unihan14" },
   });
   if (!unihan14Seeded)
     throw new Error("Unihan14 must be seeded before Unihan12.");
-  const seeded = await prisma.readyTables.findUnique({
-    where: { id: "Unihan12" },
+  const seeded = await prisma.setup.findUnique({
+    where: { step: "Unihan12" },
   });
   if (seeded && !force) console.log(`Unihan12 already seeded. 🌱`);
   else {
@@ -64,9 +66,7 @@ export async function seedUnihan12(prisma: PrismaClient, force = false) {
       })),
     });
 
-    if (!(await prisma.readyTables.findUnique({ where: { id: "Unihan12" } })))
-      await prisma.readyTables.create({ data: { id: "Unihan12" } });
-
+    await registerSeeded(prisma, "Unihan12");
     console.log(`Unihan12 seeded. 🌱`);
   }
 }

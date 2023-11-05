@@ -1,12 +1,12 @@
 import { KanjisenseFigureRelation } from "@prisma/client";
 
-import { prisma } from "~/db.server";
 import {
   ComponentUseWithSignificance,
   getTag,
-} from "~/lib/kanjisenseFigure/ComponentUseWithSignificance";
+} from "prisma/kanjisense/ComponentUseWithSignificance";
+import { prisma } from "~/db.server";
 
-import { shouldBeAssignedMeaning } from "./componentMeanings";
+import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
 import { isFigurePriority } from "./isFigurePriority";
 
 type FigureId = string;
@@ -49,11 +49,11 @@ export async function getMeaningfulUses({
     );
 
     if (
-      await shouldBeAssignedMeaning(
-        prisma,
-        directUse.id,
-        new Set(directUse.directUses),
-      )
+      await shouldComponentBeAssignedMeaning(prisma, {
+        id: directUse.id,
+        directUses: directUse.directUses,
+        variantGroupId: directUse.variantGroupId,
+      })
     )
       meaningfulUses.push(
         new ComponentUseWithSignificance(
