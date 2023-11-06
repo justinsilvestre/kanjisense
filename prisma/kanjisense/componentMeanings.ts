@@ -28,6 +28,7 @@ export async function shouldComponentBeAssignedMeaning(
     variantGroupId,
   }: {
     id: string;
+    /* includes self */
     directUses: string[];
     variantGroupId: string | null;
   },
@@ -48,7 +49,7 @@ export async function shouldComponentBeAssignedMeaning(
       directUses,
     );
   const isAtomic = false;
-  const minimumUsesInPriorityCandidates = isAtomic ? 1 : 2;
+  const minimumUsesInPriorityCandidates = isAtomic ? 2 : 3;
 
   return Boolean(
     usesInPriorityCandidates.size >= minimumUsesInPriorityCandidates,

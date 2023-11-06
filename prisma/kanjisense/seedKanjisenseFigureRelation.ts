@@ -16,7 +16,6 @@ import { registerSeeded } from "../seedUtils";
 
 import { inBatchesOf } from "./inBatchesOf";
 
-
 export async function seedKanjisenseFigureRelation(
   prisma: PrismaClient,
   force = false,
@@ -123,12 +122,14 @@ export async function seedKanjisenseFigureRelation(
       },
     );
 
+    await prisma.kanjisenseFigure.deleteMany({});
     await prisma.kanjisenseFigureRelation.deleteMany({});
     await inBatchesOf(1000, [...dbInput.values()], async (batch) => {
       await prisma.kanjisenseFigureRelation.createMany({
         data: batch.map((r) => ({
           id: r.id,
           idsText: r.idsText,
+          selectedIdsComponents: r.selectedIdsComponents,
           directUses: [...r.directUses],
           listsAsComponent: [...r.listsAsComponent],
           isPriorityCandidate: r.isPriorityCandidate,
@@ -155,12 +156,13 @@ class CreateFigureRelationInput {
   constructor(
     id: string,
     idsText: string,
+    selectedIdsComponents: string[],
     isPriorityCandidate: boolean,
     variantGroupId: string | null,
   ) {
     this.id = id;
     this.idsText = idsText;
-    this.selectedIdsComponents = [];
+    this.selectedIdsComponents = selectedIdsComponents;
     this.directUses = new Set();
     this.listsAsComponent = new Set();
     this.isPriorityCandidate = isPriorityCandidate;
@@ -179,7 +181,16 @@ async function analyzeFiguresRelations(
 ) {
   for (const figureId of figureIds) {
     const cached = cache.get(figureId);
-    const idsText = cached?.idsText ?? patchedIds.getIds(figureId);
+    const idsText = cached?.idsText ?? (await patchedIds.getIds(figureId));
+    const ids = parseIds(figureId, idsText);
+    const jLocaleIndex = ids.locales["J"];
+    if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
+      console.log(`Arbitrarily choosing first sequence for ${figureId}`);
+    }
+    const selectedIdsComponents = getComponentsFromIds(
+      ids.sequences[jLocaleIndex ?? 0],
+    ).filter((c) => c !== figureId);
+
     const variantGroupId =
       cached?.variantGroupId ??
       variantGroups.find((v) => v.includes(figureId))?.[0] ??
@@ -189,7 +200,8 @@ async function analyzeFiguresRelations(
       cached ||
       new CreateFigureRelationInput(
         figureId,
-        await idsText,
+        idsText,
+        selectedIdsComponents,
         options.isPriority,
         variantGroupId,
       );
@@ -199,22 +211,11 @@ async function analyzeFiguresRelations(
     }
 
     if (!cached) {
-      const ids = parseIds(figureId, await idsText);
-      const jLocaleIndex = ids.locales["J"];
-      if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
-        console.log(`Arbitrarily choosing first sequence for ${figureId}`);
-      }
-
-      const components = getComponentsFromIds(
-        ids.sequences[jLocaleIndex ?? 0],
-      ).filter((c) => c !== figureId);
-
-      if (components.length > 1) {
-        figureRelation.selectedIdsComponents = components;
+      if (selectedIdsComponents.length > 1) {
         await analyzeFiguresRelations(
           prisma,
           variantGroups,
-          components,
+          selectedIdsComponents,
           cache,
           patchedIds,
           {
@@ -226,14 +227,16 @@ async function analyzeFiguresRelations(
           },
         );
       }
-      for (const componentKey of components) {
+      for (const componentKey of selectedIdsComponents) {
         cache.get(componentKey)!.directUses.add(figureId);
       }
     }
   }
 }
 
-/** returns figure keys */
+/** returns figure keys for NON-ATOMIC components,
+ * and empty array for atomic components
+ */
 function getComponentsFromIds(ids: ParseIds.IDS): string[] {
   return ParseIds.flatten(ids).map((component) => {
     const key = component.type === "html" ? component.code : component.char;

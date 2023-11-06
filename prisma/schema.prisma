@@ -96,85 +96,68 @@ model ScriptinAozoraFrequency {
 model KanjisenseVariantGroup {
   id               String             @id
   variants         String[]
+  // built after variants are set
   KanjisenseFigure KanjisenseFigure[]
 }
 
 model KanjisenseFigureRelation {
-  id                  String   @id
-  variantGroupId      String?
-  directUses          String[]
-  listsAsComponent    String[]
-  isPriorityCandidate Boolean
-
+  id                    String            @id
+  variantGroupId        String?
+  directUses            String[]
+  listsAsComponent      String[]
+  isPriorityCandidate   Boolean
   idsText               String
   selectedIdsComponents String[]
-
-  figure KanjisenseFigure?
+  figure                KanjisenseFigure?
 }
 
 model KanjisenseSoundMark {
   character       String @id
   chain           Json
-  // ditch "active"?
   activeSoundMark String
 }
 
 model KanjisenseFigure {
-  id               String   @id
-  keyword          String
-  mnemonicKeyword  String?
-  isPriority       Boolean
-  listsAsComponent String[]
-  listsAsCharacter String[]
-
-  aozoraAppearances Int
-
+  id                   String                   @id
+  keyword              String
+  isPriority           Boolean
+  listsAsComponent     String[]
+  listsAsCharacter     String[]
+  aozoraAppearances    Int
   activeSoundMarkValue String?
+  variantGroupId       String?
+  componentsTree       Json?
+  shuowenImageId       String?
+  kvgJsonId            String?
+  mnemonicKeyword      String?
+  asComponent          KanjisenseComponent?     @relation("asComponent")
+  allComponents        KanjisenseComponent[]    @relation("allComponents")
+  meaningfulUses       KanjisenseComponentUse[] @relation("meaningfulUses")
+  firstClassComponents KanjisenseComponentUse[] @relation("firstClassComponents")
+  relation             KanjisenseFigureRelation @relation(fields: [id], references: [id])
+  KvgJson              KvgJson?                 @relation(fields: [kvgJsonId], references: [id])
+  ShuowenImage         ShuowenImage?            @relation(fields: [shuowenImageId], references: [id])
+  variantGroup         KanjisenseVariantGroup?  @relation(fields: [variantGroupId], references: [id])
+  meaning              KanjisenseFigureMeaning?
+}
 
-  variantGroupId String?
-  variantGroup   KanjisenseVariantGroup? @relation(fields: [variantGroupId], references: [id])
-
-  componentsTree Json?
-
-  meaningfulUses     KanjisenseComponentUse[] @relation("meaningfulUses")
-  topLevelComponents KanjisenseComponentUse[] @relation("topLevelComponents")
-
-  ShuowenImage   ShuowenImage? @relation(fields: [shuowenImageId], references: [id])
-  shuowenImageId String?
-  KvgJson        KvgJson?      @relation(fields: [kvgJsonId], references: [id])
-  kvgJsonId      String?
-
-  relation KanjisenseFigureRelation @relation(fields: [id], references: [id])
-  meaning  KanjisenseFigureMeaning?
+model KanjisenseComponent {
+  id              String             @id
+  componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade)
+  uses            KanjisenseFigure[] @relation("allComponents")
 }
 
 model KanjisenseComponentUse {
-  component   KanjisenseFigure @relation(fields: [componentId], references: [id], name: "meaningfulUses")
   componentId String
-  parent      KanjisenseFigure @relation(fields: [parentId], references: [id], name: "topLevelComponents")
   parentId    String
-
-  tag KanjisenseComponentUseTag
-
-  id String @id
-}
-
-enum KanjisenseComponentUseTag {
-  // used within this parent character, but not common enough to have a meaning in Kanjijump
-  directMeaningless
-  // should not happen
-  directMeaninglessSound
-  // used within a "directMeaningless" component of this parent character
-  meaningfulIndirect
-  // used within a "directMeaningless component" of this parent character, serving as sound mark
-  meaningfulIndirectSound
-  // used directly as a sound mark within this parent character
-  sound
+  tag         KanjisenseComponentUseTag
+  id          String                    @id
+  component   KanjisenseFigure          @relation("meaningfulUses", fields: [componentId], references: [id])
+  parent      KanjisenseFigure          @relation("firstClassComponents", fields: [parentId], references: [id])
 }
 
 model KanjisenseFigureReading {
-  id String @id
-
+  id                        String  @id
   guangyunYunjing           String?
   guangyunInferredKanOn     String?
   guangyunInferredGoOn      String?
@@ -189,16 +172,14 @@ model KanjisenseFigureReading {
 }
 
 model KanjisenseFigureMeaning {
-  id     String           @id
-  figure KanjisenseFigure @relation(fields: [id], references: [id])
-
-  kanjidicEnglish  String[]
-  unihanDefinition String?
-
+  id                   String           @id
+  unihanDefinition     String?
   kanjisenseHistorical String?
   kanjisenseMnemonic   String?
   kanjisenseStandin    String?
   kanjisenseReference  String?
+  kanjidicEnglish      String[]
+  figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model KvgJson {
@@ -236,6 +217,14 @@ model Note {
   updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum KanjisenseComponentUseTag {
+  directMeaningless
+  directMeaninglessSound
+  meaningfulIndirect
+  meaningfulIndirectSound
+  sound
 }
 
 enum KanjiDbVariantType {

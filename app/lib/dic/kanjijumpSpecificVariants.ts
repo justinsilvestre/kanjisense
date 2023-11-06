@@ -207,5 +207,6 @@ export const kanjijumpSpecificVariants = [
   ["徹", "GWS-U3054E-JV"],
   ["GWS-U7230-G", "爰"],
   ["歹", "歺", "𣦵"],
-  ["GWS-U300EE", "𦥯"]
+  ["GWS-U300EE", "𦥯"],
+  ["臘","﨟","臈"],
 ]

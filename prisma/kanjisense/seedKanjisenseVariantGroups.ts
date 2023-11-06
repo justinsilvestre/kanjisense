@@ -40,16 +40,27 @@ export async function seedKanjisenseVariantGroups(
 
     // build "base variant groups" by aggregating kdb-OLD-variants of base kanji
     let baseVariantGroups: string[][] = [];
-    for (const baseChar of baseKanji) {
-      const oldVariants = await prisma.kanjiDbVariant.findMany({
-        where: { base: baseChar, variantType: KanjiDbVariantType.OldStyle },
-      });
-      if (oldVariants.length) {
+    const oldVariants = (
+      await prisma.kanjiDbVariant.findMany({
+        where: {
+          base: { in: [...baseKanji] },
+          variantType: KanjiDbVariantType.OldStyle,
+        },
+      })
+    ).reduce((baseToVariants, { base, variant }) => {
+      const variants = baseToVariants.get(base) || [];
+      variants.push(variant);
+      baseToVariants.set(base, variants);
+      return baseToVariants;
+    }, new Map<string, string[]>());
+
+    for (const [baseChar, variants] of oldVariants) {
+      if (variants) {
         const variantGroup = [
           baseChar,
-          ...oldVariants
-            .filter((o) => o.variant !== baseChar)
-            .map(({ variant }) => variant),
+          ...variants
+            .filter((variant) => variant !== baseChar)
+            .map((variant) => variant),
         ];
         baseVariantGroups = mergeVariants(baseVariantGroups, [variantGroup]);
       }
