@@ -4,13 +4,13 @@ import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
 import yaml from "yaml";
 
 import { baseKanjiSet } from "~/lib/baseKanji";
-import { simplifiedSoundMarks } from "~/lib/dic/simplifiedSoundMarks";
 import { files } from "~/lib/files.server";
 import { getFigureById } from "~/models/figureRelation.server";
 
 import { registerSeeded } from "../seedUtils";
 
 import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
+import { ComponentUse } from "./ComponentUse";
 import { getBaseKanjiVariantGroups } from "./getBaseKanjiVariantGroups";
 import {
   ComponentMeaning,
@@ -181,10 +181,6 @@ export async function seedKanjisenseFigures(
       ),
     );
 
-    await executeAndLogTime("registering active sound marks", () =>
-      registerActiveSoundMarks(prisma, componentsTreesInput),
-    );
-
     await registerSeeded(prisma, "KanjisenseFigure");
     console.log(`figures seeded. 🌱`);
   }
@@ -199,84 +195,6 @@ interface CreateKanjisenseFigureInput {
   listsAsCharacter: string[];
   variantGroupId: string | null;
   meaning?: Awaited<ReturnType<typeof getFigureMeaningsText>>;
-}
-
-class ComponentUse {
-  constructor(
-    public parent: string,
-    public component: string,
-  ) {}
-
-  toJSON() {
-    return [this.parent, this.component];
-  }
-}
-
-async function registerActiveSoundMarks(
-  prisma: PrismaClient,
-  componentsTreesInput: Map<string, ComponentUse[]>,
-) {
-  const allVariantsToVariantGroupHead = Object.fromEntries(
-    (await prisma.kanjisenseVariantGroup.findMany()).map((g) =>
-      g.variants.flatMap((v) => [v, g.id]),
-    ),
-  );
-  // eslint-disable-next-line no-inner-declarations
-  function getPrimaryVariantId(id: string) {
-    return allVariantsToVariantGroupHead[id] || id;
-  }
-  for (const [id, tree] of componentsTreesInput.entries()) {
-    const soundMarkData =
-      (await prisma.kanjisenseSoundMark.findUnique({
-        where: {
-          character: id,
-        },
-      })) ||
-      (await prisma.kanjisenseSoundMark.findUnique({
-        where: {
-          character: id.normalize(),
-        },
-      }));
-    const originsChain = (soundMarkData?.chain || []) as [
-      characterOrComponent: string,
-      originCharacter: string,
-      tag: "p" | "s",
-    ];
-    const soundMarkCandidates = tree.filter(({ component }) => {
-      const componentPrimaryVariant = getPrimaryVariantId(component);
-      const originCharacterMatchingComponent = originsChain.find(
-        ([, originCharacter]) => {
-          const exactMatch =
-            getPrimaryVariantId(originCharacter) === componentPrimaryVariant;
-          if (exactMatch) return true;
-          const simplifiedOriginCharacterVariants =
-            simplifiedSoundMarks[
-              originCharacter as keyof typeof simplifiedSoundMarks
-            ];
-          return (
-            simplifiedOriginCharacterVariants?.some(
-              (variant) =>
-                getPrimaryVariantId(variant) === componentPrimaryVariant,
-            ) ?? false
-          );
-        },
-      );
-      return originCharacterMatchingComponent;
-    });
-    const activeSoundMark = soundMarkCandidates[0];
-    if (activeSoundMark) {
-      await prisma.kanjisenseFigure.update({
-        where: { id },
-        data: {
-          activeSoundMark: {
-            connect: {
-              id: activeSoundMark.component,
-            },
-          },
-        },
-      });
-    }
-  }
 }
 
 async function connectFirstClassComponents(

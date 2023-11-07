@@ -7,11 +7,12 @@ export async function seedKanjisenseSoundMarkChains(
   force = false,
 ) {
   const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseSoundMark" },
+    where: { step: "KanjisenseSoundMarkChain" },
   });
-  if (seeded && !force) console.log(`KanjisenseSoundMark already seeded. 🌱`);
+  if (seeded && !force)
+    console.log(`KanjisenseSoundMarkChain already seeded. 🌱`);
   else {
-    console.log(`seeding KanjisenseSoundMark...`);
+    console.log(`seeding KanjisenseSoundMarkChain...`);
 
     const dbInput = new Map<string, CreateSoundMarkInput>();
 
@@ -66,10 +67,10 @@ export async function seedKanjisenseSoundMarkChains(
       })),
     });
 
-    await registerSeeded(prisma, "KanjisenseSoundMark");
+    await registerSeeded(prisma, "KanjisenseSoundMarkChain");
   }
 
-  console.log(`KanjisenseSoundMark seeded. 🌱`);
+  console.log(`KanjisenseSoundMarkChain seeded. 🌱`);
 }
 
 class CreateSoundMarkInput {

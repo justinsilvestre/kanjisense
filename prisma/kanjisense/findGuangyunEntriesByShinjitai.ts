@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
 import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
 
@@ -16,7 +16,8 @@ const variantTypesPrioritySet = new Set(VARIANT_TYPES_PRIORITY);
 
 export async function findGuangyunEntriesByShinjitai(
   prisma: PrismaClient,
-  newToOld: Map<string, string[]>,
+  newToOldFiguresIds: Map<string, string[]>,
+  oldFiguresToXiaoYuns: Map<string, SbgyXiaoyun[]>,
   newToZVariants14: Map<string, string[]>,
   shinjitai: string,
 ) {
@@ -24,35 +25,32 @@ export async function findGuangyunEntriesByShinjitai(
     number,
     {
       xiaoyun: number;
-      chars: string[];
+      matchingExemplars: string[];
     }
   >();
 
-  const kyuujitaiForms = toKyuujitai(newToOld, shinjitai);
-  const kyuujitaiEntries = await prisma.sbgyXiaoyun.findMany({
-    where: {
-      exemplars: { hasSome: kyuujitaiForms },
-    },
-  });
-  for (const kyuujitaiEntry of kyuujitaiEntries) {
-    const { xiaoyun, exemplars } = kyuujitaiEntry;
-    for (const char of exemplars) {
-      addEntry(xiaoyun, char);
+  const kyuujitaiForms = newToOldFiguresIds.get(shinjitai) || [];
+
+  for (const kyuujitaiForm of kyuujitaiForms) {
+    const kyuujitaiXiaoyuns = oldFiguresToXiaoYuns.get(kyuujitaiForm) || [];
+    for (const kyuujitaiXiaoyun of kyuujitaiXiaoyuns) {
+      const { xiaoyun } = kyuujitaiXiaoyun;
+      addEntry(xiaoyun, kyuujitaiForm);
     }
   }
 
   if (!entries.size) {
     const zVariantForms = newToZVariants14.get(shinjitai);
     if (zVariantForms) {
-      const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
-        where: {
-          exemplars: { hasSome: zVariantForms },
-        },
-      });
-      for (const zVariantEntry of zVariantEntries) {
-        const { xiaoyun, exemplars } = zVariantEntry;
-        for (const char of exemplars) {
-          addEntry(xiaoyun, char);
+      for (const zVariantForm of zVariantForms) {
+        const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
+          where: {
+            exemplars: { has: zVariantForm },
+          },
+        });
+
+        for (const zVariantEntry of zVariantEntries) {
+          addEntry(zVariantEntry.xiaoyun, zVariantForm);
         }
       }
     }
@@ -73,20 +71,16 @@ export async function findGuangyunEntriesByShinjitai(
         where: { exemplars: { has: variant.character } },
       });
       for (const backupEntry of backupEntries) {
-        const { xiaoyun, exemplars } = backupEntry;
-        for (const char of exemplars) {
-          addEntry(xiaoyun, char);
-        }
+        const { xiaoyun } = backupEntry;
+        addEntry(xiaoyun, variant.character);
       }
     }
   }
   return entries;
 
   function addEntry(xiaoyun: number, char: string) {
-    if (!entries.has(xiaoyun)) entries.set(xiaoyun, { xiaoyun, chars: [] });
-    entries.get(xiaoyun)!.chars.push(char);
+    if (!entries.has(xiaoyun))
+      entries.set(xiaoyun, { xiaoyun, matchingExemplars: [] });
+    entries.get(xiaoyun)!.matchingExemplars.push(char);
   }
-}
-function toKyuujitai(newToOld: Map<string, string[]>, shinjitai: string) {
-  return newToOld.get(shinjitai) ?? [];
 }
