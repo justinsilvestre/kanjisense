@@ -2,7 +2,7 @@ import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
 
 import { baseKanjiSet } from "~/lib/baseKanji";
 
-import { getFigureById } from "../../app/models/getFigureById.server";
+import { getFigureById } from "../../app/models/figureRelation.server";
 
 export const forcedMeaninglessFiguresSet = new Set<string>([
   "亏",
@@ -28,7 +28,7 @@ export async function shouldComponentBeAssignedMeaning(
     variantGroupId,
   }: {
     id: string;
-    /* includes self */
+    /* might include self? check. */
     directUses: string[];
     variantGroupId: string | null;
   },

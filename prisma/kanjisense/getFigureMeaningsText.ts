@@ -4,7 +4,7 @@ const RADICAL_ENTRY_REGEX = /radical \(no\.|radical number/;
 export async function getFigureMeaningsText(
   prisma: PrismaClient,
   figure: KanjisenseFigureRelation,
-  componentsDictionaryEntry: ComponentMeaning | null,
+  mnemonicKeywords: ComponentMeaning | null,
 ) {
   const figureId = figure.id;
   const unihanDefinitionLookup = prisma.unihan15.findUnique({
@@ -16,7 +16,6 @@ export async function getFigureMeaningsText(
     select: { definitions: true },
   });
 
-  const mnemonicKeywords = componentsDictionaryEntry;
   const historicalKeyword =
     mnemonicKeywords?.historical && mnemonicKeywords.historical !== "(various)"
       ? mnemonicKeywords.historical

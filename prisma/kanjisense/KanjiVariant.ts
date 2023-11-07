@@ -5,7 +5,7 @@ import {
   unihan14VariantFieldNames,
 } from "../external/seedUnihan14";
 
-type KanjiVariant =
+export type KanjiVariant =
   | {
       character: string;
       variantType: Unihan14VariantFieldName;
@@ -24,19 +24,19 @@ type KanjiVariant =
 
 export async function lookUpVariants(
   prisma: PrismaClient,
-  baseCharacter: string,
+  baseCharacters: string[],
 ): Promise<KanjiVariant[]> {
   const variants: KanjiVariant[] = [];
 
   const kanjiDbVariants = await prisma.kanjiDbVariant.findMany({
-    where: { base: baseCharacter },
+    where: { base: { in: baseCharacters } },
   });
   for (const { variant, variantType } of kanjiDbVariants) {
     variants.push({ character: variant, variantType, source: "KanjiDb" });
   }
 
   const unihan14Variants = await prisma.unihan14.findFirst({
-    where: { id: baseCharacter },
+    where: { id: { in: baseCharacters } },
   });
   if (unihan14Variants) {
     for (const variantType of unihan14VariantFieldNames) {
@@ -47,7 +47,7 @@ export async function lookUpVariants(
   }
 
   const unihan12Variants = await prisma.unihan12.findFirst({
-    where: { id: baseCharacter },
+    where: { id: { in: baseCharacters } },
   });
   if (unihan12Variants) {
     for (const variant of unihan12Variants.kZVariant) {

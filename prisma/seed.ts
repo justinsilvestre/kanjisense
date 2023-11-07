@@ -12,7 +12,7 @@ import { seedUnihan14 } from "./external/seedUnihan14";
 import { seedUnihan15 } from "./external/seedUnihan15";
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
-import { seedKanjisenseSoundMarks } from "./kanjisense/seedKanjisenseSoundMarks";
+import { seedKanjisenseSoundMarkChains } from "./kanjisense/seedKanjisenseSoundMarkChains";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 
 const prisma = new PrismaClient();
@@ -41,7 +41,7 @@ async function seed() {
   console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjisenseFigureRelation(prisma);
   console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjisenseSoundMarks(prisma);
+  await seedKanjisenseSoundMarkChains(prisma);
   console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
   await seedKanjisenseFigures(prisma);
 

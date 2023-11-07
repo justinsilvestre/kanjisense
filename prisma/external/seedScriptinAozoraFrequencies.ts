@@ -35,6 +35,10 @@ export async function seedScriptinAozoraFrequencies(
       };
     }
 
+    await prisma.scriptinAozoraFrequency.createMany({
+      data: Object.values(dbInput),
+    });
+
     await registerSeeded(prisma, "ScriptinAozoraFrequency");
     console.log(`scriptinAozoraFrequency seeded. 🌱`);
   }
