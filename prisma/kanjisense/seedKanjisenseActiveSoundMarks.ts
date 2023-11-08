@@ -18,14 +18,9 @@ export async function seedKanjisenseActiveSoundMarks(
   else {
     console.log(`seeding KanjisenseActiveSoundMark...`);
 
-    const componentsTreesOfFiguresWithActiveSoundMarks = new Map(
+    const componentsTrees = new Map(
       (
         await prisma.kanjisenseFigure.findMany({
-          where: {
-            activeSoundMark: {
-              isNot: null,
-            },
-          },
           select: {
             id: true,
             componentsTree: true,
@@ -39,10 +34,7 @@ export async function seedKanjisenseActiveSoundMarks(
       ]),
     );
 
-    await registerActiveSoundMarks(
-      prisma,
-      componentsTreesOfFiguresWithActiveSoundMarks,
-    );
+    await registerActiveSoundMarks(prisma, componentsTrees);
 
     await registerSeeded(prisma, "KanjisenseActiveSoundMark");
   }
@@ -52,38 +44,34 @@ export async function seedKanjisenseActiveSoundMarks(
 
 async function registerActiveSoundMarks(
   prisma: PrismaClient,
-  componentsTreesInput: Map<string, ComponentUse[]>,
+  componentsTrees: Map<string, ComponentUse[]>,
 ) {
   const allVariantsToVariantGroupHead = Object.fromEntries(
-    (await prisma.kanjisenseVariantGroup.findMany()).map((g) =>
-      g.variants.flatMap((v) => [v, g.id]),
+    (await prisma.kanjisenseVariantGroup.findMany()).flatMap((g) =>
+      g.variants.map((v) => [v, g.id]),
     ),
   );
   // eslint-disable-next-line no-inner-declarations
   function getPrimaryVariantId(id: string) {
     return allVariantsToVariantGroupHead[id] || id;
   }
-  for (const [id, tree] of componentsTreesInput.entries()) {
-    const soundMarkChain =
-      (await prisma.kanjisenseSoundMarkChain.findUnique({
+  for (const [id, tree] of componentsTrees.entries()) {
+    const derivation =
+      (await prisma.kanjiDbCharacterDerivation.findUnique({
         where: {
           character: id,
         },
       })) ||
-      (await prisma.kanjisenseSoundMarkChain.findUnique({
+      (await prisma.kanjiDbCharacterDerivation.findUnique({
         where: {
           character: id.normalize(),
         },
       }));
-    const originsChain = (soundMarkChain?.chain || []) as [
-      characterOrComponent: string,
-      originCharacter: string,
-      tag: "p" | "s",
-    ];
     const soundMarkCandidates = tree.filter(({ component }) => {
       const componentPrimaryVariant = getPrimaryVariantId(component);
-      const originCharacterMatchingComponent = originsChain.find(
-        ([, originCharacter]) => {
+
+      const phoneticMatchInDerivationChain = derivation?.phoneticOrigins.find(
+        (originCharacter) => {
           const exactMatch =
             getPrimaryVariantId(originCharacter) === componentPrimaryVariant;
           if (exactMatch) return true;
@@ -99,7 +87,7 @@ async function registerActiveSoundMarks(
           );
         },
       );
-      return originCharacterMatchingComponent;
+      return phoneticMatchInDerivationChain;
     });
     const activeSoundMark = soundMarkCandidates[0];
     if (activeSoundMark) {

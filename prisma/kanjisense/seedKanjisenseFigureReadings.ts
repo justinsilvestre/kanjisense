@@ -156,6 +156,7 @@ export async function seedKanjisenseFigureReadings(
     );
 
     console.log("creating entries");
+    await prisma.kanjisenseFigureReadingToSbgyXiaoyun.deleteMany();
     await prisma.kanjisenseFigureReading.deleteMany();
     await prisma.kanjisenseFigureReading.createMany({
       data: Array.from(figuresNeedingReadingsIds, (id) => ({

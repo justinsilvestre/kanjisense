@@ -12,29 +12,31 @@ model Setup {
 }
 
 model KanjidicEntry {
-  id          String   @id
-  onReadings  String[]
-  kunReadings String[]
-  tag         String?
-  definitions String[]
-  meta        Json?
+  id            String                   @id
+  onReadings    String[]
+  kunReadings   String[]
+  tag           String?
+  definitions   String[]
+  meta          Json?
+  figureReading KanjisenseFigureReading? @relation("kanjidicEntry")
 }
 
 model Unihan15 {
-  id           String   @id
-  kCantonese   String[]
-  kDefinition  String[]
-  kHangul      String[]
-  kHanyuPinlu  String[]
-  kHanyuPinyin String[]
-  kJapaneseKun String[]
-  kJapaneseOn  String[]
-  kKorean      String[]
-  kMandarin    String[]
-  kTang        String[]
-  kTGHZ2013    String[]
-  kVietnamese  String[]
-  kXHC1983     String[]
+  id            String                   @id
+  kCantonese    String[]
+  kDefinition   String[]
+  kHangul       String[]
+  kHanyuPinlu   String[]
+  kHanyuPinyin  String[]
+  kJapaneseKun  String[]
+  kJapaneseOn   String[]
+  kKorean       String[]
+  kMandarin     String[]
+  kTang         String[]
+  kTGHZ2013     String[]
+  kVietnamese   String[]
+  kXHC1983      String[]
+  figureReading KanjisenseFigureReading? @relation("unihan15")
 }
 
 model Unihan12 {
@@ -84,6 +86,8 @@ model SbgyXiaoyun {
   kaihe          String?
   note           String?
   dengOrChongniu String?
+
+  figureReading KanjisenseFigureReadingToSbgyXiaoyun[]
 }
 
 model ScriptinAozoraFrequency {
@@ -111,9 +115,10 @@ model KanjisenseFigureRelation {
   figure                KanjisenseFigure?
 }
 
-model KanjisenseSoundMarkChain {
-  character String @id
-  chain     Json
+model KanjiDbCharacterDerivation {
+  character       String   @id
+  chain           Json
+  phoneticOrigins String[]
 }
 
 model KanjisenseFigure {
@@ -123,59 +128,62 @@ model KanjisenseFigure {
   listsAsComponent     String[]
   listsAsCharacter     String[]
   aozoraAppearances    Int
-  activeSoundMark      KanjisenseComponent?     @relation("activeSoundMark", fields: [activeSoundMarkId], references: [id])
-  activeSoundMarkId    String?
   activeSoundMarkValue String?
   variantGroupId       String?
   componentsTree       Json?
   shuowenImageId       String?
   kvgJsonId            String?
   mnemonicKeyword      String?
+  activeSoundMarkId    String?
   asComponent          KanjisenseComponent?     @relation("asComponent")
-  allComponents        KanjisenseComponent[]    @relation("allComponents")
   firstClassUses       KanjisenseComponentUse[] @relation("firstClassUses")
   firstClassComponents KanjisenseComponentUse[] @relation("firstClassComponents")
-
-  relation     KanjisenseFigureRelation @relation(fields: [id], references: [id])
-  KvgJson      KvgJson?                 @relation(fields: [kvgJsonId], references: [id])
-  ShuowenImage ShuowenImage?            @relation(fields: [shuowenImageId], references: [id])
-  variantGroup KanjisenseVariantGroup?  @relation(fields: [variantGroupId], references: [id])
-  meaning      KanjisenseFigureMeaning?
+  activeSoundMark      KanjisenseComponent?     @relation("activeSoundMark", fields: [activeSoundMarkId], references: [id])
+  relation             KanjisenseFigureRelation @relation(fields: [id], references: [id])
+  KvgJson              KvgJson?                 @relation(fields: [kvgJsonId], references: [id])
+  ShuowenImage         ShuowenImage?            @relation(fields: [shuowenImageId], references: [id])
+  variantGroup         KanjisenseVariantGroup?  @relation(fields: [variantGroupId], references: [id])
+  meaning              KanjisenseFigureMeaning?
+  reading              KanjisenseFigureReading?
+  allComponents        KanjisenseComponent[]    @relation("allComponents")
 }
 
 model KanjisenseComponent {
   id              String             @id
-  componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade)
+  soundMarkUses   KanjisenseFigure[] @relation("activeSoundMark")
   allUses         KanjisenseFigure[] @relation("allComponents")
-
-  soundMarkUses KanjisenseFigure[] @relation("activeSoundMark")
 }
 
 model KanjisenseComponentUse {
   componentId String
   parentId    String
-  indexInTree Int?
   isSoundMark Boolean
-
-  component KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  parent    KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  indexInTree Int?
+  component   KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade)
+  parent      KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade)
 
   @@id([componentId, parentId])
 }
 
 model KanjisenseFigureReading {
-  id                        String  @id
-  guangyunYunjing           String?
-  guangyunInferredKanOn     String?
-  guangyunInferredGoOn      String?
-  kanjidicOn                String?
-  kanjidicOnInJmDictIndexes String?
-  kanjidicKun               String?
-  unihanMandarin            String?
-  kCantonese                String?
-  kHangul                   String?
-  kVietnamese               String?
-  kJapaneseOn               String?
+  id                            String                                 @id
+  kanjidicEntryId               String?                                @unique
+  sbgyXiaoyunsMatchingExemplars Json?
+  unihan15Id                    String?                                @unique
+  figure                        KanjisenseFigure                       @relation(fields: [id], references: [id], onDelete: Cascade)
+  kanjidicEntry                 KanjidicEntry?                         @relation("kanjidicEntry", fields: [kanjidicEntryId], references: [id])
+  unihan15                      Unihan15?                              @relation("unihan15", fields: [unihan15Id], references: [id])
+  sbgyXiaoyuns                  KanjisenseFigureReadingToSbgyXiaoyun[]
+}
+
+model KanjisenseFigureReadingToSbgyXiaoyun {
+  figureReadingId String
+  figureReading   KanjisenseFigureReading @relation(fields: [figureReadingId], references: [id])
+  sbgyXiaoyunId   Int
+  sbgyXiaoyun     SbgyXiaoyun             @relation(fields: [sbgyXiaoyunId], references: [xiaoyun])
+
+  @@id([figureReadingId, sbgyXiaoyunId])
 }
 
 model KanjisenseFigureMeaning {
@@ -186,7 +194,7 @@ model KanjisenseFigureMeaning {
   kanjisenseStandin    String?
   kanjisenseReference  String?
   kanjidicEnglish      String[]
-  figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model KvgJson {
@@ -213,7 +221,7 @@ model User {
 model Password {
   hash   String
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Note {
@@ -223,7 +231,7 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum KanjisenseComponentUseTag {

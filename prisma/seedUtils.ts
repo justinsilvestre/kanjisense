@@ -9,7 +9,7 @@ export type SetupStep =
   | "KanjisenseFigureReading"
   | "KanjisenseFigureRelation"
   | "KanjisenseFigure"
-  | "KanjisenseSoundMarkChain"
+  | "KanjiDbCharacterDerivation"
   | "KanjisenseActiveSoundMark"
   | "SbgyXiaoyun"
   | "SbgyXiaoyun"

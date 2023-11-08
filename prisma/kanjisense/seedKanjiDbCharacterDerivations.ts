@@ -2,21 +2,20 @@ import { PrismaClient } from "@prisma/client";
 
 import { registerSeeded } from "../seedUtils";
 
-export async function seedKanjisenseSoundMarkChains(
+export async function seedKanjiDbCharacterDerivations(
   prisma: PrismaClient,
   force = false,
 ) {
   const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseSoundMarkChain" },
+    where: { step: "KanjiDbCharacterDerivation" },
   });
   if (seeded && !force)
-    console.log(`KanjisenseSoundMarkChain already seeded. 🌱`);
+    console.log(`KanjiDbCharacterDerivation already seeded. 🌱`);
   else {
-    console.log(`seeding KanjisenseSoundMarkChain...`);
+    console.log(`seeding KanjiDbCharacterDerivation...`);
 
     const dbInput = new Map<string, CreateSoundMarkInput>();
 
-    // first pass: find provisional sound marks
     const figuresIds = (await prisma.kanjisenseFigureRelation.findMany()).map(
       ({ id }) => id,
     );
@@ -41,15 +40,25 @@ export async function seedKanjisenseSoundMarkChains(
       const originCharacter = parseEtymologyText(id, etymologyText!);
       if (originCharacter) {
         const chain: CharacterOriginReference[] = [];
+        const visitedCharacters = new Set<string>([id]);
         let nextInChain: CharacterOriginReference | null = originCharacter;
         if (nextInChain)
           do {
+            if (chain.length > 10) {
+              console.error(
+                `chain too long: ${originCharacter.char} ${chain
+                  .map((o) => o.char)
+                  .join(" ")}`,
+              );
+              break;
+            }
             chain.push(nextInChain);
           } while (
             (nextInChain = await getNextInEtymologyChain(
               prisma,
               kanjiDbEtymologiesCache,
               nextInChain,
+              visitedCharacters,
             ))
           );
         dbInput.set(id, {
@@ -59,18 +68,21 @@ export async function seedKanjisenseSoundMarkChains(
       }
     }
 
-    await prisma.kanjisenseSoundMark.deleteMany({});
-    await prisma.kanjisenseSoundMark.createMany({
+    await prisma.kanjiDbCharacterDerivation.deleteMany({});
+    await prisma.kanjiDbCharacterDerivation.createMany({
       data: [...dbInput.values()].map(({ character, chain }) => ({
         character,
-        chain: chain.map((item) => item.toJSON()),
+        chain: chain.map((o) => o.toJSON()),
+        phoneticOrigins: chain.flatMap((o) =>
+          o.isPhonetic() ? [o.source] : [],
+        ),
       })),
     });
 
-    await registerSeeded(prisma, "KanjisenseSoundMarkChain");
+    await registerSeeded(prisma, "KanjiDbCharacterDerivation");
   }
 
-  console.log(`KanjisenseSoundMarkChain seeded. 🌱`);
+  console.log(`KanjiDbCharacterDerivation seeded. 🌱`);
 }
 
 class CreateSoundMarkInput {
@@ -85,7 +97,7 @@ enum CharacterOriginType {
   simplification,
 }
 
-class CharacterOriginReference {
+export class CharacterOriginReference {
   char: string;
   source: string;
   type: CharacterOriginType;
@@ -105,7 +117,11 @@ class CharacterOriginReference {
 
   toJSON() {
     const { char, source, type } = this;
-    return [char, source, type === CharacterOriginType.phonetic ? "p" : "s"];
+    return [
+      char,
+      source,
+      type === CharacterOriginType.phonetic ? "p" : "s",
+    ] as [char: string, source: string, type: "p" | "s"];
   }
   static fromJSON(json: ReturnType<CharacterOriginReference["toJSON"]>) {
     const [char, source, typeCode] = json;
@@ -120,6 +136,8 @@ class CharacterOriginReference {
 }
 
 function parseEtymologyText(character: string, text: string) {
+  if (text.includes("	或字	")) return null;
+
   const [, parentMatch] = text.match(/^→(\S+)[^簡体]*(?<comment>#.+)?$/u) || [];
   if (parentMatch) {
     return new CharacterOriginReference(
@@ -166,16 +184,24 @@ async function getNextInEtymologyChain(
   prisma: PrismaClient,
   etymologiesCache: Map<string, string>,
   item: CharacterOriginReference,
+  visitedCharacters: Set<string>,
 ): Promise<CharacterOriginReference | null> {
-  if (item.isPhonetic()) {
-    const etymologyText = await lookUpKanjiDbEtymology(
-      prisma,
-      etymologiesCache,
-      item.source,
-    );
-    if (!etymologyText) return null;
-    const etymology = parseEtymologyText(item.source, etymologyText);
-    return etymology;
+  // if (item.isPhonetic()) {
+
+  if (visitedCharacters.has(item.char)) {
+    console.error(`cycle detected: ${item.char}`);
+    return null;
   }
+  visitedCharacters.add(item.char);
+  const etymologyText = await lookUpKanjiDbEtymology(
+    prisma,
+    etymologiesCache,
+    item.source,
+  );
+  if (!etymologyText) return null;
+
+  const etymology = parseEtymologyText(item.source, etymologyText);
+  return etymology;
+  // }
   return null;
 }

@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
 import yaml from "yaml";
 
-import { baseKanjiSet } from "~/lib/baseKanji";
 import { files } from "~/lib/files.server";
 import { getFigureById } from "~/models/figureRelation.server";
 
@@ -11,7 +10,8 @@ import { registerSeeded } from "../seedUtils";
 
 import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
 import { ComponentUse } from "./ComponentUse";
-import { getBaseKanjiVariantGroups } from "./getBaseKanjiVariantGroups";
+import { executeAndLogTime } from "./executeAndLogTime";
+import { getAllCharacters } from "./getAllCharacters";
 import {
   ComponentMeaning,
   getFigureMeaningsText,
@@ -33,34 +33,11 @@ export async function seedKanjisenseFigures(
       readFileSync(files.componentsDictionaryYml, "utf-8"),
     ) as Record<string, ComponentMeaning>;
 
-    const baseKanjiVariantsGroups = await getBaseKanjiVariantGroups(prisma);
-    const priorityCharacters = await prisma.kanjisenseFigureRelation.findMany({
-      where: {
-        OR: [
-          {
-            id: { in: [...baseKanjiSet] },
-          },
-          {
-            id: {
-              in: Object.values(baseKanjiVariantsGroups).flatMap(
-                (g) => g.variants,
-              ),
-            },
-            directUses: { isEmpty: true },
-          },
-        ],
-      },
-    });
-    const nonPriorityCharacters =
-      await prisma.kanjisenseFigureRelation.findMany({
-        where: {
-          directUses: { isEmpty: true },
-          id: { notIn: priorityCharacters.map((c) => c.id) },
-        },
-      });
-    const allStandaloneCharacters = priorityCharacters.concat(
-      ...nonPriorityCharacters,
-    );
+    const {
+      allStandaloneCharacters,
+      priorityCharacters,
+      nonPriorityCharacters,
+    } = await getAllCharacters(prisma);
 
     const allAozoraCharacterFrequencies = Object.fromEntries(
       (
@@ -531,15 +508,4 @@ function setReduce<T, U>(
     acc = reducer(acc, next);
   }
   return acc;
-}
-
-function executeAndLogTime<T>(label: string, fn: () => Promise<T>) {
-  const startTime = Date.now();
-  console.log(label, "...");
-  return fn().then((result) => {
-    console.log(
-      `${(Date.now() - startTime) / 1000}s.`.padStart(label.length + 8),
-    );
-    return result;
-  });
 }
