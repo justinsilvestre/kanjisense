@@ -17,7 +17,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
 
     const dbInput: Record<
       string,
-      { id: string; fields: Record<string, string[]> }
+      { id: string; fields: Record<string, string> }
     > = {};
     await forEachLine(files.unihanReadings15, async (line) => {
       if (!line || line.startsWith("#")) return;
@@ -30,25 +30,24 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
         id: head,
         fields: {},
       };
-      dbInput[head].fields[fieldName] ||= [];
-      dbInput[head].fields[fieldName].push(body);
+      dbInput[head].fields[fieldName] = body;
     });
 
     const data = Object.values(dbInput).map(({ id, fields }) => ({
       id,
-      kCantonese: fields.kCantonese || [],
-      kDefinition: fields.kDefinition || [],
-      kHangul: fields.kHangul || [],
-      kHanyuPinlu: fields.kHanyuPinlu || [],
-      kHanyuPinyin: fields.kHanyuPinyin || [],
-      kJapaneseKun: fields.kJapaneseKun || [],
-      kJapaneseOn: fields.kJapaneseOn || [],
-      kKorean: fields.kKorean || [],
-      kMandarin: fields.kMandarin || [],
-      kTang: fields.kTang || [],
-      kTGHZ2013: fields.kTGHZ2013 || [],
-      kVietnamese: fields.kVietnamese || [],
-      kXHC1983: fields.kXHC1983 || [],
+      kDefinition: fields.kDefinition || null,
+      kCantonese: fields.kCantonese?.split(" ") || [],
+      kHangul: fields.kHangul?.split(" ") || [],
+      kHanyuPinlu: fields.kHanyuPinlu?.split(" ") || [],
+      kHanyuPinyin: fields.kHanyuPinyin?.split(" ") || [],
+      kJapaneseKun: fields.kJapaneseKun?.split(" ") || [],
+      kJapaneseOn: fields.kJapaneseOn?.split(" ") || [],
+      kKorean: fields.kKorean?.split(" ") || [],
+      kMandarin: fields.kMandarin?.split(" ") || [],
+      kTang: fields.kTang?.split(" ") || [],
+      kTGHZ2013: fields.kTGHZ2013?.split(" ") || [],
+      kVietnamese: fields.kVietnamese?.split(" ") || [],
+      kXHC1983: fields.kXHC1983?.split(" ") || [],
     }));
     const x = await prisma.unihan15.createMany({
       data,

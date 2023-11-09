@@ -24,7 +24,7 @@ export async function findGuangyunEntriesByShinjitai(
   const entries = new Map<
     number,
     {
-      xiaoyun: number;
+      xiaoyun: SbgyXiaoyun;
       matchingExemplars: string[];
     }
   >();
@@ -34,8 +34,7 @@ export async function findGuangyunEntriesByShinjitai(
   for (const kyuujitaiForm of kyuujitaiForms) {
     const kyuujitaiXiaoyuns = oldFiguresToXiaoYuns.get(kyuujitaiForm) || [];
     for (const kyuujitaiXiaoyun of kyuujitaiXiaoyuns) {
-      const { xiaoyun } = kyuujitaiXiaoyun;
-      addEntry(xiaoyun, kyuujitaiForm);
+      addEntry(kyuujitaiXiaoyun, kyuujitaiForm);
     }
   }
 
@@ -50,7 +49,7 @@ export async function findGuangyunEntriesByShinjitai(
         });
 
         for (const zVariantEntry of zVariantEntries) {
-          addEntry(zVariantEntry.xiaoyun, zVariantForm);
+          addEntry(zVariantEntry, zVariantForm);
         }
       }
     }
@@ -71,16 +70,15 @@ export async function findGuangyunEntriesByShinjitai(
         where: { exemplars: { has: variant.character } },
       });
       for (const backupEntry of backupEntries) {
-        const { xiaoyun } = backupEntry;
-        addEntry(xiaoyun, variant.character);
+        addEntry(backupEntry, variant.character);
       }
     }
   }
   return entries;
 
-  function addEntry(xiaoyun: number, char: string) {
-    if (!entries.has(xiaoyun))
-      entries.set(xiaoyun, { xiaoyun, matchingExemplars: [] });
-    entries.get(xiaoyun)!.matchingExemplars.push(char);
+  function addEntry(xiaoyun: SbgyXiaoyun, char: string) {
+    if (!entries.has(xiaoyun.xiaoyun))
+      entries.set(xiaoyun.xiaoyun, { xiaoyun, matchingExemplars: [] });
+    entries.get(xiaoyun.xiaoyun)!.matchingExemplars.push(char);
   }
 }

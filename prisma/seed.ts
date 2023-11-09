@@ -10,41 +10,63 @@ import { seedScriptinAozoraFrequencies } from "./external/seedScriptinAozoraFreq
 import { seedUnihan12 } from "./external/seedUnihan12";
 import { seedUnihan14 } from "./external/seedUnihan14";
 import { seedUnihan15 } from "./external/seedUnihan15";
+import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
+import { seedKanjiDbCharacterDerivations } from "./kanjisense/seedKanjiDbCharacterDerivations";
+import { seedKanjisenseActiveSoundMarks } from "./kanjisense/seedKanjisenseActiveSoundMarks";
+import { seedKanjisenseActiveSoundMarkValuess } from "./kanjisense/seedKanjisenseActiveSoundMarkValues";
+import { seedKanjisenseFigureReadings } from "./kanjisense/seedKanjisenseFigureReadings";
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
-import { seedKanjisenseSoundMarkChains } from "./kanjisense/seedKanjisenseSoundMarkChains";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 
 const prisma = new PrismaClient();
 
 async function seed() {
   const startTime = Date.now();
+  try {
+    await executeAndLogTime("seeding kanjidic", () => seedKanjidic(prisma));
+    await executeAndLogTime("seeding unihan15", () => seedUnihan15(prisma));
+    await executeAndLogTime("seeding unihan14", () => seedUnihan14(prisma));
+    await executeAndLogTime("seeding unihan12", () => seedUnihan12(prisma));
+    await executeAndLogTime("seeding kanjiDB composition data", () =>
+      seedKanjiDbComposition(prisma),
+    );
+    await executeAndLogTime("seeding kanjiDB variants", () =>
+      seedKanjiDbVariants(prisma),
+    );
+    await executeAndLogTime("seeding sbgynotes", () =>
+      seedKanjiDbSbgyNotes(prisma),
+    );
+    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma));
+    await executeAndLogTime("seeding aozora frequencies", () =>
+      seedScriptinAozoraFrequencies(prisma),
+    );
+    await executeAndLogTime("seeding kanjisense variant groups", () =>
+      seedKanjisenseVariantGroups(prisma),
+    );
+    await executeAndLogTime("seeding kanjisense figure relations", () =>
+      seedKanjisenseFigureRelation(prisma),
+    );
+    await executeAndLogTime("seeding kanjidb character derivations", () =>
+      seedKanjiDbCharacterDerivations(prisma),
+    );
+    await executeAndLogTime("seeding kanjisense figures", () =>
+      seedKanjisenseFigures(prisma),
+    );
+    await executeAndLogTime("seeding kanjisense active sound marks", () =>
+      seedKanjisenseActiveSoundMarks(prisma),
+    );
+    await executeAndLogTime("seeding kanjisense figure readings", () =>
+      seedKanjisenseFigureReadings(prisma),
+    );
 
-  await seedKanjidic(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedUnihan15(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedUnihan14(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedUnihan12(prisma);
-  await seedKanjiDbComposition(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjiDbVariants(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjiDbSbgyNotes(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedSbgy(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedScriptinAozoraFrequencies(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjisenseVariantGroups(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjisenseFigureRelation(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjisenseSoundMarkChains(prisma);
-  console.log(`✅ ${(Date.now() - startTime) / 1000}s.`);
-  await seedKanjisenseFigures(prisma);
-
+    await executeAndLogTime("seeding kanjisense active sound mark values", () =>
+      seedKanjisenseActiveSoundMarkValuess(prisma),
+    );
+  } catch (error) {
+    console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);
+    throw error;
+  }
   const email = "rachel@remix.run";
 
   // cleanup the existing database
@@ -84,7 +106,7 @@ async function seed() {
   const endTime = Date.now();
 
   console.log(`Database has been seeded. 🌱`);
-  console.log(`Took ${endTime - startTime}ms.`);
+  console.log(`Finished in ${(endTime - startTime) / 1000}s.`);
 }
 
 seed()

@@ -1,29 +1,11 @@
 // https://nk2028.shn.hk/qieyun-js/classes/____.html
 
-const initialGroups = {
-  幫: new Set("幫滂並明"),
-  端: new Set("端透定泥"),
-  來: new Set("來"),
-  知: new Set("知徹澄孃"),
-  精: new Set("精清從心邪"),
-  莊: new Set("莊初崇生俟"),
-  章: new Set("章昌常書船"),
-  日: new Set("日"),
-  見: new Set("見溪羣疑"),
-  影: new Set("影曉匣云"),
-  以: new Set("以"),
-};
-const initialToGroup = Object.fromEntries(
-  Object.entries(initialGroups).flatMap(([group, initials]) =>
-    Array.from(initials, (initial) => [initial, group]),
-  ),
-);
-const getInitialGroup = (initial: string) => initialToGroup[initial] || null;
+import { initialGroups, getInitialGroup, QysInitial } from "prisma/QysInitial";
 
-interface SyllableQieyunProfile {
+export interface QysTranscriptionProfile {
   is合口: boolean;
-  canonical母: string;
-  tone聲: string;
+  canonical母: QysInitial;
+  tone聲: "平" | "上" | "去" | "入";
   is重紐A類: boolean;
   qieyunCycleHead韻: string;
   row等: string | null;
@@ -31,7 +13,7 @@ interface SyllableQieyunProfile {
 
 const rhymes: Record<
   QieyunRhymeCycleHead,
-  string | ((syllable: SyllableQieyunProfile) => string)
+  string | ((syllable: QysTranscriptionProfile) => string)
 > = {
   東: (s) => {
     if (s.tone聲 === "入" && s.row等 === "三") {
@@ -288,7 +270,7 @@ const rhymes: Record<
   凡: "âm",
 };
 
-export function transcribe(syllable: SyllableQieyunProfile) {
+export function transcribe(syllable: QysTranscriptionProfile) {
   const {
     canonical母: 母,
     tone聲: 聲,
@@ -316,11 +298,12 @@ export function transcribe(syllable: SyllableQieyunProfile) {
   else if (母組 === "端" && (等 === "二" || 等 === "三")) 聲母 += "h";
   else if (母 === "以" && /^[yŷẁ]/.test(韻母)) 聲母 = "";
 
-  const 聲調 =
-    {
-      上: "ˬ",
-      去: "ˎ",
-    }[聲] || "";
+  const 聲調 = {
+    上: "ˬ",
+    去: "ˎ",
+    平: "",
+    入: "",
+  }[聲];
 
   return 聲母 + 韻母 + 聲調;
 }
@@ -366,7 +349,7 @@ const initials = {
   云: "",
 };
 
-type QieyunRhymeCycleHead =
+export type QieyunRhymeCycleHead =
   | "東"
   | "冬"
   | "模"

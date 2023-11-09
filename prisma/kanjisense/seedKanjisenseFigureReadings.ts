@@ -1,5 +1,12 @@
 import { KanjiDbVariantType, PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
+import {
+  InferredOnyomiType,
+  QysSyllableProfile,
+  inferOnyomi,
+  toModernKatakana,
+} from "~/lib/qys/inferOnyomi";
+
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
@@ -43,12 +50,12 @@ export async function seedKanjisenseFigureReadings(
   else {
     console.log(`seeding KanjisenseFigureReading...`);
 
-    const kanjidicEntriesKeys = new Set(
+    const kanjidicEntries = new Map(
       Array.from(
         await prisma.kanjidicEntry.findMany({
-          select: { id: true },
+          select: { id: true, onReadings: true },
         }),
-        (e) => e.id,
+        (e) => [e.id, e],
       ),
     );
     const unihan15Keys = new Set(
@@ -143,7 +150,7 @@ export async function seedKanjisenseFigureReadings(
       newToZVariants14.get(newFigure)?.push(...kZVariant);
     }
 
-    const figuresToXiaoyuns = await executeAndLogTime(
+    const figuresToXiaoyunsWithMatchingExemplars = await executeAndLogTime(
       "preparing guangyun entries",
       async () =>
         await prepareGuangyunEntries(
@@ -159,26 +166,59 @@ export async function seedKanjisenseFigureReadings(
     await prisma.kanjisenseFigureReadingToSbgyXiaoyun.deleteMany();
     await prisma.kanjisenseFigureReading.deleteMany();
     await prisma.kanjisenseFigureReading.createMany({
-      data: Array.from(figuresNeedingReadingsIds, (id) => ({
-        id,
-        kanjidicEntryId: kanjidicEntriesKeys.has(id) ? id : null,
-        unihan15Id: unihan15Keys.has(id) ? id : null,
-        sbgyXiaoyunsMatchingExemplars: Object.fromEntries(
-          Array.from(
-            figuresToXiaoyuns.get(id)?.entries() || [],
-            ([xiaoyun, matchingExemplars]) => [xiaoyun, [...matchingExemplars]],
-          ),
-        ),
-      })),
+      data: Array.from(figuresNeedingReadingsIds, (id) => {
+        // classify on readings by
+        // - whether they are kan or go for a given xiaoyun
+        // - whether they are common or rare as kan/go for that xiaoyun
+
+        // also include "inferred onyomi" when "necessary" (maybe when there is no onyomi?)
+        const inferredOnyomiModernKatakanaToTypeToXiaoyuns =
+          getInferredOnyomiModernKatakanaToTypeToXiaoyuns(
+            figuresToXiaoyunsWithMatchingExemplars,
+            id,
+          );
+        const inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns = {};
+        for (const [
+          modernKatakanaOnReading,
+          typeToXiaoyuns,
+        ] of inferredOnyomiModernKatakanaToTypeToXiaoyuns) {
+          for (const [type, xiaoyuns] of typeToXiaoyuns) {
+            for (const xiaoyun of xiaoyuns) {
+              const classifications =
+                inferredOnReadingCandidates[modernKatakanaOnReading] ||
+                (inferredOnReadingCandidates[modernKatakanaOnReading] = {});
+              classifications[type] ||= [] as number[];
+              classifications[type].push(xiaoyun.xiaoyun.xiaoyun);
+            }
+          }
+        }
+
+        const sbgyXiaoyunsMatchingExemplars: Record<string, string[]> = {};
+        for (const [
+          xiaoyun,
+          { matchingExemplars },
+        ] of figuresToXiaoyunsWithMatchingExemplars.get(id)?.entries() || []) {
+          sbgyXiaoyunsMatchingExemplars[xiaoyun] = [...matchingExemplars];
+        }
+
+        return {
+          id,
+          kanjidicEntryId: kanjidicEntries.has(id) ? id : null,
+          unihan15Id: unihan15Keys.has(id) ? id : null,
+          inferredOnReadingCandidates,
+          sbgyXiaoyunsMatchingExemplars,
+        };
+      }),
     });
 
     await executeAndLogTime("hooking up guangyun entries", async () => {
       await prisma.kanjisenseFigureReadingToSbgyXiaoyun.createMany({
-        data: [...figuresToXiaoyuns].flatMap(([figureId, xiaoyuns]) =>
-          Array.from(xiaoyuns.keys(), (sbgyXiaoyunId) => ({
-            figureReadingId: figureId,
-            sbgyXiaoyunId,
-          })),
+        data: [...figuresToXiaoyunsWithMatchingExemplars].flatMap(
+          ([figureId, xiaoyuns]) =>
+            Array.from(xiaoyuns.keys(), (sbgyXiaoyunId) => ({
+              figureReadingId: figureId,
+              sbgyXiaoyunId,
+            })),
         ),
       });
     });
@@ -188,27 +228,65 @@ export async function seedKanjisenseFigureReadings(
 
   console.log(`KanjisenseFigureReading seeded. 🌱`);
 }
+function getInferredOnyomiModernKatakanaToTypeToXiaoyuns(
+  figuresToXiaoyunsWithMatchingExemplars: Map<
+    string,
+    Map<number, { xiaoyun: SbgyXiaoyun; matchingExemplars: Set<string> }>
+  >,
+  id: string,
+) {
+  const inferredOnyomiModernKatakanaToTypeToXiaoyuns = new Map<
+    string,
+    Map<
+      InferredOnyomiType,
+      {
+        xiaoyun: SbgyXiaoyun;
+        matchingExemplars: Set<string>;
+      }[]
+    >
+  >();
+  for (const [, xiaoyun] of figuresToXiaoyunsWithMatchingExemplars.get(id) ||
+    []) {
+    const inferredOnReadings = inferOnyomi(
+      xiaoyun as unknown as QysSyllableProfile,
+      toModernKatakana,
+    );
+    for (const [readingType, readingsForType] of inferredOnReadings.kan) {
+      for (const katakanaOnReading of readingsForType) {
+        const typesToXiaoyuns =
+          inferredOnyomiModernKatakanaToTypeToXiaoyuns.get(katakanaOnReading) ||
+          new Map();
+        inferredOnyomiModernKatakanaToTypeToXiaoyuns.set(
+          katakanaOnReading,
+          typesToXiaoyuns,
+        );
+        const xiaoyunsForType = typesToXiaoyuns.get(readingType) || [];
+        typesToXiaoyuns.set(readingType, xiaoyunsForType);
+        xiaoyunsForType.push(xiaoyun);
+      }
+    }
+  }
+
+  return inferredOnyomiModernKatakanaToTypeToXiaoyuns;
+}
+
 async function prepareGuangyunEntries(
   figuresNeedingReadingsIds: string[],
   prisma: PrismaClient,
   newToOldFiguresIds: Map<string, string[]>,
-  oldFiguresToXiaoYuns: Map<
-    string,
-    {
-      xiaoyun: number;
-      exemplars: string[];
-      fanqie: string;
-      initial: string;
-      cycleHead: string;
-      tone: string;
-      kaihe: string | null;
-      note: string | null;
-      dengOrChongniu: string | null;
-    }[]
-  >,
+  oldFiguresToXiaoYuns: Map<string, SbgyXiaoyun[]>,
   newToZVariants14: Map<string, string[]>,
 ) {
-  const figuresToXiaoyuns = new Map<string, Map<number, Set<string>>>();
+  const figuresToXiaoyunsWithMatchingExemplars = new Map<
+    string,
+    Map<
+      number,
+      {
+        xiaoyun: SbgyXiaoyun;
+        matchingExemplars: Set<string>;
+      }
+    >
+  >();
   for (const figureId of figuresNeedingReadingsIds) {
     const guangyunEntries = await findGuangyunEntriesByShinjitai(
       prisma,
@@ -218,19 +296,37 @@ async function prepareGuangyunEntries(
       figureId,
     );
     for (const [
-      xiaoyun,
-      { matchingExemplars: matchingExemplars },
+      xiaoyunNumber,
+      { xiaoyun, matchingExemplars },
     ] of guangyunEntries) {
       const xiaoyunsToExemplars =
-        figuresToXiaoyuns.get(figureId) || new Map<number, Set<string>>();
-      figuresToXiaoyuns.set(figureId, xiaoyunsToExemplars);
-      const xiaoyunExemplars =
-        xiaoyunsToExemplars.get(xiaoyun) || new Set<string>();
-      xiaoyunsToExemplars.set(xiaoyun, xiaoyunExemplars);
+        figuresToXiaoyunsWithMatchingExemplars.get(figureId) ||
+        new Map<
+          number,
+          {
+            xiaoyun: SbgyXiaoyun;
+            matchingExemplars: Set<string>;
+          }
+        >();
+      figuresToXiaoyunsWithMatchingExemplars.set(figureId, xiaoyunsToExemplars);
+
+      const xiaoyunExemplars: {
+        xiaoyun: SbgyXiaoyun;
+        matchingExemplars: Set<string>;
+      } = xiaoyunsToExemplars.get(xiaoyunNumber) || {
+        xiaoyun,
+        matchingExemplars: new Set<string>(),
+      };
+      xiaoyunsToExemplars.set(xiaoyunNumber, xiaoyunExemplars);
       for (const char of matchingExemplars) {
-        xiaoyunExemplars.add(char);
+        xiaoyunExemplars.matchingExemplars.add(char);
       }
     }
   }
-  return figuresToXiaoyuns;
+  return figuresToXiaoyunsWithMatchingExemplars;
 }
+
+export type OnReadingToTypeToXiaoyuns = Record<
+  string,
+  Record<string, number[]>
+>;

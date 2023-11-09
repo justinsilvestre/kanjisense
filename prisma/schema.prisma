@@ -23,8 +23,8 @@ model KanjidicEntry {
 
 model Unihan15 {
   id            String                   @id
+  kDefinition   String?
   kCantonese    String[]
-  kDefinition   String[]
   kHangul       String[]
   kHanyuPinlu   String[]
   kHanyuPinyin  String[]
@@ -98,10 +98,10 @@ model ScriptinAozoraFrequency {
 }
 
 model KanjisenseVariantGroup {
-  id               String             @id
-  variants         String[]
+  id       String             @id
+  variants String[]
   // built after variants are set
-  KanjisenseFigure KanjisenseFigure[]
+  figures  KanjisenseFigure[]
 }
 
 model KanjisenseFigureRelation {
@@ -168,8 +168,9 @@ model KanjisenseComponentUse {
 
 model KanjisenseFigureReading {
   id                            String                                 @id
-  kanjidicEntryId               String?                                @unique
   sbgyXiaoyunsMatchingExemplars Json?
+  inferredOnReadingCandidates   Json
+  kanjidicEntryId               String?                                @unique
   unihan15Id                    String?                                @unique
   figure                        KanjisenseFigure                       @relation(fields: [id], references: [id], onDelete: Cascade)
   kanjidicEntry                 KanjidicEntry?                         @relation("kanjidicEntry", fields: [kanjidicEntryId], references: [id])

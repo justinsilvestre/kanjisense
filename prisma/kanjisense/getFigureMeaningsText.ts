@@ -27,7 +27,7 @@ export async function getFigureMeaningsText(
     mnemonicSource = ` {{via ${mnemonicKeywords.standin}}}`;
 
   const unihanDefinitionText =
-    (await unihanDefinitionLookup)?.kDefinition?.join("; ") || null;
+    (await unihanDefinitionLookup)?.kDefinition || null;
   const kanjidicEnglish =
     (await kanjidicEnglishLookup)?.definitions?.filter(
       (e) => !RADICAL_ENTRY_REGEX.test(e),

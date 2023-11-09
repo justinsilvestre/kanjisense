@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-import { transcribe } from "prisma/transcribeXiaoyun";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
+import { transcribe } from "~/lib/qys/transcribeXiaoyun";
 
 import { registerSeeded } from "../seedUtils";
 
@@ -54,8 +54,8 @@ export async function seedSbgy(prisma: PrismaClient, force = false) {
       const transcription = transcribe({
         is合口: syl.kaihe === "合",
         is重紐A類: syl.dengOrChongniu === "A",
-        canonical母: syl.initial,
-        tone聲: syl.tone,
+        canonical母: syl.initial as CanonicalInitial,
+        tone聲: syl.tone as "平" | "上" | "去" | "入",
         qieyunCycleHead韻: syl.cycleHead,
         row等: syl.dengOrChongniu || null,
       });

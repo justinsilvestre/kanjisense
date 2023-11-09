@@ -5,6 +5,7 @@ import { simplifiedSoundMarks } from "~/lib/dic/simplifiedSoundMarks";
 import { registerSeeded } from "../seedUtils";
 
 import { ComponentUse } from "./ComponentUse";
+import { executeAndLogTime } from "./executeAndLogTime";
 
 export async function seedKanjisenseActiveSoundMarks(
   prisma: PrismaClient,
@@ -33,8 +34,10 @@ export async function seedKanjisenseActiveSoundMarks(
         ),
       ]),
     );
-
-    await registerActiveSoundMarks(prisma, componentsTrees);
+    console.log("registering active sound marks...");
+    await executeAndLogTime("registering active sound marks", () =>
+      registerActiveSoundMarks(prisma, componentsTrees),
+    );
 
     await registerSeeded(prisma, "KanjisenseActiveSoundMark");
   }

@@ -11,6 +11,7 @@ export type SetupStep =
   | "KanjisenseFigure"
   | "KanjiDbCharacterDerivation"
   | "KanjisenseActiveSoundMark"
+  | "KanjisenseActiveSoundMarkValue"
   | "SbgyXiaoyun"
   | "SbgyXiaoyun"
   | "ScriptinAozoraFrequency"
