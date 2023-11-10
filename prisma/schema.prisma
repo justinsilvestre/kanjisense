@@ -87,7 +87,7 @@ model SbgyXiaoyun {
   note           String?
   dengOrChongniu String?
 
-  figureReading KanjisenseFigureReadingToSbgyXiaoyun[]
+  figureReadings KanjisenseFigureReadingToSbgyXiaoyun[]
 }
 
 model ScriptinAozoraFrequency {
@@ -158,7 +158,6 @@ model KanjisenseComponent {
 model KanjisenseComponentUse {
   componentId String
   parentId    String
-  isSoundMark Boolean
   indexInTree Int?
   component   KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade)
   parent      KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade)
@@ -180,9 +179,9 @@ model KanjisenseFigureReading {
 
 model KanjisenseFigureReadingToSbgyXiaoyun {
   figureReadingId String
-  figureReading   KanjisenseFigureReading @relation(fields: [figureReadingId], references: [id])
+  figureReading   KanjisenseFigureReading @relation(fields: [figureReadingId], references: [id], onDelete: Cascade)
   sbgyXiaoyunId   Int
-  sbgyXiaoyun     SbgyXiaoyun             @relation(fields: [sbgyXiaoyunId], references: [xiaoyun])
+  sbgyXiaoyun     SbgyXiaoyun             @relation(fields: [sbgyXiaoyunId], references: [xiaoyun], onDelete: Cascade)
 
   @@id([figureReadingId, sbgyXiaoyunId])
 }

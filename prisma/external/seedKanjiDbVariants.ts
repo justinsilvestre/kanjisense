@@ -9,11 +9,11 @@ import { registerSeeded } from "../seedUtils";
 // i.e. the simplified form was borrowed from an existing character
 const suppressedOldVariants = new Set("糸虫万");
 
-export async function seedKanjiDbVariants(prisma: PrismaClient) {
+export async function seedKanjiDbVariants(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
     where: { step: "KanjiDbVariant" },
   });
-  if (seeded) console.log(`KanjiDbVariant already seeded. 🌱`);
+  if (seeded && !force) console.log(`KanjiDbVariant already seeded. 🌱`);
   else {
     await prisma.kanjiDbVariant.deleteMany({});
 
@@ -154,13 +154,14 @@ async function getkanjiDbOldStyleDbInput(
     )
       return;
     const line = lineWithComments.split(/\s#\s/)[0];
-    const [, char, rest] = line.match(/^(.).*\t(.+)/u) || [];
-    if (!char) throw new Error(`Problem reading line ${line}`);
+    const [, newChar, rest] = line.match(/^(\S).*\t(.+)/u) || [];
+    if (!newChar) throw new Error(`Problem reading line ${line}`);
     const oldForms = rest.split("\t");
     for (const text of oldForms) {
       const [oldChar] = [...text];
+      if (oldChar === "渚") console.log({ newChar, oldChar });
       if (oldChar) {
-        registerOldAndNewVariants(dbInput, oldChar, char);
+        registerOldAndNewVariants(dbInput, oldChar, newChar);
       }
     }
   });
@@ -202,10 +203,11 @@ async function getHyogaiDbInput() {
   await forEachLine(files.kanjiDbHyogaiVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("hyo")) return;
 
-    const [, char, variant] = line.match(/(.),hyogai\/variant,(.)/u) || [];
-    if (!char) throw new Error(`Problem reading line ${line}`);
+    const [, oldChar, newVariant] =
+      line.match(/(.),hyogai\/variant,(.)/u) || [];
+    if (!oldChar) throw new Error(`Problem reading line ${line}`);
 
-    registerOldAndNewVariants(dbInput, char, variant);
+    registerOldAndNewVariants(dbInput, oldChar, newVariant);
   });
 }
 
@@ -215,10 +217,10 @@ async function getJinmeiDbInput(
   await forEachLine(files.kanjiDbJinmeiVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("jin")) return;
 
-    const [, char, variant] = line.match(/(.),jinmei\d\/variant,(.)/u) || [];
-    if (!char) throw new Error(`Problem reading line ${line}`);
+    const [, newForm, oldForm] = line.match(/(.),jinmei\d\/variant,(.)/u) || [];
+    if (!newForm) throw new Error(`Problem reading line ${line}`);
 
-    registerOldAndNewVariants(dbInput, char, variant);
+    registerOldAndNewVariants(dbInput, oldForm, newForm);
   });
 }
 

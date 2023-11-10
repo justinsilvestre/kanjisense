@@ -220,7 +220,6 @@ async function connectFirstClassComponents(
       firstClassComponents,
       ([componentId, indexInTree]) => {
         return {
-          isSoundMark: false,
           indexInTree,
           component: {
             connect: { id: componentId },

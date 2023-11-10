@@ -1,23 +1,22 @@
 import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
-import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
+// import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
 
-const VARIANT_TYPES_PRIORITY = [
-  "NewStyle",
-  "kSemanticVariant",
-  "kZVariant",
-  "kTraditionalVariant",
-  "HanyuDaCidianVariant",
-  "TwEduVariant",
-  "HanyuDaCidianVariantReverse",
-  "CjkviVariant",
-] as KanjiVariant["variantType"][];
-const variantTypesPrioritySet = new Set(VARIANT_TYPES_PRIORITY);
+// const VARIANT_TYPES_PRIORITY = [
+//   "NewStyle",
+//   "kSemanticVariant",
+//   "kZVariant",
+//   "kTraditionalVariant",
+//   "HanyuDaCidianVariant",
+//   "TwEduVariant",
+//   "HanyuDaCidianVariantReverse",
+//   "CjkviVariant",
+// ] as KanjiVariant["variantType"][];
 
 export async function findGuangyunEntriesByShinjitai(
   prisma: PrismaClient,
   newToOldFiguresIds: Map<string, string[]>,
-  oldFiguresToXiaoYuns: Map<string, SbgyXiaoyun[]>,
+  sbgyCharactersToXiaoyunNumbers: Map<string, number[]>,
   newToZVariants14: Map<string, string[]>,
   shinjitai: string,
 ) {
@@ -28,52 +27,66 @@ export async function findGuangyunEntriesByShinjitai(
       matchingExemplars: string[];
     }
   >();
+  const shinkyuuForms = newToOldFiguresIds.get(shinjitai) || [];
+  if (shinjitai === "者") console.log({ shinjitai, shinkyuuForms });
+  shinkyuuForms.push(shinjitai);
 
-  const kyuujitaiForms = newToOldFiguresIds.get(shinjitai) || [];
+  for (const jiForm of shinkyuuForms) {
+    const jiXiaoyunNumbers = sbgyCharactersToXiaoyunNumbers.get(jiForm);
 
-  for (const kyuujitaiForm of kyuujitaiForms) {
-    const kyuujitaiXiaoyuns = oldFiguresToXiaoYuns.get(kyuujitaiForm) || [];
-    for (const kyuujitaiXiaoyun of kyuujitaiXiaoyuns) {
-      addEntry(kyuujitaiXiaoyun, kyuujitaiForm);
-    }
-  }
-
-  if (!entries.size) {
-    const zVariantForms = newToZVariants14.get(shinjitai);
-    if (zVariantForms) {
-      for (const zVariantForm of zVariantForms) {
-        const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
-          where: {
-            exemplars: { has: zVariantForm },
-          },
-        });
-
-        for (const zVariantEntry of zVariantEntries) {
-          addEntry(zVariantEntry, zVariantForm);
-        }
-      }
-    }
-  }
-
-  if (!entries.size) {
-    const backupVariants = (
-      await lookUpVariants(prisma, [shinjitai, ...kyuujitaiForms])
-    )
-      .filter((a) => variantTypesPrioritySet.has(a.variantType))
-      .sort((a, b) => {
-        const aTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(a.variantType);
-        const bTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(b.variantType);
-        return aTypeIndex - bTypeIndex;
+    const jiXiaoyuns = jiXiaoyunNumbers
+      ? await prisma.sbgyXiaoyun.findMany({
+          where: { xiaoyun: { in: jiXiaoyunNumbers } },
+        })
+      : [];
+    if (shinjitai === "者")
+      console.log({
+        shinjitai,
+        jiForm,
+        jiXiaoyunNumbers,
+        jiXiaoyuns,
       });
-    for (const variant of backupVariants) {
-      const backupEntries = await prisma.sbgyXiaoyun.findMany({
-        where: { exemplars: { has: variant.character } },
-      });
-      for (const backupEntry of backupEntries) {
-        addEntry(backupEntry, variant.character);
-      }
+    for (const jiXiaoyun of jiXiaoyuns) {
+      addEntry(jiXiaoyun, jiForm);
     }
   }
+
+  // if (!entries.size) {
+  //   const zVariantForms = newToZVariants14.get(shinjitai);
+  //   if (zVariantForms) {
+  //     for (const zVariantForm of zVariantForms) {
+  //       const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
+  //         where: {
+  //           exemplars: { has: zVariantForm },
+  //         },
+  //       });
+
+  //       for (const zVariantEntry of zVariantEntries) {
+  //         addEntry(zVariantEntry, zVariantForm);
+  //       }
+  //     }
+  //   }
+  // }
+
+  // if (!entries.size) {
+  //   const backupVariants = (
+  //     await lookUpVariants(prisma, [shinjitai, ...kyuujitaiForms])
+  //   )
+  //     .filter((a) => variantTypesPrioritySet.has(a.variantType))
+  //     .sort((a, b) => {
+  //       const aTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(a.variantType);
+  //       const bTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(b.variantType);
+  //       return aTypeIndex - bTypeIndex;
+  //     });
+  //   for (const variant of backupVariants) {
+  //     const backupEntries = await prisma.sbgyXiaoyun.findMany({
+  //       where: { exemplars: { has: variant.character } },
+  //     });
+  //     for (const backupEntry of backupEntries) {
+  //       addEntry(backupEntry, variant.character);
+  //     }
+  //   }
+  // }
   return entries;
 
   function addEntry(xiaoyun: SbgyXiaoyun, char: string) {

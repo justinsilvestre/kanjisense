@@ -10,7 +10,7 @@ import { registerSeeded } from "../seedUtils";
 import { executeAndLogTime } from "./executeAndLogTime";
 import { OnReadingToTypeToXiaoyuns } from "./seedKanjisenseFigureReadings";
 
-export async function seedKanjisenseActiveSoundMarkValuess(
+export async function seedKanjisenseActiveSoundMarkValues(
   prisma: PrismaClient,
   force = false,
 ) {
@@ -97,28 +97,47 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
         : soundMarkFigure.reading?.unihan15?.kJapaneseOn?.map(
             (s) => toKatakana(s) as string,
           ) ?? [];
-
-      katakanaOnReadings.sort((aKatakana, bKatakana) => {
-        return (
-          getKanOnPriority(inferredOnReadingCandidates[aKatakana]) -
-          getKanOnPriority(inferredOnReadingCandidates[bKatakana])
+      if (soundMarkFigure.id === "者")
+        console.log(
+          "者 inferredOnReadingCandidates",
+          inferredOnReadingCandidates,
         );
+      if (soundMarkFigure.id === "者")
+        console.log("者 katakanaOnReadings", katakanaOnReadings);
+
+      const katakanaOnReadingsWithMatchingXiaoyuns = katakanaOnReadings
+        .filter(Boolean)
+        .map((katakana) => ({
+          katakana,
+          priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
+        }));
+      katakanaOnReadingsWithMatchingXiaoyuns.sort((a, b) => {
+        return (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999);
       });
       const activeSoundMarkValue =
-        katakanaOnReadings[0] ??
-        Object.keys(inferredOnReadingCandidates).sort((a, b) => {
-          return (
-            getKanOnPriority(inferredOnReadingCandidates[a]) -
-            getKanOnPriority(inferredOnReadingCandidates[b])
-          );
-        })?.[0];
+        katakanaOnReadingsWithMatchingXiaoyuns?.[0] ??
+        Object.keys(inferredOnReadingCandidates)
+          .filter(Boolean)
+          .map((katakana) => ({
+            katakana,
+            priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
+          }))
+          .sort((a, b) => {
+            return (
+              (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999)
+            );
+          })?.[0]?.katakana ??
+        null;
+
+      const activeSoundMarkValueText =
+        getActiveSoundMarkValueText(activeSoundMarkValue);
 
       for (const soundMarkUseFigure of soundMarkFigure.asComponent!
         .soundMarkUses) {
         await prisma.kanjisenseFigure.update({
           where: { id: soundMarkUseFigure.id },
           data: {
-            activeSoundMarkValue,
+            activeSoundMarkValue: activeSoundMarkValueText,
           },
         });
       }
@@ -126,48 +145,114 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
   }
 }
 
-function getKanOnPriority(
-  inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns[string] | null,
-) {
-  if (!inferredOnReadingCandidates) return 999;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
-    !inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
-  )
-    return 1;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
-    !inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
-  )
-    return 2;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
-  )
-    return 3;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare]
-  )
-    return 4;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare]
-  )
-    return 4;
-  if (
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
-    inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
-  )
-    return 5;
-  if (inferredOnReadingCandidates[InferredOnyomiType.SpeculatedKan]) return 6;
-  return 999;
+function getActiveSoundMarkValueText(activeSoundMarkValue: {
+  katakana: string;
+  priority: {
+    priority: number;
+    xiaoyunsByMatchingType: Partial<Record<InferredOnyomiType, number[]>>;
+  } | null;
+}) {
+  if (!activeSoundMarkValue) return null;
+
+  return activeSoundMarkValue
+    ? `${activeSoundMarkValue.katakana}${
+        activeSoundMarkValue.priority
+          ? ` ${JSON.stringify(
+              activeSoundMarkValue.priority.xiaoyunsByMatchingType,
+            )}`
+          : ""
+      }`
+    : null;
 }
 
-// ATTESTED_KAN: "k",
-// ATTESTED_KAN_RARE: "l",
-// ATTESTED_GO: "g",
-// ATTESTED_GO_RARE: "h",
-// INFERRED_KAN: "x",
-// INFERRED_GO: "y",
-// KANYO: "z",
+function getKanOnPriority(
+  inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns[string] | null,
+): {
+  priority: number;
+  xiaoyunsByMatchingType: Partial<Record<InferredOnyomiType, number[]>>;
+} | null {
+  if (!inferredOnReadingCandidates) return null;
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
+    !inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
+  )
+    return {
+      priority: 1,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKan]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKan],
+      },
+    };
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
+    !inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
+  )
+    return {
+      priority: 2,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKanRare]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare],
+      },
+    };
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
+  )
+    return {
+      priority: 3,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKan]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKan],
+        [InferredOnyomiType.AttestedGo]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedGo],
+      },
+    };
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKan] &&
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare]
+  )
+    return {
+      priority: 4,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKan]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKan],
+        [InferredOnyomiType.AttestedGoRare]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare],
+      },
+    };
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare]
+  )
+    return {
+      priority: 5,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKanRare]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare],
+        [InferredOnyomiType.AttestedGoRare]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedGoRare],
+      },
+    };
+  if (
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare] &&
+    inferredOnReadingCandidates[InferredOnyomiType.AttestedGo]
+  )
+    return {
+      priority: 6,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.AttestedKanRare]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedKanRare],
+        [InferredOnyomiType.AttestedGo]:
+          inferredOnReadingCandidates[InferredOnyomiType.AttestedGo],
+      },
+    };
+  if (inferredOnReadingCandidates[InferredOnyomiType.SpeculatedKan])
+    return {
+      priority: 7,
+      xiaoyunsByMatchingType: {
+        [InferredOnyomiType.SpeculatedKan]:
+          inferredOnReadingCandidates[InferredOnyomiType.SpeculatedKan],
+      },
+    };
+  return null;
+}

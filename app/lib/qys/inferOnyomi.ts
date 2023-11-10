@@ -8,12 +8,12 @@ import {
 } from "./attestedOnFinals";
 
 type DengOrChongniu = "一" | "二" | "三" | "四" | "A" | "B";
-enum Kaihe {
+export enum Kaihe {
   Open = "開",
   Closed = "合",
 }
 
-enum Tone {
+export enum Tone {
   平 = "平",
   上 = "上",
   去 = "去",
@@ -22,7 +22,7 @@ enum Tone {
 
 export interface QysSyllableProfile {
   initial: QysInitial;
-  dengOrChongniu: DengOrChongniu;
+  dengOrChongniu: DengOrChongniu | null;
   kaihe: Kaihe | null;
   tone: Tone;
   cycleHead: QieyunRhymeCycleHead;
@@ -70,7 +70,7 @@ const GO_TYPES_PRIORITY = [
 export function inferKanOn(
   syllable: QysSyllableProfile,
   format = (historicalOnyomiNotation: string) => historicalOnyomiNotation,
-  onyomiFinalCandidates = getAttestedOnFinals(syllable, format),
+  onyomiFinalCandidates = getAttestedOnFinals(syllable),
 ) {
   const readingTypeToReadings = new Map<InferredOnyomiType, string[]>();
   if (!onyomiFinalCandidates) return readingTypeToReadings;
@@ -90,7 +90,7 @@ export function inferKanOn(
 export function inferGoOn(
   syllable: QysSyllableProfile,
   format = (historicalOnyomiNotation: string) => historicalOnyomiNotation,
-  onyomiFinalCandidates = getAttestedOnFinals(syllable, format),
+  onyomiFinalCandidates = getAttestedOnFinals(syllable),
 ) {
   const readingTypeToReadings = new Map<InferredOnyomiType, string[]>();
   if (!onyomiFinalCandidates) return readingTypeToReadings;
@@ -110,35 +110,41 @@ export function inferOnyomi(
   syllable: QysSyllableProfile,
   format = (historicalOnyomiNotation: string) => historicalOnyomiNotation,
 ) {
-  const onyomiFinalCandidates = getAttestedOnFinals(syllable, format);
-  return {
-    kan: inferKanOn(syllable, format, onyomiFinalCandidates),
-    go: inferGoOn(syllable, format, onyomiFinalCandidates),
-  };
+  const onyomiFinalCandidates = getAttestedOnFinals(syllable);
+  return mergeMaps(
+    inferKanOn(syllable, format, onyomiFinalCandidates),
+    inferGoOn(syllable, format, onyomiFinalCandidates),
+  );
+}
+function mergeMaps<K, V>(...maps: Map<K, V>[]) {
+  const result = new Map<K, V>();
+  for (const map of maps) {
+    for (const [key, value] of map) {
+      result.set(key, value);
+    }
+  }
+  return result;
 }
 
-class XiaoyunInferredOnyomiReadings {
-  constructor(
-    private format = (historicalOnyomiNotation: string) =>
-      historicalOnyomiNotation,
-    public readings = new Map<InferredOnyomiType, string[]>(),
-  ) {}
+class XiaoyunInferredOnyomiFinals {
+  constructor(public readings = new Map<InferredOnyomiType, string[]>()) {}
 
   addReadings(type: InferredOnyomiType, readings: string[]) {
     const readingsForType = this.readings.get(type) || [];
     this.readings.set(type, readingsForType);
-    for (const reading of readings) readingsForType.push(this.format(reading));
+    for (const reading of readings) readingsForType.push(reading);
   }
 
-  getReadings(type: InferredOnyomiType) {
+  getReadings(
+    type: InferredOnyomiType,
+    format?: (historicalOnyomiNotation: string) => string,
+  ) {
+    if (format) return this.readings.get(type)?.map(format) || [];
     return this.readings.get(type) || [];
   }
 }
 
-function getAttestedOnFinals(
-  syllable: QysSyllableProfile,
-  format?: (historicalOnyomiNotation: string) => string,
-) {
+export function getAttestedOnFinals(syllable: QysSyllableProfile) {
   const { initial, cycleHead } = syllable;
   const finalCodeSuffix = finalCodeSuffixes.find((fc) => {
     return fc.test(syllable) && attestedFinals[`${cycleHead}${fc.text}`];
@@ -149,7 +155,7 @@ function getAttestedOnFinals(
   if (!attestedReadingsForFinal) return null;
   const initialCategories = getCategoriesBySpecificityDescending(initial);
   if (!initialCategories.length) return null;
-  const result = new XiaoyunInferredOnyomiReadings(format);
+  const result = new XiaoyunInferredOnyomiFinals();
 
   let kanEncountered = false;
   let goEncountered = false;
@@ -334,10 +340,11 @@ const LATIN_TO_KANA = {
   M: { u: "ン" },
 };
 
+/* may be unnecessary if deng/chongniu is only present when contrastive */
 function isContrastiveThirdDivisionRhyme(cycleHead: string) {
   return (
     cycleHead === "東" ||
-    cycleHead === "戈" ||
+    cycleHead === "戈" || // for compatibility with guangyun
     cycleHead === "麻" ||
     cycleHead === "庚"
   );

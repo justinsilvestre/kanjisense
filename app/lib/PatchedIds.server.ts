@@ -52,23 +52,23 @@ export class PatchedIds {
     if (!originalIds) throw new Error(`No ids found in original for ${key}`);
     let transformed = originalIds;
 
-    const figureIsSimplifiedInStandardFormCache = new Map<FigureId, boolean>();
-    const figureIsNonSimplifiedCache = new Map<FigureId, boolean>();
+    const figuresSimpliiedInStandardForm = new Map<FigureId, boolean>();
+    const figuresNotSimplifiedInStandardForm = new Map<FigureId, boolean>();
 
     const memoizedVariantsHelpers = {
       figureIsSimplifiedInStandardForm: async (key: FigureId) => {
-        if (figureIsSimplifiedInStandardFormCache.has(key))
-          return figureIsSimplifiedInStandardFormCache.get(key)!;
+        if (figuresSimpliiedInStandardForm.has(key))
+          return figuresSimpliiedInStandardForm.get(key)!;
         const result =
           await this.variantsHelpers.figureIsSimplifiedInStandardForm(key);
-        figureIsSimplifiedInStandardFormCache.set(key, result);
+        figuresSimpliiedInStandardForm.set(key, result);
         return result;
       },
       figureIsNonSimplified: async (key: FigureId) => {
-        if (figureIsNonSimplifiedCache.has(key))
-          return figureIsNonSimplifiedCache.get(key)!;
+        if (figuresNotSimplifiedInStandardForm.has(key))
+          return figuresNotSimplifiedInStandardForm.get(key)!;
         const result = await this.variantsHelpers.figureIsNonSimplified(key);
-        figureIsNonSimplifiedCache.set(key, result);
+        figuresNotSimplifiedInStandardForm.set(key, result);
         return result;
       },
     };

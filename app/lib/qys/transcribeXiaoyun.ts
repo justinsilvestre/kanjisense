@@ -8,15 +8,127 @@ export interface QysTranscriptionProfile {
   tone聲: "平" | "上" | "去" | "入";
   is重紐A類: boolean;
   qieyunCycleHead韻: string;
-  row等: string | null;
+  contrastiveRow等: string | null;
 }
+
+const asciiFinals = {
+  iūng: "iuung",
+  wōng: "woong",
+  ōng: "oong",
+  ong: "ong",
+  wo: "wo",
+  o: "o",
+  wāi: "waai",
+  āi: "aai",
+  wai: "wai",
+  ai: "ai",
+  won: "won",
+  on: "on",
+  an: "an",
+  au: "au",
+  ẃa: "ywa",
+  wa: "wa",
+  ya: "ya",
+  a: "a",
+  wang: "wang",
+  ang: "ang",
+  wŏng: "wcong",
+  ŏng: "cong",
+  ou: "ou",
+  am: "am",
+  ām: "aam",
+  ạ̊ng: "roang",
+  wạ̈: "rwae",
+  ạ̈: "rae",
+  wạ̈i: "rwaei",
+  ạ̈i: "raei",
+  wại: "rwai",
+  ại: "rai",
+  wạn: "rwan",
+  ạn: "ran",
+  wạ̈n: "rwaen",
+  ạ̈n: "raen",
+  ạu: "rau",
+  yạ: "yra",
+  wạ: "rwa",
+  ạ: "ra",
+  wẹng: "rweng",
+  ẹng: "reng",
+  wạ̈ng: "rwaeng",
+  ạ̈ng: "raeng",
+  äm: "raem",
+  ạm: "ram",
+  wèi: "waei",
+  èi: "aei",
+  wèn: "waen",
+  èn: "aen",
+  èu: "aeu",
+  wèng: "waeng",
+  èng: "aeng",
+  uï: "uie",
+  ẁï: "ywie",
+  wï: "wie",
+  yï: "yie",
+  ï: "ie",
+  uī: "uii",
+  ẁī: "ywii",
+  wī: "wii",
+  yī: "yii",
+  ī: "ii",
+  wî: "wvi",
+  î: "vi",
+  yo: "yo",
+  u: "u",
+  yu: "yu",
+  ẁei: "ywei",
+  wei: "wei",
+  yei: "yei",
+  ei: "ei",
+  âi: "vai",
+  yeu: "yeu",
+  eu: "eu",
+  ū: "uu",
+  iū: "iuu",
+  ông: "vong",
+  ŷong: "vyong",
+  yūn: "yuun",
+  ẁīn: "ywiin",
+  wīn: "wiin",
+  yīn: "yiin",
+  īn: "iin",
+  ịn: "rin",
+  un: "un",
+  in: "in",
+  ân: "van",
+  wên: "wven",
+  ên: "ven",
+  ẁen: "ywen",
+  wen: "wen",
+  yen: "yen",
+  en: "en",
+  âng: "wvang",
+  yang: "yang",
+  ẁeng: "yweng",
+  weng: "weng",
+  yeng: "yeng",
+  eng: "eng",
+  wĭng: "wcing",
+  ŷŏng: "vycong",
+  yŏng: "ycong",
+  yim: "yim",
+  im: "im",
+  yem: "yem",
+  em: "em",
+  êm: "vem",
+  âm: "vam",
+};
 
 const rhymes: Record<
   QieyunRhymeCycleHead,
   string | ((syllable: QysTranscriptionProfile) => string)
 > = {
   東: (s) => {
-    if (s.tone聲 === "入" && s.row等 === "三") {
+    if (s.tone聲 === "入" && s.contrastiveRow等 === "三") {
       if (initialGroups["幫"].has(s.canonical母)) return "ūk";
       if (s.canonical母 === "以") return "ẁīk";
       return initialGroups["莊"].has(s.canonical母) ||
@@ -24,7 +136,7 @@ const rhymes: Record<
         ? "yūk"
         : "wīk";
     }
-    if (s.row等 === "三") {
+    if (s.contrastiveRow等 === "三") {
       return initialGroups["幫"].has(s.canonical母) ? "ūng" : "iūng";
     }
     return s.canonical母 === "影" ? "wōng" : "ōng";
@@ -39,8 +151,8 @@ const rhymes: Record<
   寒: "an",
   豪: "au",
   歌: (s) => {
-    if (s.is合口) return s.row等 === "三" ? "ẃa" : "wa";
-    return s.row等 === "三" ? "ya" : "a";
+    if (s.is合口) return s.contrastiveRow等 === "三" ? "ẃa" : "wa";
+    return s.contrastiveRow等 === "三" ? "ya" : "a";
   },
   唐: (s) => (s.is合口 ? "wang" : "ang"),
   登: (s) => (s.is合口 ? "wŏng" : "ŏng"),
@@ -52,16 +164,16 @@ const rhymes: Record<
   江: "ạ̊ng",
   佳: (s) => (s.is合口 ? "wạ̈" : "ạ̈"),
   皆: (s) => (s.is合口 ? "wạ̈i" : "ạ̈i"),
-  夬: (s) => (s.is合口 ? "wạ" : "ạ"),
+  夬: (s) => (s.is合口 ? "wại" : "ại"),
   刪: (s) => (s.is合口 ? "wạn" : "ạn"),
   山: (s) => (s.is合口 ? "wạ̈n" : "ạ̈n"),
   肴: "ạu",
   麻: (s) => {
-    if (s.row等 === "三") return "yạ";
+    if (s.contrastiveRow等 === "三") return "yạ";
     return s.is合口 ? "wạ" : "ạ";
   },
   庚: (s) => {
-    if (s.row等 === "三") return s.is合口 ? "wẹng" : "ẹng";
+    if (s.contrastiveRow等 === "三") return s.is合口 ? "wẹng" : "ẹng";
     return s.is合口 ? "wạng" : "ạng";
   },
   耕: (s) => (s.is合口 ? "wạ̈ng" : "ạ̈ng"),
@@ -270,15 +382,10 @@ const rhymes: Record<
   凡: "âm",
 };
 
-export function transcribe(syllable: QysTranscriptionProfile) {
-  const {
-    canonical母: 母,
-    tone聲: 聲,
-    qieyunCycleHead韻: 韻,
-    row等: 等,
-  } = syllable;
-  let 聲母 = initials[母 as keyof typeof initials];
+export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
+  const { canonical母, tone聲: 聲, qieyunCycleHead韻: 韻 } = syllable;
   const transcribe韻母 = rhymes[韻 as QieyunRhymeCycleHead];
+  const 母 = canonical母;
 
   const 母組 = getInitialGroup(母);
 
@@ -293,10 +400,39 @@ export function transcribe(syllable: QysTranscriptionProfile) {
     else if (韻母.endsWith("ng")) 韻母 = 韻母.slice(0, -2) + "k";
   }
 
-  if (母組 === "莊" && (韻 === "臻" || 等 === "二" || 韻 === "庚"))
-    聲母 = 聲母!.replace("ṣ", "s").replace("ẓ", "z");
-  else if (母組 === "端" && (等 === "二" || 等 === "三")) 聲母 += "h";
-  else if (母 === "以" && /^[yŷẁ]/.test(韻母)) 聲母 = "";
+  let initialRealization: string;
+  // if (母組 === "莊" && (韻 === "臻" || 等 === "二" || 韻 === "庚"))
+  if (
+    母組 === "莊" &&
+    // 2rd row or having underdot 臻庚
+    asciiFinals[韻母 as keyof typeof asciiFinals].startsWith("r")
+  )
+    initialRealization =
+      initials[retroflexToDental[母 as keyof typeof retroflexToDental]];
+  else if (
+    母組 === "端" &&
+    // 2nd or 3rd row
+    /^r|^w?([viuy])|^w?e/.test(asciiFinals[韻母 as keyof typeof asciiFinals])
+  ) {
+    initialRealization = initials[母] + "h";
+  } else if (母 === "以" && /^[yŷẁ]/.test(韻母)) initialRealization = "";
+  else initialRealization = initials[母];
+
+  if (ascii) {
+    const 聲調 = {
+      上: "q",
+      去: "h",
+      平: "",
+      入: "",
+    }[聲];
+
+    return (
+      (asciiInitials[initialRealization as keyof typeof asciiInitials] ||
+        initialRealization) +
+      asciiFinals[韻母 as keyof typeof asciiFinals] +
+      聲調
+    );
+  }
 
   const 聲調 = {
     上: "ˬ",
@@ -305,8 +441,16 @@ export function transcribe(syllable: QysTranscriptionProfile) {
     入: "",
   }[聲];
 
-  return 聲母 + 韻母 + 聲調;
+  return initialRealization + 韻母 + 聲調;
 }
+
+const retroflexToDental = {
+  莊: "精",
+  初: "清",
+  崇: "從",
+  生: "心",
+  俟: "邪",
+} as const;
 
 const initials = {
   幫: "p",
@@ -347,6 +491,22 @@ const initials = {
   曉: "kh",
   匣: "gh",
   云: "",
+};
+const asciiInitials = {
+  tʻ: "tx",
+  kʻ: "kx",
+  tṣʻ: "tsxr",
+  pʻ: "px",
+  ʾ: "q",
+  ẓ: "zr",
+  dẓ: "dzr",
+  ṣ: "sr",
+  tṣ: "tsr",
+  ź: "zj",
+  dź: "dzj",
+  tś: "tsj",
+  tśʻ: "tsxj",
+  ś: "sj",
 };
 
 export type QieyunRhymeCycleHead =

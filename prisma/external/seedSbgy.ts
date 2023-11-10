@@ -57,7 +57,7 @@ export async function seedSbgy(prisma: PrismaClient, force = false) {
         canonical母: syl.initial as CanonicalInitial,
         tone聲: syl.tone as "平" | "上" | "去" | "入",
         qieyunCycleHead韻: syl.cycleHead,
-        row等: syl.dengOrChongniu || null,
+        contrastiveRow等: syl.dengOrChongniu || null,
       });
       console.log(xiaoyunNumber, transcription, syl.exemplars);
     }

@@ -18,6 +18,7 @@ export async function seedKanjiDbComposition(
 
     const dbInput = await getDbInput();
 
+    await prisma.kanjiDbComposition.deleteMany({});
     await prisma.kanjiDbComposition.createMany({
       data: Object.values(dbInput).map(
         ({ id, ids, etymology, sbgySyllables }) => ({

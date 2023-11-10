@@ -41,11 +41,12 @@ export async function getFigureMeaningsText(
       unihanDefinitionText?.split("; ")?.[0]) ??
     null;
 
+  const keyword = historicalKeywordOrDefinition || mnemonicKeyword;
   const meaning = {
     unihanDefinitionText,
     kanjidicEnglish,
-    keyword: historicalKeywordOrDefinition || mnemonicKeyword,
-    mnemonicKeyword: !historicalKeywordOrDefinition ? mnemonicKeyword : null,
+    keyword: keyword,
+    mnemonicKeyword: mnemonicKeyword || null,
   };
 
   if (
