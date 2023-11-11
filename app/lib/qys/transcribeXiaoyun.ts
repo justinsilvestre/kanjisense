@@ -1,6 +1,10 @@
 // https://nk2028.shn.hk/qieyun-js/classes/____.html
 
-import { initialGroups, getInitialGroup, QysInitial } from "prisma/QysInitial";
+import {
+  initialGroups,
+  getInitialGroup,
+  QysInitial,
+} from "~/lib/qys/QysInitial";
 
 export interface QysTranscriptionProfile {
   is合口: boolean;

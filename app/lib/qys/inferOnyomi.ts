@@ -1,11 +1,10 @@
-import { QieyunRhymeCycleHead } from "prisma/QieyunRhymeCycleHead";
-import { QysInitial } from "prisma/QysInitial";
-
 import {
   FinalCodeSuffix,
   attestedFinals,
   getCategoriesBySpecificityDescending,
-} from "./attestedOnFinals";
+} from "~/lib/qys/attestedOnFinals";
+import type { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
+import type { QysInitial } from "~/lib/qys/QysInitial";
 
 type DengOrChongniu = "一" | "二" | "三" | "四" | "A" | "B";
 export enum Kaihe {

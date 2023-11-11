@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+import { kanjivgExtractedComponents } from "./dic/kanjivgExtractedComponents";
+
 export const files = {
   kanjidicInput1: vendor("kanjidic/kanji_bank_1.json"),
   kanjidicInput2: vendor("kanjidic/kanji_bank_2.json"),
@@ -35,4 +37,14 @@ function readTextFileSync<T>(filepath: string) {
 }
 export function readJsonSync<T>(filepath: string) {
   return JSON.parse(readTextFileSync(filepath)) as T;
+}
+
+export function getKvgPath(character: string) {
+  const sourceCharacter =
+    kanjivgExtractedComponents[character]?.[0] || character;
+  const filename = `${sourceCharacter
+    .codePointAt(0)
+    ?.toString(16)
+    .padStart(5, "0")}.svg`;
+  return path.resolve(__dirname, "vendor", "kanjivg", "svgs", filename);
 }

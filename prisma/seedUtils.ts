@@ -21,6 +21,7 @@ export type SetupStep =
   | "Unihan14"
   | "Unihan15"
   | "Unihan15"
+  | "KvgJson"
   | "KanjisenseVariantGroup";
 
 export async function registerSeeded(prisma: PrismaClient, step: SetupStep) {

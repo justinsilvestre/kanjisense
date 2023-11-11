@@ -13,11 +13,12 @@ import { seedUnihan15 } from "./external/seedUnihan15";
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
 import { seedKanjiDbCharacterDerivations } from "./kanjisense/seedKanjiDbCharacterDerivations";
 import { seedKanjisenseActiveSoundMarks } from "./kanjisense/seedKanjisenseActiveSoundMarks";
-import { seedKanjisenseActiveSoundMarkValuess } from "./kanjisense/seedKanjisenseActiveSoundMarkValues";
+import { seedKanjisenseActiveSoundMarkValues } from "./kanjisense/seedKanjisenseActiveSoundMarkValues";
 import { seedKanjisenseFigureReadings } from "./kanjisense/seedKanjisenseFigureReadings";
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
+import { seedKvgJson } from "./kanjisense/seedKvgJson";
 
 const prisma = new PrismaClient();
 
@@ -29,7 +30,7 @@ async function seed() {
     await executeAndLogTime("seeding unihan14", () => seedUnihan14(prisma));
     await executeAndLogTime("seeding unihan12", () => seedUnihan12(prisma));
     await executeAndLogTime("seeding kanjiDB composition data", () =>
-      seedKanjiDbComposition(prisma),
+      seedKanjiDbComposition(prisma, true),
     );
     await executeAndLogTime("seeding kanjiDB variants", () =>
       seedKanjiDbVariants(prisma),
@@ -61,8 +62,10 @@ async function seed() {
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValuess(prisma),
+      seedKanjisenseActiveSoundMarkValues(prisma),
     );
+
+    await executeAndLogTime("seeding kanjivg json", () => seedKvgJson(prisma));
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);
     throw error;

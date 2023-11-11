@@ -2,7 +2,7 @@
 // first entered from composite kan-go table,
 // then double-checked with kan summary table.
 
-import { QieyunRhymeCycleHead } from "prisma/QieyunRhymeCycleHead";
+import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
 
 export type FinalCodeSuffix =
   | "3h4"

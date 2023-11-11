@@ -1,7 +1,5 @@
 import { KanjiDbVariantType, PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
-import { QieyunRhymeCycleHead } from "prisma/QieyunRhymeCycleHead";
-import { QysInitial } from "prisma/QysInitial";
 import {
   InferredOnyomiType,
   Kaihe,
@@ -10,6 +8,8 @@ import {
   inferOnyomi,
   toModernKatakana,
 } from "~/lib/qys/inferOnyomi";
+import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
+import { QysInitial } from "~/lib/qys/QysInitial";
 
 import { registerSeeded } from "../seedUtils";
 
