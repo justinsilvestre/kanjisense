@@ -55,7 +55,7 @@ export function isSecondaryVariant(
   return Boolean(figure.variantGroupId && figure.variantGroupId !== figure.id);
 }
 
-type IsPriorityComponentQueryFigure = Pick<
+export type IsPriorityComponentQueryFigure = Pick<
   DictionaryPageFigureWithPriorityUses,
   "_count"
 >;

@@ -25,7 +25,7 @@ function encodeFigure(key: string) {
 // - perhaps should have crown and not cover
 //    睿, 雪 top part
 // - 藤 should have 'pump', not 'water'
-// - 录 has wrong "pig snout"
+// - 录 has wrong "pig snout" - KVG is wrong, actually
 
 // leaving alone for now:
 // 朩 different in e.g. 術茶 (hane vs no hane)

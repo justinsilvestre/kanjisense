@@ -3,6 +3,7 @@ import { KanjisenseFigure } from "@prisma/client";
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
+  IsPriorityComponentQueryFigure,
   getBadgeProps,
   isPriorityComponent,
   isPrioritySoundMark,
@@ -23,7 +24,7 @@ export function SingleFigureDictionaryEntry({
   return (
     <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
       <h1>
-        {figure.id} {figure.keyword} {figure.mnemonicKeyword}
+        {figure.id} <FigureKeywordDisplay figure={figure} />
       </h1>
 
       <h1>
@@ -112,9 +113,12 @@ function FigureKeywordDisplay({
   figure: Pick<
     KanjisenseFigure,
     "keyword" | "mnemonicKeyword" | "listsAsCharacter"
-  >;
+  > &
+    IsPriorityComponentQueryFigure;
 }) {
   if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
+
+  if (!isPriorityComponent(figure)) return <>{figure.keyword}</>;
 
   if (figure.mnemonicKeyword === figure.keyword)
     return <>&quot;{figure.keyword}&quot;</>;

@@ -151,7 +151,7 @@ function FigureGlyphWikiSvg({
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
       baseProfile="full"
-      viewBox="-10 -10 220 220"
+      viewBox="-30 -30 260 260"
     >
       <g fill="black">
         <path d={JSON.parse(content as unknown as string) as string} />
