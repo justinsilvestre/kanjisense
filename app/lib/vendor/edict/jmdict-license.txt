@@ -1,0 +1,5 @@
+The files in this folder are the property of are the property of the Electronic Dictionary Research and Development Group.
+
+See http://www.edrdg.org/wiki/index.php/KANJIDIC_Project.
+
+They are used in conformance with the group's license (Creative Commons Attribution-ShareAlike Licence Version 3.0): http://www.edrdg.org/edrdg/licence.html

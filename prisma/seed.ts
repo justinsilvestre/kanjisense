@@ -14,11 +14,12 @@ import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
 import { seedKanjiDbCharacterDerivations } from "./kanjisense/seedKanjiDbCharacterDerivations";
 import { seedKanjisenseActiveSoundMarks } from "./kanjisense/seedKanjisenseActiveSoundMarks";
 import { seedKanjisenseActiveSoundMarkValues } from "./kanjisense/seedKanjisenseActiveSoundMarkValues";
+import { seedFigureImages } from "./kanjisense/seedKanjisenseFigureImages";
 import { seedKanjisenseFigureReadings } from "./kanjisense/seedKanjisenseFigureReadings";
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
-import { seedKvgJson } from "./kanjisense/seedKvgJson";
+import { seedJMDict } from "./seedJMDict";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,7 @@ async function seed() {
     await executeAndLogTime("seeding unihan14", () => seedUnihan14(prisma));
     await executeAndLogTime("seeding unihan12", () => seedUnihan12(prisma));
     await executeAndLogTime("seeding kanjiDB composition data", () =>
-      seedKanjiDbComposition(prisma, true),
+      seedKanjiDbComposition(prisma),
     );
     await executeAndLogTime("seeding kanjiDB variants", () =>
       seedKanjiDbVariants(prisma),
@@ -57,6 +58,8 @@ async function seed() {
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
       seedKanjisenseActiveSoundMarks(prisma),
     );
+    await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
+
     await executeAndLogTime("seeding kanjisense figure readings", () =>
       seedKanjisenseFigureReadings(prisma),
     );
@@ -65,7 +68,9 @@ async function seed() {
       seedKanjisenseActiveSoundMarkValues(prisma),
     );
 
-    await executeAndLogTime("seeding kanjivg json", () => seedKvgJson(prisma));
+    await executeAndLogTime("seed figure images", () =>
+      seedFigureImages(prisma),
+    );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);
     throw error;
