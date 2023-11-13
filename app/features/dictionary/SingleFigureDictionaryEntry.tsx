@@ -1,6 +1,6 @@
 import { KanjisenseFigure } from "@prisma/client";
 import { FigureBadge } from "~/components/FigureBadge";
-import { FigurePopover, FigurePopoverBadge } from "~/components/FigurePopover";
+import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
   getBadgeProps,
   isPriorityComponent,
