@@ -52,14 +52,14 @@ export function getBadgeHue(lists: KanjiListCode[]) {
 export function isSecondaryVariant(
   figure: Pick<KanjisenseFigure, "id" | "variantGroupId">,
 ) {
-  return figure.variantGroupId && figure.variantGroupId !== figure.id;
+  return Boolean(figure.variantGroupId && figure.variantGroupId !== figure.id);
 }
 
 type IsPriorityComponentQueryFigure = Pick<
   DictionaryPageFigureWithPriorityUses,
   "_count"
 >;
-export function isPriorityComponent<T>(
+export function isPriorityComponent(
   figureWithPriorityUses: IsPriorityComponentQueryFigure,
 ) {
   return Boolean(figureWithPriorityUses._count.firstClassUses);
@@ -88,7 +88,7 @@ function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
   };
 }
 
-function _getBadgeProps<T>(
+function _getBadgeProps(
   figure: Pick<
     KanjisenseFigure,
     | "id"
@@ -103,12 +103,12 @@ function _getBadgeProps<T>(
     IsPrioritySoundMarkFigure & {
       image?: KanjisenseFigureImage | null;
     },
-) {
+): BadgeProps {
   const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
   const lists = getLists(figureIsStandaloneCharacter, figure);
   return {
     image: figure.image,
-    aozoraAppearanaces: figure.aozoraAppearances,
+    aozoraAppearances: figure.aozoraAppearances,
     hue: getBadgeHue(lists),
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),
@@ -116,4 +116,11 @@ function _getBadgeProps<T>(
   };
 }
 
-export type BadgeProps = ReturnType<typeof getBadgeProps>;
+export interface BadgeProps {
+  image?: KanjisenseFigureImage | null;
+  aozoraAppearances: number;
+  hue: BadgeHue;
+  isStandaloneCharacter: boolean;
+  isPriorityComponent: boolean;
+  isSecondaryVariant: boolean;
+}

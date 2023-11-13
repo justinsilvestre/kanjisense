@@ -1,5 +1,8 @@
+import { readFileSync } from "fs";
+
 import { KanjiDbVariantType, PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
+import { files } from "~/lib/files.server";
 import {
   InferredOnyomiType,
   Kaihe,
@@ -16,8 +19,6 @@ import { registerSeeded } from "../seedUtils";
 import { executeAndLogTime } from "./executeAndLogTime";
 import { findGuangyunEntriesByShinjitai } from "./findGuangyunEntriesByShinjitai";
 import { getAllCharacters } from "./getAllCharacters";
-import { files } from "~/lib/files.server";
-import { readFileSync } from "fs";
 
 export async function seedKanjisenseFigureReadings(
   prisma: PrismaClient,

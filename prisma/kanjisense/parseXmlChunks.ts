@@ -4,7 +4,6 @@ import type { Readable } from "stream";
 import Emittery from "emittery";
 import type { SaxesTagPlain } from "saxes";
 import { SaxesParser } from "saxes";
-// const Emittery = await (await import("emittery")).default;
 
 export interface SaxesEvent {
   type: "opentag" | "text" | "closetag" | "end";
@@ -57,8 +56,12 @@ async function* parseChunk(
   for await (const chunk of iterable) {
     saxesParser.write(chunk as string);
     if (error) {
-      if ((error as unknown as any).message?.includes("undefined entity")) {
-        // console.error(error);
+      if (
+        (error as unknown as { message: string } | null)?.message?.includes(
+          "undefined entity",
+        )
+      ) {
+        console.error(error);
       } else throw error;
     }
 
@@ -89,21 +92,18 @@ export async function parseXmlChunks(
 ) {
   const eventEmitter = new Emittery();
   eventEmitter.on("text", async (text) => {
-    await new Promise<void>(async (resolve) => {
-      await onText(text);
-      resolve();
+    await new Promise<void>((resolve) => {
+      onText(text).then(resolve);
     });
   });
   eventEmitter.on("opentag", async (node) => {
-    await new Promise<void>(async (resolve) => {
-      await onOpenTag(node);
-      resolve();
+    await new Promise<void>((resolve) => {
+      onOpenTag(node).then(resolve);
     });
   });
   eventEmitter.on("closetag", async (node) => {
-    await new Promise<void>(async (resolve) => {
-      await onCloseTag(node);
-      resolve();
+    await new Promise<void>((resolve) => {
+      onCloseTag(node).then(resolve);
     });
   });
   console.log("parsing chunks");

@@ -24,7 +24,7 @@ export const files = {
   sbgyJson: dic("sbgy.json"),
   sbgyNotesJson: dic("sbgyNotes.json"),
   joyoWikipediaTsv: vendor("wikipedia/joyoWikipedia.tsv"),
-  jmdictXmlPath: vendor("jmdict/JMdict_e"),
+  jmdictXml: vendor("jmdict/JMdict_e"),
 };
 
 function vendor<S extends string>(string: S) {

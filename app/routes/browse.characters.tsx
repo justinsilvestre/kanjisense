@@ -25,7 +25,7 @@ interface LoaderData {
   totalCharacters: number;
 }
 
-async function getAllBadgeFigures(prisma: PrismaClient) {
+async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
   const priorityCharacters = await prisma.kanjisenseFigure.findMany({
     select: { ...badgeFigureSelect },
     orderBy: { aozoraAppearances: "desc" },
@@ -35,20 +35,21 @@ async function getAllBadgeFigures(prisma: PrismaClient) {
       },
     },
   });
+  const characters: Record<string, BadgeProps> = Object.fromEntries(
+    priorityCharacters.map((figure) => {
+      return [figure.id, getBadgeProps(figure)];
+    }),
+  );
   return {
-    characters: Object.fromEntries(
-      priorityCharacters.map((figure) => {
-        return [figure.id, getBadgeProps(figure)];
-      }),
-    ),
+    characters: characters,
     totalCharacters: priorityCharacters.length,
   };
 }
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const allBAdgeFigures = await getAllBadgeFigures(prisma);
+export const loader: LoaderFunction = async () => {
+  const allBadgeFigures = await getAllListCharacterBadgeFigures(prisma);
 
-  return json<LoaderData>(allBAdgeFigures);
+  return json<LoaderData>(allBadgeFigures);
 };
 
 export default function FigureDetailsPage() {
@@ -66,8 +67,8 @@ export default function FigureDetailsPage() {
                 {[...gradeCharactersJoined]
                   .sort(
                     (a, b) =>
-                      characters[b].aozoraAppearanaces -
-                      characters[a].aozoraAppearanaces,
+                      characters[b].aozoraAppearances -
+                      characters[a].aozoraAppearances,
                   )
                   .map((gradeCharacter) => {
                     return (
@@ -87,8 +88,8 @@ export default function FigureDetailsPage() {
           {joyoNotInKyoiku
             .sort(
               (a, b) =>
-                characters[b].aozoraAppearanaces -
-                characters[a].aozoraAppearanaces,
+                characters[b].aozoraAppearances -
+                characters[a].aozoraAppearances,
             )
             .map((kanji) => {
               return (
@@ -105,8 +106,8 @@ export default function FigureDetailsPage() {
           {[...hyogaiKanji]
             .sort(
               (a, b) =>
-                characters[b].aozoraAppearanaces -
-                characters[a].aozoraAppearanaces,
+                characters[b].aozoraAppearances -
+                characters[a].aozoraAppearances,
             )
             .map((kanji) => {
               return (
@@ -124,8 +125,8 @@ export default function FigureDetailsPage() {
           {jinmeiyoNotInHyogai
             .sort(
               (a, b) =>
-                characters[b].aozoraAppearanaces -
-                characters[a].aozoraAppearanaces,
+                characters[b].aozoraAppearances -
+                characters[a].aozoraAppearances,
             )
             .map((kanji) => {
               return (

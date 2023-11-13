@@ -141,7 +141,6 @@ function FigureKvg({ id, content }: { id: string; content: Prisma.JsonValue }) {
 }
 
 function FigureGlyphWikiSvg({
-  id,
   content,
 }: {
   id: string;

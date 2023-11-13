@@ -2,10 +2,11 @@ import { createReadStream } from "fs";
 
 import { PrismaClient } from "@prisma/client";
 
+import { files } from "~/lib/files.server";
+
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
 import { parseXmlChunks } from "./kanjisense/parseXmlChunks";
 import { registerSeeded } from "./seedUtils";
-import { files } from "~/lib/files.server";
 
 export async function seedJMDict(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
@@ -73,6 +74,7 @@ async function parseXml(prisma: PrismaClient, entriesBatchSize = 10000) {
           currentEntry()?.readings.push(text);
         }
       },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async onChunkParsed() {},
     });
   } catch (e) {
@@ -115,49 +117,11 @@ async function createEntriesFromBatch(
     data: Array.from(entriesInput.values()),
   });
 
-  // const allEntries = await prisma.jmDictEntry.findMany({
-  //   select: {
-  //     id: true,
-  //     head: true,
-  //   },
-  // });
-  // const kanjiUses = new Map<string, number[]>();
-  // for (const { id, head } of allEntries) {
-  //   for (const kanji of head) {
-  //     const uses = kanjiUses.get(kanji) || [];
-  //     uses.push(id);
-  //     kanjiUses.set(kanji, uses);
-  //   }
-  // }
-
-  // await prisma.jmDictEntryKanjiUse.createMany({
-  //   data: iterableFlatMap(kanjiUses.entries(), ([kanji, entries]) =>
-  //     entries.map((entryId) => ({
-  //       kanji,
-  //       entryId,
-  //     })),
-  //   ),
-  // });
-  // model JmDictEntryKanjiUse {
-  //   kanji   String        @id
-  //   entries JmDictEntry[]
-  // }
-
   console.log(`${entriesInput.size} entries created!)`);
 
   onFinish();
 }
 
-function iterableFlatMap<T, U>(
-  iterable: Iterable<T>,
-  mapper: (t: T) => U[],
-): U[] {
-  const result: U[] = [];
-  for (const t of iterable) {
-    result.push(...mapper(t));
-  }
-  return result;
-}
 class CreateEntryInput {
   head: string;
   readingText: string;
