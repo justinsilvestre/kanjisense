@@ -1,5 +1,6 @@
 import { KanjisenseFigure } from "@prisma/client";
 import { FigureBadge } from "~/components/FigureBadge";
+import { FigurePopover, FigurePopoverBadge } from "~/components/FigurePopover";
 import {
   getBadgeProps,
   isPriorityComponent,
@@ -27,22 +28,23 @@ export function SingleFigureDictionaryEntry({
 
       <h1>
         {" "}
-        <FigureBadge id={figure.id} badgeProps={getBadgeProps(figure)} />
+        <FigureBadge
+          id={figure.id}
+          badgeProps={getBadgeProps(figure)}
+          width={10}
+        />
       </h1>
       <h2>
         {figure.firstClassComponents.map((c) => (
           <span key={c.indexInTree}>
-            <FigureBadge
+            <FigurePopoverBadge
               id={c.componentId}
               badgeProps={getBadgeProps(c.component)}
             />{" "}
             {c.parent.activeSoundMarkId === c.component.id
               ? displayActiveSoundMark(c)
               : ""}{" "}
-            {c.component.keyword}{" "}
-            {c.component.mnemonicKeyword
-              ? `"${c.component.mnemonicKeyword}"`
-              : ""}
+            <FigureKeywordDisplay figure={c.component} />
           </span>
         ))}
       </h2>
@@ -73,7 +75,7 @@ export function SingleFigureDictionaryEntry({
               !u.parent.isPriority ? "bg-slate-200" : ""
             }`}
           >
-            <FigureBadge
+            <FigurePopoverBadge
               id={u.parent.id}
               badgeProps={getBadgeProps(u.parent)}
             />
@@ -113,6 +115,9 @@ function FigureKeywordDisplay({
   >;
 }) {
   if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
+
+  if (figure.mnemonicKeyword === figure.keyword)
+    return <>&quot;{figure.keyword}&quot;</>;
 
   const mnemonicKeywordWithoutReference =
     figure.mnemonicKeyword.split(" {{")[0];

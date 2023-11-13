@@ -53,6 +53,11 @@ export function FigureBadge({
       ? 0.25
       : 0;
 
+  const outlineWidth = Math.max(
+    1,
+    Math.round(outerWidth - innerWidth + buffer),
+  );
+
   return (
     <div
       className={`inline-block text-center align-bottom ${
@@ -61,15 +66,19 @@ export function FigureBadge({
         badgeProps.hue === BadgeHue.HYOGAI ? "bg-fuchsia-600" : ""
       } ${badgeProps.hue === BadgeHue.KYOIKU ? "bg-blue-600" : ""}  ${
         badgeProps.hue === BadgeHue.EXTRA ? "bg-slate-600" : ""
-      } ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} ${
-        badgeProps.isSecondaryVariant
-          ? "outline outline-white outline-1 -outline-offset-2"
-          : ""
-      }`}
+      } ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} $`}
       style={{
         width: `${outerWidth}rem`,
         height: `${outerWidth}rem`,
         padding: `${0.5 * (outerWidth - innerWidth + buffer)}rem`,
+        ...(badgeProps.isSecondaryVariant
+          ? {
+              outline: "solid",
+              outlineColor: "white",
+              outlineWidth: `${outlineWidth}px`,
+              outlineOffset: `${-(3 * outlineWidth)}px`,
+            }
+          : null),
       }}
     >
       <div

@@ -32,6 +32,7 @@
   ],
   "dependencies": {
     "@isaacs/express-prometheus-middleware": "^1.2.1",
+    "@popperjs/core": "^2.11.8",
     "@prisma/client": "^5.5.2",
     "@remix-run/css-bundle": "^2.2.0",
     "@remix-run/express": "^2.2.0",
@@ -41,12 +42,15 @@
     "chokidar": "^3.5.3",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
+    "emittery": "^0.13.1",
     "express": "^4.18.2",
     "isbot": "^3.7.0",
     "morgan": "^1.10.0",
     "prom-client": "^15.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-popper": "^2.3.0",
+    "saxes": "^6.0.0",
     "source-map-support": "^0.5.21",
     "tiny-invariant": "^1.3.1",
     "wanakana": "^5.2.0"
