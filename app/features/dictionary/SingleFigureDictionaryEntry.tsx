@@ -1,4 +1,5 @@
 import { KanjisenseFigure } from "@prisma/client";
+
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
@@ -12,7 +13,6 @@ import {
   displayActiveSoundMark,
   getReadingMatchingSoundMark,
 } from "~/features/dictionary/getReadingMatchingSoundMark";
-import { KvgJsonData } from "~/features/dictionary/KvgJsonData";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
 export function SingleFigureDictionaryEntry({
@@ -94,7 +94,7 @@ export function SingleFigureDictionaryEntry({
 }
 
 export const kvgAttributes = {
-  xlmns: "http://www.w3.org/2000/svg",
+  ["xlmns"]: "http://www.w3.org/2000/svg",
   viewBox: "-20 -20 149 149",
   style: {
     fill: "none",

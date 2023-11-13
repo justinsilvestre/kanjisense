@@ -12,7 +12,8 @@
     "docker": "docker compose up -d",
     "format:w": "prettier --write .",
     "format:ci": "prettier --list-different . --config .prettierrc --ignore-path=.prettierignore && npm run --prefix web format:ci",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:only": "eslint --cache --cache-location ./node_modules/.cache/eslint",
+    "lint": "npm run lint:only -- .",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "start:mocks": "cross-env NODE_ENV=production node --require ./mocks --require dotenv/config ./build/server.js",
@@ -115,10 +116,9 @@
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
   },
   "lint-staged": {
-    "{core,glossParser,textRanking}/*.{ts,js,json}": "prettier --write --config .prettierrc",
-    "web/**/*.{ts,js,tsx}": [
-      "npm --prefix web run lint:only -- ",
-      "npm --prefix web run format:only --"
+    "**/*.{ts,js,tsx,jsx}": [
+      "prettier --write --config .prettierrc",
+      "npm run lint:only -- --fix"
     ]
   }
 }
