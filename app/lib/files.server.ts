@@ -23,6 +23,7 @@ export const files = {
   componentsDictionaryYml: dic("componentsDictionary.yml"),
   sbgyJson: dic("sbgy.json"),
   sbgyNotesJson: dic("sbgyNotes.json"),
+  joyoWikipediaTsv: vendor("wikipedia/joyoWikipedia.tsv"),
 };
 
 function vendor<S extends string>(string: S) {
@@ -47,4 +48,24 @@ export function getKvgPath(character: string) {
     ?.toString(16)
     .padStart(5, "0")}.svg`;
   return path.resolve(__dirname, "vendor", "kanjivg", "svgs", filename);
+}
+
+export function getGlyphwikiSvgPath(figureId: string) {
+  const filename = `${
+    [...figureId].length === 1 ? getGlyphWikiCode(figureId) : figureId
+  }.svg`;
+  return path.resolve(__dirname, "vendor", "glyphwiki", "svgs", filename);
+}
+
+function getGlyphWikiCode(key: string) {
+  if ([...key].length === 1) {
+    const uCode = key.codePointAt(0)?.toString(16);
+    return `u${uCode}`;
+  } else if (key.startsWith("GWS")) {
+    return key.slice(4);
+  } else if (key.startsWith("CDP")) {
+    return key;
+  } else {
+    throw new Error(key);
+  }
 }

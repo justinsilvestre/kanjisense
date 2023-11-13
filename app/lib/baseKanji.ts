@@ -23,3 +23,14 @@ export const kyoikuKanji = [
   "圧囲移因永営衛易益液演応往桜可仮価河過快解格確額刊幹慣眼紀基寄規喜技義逆久旧救居許境均禁句型経潔件険検限現減故個護効厚耕航鉱構興講告混査再災妻採際在財罪殺雑酸賛士支史志枝師資飼示似識質舎謝授修述術準序招証象賞条状常情織職制性政勢精製税責績接設絶祖素総造像増則測属率損貸態団断築貯張停提程適統堂銅導得毒独任燃能破犯判版比肥非費備評貧布婦武復複仏粉編弁保墓報豊防貿暴脈務夢迷綿輸余容略留領歴",
   "胃異遺域宇映延沿恩我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴券絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除承将傷障蒸針仁垂推寸盛聖誠舌宣専泉洗染銭善奏窓創装層操蔵臓存尊退宅担探誕段暖値宙忠著庁頂腸潮賃痛敵展討党糖届難乳認納脳派拝背肺俳班晩否批秘俵腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優預幼欲翌乱卵覧裏律臨朗論",
 ];
+
+export const allKyoikuKanjiSet = new Set(kyoikuKanji.join(""));
+export const joyoNotInKyoiku = [...joyoKanji].filter(
+  (kanji) => !allKyoikuKanjiSet.has(kanji),
+);
+export const hyogaiNotInJinmeiyoo = [...hyogaiKanji].filter(
+  (kanji) => !jinmeiyoKanji.includes(kanji),
+);
+export const jinmeiyoNotInHyogai = [...jinmeiyoKanji].filter(
+  (kanji) => !hyogaiKanji.includes(kanji),
+);

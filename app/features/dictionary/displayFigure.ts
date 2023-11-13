@@ -1,37 +1,36 @@
-import type { KanjisenseFigure } from "@prisma/client";
+import type { KanjisenseFigure, KanjisenseFigureImage } from "@prisma/client";
 
-import type {
-  DictionaryPageFigureWithAsComponent,
-  DictionaryPageFigureWithPriorityUses,
-} from "~/features/dictionary/getDictionaryPageFigure.server";
+import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import {
   KanjiListCode,
   isKyoikuCode,
   listCodes,
 } from "~/lib/dic/KanjiListCode";
 
-enum BadgeHue {
+export enum BadgeHue {
   KYOIKU = "KYOIKU",
   JOYO = "JOYO",
   HYOGAI = "HYOGAI",
   JINMEIYO = "JINMEIYO",
-  NONPRIORITY = "NONPRIORITY",
+  EXTRA = "EXTRA",
 }
 
 export type StandaloneCharacterQueryFigure = Pick<
-  KanjisenseFigure,
-  "listsAsCharacter"
-> &
-  DictionaryPageFigureWithAsComponent;
-
+  DictionaryPageFigureWithPriorityUses,
+  "_count" | "listsAsCharacter"
+>;
 export function isStandaloneCharacter(figure: StandaloneCharacterQueryFigure) {
-  return Boolean(figure.listsAsCharacter.length || !figure.asComponent);
+  return Boolean(
+    figure.listsAsCharacter.length || !figure._count.firstClassUses,
+  );
 }
 
-export function isAtomicFigure(
-  figure: Pick<DictionaryPageFigureWithPriorityUses, "firstClassComponents">,
-) {
-  return figure.firstClassComponents.length === 0;
+export type IsAtomicFigureQueryFigure = Pick<
+  DictionaryPageFigureWithPriorityUses,
+  "_count"
+>;
+export function isAtomicFigure(figure: IsAtomicFigureQueryFigure) {
+  return figure._count.firstClassComponents < 2;
 }
 
 export function getLists(
@@ -47,33 +46,34 @@ export function getBadgeHue(lists: KanjiListCode[]) {
   else if (lists.includes(listCodes.joyo)) return BadgeHue.JOYO;
   else if (lists.includes(listCodes.hyogai)) return BadgeHue.HYOGAI;
   else if (lists.includes(listCodes.jinmeiyo)) return BadgeHue.JINMEIYO;
-  else return BadgeHue.NONPRIORITY;
+  else return BadgeHue.EXTRA;
 }
 
 export function isSecondaryVariant(
   figure: Pick<KanjisenseFigure, "id" | "variantGroupId">,
 ) {
-  return figure.variantGroupId ? figure.variantGroupId === figure.id : false;
+  return figure.variantGroupId && figure.variantGroupId !== figure.id;
 }
 
-export function isPriorityComponent(
-  figureWithPriorityUses: Pick<
-    DictionaryPageFigureWithPriorityUses,
-    "firstClassUses"
-  >,
+type IsPriorityComponentQueryFigure = Pick<
+  DictionaryPageFigureWithPriorityUses,
+  "_count"
+>;
+export function isPriorityComponent<T>(
+  figureWithPriorityUses: IsPriorityComponentQueryFigure,
 ) {
-  return figureWithPriorityUses.firstClassUses.length > 0;
+  return Boolean(figureWithPriorityUses._count.firstClassUses);
 }
+
+type IsPrioritySoundMarkFigure = Pick<
+  DictionaryPageFigureWithPriorityUses,
+  "asComponent"
+>;
 
 export function isPrioritySoundMark(
-  figureWithPriorityUses: Pick<
-    DictionaryPageFigureWithPriorityUses,
-    "id" | "firstClassUses"
-  >,
+  figureWithPriorityUses: IsPrioritySoundMarkFigure,
 ) {
-  return figureWithPriorityUses.firstClassUses.some(
-    (u) => u.parent.activeSoundMarkId === figureWithPriorityUses.id,
-  );
+  return Boolean(figureWithPriorityUses.asComponent?._count.soundMarkUses);
 }
 
 export const getBadgeProps = memoizeById(_getBadgeProps);
@@ -88,24 +88,32 @@ function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
   };
 }
 
-function _getBadgeProps(
+function _getBadgeProps<T>(
   figure: Pick<
-    DictionaryPageFigureWithPriorityUses,
+    KanjisenseFigure,
     | "id"
     | "variantGroupId"
-    | "firstClassComponents"
-    | "firstClassUses"
-    | "asComponent"
     | "listsAsCharacter"
     | "listsAsComponent"
-  >,
+    | "aozoraAppearances"
+  > &
+    StandaloneCharacterQueryFigure &
+    IsAtomicFigureQueryFigure &
+    IsPriorityComponentQueryFigure &
+    IsPrioritySoundMarkFigure & {
+      image?: KanjisenseFigureImage | null;
+    },
 ) {
   const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
   const lists = getLists(figureIsStandaloneCharacter, figure);
   return {
+    image: figure.image,
+    aozoraAppearanaces: figure.aozoraAppearances,
     hue: getBadgeHue(lists),
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),
     isSecondaryVariant: isSecondaryVariant(figure),
   };
 }
+
+export type BadgeProps = ReturnType<typeof getBadgeProps>;

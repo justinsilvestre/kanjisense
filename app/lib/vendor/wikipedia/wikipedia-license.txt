@@ -1,0 +1,3 @@
+joyoWikipedia.tsv organizes data from the Japanese 文部科学省's Joyo Kanji data which was first put in a digital format by Wikipedia editors.
+
+Wikipedia content is under a CC BY-SA 4.0 license: https://creativecommons.org/licenses/by-sa/4.0/deed.en

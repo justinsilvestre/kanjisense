@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 export type SetupStep =
   | "KanjidicEntry"
+  | "JMDictEntry"
   | "KanjiDbComposition"
   | "KanjiDbSbgyNote"
   | "KanjiDbVariant"
@@ -21,7 +22,7 @@ export type SetupStep =
   | "Unihan14"
   | "Unihan15"
   | "Unihan15"
-  | "KvgJson"
+  | "KanjisenseFigureImage"
   | "KanjisenseVariantGroup";
 
 export async function registerSeeded(prisma: PrismaClient, step: SetupStep) {

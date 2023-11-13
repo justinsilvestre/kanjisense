@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 
 import DictionaryLayout from "~/components/DictionaryLayout";
+import { prisma } from "~/db.server";
 import {
   getDictionaryPageFigure,
   DictionaryPageSearchedFigure,

@@ -16,36 +16,13 @@ import { registerSeeded } from "../seedUtils";
 import { executeAndLogTime } from "./executeAndLogTime";
 import { findGuangyunEntriesByShinjitai } from "./findGuangyunEntriesByShinjitai";
 import { getAllCharacters } from "./getAllCharacters";
+import { files } from "~/lib/files.server";
+import { readFileSync } from "fs";
 
 export async function seedKanjisenseFigureReadings(
   prisma: PrismaClient,
   force = false,
 ) {
-  console.log(
-    "sound mark figures",
-    Array.from(
-      await prisma.kanjisenseFigure.findMany({
-        select: { id: true },
-        where: {
-          OR: [
-            {
-              asComponent: {
-                soundMarkUses: {
-                  some: {
-                    id: {
-                      notIn: [],
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
-      }),
-      (f) => f.id,
-    ),
-  );
-
   const seeded = await prisma.setup.findUnique({
     where: { step: "KanjisenseFigureReading" },
   });
@@ -169,52 +146,141 @@ export async function seedKanjisenseFigureReadings(
     console.log("creating entries");
     await prisma.kanjisenseFigureReadingToSbgyXiaoyun.deleteMany();
     await prisma.kanjisenseFigureReading.deleteMany();
-    await prisma.kanjisenseFigureReading.createMany({
-      data: Array.from(figuresNeedingReadingsIds, (readingFigureId) => {
-        const inferredOnyomiFor = getInferredOnReadings(
-          figuresToXiaoyunsWithMatchingExemplars,
-          readingFigureId,
-        );
 
-        const inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns = {};
-        for (const [
-          modernKatakanaOnReading,
-          typeToXiaoyuns,
-        ] of inferredOnyomiFor) {
-          for (const [type, xiaoyuns] of typeToXiaoyuns) {
-            for (const xiaoyun of xiaoyuns) {
-              const classifications =
-                inferredOnReadingCandidates[modernKatakanaOnReading] ||
-                (inferredOnReadingCandidates[modernKatakanaOnReading] = {});
-              classifications[type] ||= [] as number[];
-              classifications[type].push(xiaoyun.xiaoyun.xiaoyun);
-            }
+    const joyoWikipediaText = readFileSync(files.joyoWikipediaTsv, "utf-8");
+    const joyoWikipedia = new Map(
+      joyoWikipediaText
+        .split("\n")
+        .slice(1)
+        .map((lineText) => {
+          const line = lineText.split("\t");
+          const kanji = line[1];
+          const readings = line[8].split("、");
+          const onyomi = readings
+            .filter((r) => r.match(/^[ア-ン]+$/))
+            .map((r) => r.replace(/[（）]|(\[\d+\])/g, ""));
+          return [kanji, onyomi];
+        }),
+    );
+
+    const dbInput: {
+      id: string;
+      kanjidicEntryId: string | null;
+      unihan15Id: string | null;
+      inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns;
+      sbgyXiaoyunsMatchingExemplars: Record<string, string[]>;
+      selectedOnReadings: string[];
+    }[] = [];
+    for (const readingFigureId of figuresNeedingReadingsIds) {
+      const inferredOnyomiFor = getInferredOnReadings(
+        figuresToXiaoyunsWithMatchingExemplars,
+        readingFigureId,
+      );
+
+      const inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns = {};
+      for (const [
+        modernKatakanaOnReading,
+        typeToXiaoyuns,
+      ] of inferredOnyomiFor) {
+        for (const [type, xiaoyuns] of typeToXiaoyuns) {
+          for (const xiaoyun of xiaoyuns) {
+            const classifications =
+              inferredOnReadingCandidates[modernKatakanaOnReading] ||
+              (inferredOnReadingCandidates[modernKatakanaOnReading] = {});
+            classifications[type] ||= [] as number[];
+            classifications[type].push(xiaoyun.xiaoyun.xiaoyun);
+          }
+        }
+      }
+
+      const charactersTojmdictOnyomi = new Map<string, Set<JmDictOnyomi>>();
+      class JmDictOnyomi {
+        constructor(public onyomi: string) {
+          const existing = charactersTojmdictOnyomi.get(onyomi);
+          if (existing) {
+            existing.add(this);
+          } else {
+            charactersTojmdictOnyomi.set(onyomi, new Set([this]));
           }
         }
 
-        const sbgyXiaoyunsMatchingExemplars: Record<string, string[]> = {};
-        for (const [
-          xiaoyun,
-          { matchingExemplars },
-        ] of figuresToXiaoyunsWithMatchingExemplars
-          .get(readingFigureId)
-          ?.entries() || []) {
-          sbgyXiaoyunsMatchingExemplars[xiaoyun] ||= [];
-          sbgyXiaoyunsMatchingExemplars[xiaoyun].push(...matchingExemplars);
-        }
+        static cache = new Map<string, JmDictOnyomi>();
+      }
 
-        return {
-          id: readingFigureId,
-          kanjidicEntryId: kanjidicEntries.has(readingFigureId)
-            ? readingFigureId
-            : null,
-          unihan15Id: unihan15Keys.has(readingFigureId)
-            ? readingFigureId
-            : null,
-          inferredOnReadingCandidates,
-          sbgyXiaoyunsMatchingExemplars,
-        };
-      }),
+      const selectedOnReadings: string[] = [];
+      if (
+        isSingleCharacter(readingFigureId) &&
+        (kanjidicEntries.get(readingFigureId)?.onReadings?.length ?? 0) > 1
+      ) {
+        const joyoReadings = joyoWikipedia.get(readingFigureId);
+        if (readingFigureId === "三") {
+          console.log("三", { joyoReadings });
+        }
+        if (joyoReadings?.length) {
+          selectedOnReadings.push(...joyoReadings);
+          console.log(
+            'Got joyo readings for "' + readingFigureId + '"',
+            joyoReadings,
+          );
+        } else {
+          const jmdictEntriesWithKanjiArePresent =
+            await prisma.jmDictEntry.count({
+              where: { head: { contains: readingFigureId } },
+              take: 1,
+            });
+          if (jmdictEntriesWithKanjiArePresent) {
+            const katakanaKanjidicOnReadings =
+              kanjidicEntries.get(readingFigureId)?.onReadings || [];
+            const jmdictEntriesWithKanjidicOnReadings =
+              await prisma.jmDictEntry.findMany({
+                where: {
+                  head: { contains: readingFigureId },
+                  OR: katakanaKanjidicOnReadings.map((katakanaReading) => ({
+                    readingText: {
+                      contains: katakanaOnyomiToHiragana(katakanaReading),
+                    },
+                  })),
+                },
+              });
+            for (const katakanaKanjidicOnReading of katakanaKanjidicOnReadings) {
+              if (
+                jmdictEntriesWithKanjidicOnReadings.some((jmdictEntry) =>
+                  jmdictEntry.readingText.includes(
+                    katakanaOnyomiToHiragana(katakanaKanjidicOnReading),
+                  ),
+                )
+              )
+                selectedOnReadings.push(katakanaKanjidicOnReading);
+            }
+          }
+        }
+      }
+
+      const sbgyXiaoyunsMatchingExemplars: Record<string, string[]> = {};
+      for (const [
+        xiaoyun,
+        { matchingExemplars },
+      ] of figuresToXiaoyunsWithMatchingExemplars
+        .get(readingFigureId)
+        ?.entries() || []) {
+        sbgyXiaoyunsMatchingExemplars[xiaoyun] ||= [];
+        sbgyXiaoyunsMatchingExemplars[xiaoyun].push(...matchingExemplars);
+      }
+
+      dbInput.push({
+        id: readingFigureId,
+        kanjidicEntryId: kanjidicEntries.has(readingFigureId)
+          ? readingFigureId
+          : null,
+        unihan15Id: unihan15Keys.has(readingFigureId) ? readingFigureId : null,
+        inferredOnReadingCandidates,
+        sbgyXiaoyunsMatchingExemplars,
+        selectedOnReadings,
+      });
+    }
+
+    await prisma.kanjisenseFigureReading.createMany({
+      data: dbInput,
     });
 
     await executeAndLogTime("hooking up guangyun entries", async () => {
@@ -234,6 +300,10 @@ export async function seedKanjisenseFigureReadings(
 
   console.log(`KanjisenseFigureReading seeded. 🌱`);
 }
+function isSingleCharacter(readingFigureId: string) {
+  return [...readingFigureId].length === 1;
+}
+
 function getInferredOnReadings(
   figuresToXiaoyunsWithMatchingExemplars: Map<
     string,
@@ -364,4 +434,16 @@ export function sbgyXiaoyunToQysSyllableProfile(
     dengOrChongniu:
       xiaoyun.dengOrChongniu as QysSyllableProfile["dengOrChongniu"],
   };
+}
+
+const katakanaToHiraganaOnCache = new Map<string, string>();
+function katakanaOnyomiToHiragana(katakanaOnReading: string) {
+  const cached = katakanaToHiraganaOnCache.get(katakanaOnReading);
+  if (cached) return cached;
+  const hiragana = katakanaOnReading
+    .split("")
+    .map((c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
+    .join("");
+  katakanaToHiraganaOnCache.set(katakanaOnReading, hiragana);
+  return hiragana;
 }

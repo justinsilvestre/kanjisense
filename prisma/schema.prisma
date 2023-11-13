@@ -139,8 +139,8 @@ model KanjisenseFigure {
   firstClassComponents KanjisenseComponentUse[] @relation("firstClassComponents")
   activeSoundMark      KanjisenseComponent?     @relation("activeSoundMark", fields: [activeSoundMarkId], references: [id])
   relation             KanjisenseFigureRelation @relation(fields: [id], references: [id])
-  KvgJson              KvgJson?
-  ShuowenImage         ShuowenImage?            @relation(fields: [shuowenImageId], references: [id])
+  image                KanjisenseFigureImage?
+  shuowenImage         ShuowenImage?            @relation(fields: [shuowenImageId], references: [id])
   variantGroup         KanjisenseVariantGroup?  @relation(fields: [variantGroupId], references: [id])
   meaning              KanjisenseFigureMeaning?
   reading              KanjisenseFigureReading?
@@ -174,6 +174,7 @@ model KanjisenseFigureReading {
   kanjidicEntry                 KanjidicEntry?                         @relation("kanjidicEntry", fields: [kanjidicEntryId], references: [id])
   unihan15                      Unihan15?                              @relation("unihan15", fields: [unihan15Id], references: [id])
   sbgyXiaoyuns                  KanjisenseFigureReadingToSbgyXiaoyun[]
+  selectedOnReadings            String[]
 }
 
 model KanjisenseFigureReadingToSbgyXiaoyun {
@@ -196,10 +197,18 @@ model KanjisenseFigureMeaning {
   figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
-model KvgJson {
-  id     String           @id
-  json   Json
-  figure KanjisenseFigure @relation(fields: [id], references: [id])
+model KanjisenseFigureImage {
+  id String @id
+
+  type KanjisenseFigureImageType
+
+  content Json
+  figure  KanjisenseFigure @relation(fields: [id], references: [id])
+}
+
+enum KanjisenseFigureImageType {
+  Kvg
+  GlyphWiki
 }
 
 model ShuowenImage {
@@ -250,4 +259,22 @@ enum KanjiDbVariantType {
   TwEduVariant
   HanyuDaCidianVariant
   HanyuDaCidianVariantReverse
+}
+
+model JmDictEntry {
+  id          Int    @id @default(autoincrement())
+  head        String
+  readingText String
+
+  kanjiUses JmDictEntryKanjiUse[]
+
+  @@index([head, readingText])
+}
+
+model JmDictEntryKanjiUse {
+  kanji   String
+  entry   JmDictEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId Int
+
+  @@id([kanji, entryId])
 }

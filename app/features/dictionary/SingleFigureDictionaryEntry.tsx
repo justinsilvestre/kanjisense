@@ -1,4 +1,7 @@
+import { KanjisenseFigure } from "@prisma/client";
+import { FigureBadge } from "~/components/FigureBadge";
 import {
+  getBadgeProps,
   isPriorityComponent,
   isPrioritySoundMark,
   isStandaloneCharacter,
@@ -19,17 +22,20 @@ export function SingleFigureDictionaryEntry({
   return (
     <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
       <h1>
-        hiiiiii!!!
         {figure.id} {figure.keyword} {figure.mnemonicKeyword}
       </h1>
 
       <h1>
-        <FigureSvg figure={figure} />
+        {" "}
+        <FigureBadge id={figure.id} badgeProps={getBadgeProps(figure)} />
       </h1>
       <h2>
         {figure.firstClassComponents.map((c) => (
           <span key={c.indexInTree}>
-            {c.component.id}{" "}
+            <FigureBadge
+              id={c.componentId}
+              badgeProps={getBadgeProps(c.component)}
+            />{" "}
             {c.parent.activeSoundMarkId === c.component.id
               ? displayActiveSoundMark(c)
               : ""}{" "}
@@ -41,6 +47,7 @@ export function SingleFigureDictionaryEntry({
         ))}
       </h2>
 
+      <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
       <h2>{figure.reading?.kanjidicEntry?.onReadings?.join(" ")}</h2>
       <h2>{figure.reading?.kanjidicEntry?.kunReadings?.join(" ")}</h2>
       <h2>
@@ -49,6 +56,7 @@ export function SingleFigureDictionaryEntry({
           ?.join(" ")}
       </h2>
 
+      <h2>priority: {figure.isPriority ? "yes" : "no"}</h2>
       <h2>standalone: {isStandaloneCharacter(figure) ? "yes" : "no"}</h2>
       <h2>priority sound mark: {isPrioritySoundMark(figure) ? "yes" : "no"}</h2>
       <h2>priority component: {isPriorityComponent(figure) ? "yes" : "no"}</h2>
@@ -65,16 +73,16 @@ export function SingleFigureDictionaryEntry({
               !u.parent.isPriority ? "bg-slate-200" : ""
             }`}
           >
-            <span className={` text-2xl`}>{u.parent.id}</span>
-            <br />
-            {isStandaloneCharacter(u.parent) ? "字" : ""}
-            {u.parent.asComponent ? "⚙️" : ""}
+            <FigureBadge
+              id={u.parent.id}
+              badgeProps={getBadgeProps(u.parent)}
+            />
             <br />
             {u.parent.activeSoundMarkId === figure.id
               ? getReadingMatchingSoundMark(u)
               : null}
             <br />
-            {u.parent.keyword} {u.parent.mnemonicKeyword}
+            <FigureKeywordDisplay figure={u.parent} />
             <br />
           </li>
         ))}
@@ -96,33 +104,24 @@ export const kvgAttributes = {
     height: "7em",
   },
 } as const;
-function FigureSvg({
+function FigureKeywordDisplay({
   figure,
-  strokeWidth = kvgAttributes.style.strokeWidth,
-  stroke = kvgAttributes.style.stroke,
 }: {
-  figure: Pick<DictionaryPageFigureWithPriorityUses, "KvgJson" | "id">;
-  strokeWidth?: number;
-  stroke?: string;
+  figure: Pick<
+    KanjisenseFigure,
+    "keyword" | "mnemonicKeyword" | "listsAsCharacter"
+  >;
 }) {
-  if (figure.KvgJson) {
-    const kvgJson = figure.KvgJson.json as unknown as KvgJsonData;
+  if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
+
+  const mnemonicKeywordWithoutReference =
+    figure.mnemonicKeyword.split(" {{")[0];
+  if (figure.listsAsCharacter.length)
     return (
-      <svg
-        {...kvgAttributes}
-        style={{ ...kvgAttributes.style, strokeWidth, stroke }}
-      >
-        {kvgJson.p.map((d, i) => (
-          <path d={d} key={i} />
-        ))}
-        <text
-          x="-10"
-          y="100"
-          className="fill-transparent stroke-transparent text-transparent "
-        >
-          {figure.id}
-        </text>
-      </svg>
+      <>
+        {figure.keyword} &quot;{mnemonicKeywordWithoutReference}&quot;
+      </>
     );
-  }
+
+  return <>{mnemonicKeywordWithoutReference}</>;
 }

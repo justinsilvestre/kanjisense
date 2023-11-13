@@ -1,3 +1,4 @@
+import { badgeFigureSelect } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
 
 export type DictionaryPageSearchedFigure = NonNullable<
@@ -7,11 +8,6 @@ export type DictionaryPageSearchedFigure = NonNullable<
 export type DictionaryPageFigureWithPriorityUses = Omit<
   DictionaryPageSearchedFigure,
   "variantGroup"
->;
-
-export type DictionaryPageFigureWithAsComponent = Pick<
-  DictionaryPageFigureWithPriorityUses,
-  "asComponent"
 >;
 
 export async function getDictionaryPageFigure(figureId: string) {
@@ -33,9 +29,32 @@ export async function getDictionaryPageFigure(figureId: string) {
 }
 
 const commonInclude = {
-  asComponent: { select: { id: true } },
+  _count: {
+    select: {
+      firstClassComponents: true,
+      firstClassUses: {
+        where: {
+          parent: {
+            isPriority: true,
+          },
+        },
+      },
+    },
+  },
 
-  KvgJson: true,
+  image: true,
+  asComponent: {
+    select: {
+      _count: {
+        select: {
+          soundMarkUses: {
+            where: { isPriority: true },
+          },
+        },
+      },
+    },
+  },
+
   reading: {
     include: {
       sbgyXiaoyuns: {
@@ -58,9 +77,13 @@ const commonInclude = {
     include: {
       component: {
         select: {
+          ...badgeFigureSelect,
+
           id: true,
           keyword: true,
           mnemonicKeyword: true,
+
+          image: true,
           reading: {
             select: {
               sbgyXiaoyuns: {
@@ -81,24 +104,23 @@ const commonInclude = {
     },
   },
   firstClassUses: {
+    orderBy: {
+      parent: {
+        aozoraAppearances: "desc" as const,
+      },
+    },
     where: {
-      OR: [
-        { parent: { isPriority: true } },
-        // {
-        //   parent: {
-        //     isPriority: false,
-        //     relation: {
-        //       directUses: {
-        //         isEmpty: true,
-        //       },
-        //     },
-        //   },
-        // },
-      ],
+      OR: [{ parent: { isPriority: true } }],
     },
     include: {
       parent: {
-        include: {
+        select: {
+          ...badgeFigureSelect,
+          activeSoundMarkId: true,
+          keyword: true,
+          mnemonicKeyword: true,
+          isPriority: true,
+          image: true,
           reading: {
             select: {
               sbgyXiaoyuns: {
@@ -112,7 +134,9 @@ const commonInclude = {
             },
           },
           asComponent: {
+            ...badgeFigureSelect.asComponent,
             select: {
+              ...badgeFigureSelect.asComponent.select,
               id: true,
               soundMarkUses: {
                 select: {
