@@ -232,10 +232,5 @@ function FigureKeywordDisplay({
       </>
     );
 
-  return (
-    <>
-      {figure.variantGroup?.hasStandaloneCharacter ? "true" : "false"} &quot;
-      {mnemonicKeywordWithoutReference}&quot;
-    </>
-  );
+  return <>&quot;{mnemonicKeywordWithoutReference}&quot;</>;
 }
