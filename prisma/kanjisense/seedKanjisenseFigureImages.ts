@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
 
 import { PrismaClient, KanjisenseFigureImageType } from "@prisma/client";
+import SVGPathCommander from "svg-path-commander";
 
 import { registerSeeded } from "prisma/seedUtils";
 import { kanjivgExtractedComponents } from "~/lib/dic/kanjivgExtractedComponents";
@@ -95,17 +96,27 @@ async function getKvgJson(
   const kvgFileText = await getFileTextIfPresent(kvgPath);
   if (!kvgFileText) return null;
 
+  const transform = kanjivgExtractedComponents[key]?.[2];
   const strokesSegment = kanjivgExtractedComponents[key]?.[1];
 
   const paths = Array.from(kvgFileText.matchAll(/\bd="(.+?)"/g), (x) => x[1]);
+  const transformedPaths =
+    transform && strokesSegment
+      ? paths.map((p) =>
+          new SVGPathCommander(p).transform(transform).toString(),
+        )
+      : null;
   const numbers = Array.from(
     kvgFileText.matchAll(/\btransform="(.+?)"/g),
     (x) => x[1],
   );
   return {
     p: strokesSegment
-      ? paths.slice(strokesSegment[0] - 1, strokesSegment[1])
-      : paths,
+      ? (transformedPaths || paths).slice(
+          strokesSegment[0] - 1,
+          strokesSegment[1],
+        )
+      : transformedPaths || paths,
     n: strokesSegment
       ? numbers.slice(strokesSegment[0] - 1, strokesSegment[1])
       : numbers,
