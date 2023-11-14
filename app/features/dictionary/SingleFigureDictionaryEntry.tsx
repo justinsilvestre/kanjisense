@@ -13,6 +13,7 @@ import {
   isStandaloneCharacterVariant,
 } from "~/features/dictionary/displayFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
+import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import {
   displayActiveSoundMark,
   getReadingMatchingSoundMark,
@@ -42,6 +43,10 @@ export function SingleFigureDictionaryEntry({
 
       {headingsMeanings.currentCharacter ? (
         <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
+      ) : null}
+
+      {headingsMeanings.componentHistoricalMeaning ? (
+        <h1>{headingsMeanings.componentHistoricalMeaning}</h1>
       ) : null}
       {headingsMeanings.componentMnemonic ? (
         <h1>
@@ -134,81 +139,8 @@ export const kvgAttributes = {
     height: "7em",
   },
 } as const;
-function getHeadingsMeanings(
-  figure: DictionaryPageFigureWithPriorityUses,
-  primaryVariantFigure: StandaloneCharacterQueryFigure,
-): HeadingMeanings {
-  const mnemonicKeyword = figure.mnemonicKeyword;
-  const [, mnemonicKeywordText, , referenceTypeText, reference] =
-    mnemonicKeyword?.match(/^(.+?)( \{\{(cf\.|via) (.)}})?$/) ?? [];
 
-  const componentMnemonic: HeadingComponentMnemonic | null = mnemonicKeywordText
-    ? {
-        text: mnemonicKeywordText,
-        reference: reference || null,
-        referenceTypeText:
-          (referenceTypeText as HeadingComponentMnemonic["referenceTypeText"]) ||
-          null,
-      }
-    : null;
-
-  const isStandaloneCharacterVariant =
-    isStandaloneCharacter(primaryVariantFigure);
-
-  if (isStandaloneCharacterVariant) {
-    const currentCharacterMeanings: string[] = [];
-    currentCharacterMeanings.push(figure.keyword);
-    if (figure.meaning?.kanjidicEnglish?.length)
-      currentCharacterMeanings.push(
-        ...figure.meaning.kanjidicEnglish.filter((m) => m !== figure.keyword),
-      );
-    if (!currentCharacterMeanings.length && figure.meaning?.unihanDefinition)
-      currentCharacterMeanings.push(figure.meaning.unihanDefinition);
-
-    return {
-      currentCharacter: currentCharacterMeanings,
-      componentMnemonic,
-    };
-  }
-
-  const characterMeanings: string[] = [];
-  characterMeanings.push(figure.keyword);
-  if (figure.meaning?.kanjidicEnglish?.length)
-    characterMeanings.push(
-      ...figure.meaning.kanjidicEnglish.filter((m) => m !== figure.keyword),
-    );
-  if (!characterMeanings.length && figure.meaning?.unihanDefinition)
-    characterMeanings.push(figure.meaning.unihanDefinition);
-
-  return {
-    componentMnemonic: componentMnemonic || {
-      text: figure.keyword,
-      reference: null,
-      referenceTypeText: null,
-    },
-    obsoleteCharacter: characterMeanings,
-  };
-}
-
-type HeadingMeanings =
-  | {
-      currentCharacter: string[];
-      componentMnemonic: HeadingComponentMnemonic | null;
-      obsoleteCharacter?: null;
-    }
-  | {
-      componentMnemonic: HeadingComponentMnemonic;
-      obsoleteCharacter: string[] | null;
-      currentCharacter?: null;
-    };
-
-interface HeadingComponentMnemonic {
-  text: string;
-  reference?: string | null;
-  referenceTypeText?: "cf." | "via" | null;
-}
-
-function FigureKeywordDisplay({
+export function FigureKeywordDisplay({
   figure,
 }: {
   figure: Pick<
@@ -220,11 +152,12 @@ function FigureKeywordDisplay({
 }) {
   if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
 
-  if (figure.mnemonicKeyword === figure.keyword)
-    return <>&quot;{figure.keyword}&quot;</>;
-
   const mnemonicKeywordWithoutReference =
     figure.mnemonicKeyword.split(" {{")[0];
+
+  if (figure.mnemonicKeyword === figure.keyword)
+    return <>&quot;{mnemonicKeywordWithoutReference}&quot;</>;
+
   if (isStandaloneCharacterVariant(figure))
     return (
       <>
