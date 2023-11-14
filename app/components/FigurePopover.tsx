@@ -3,7 +3,7 @@ import { PropsWithChildren, useEffect, createElement } from "react";
 import { createPortal } from "react-dom";
 
 import { BadgeProps, getBadgeProps } from "~/features/dictionary/displayFigure";
-import { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
+import type { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
 
 import { DictLink } from "./AppLink";
 import { FigureBadge } from "./FigureBadge";

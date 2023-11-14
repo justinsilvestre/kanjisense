@@ -81,6 +81,7 @@ export async function seedKanjisenseFigures(
         meaning?.keyword ?? "[MISSING]",
         meaning?.mnemonicKeyword ?? null,
         true,
+        meaning ?? null,
       );
       dbInput.set(id, createFigureInput);
     }
@@ -103,6 +104,7 @@ export async function seedKanjisenseFigures(
         keyword,
         null,
         false,
+        meaning,
       );
       dbInput.set(id, createFigureInput);
     }
@@ -111,6 +113,7 @@ export async function seedKanjisenseFigures(
 
     await prisma.kanjisenseComponentUse.deleteMany({});
     await prisma.kanjisenseComponent.deleteMany({});
+    await prisma.kanjisenseFigureImage.deleteMany({});
     await prisma.kanjisenseFigure.deleteMany({});
 
     console.log("seeding figures");
@@ -156,6 +159,38 @@ export async function seedKanjisenseFigures(
         priorityFiguresMeanings,
         prisma,
       ),
+    );
+
+    await executeAndLogTime(
+      "updating variant group hasStandaloneCharacter field",
+      async () => {
+        const variantGroups = await prisma.kanjisenseVariantGroup.findMany();
+        const variantGroupHeadsIds = new Set(variantGroups.map((g) => g.id));
+        const standaloneVariantGroupHeads =
+          await prisma.kanjisenseFigure.findMany({
+            where: {
+              id: { in: [...variantGroupHeadsIds] },
+              OR: [
+                { listsAsCharacter: { isEmpty: false } },
+                {
+                  firstClassUses: {
+                    none: {
+                      parent: {
+                        isPriority: true,
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          });
+        for (const variantGroupHead of standaloneVariantGroupHeads) {
+          await prisma.kanjisenseVariantGroup.update({
+            where: { id: variantGroupHead.id },
+            data: { hasStandaloneCharacter: true },
+          });
+        }
+      },
     );
 
     await registerSeeded(prisma, "KanjisenseFigure");
@@ -387,9 +422,9 @@ async function preparePriorityFiguresMeanings(
           componentsDictionaryEntry || null,
         );
         if (meaning) {
-          console.warn(
-            `meaning not found for priority figure variant ${figure.id}, using variant ${variant}, ${meaning.kanjidicEnglish} // ${meaning.unihanDefinitionText}`,
-          );
+          // console.warn(
+          //   `meaning not found for priority figure variant ${figure.id}, using variant ${variant}, ${meaning.kanjidicEnglish} // ${meaning.unihanDefinitionText}`,
+          // );
           break;
         }
       }
@@ -456,6 +491,7 @@ function getCreateFigureInput(
   keyword: string,
   mnemonicKeyword: string | null,
   isPriority: boolean,
+  meaning: Awaited<ReturnType<typeof getFigureMeaningsText>> | null,
 ) {
   const figureId = figure.id;
 
@@ -467,6 +503,7 @@ function getCreateFigureInput(
     listsAsComponent: figure.listsAsComponent, // refine?
     listsAsCharacter: [...getListsMembership(figureId)],
     variantGroupId: figure.variantGroupId,
+    meaning,
   };
 }
 

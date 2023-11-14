@@ -17,6 +17,7 @@ export async function getDictionaryPageFigure(figureId: string) {
       ...commonInclude,
       variantGroup: {
         select: {
+          ...commonInclude.variantGroup.select,
           id: true,
           variants: true,
           figures: {
@@ -42,6 +43,12 @@ const commonInclude = {
     },
   },
 
+  variantGroup: {
+    select: {
+      hasStandaloneCharacter: true,
+    },
+  },
+
   image: true,
   asComponent: {
     select: {
@@ -55,6 +62,12 @@ const commonInclude = {
     },
   },
 
+  meaning: {
+    select: {
+      kanjidicEnglish: true,
+      unihanDefinition: true,
+    },
+  },
   reading: {
     include: {
       sbgyXiaoyuns: {
@@ -121,6 +134,11 @@ const commonInclude = {
           mnemonicKeyword: true,
           isPriority: true,
           image: true,
+          variantGroup: {
+            select: {
+              hasStandaloneCharacter: true,
+            },
+          },
           reading: {
             select: {
               sbgyXiaoyuns: {

@@ -1,4 +1,8 @@
-import type { KanjisenseFigure, KanjisenseFigureImage } from "@prisma/client";
+import type {
+  KanjisenseFigure,
+  KanjisenseFigureImage,
+  KanjisenseVariantGroup,
+} from "@prisma/client";
 
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import {
@@ -23,6 +27,21 @@ export function isStandaloneCharacter(figure: StandaloneCharacterQueryFigure) {
   return Boolean(
     figure.listsAsCharacter.length || !figure._count.firstClassUses,
   );
+}
+
+export type StandaloneCharacterVariantQueryFigure =
+  StandaloneCharacterQueryFigure & {
+    variantGroup?: Pick<
+      KanjisenseVariantGroup,
+      "hasStandaloneCharacter"
+    > | null;
+  };
+export function isStandaloneCharacterVariant(
+  figure: StandaloneCharacterVariantQueryFigure,
+) {
+  return !figure.variantGroup
+    ? isStandaloneCharacter(figure)
+    : figure.variantGroup.hasStandaloneCharacter;
 }
 
 export type IsAtomicFigureQueryFigure = Pick<

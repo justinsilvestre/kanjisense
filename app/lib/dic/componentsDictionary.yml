@@ -2123,7 +2123,8 @@ CDP-8DBF: # 廌,焉,薦
   historical: flag
   tag: fabric
 免:
-  historical: evening
+  historical: exempt
+  mnemonic: evening
   standin: 晩
   tag: nature
 百:

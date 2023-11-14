@@ -102,8 +102,6 @@ export async function seedKanjisenseFigureReadings(
       newToOldFiguresIds.get(newFigure)?.push(oldFigure);
     }
 
-    console.log(`allOldFiguresIds.has('者')`, allOldFiguresIds.has(`者`));
-
     const sbgyCharactersToXiaoyunNumbers = new Map<string, number[]>();
     for (const { xiaoyun, exemplars } of await prisma.sbgyXiaoyun.findMany()) {
       for (const exemplar of exemplars) {
@@ -137,11 +135,6 @@ export async function seedKanjisenseFigureReadings(
           sbgyCharactersToXiaoyunNumbers,
           newToZVariants14,
         }),
-    );
-
-    console.log(
-      "figuresToXiaoyunsWithMatchingExemplars",
-      figuresToXiaoyunsWithMatchingExemplars,
     );
 
     console.log("creating entries");
@@ -214,15 +207,8 @@ export async function seedKanjisenseFigureReadings(
         (kanjidicEntries.get(readingFigureId)?.onReadings?.length ?? 0) > 1
       ) {
         const joyoReadings = joyoWikipedia.get(readingFigureId);
-        if (readingFigureId === "三") {
-          console.log("三", { joyoReadings });
-        }
         if (joyoReadings?.length) {
           selectedOnReadings.push(...joyoReadings);
-          console.log(
-            'Got joyo readings for "' + readingFigureId + '"',
-            joyoReadings,
-          );
         } else {
           const jmdictEntriesWithKanjiArePresent =
             await prisma.jmDictEntry.count({

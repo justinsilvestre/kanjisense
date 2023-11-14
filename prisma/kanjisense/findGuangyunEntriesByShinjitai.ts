@@ -28,7 +28,6 @@ export async function findGuangyunEntriesByShinjitai(
     }
   >();
   const shinkyuuForms = newToOldFiguresIds.get(shinjitai) || [];
-  if (shinjitai === "者") console.log({ shinjitai, shinkyuuForms });
   shinkyuuForms.push(shinjitai);
 
   for (const jiForm of shinkyuuForms) {
@@ -39,13 +38,6 @@ export async function findGuangyunEntriesByShinjitai(
           where: { xiaoyun: { in: jiXiaoyunNumbers } },
         })
       : [];
-    if (shinjitai === "者")
-      console.log({
-        shinjitai,
-        jiForm,
-        jiXiaoyunNumbers,
-        jiXiaoyuns,
-      });
     for (const jiXiaoyun of jiXiaoyuns) {
       addEntry(jiXiaoyun, jiForm);
     }

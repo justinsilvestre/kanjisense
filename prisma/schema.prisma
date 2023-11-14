@@ -98,10 +98,11 @@ model ScriptinAozoraFrequency {
 }
 
 model KanjisenseVariantGroup {
-  id       String             @id
-  variants String[]
+  id                     String             @id
+  variants               String[]
   // built after variants are set
-  figures  KanjisenseFigure[]
+  figures                KanjisenseFigure[]
+  hasStandaloneCharacter Boolean            @default(false)
 }
 
 model KanjisenseFigureRelation {
@@ -128,6 +129,7 @@ model KanjisenseFigure {
   listsAsComponent     String[]
   listsAsCharacter     String[]
   aozoraAppearances    Int
+  // aozoraAppearancesCountingVariants Int
   activeSoundMarkValue String?
   variantGroupId       String?
   componentsTree       Json?
@@ -149,7 +151,7 @@ model KanjisenseFigure {
 
 model KanjisenseComponent {
   id              String             @id
-  componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade)
+  componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   soundMarkUses   KanjisenseFigure[] @relation("activeSoundMark")
   allUses         KanjisenseFigure[] @relation("allComponents")
 }
@@ -158,8 +160,8 @@ model KanjisenseComponentUse {
   componentId String
   parentId    String
   indexInTree Int?
-  component   KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade)
-  parent      KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade)
+  component   KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  parent      KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([componentId, parentId])
 }
@@ -170,7 +172,7 @@ model KanjisenseFigureReading {
   inferredOnReadingCandidates   Json
   kanjidicEntryId               String?                                @unique
   unihan15Id                    String?                                @unique
-  figure                        KanjisenseFigure                       @relation(fields: [id], references: [id], onDelete: Cascade)
+  figure                        KanjisenseFigure                       @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   kanjidicEntry                 KanjidicEntry?                         @relation("kanjidicEntry", fields: [kanjidicEntryId], references: [id])
   unihan15                      Unihan15?                              @relation("unihan15", fields: [unihan15Id], references: [id])
   sbgyXiaoyuns                  KanjisenseFigureReadingToSbgyXiaoyun[]
@@ -179,9 +181,9 @@ model KanjisenseFigureReading {
 
 model KanjisenseFigureReadingToSbgyXiaoyun {
   figureReadingId String
-  figureReading   KanjisenseFigureReading @relation(fields: [figureReadingId], references: [id], onDelete: Cascade)
+  figureReading   KanjisenseFigureReading @relation(fields: [figureReadingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   sbgyXiaoyunId   Int
-  sbgyXiaoyun     SbgyXiaoyun             @relation(fields: [sbgyXiaoyunId], references: [xiaoyun], onDelete: Cascade)
+  sbgyXiaoyun     SbgyXiaoyun             @relation(fields: [sbgyXiaoyunId], references: [xiaoyun], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([figureReadingId, sbgyXiaoyunId])
 }
@@ -194,7 +196,7 @@ model KanjisenseFigureMeaning {
   kanjisenseStandin    String?
   kanjisenseReference  String?
   kanjidicEnglish      String[]
-  figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade)
+  figure               KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model KanjisenseFigureImage {
@@ -203,7 +205,7 @@ model KanjisenseFigureImage {
   type KanjisenseFigureImageType
 
   content Json
-  figure  KanjisenseFigure @relation(fields: [id], references: [id])
+  figure  KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 enum KanjisenseFigureImageType {
@@ -229,7 +231,7 @@ model User {
 model Password {
   hash   String
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Note {
@@ -239,7 +241,7 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 enum KanjisenseComponentUseTag {
@@ -266,15 +268,5 @@ model JmDictEntry {
   head        String
   readingText String
 
-  kanjiUses JmDictEntryKanjiUse[]
-
   @@index([head, readingText])
-}
-
-model JmDictEntryKanjiUse {
-  kanji   String
-  entry   JmDictEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
-  entryId Int
-
-  @@id([kanji, entryId])
 }

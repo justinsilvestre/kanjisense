@@ -9,6 +9,7 @@ import {
 
 import { DictLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
+import { FigureBadge, badgeFigureSelect } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
 import { BadgeProps, getBadgeProps } from "~/features/dictionary/displayFigure";
 import {
@@ -17,8 +18,6 @@ import {
   joyoNotInKyoiku,
   kyoikuKanji,
 } from "~/lib/baseKanji";
-
-import { FigureBadge, badgeFigureSelect } from "../components/FigureBadge";
 
 interface LoaderData {
   characters: Record<string, BadgeProps>;
