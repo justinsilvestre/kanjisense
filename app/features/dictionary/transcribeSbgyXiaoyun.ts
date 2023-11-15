@@ -7,7 +7,10 @@ import {
   transcribe,
 } from "~/lib/qys/transcribeXiaoyun";
 
-export function transcribeSbgyXiaoyun(sbgyXiaoyun: SbgyXiaoyun) {
+export function transcribeSbgyXiaoyun(
+  sbgyXiaoyun: SbgyXiaoyun,
+  options: { ascii?: boolean } = {},
+) {
   const transcriptionProfile: QysTranscriptionProfile = {
     is合口: sbgyXiaoyun.kaihe === Kaihe.Closed,
     canonical母: sbgyXiaoyun.initial as QysInitial,
@@ -16,5 +19,5 @@ export function transcribeSbgyXiaoyun(sbgyXiaoyun: SbgyXiaoyun) {
     qieyunCycleHead韻: sbgyXiaoyun.cycleHead,
     contrastiveRow等: sbgyXiaoyun.dengOrChongniu,
   };
-  return transcribe(transcriptionProfile);
+  return transcribe(transcriptionProfile, options.ascii);
 }

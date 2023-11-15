@@ -5,9 +5,7 @@ import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 type ElementOf<T> = T extends (infer E)[] ? E : never;
 
 export function getReadingMatchingSoundMark(
-  firstClassUse: ElementOf<
-    DictionaryPageFigureWithPriorityUses["firstClassUses"]
-  >,
+  firstClassUse: DictionaryPageFigureWithPriorityUses["firstClassUses"][number],
 ) {
   if (!firstClassUse.parent.activeSoundMarkId) return null;
   const onKatakana =

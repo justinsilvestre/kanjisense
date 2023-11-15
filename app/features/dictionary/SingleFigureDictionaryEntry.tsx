@@ -2,6 +2,7 @@ import { KanjisenseFigure } from "@prisma/client";
 
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
+import { displayActiveSoundMark } from "~/features/dictionary/displayActiveSoundMark";
 import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
@@ -13,49 +14,9 @@ import {
 } from "~/features/dictionary/displayFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
-import {
-  displayActiveSoundMark,
-  getReadingMatchingSoundMark,
-} from "~/features/dictionary/getReadingMatchingSoundMark";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
-function FirstClassUses({
-  figure,
-}: {
-  figure: DictionaryPageFigureWithPriorityUses;
-}) {
-  if (!figure.firstClassUses.length) return null;
-  return (
-    <>
-      <h2>
-        used as a component in {figure.firstClassUses.length} priority figures
-      </h2>
-
-      <ul>
-        {figure.firstClassUses.map((u) => (
-          <li
-            key={u.parentId}
-            className={`inline-block m-4 ${
-              !u.parent.isPriority ? "bg-slate-200" : ""
-            }`}
-          >
-            <FigurePopoverBadge
-              id={u.parent.id}
-              badgeProps={getBadgeProps(u.parent)}
-            />
-            <br />
-            {u.parent.activeSoundMarkId === figure.id
-              ? getReadingMatchingSoundMark(u)
-              : null}
-            <br />
-            <FigureKeywordDisplay figure={u.parent} />
-            <br />
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-}
+import { FigurePriorityUses } from "./FigurePriorityUses";
 
 export function SingleFigureDictionaryEntry({
   figure,
@@ -131,7 +92,10 @@ export function SingleFigureDictionaryEntry({
       <h2>priority sound mark: {isPrioritySoundMark(figure) ? "yes" : "no"}</h2>
       <h2>priority component: {isPriorityComponent(figure) ? "yes" : "no"}</h2>
 
-      <FirstClassUses figure={figure}></FirstClassUses>
+      <FigurePriorityUses
+        componentFigure={figure}
+        priorityUses={figure.firstClassUses}
+      />
     </section>
   );
 }

@@ -194,7 +194,7 @@ const rhymes: Record<
   // 三等陰聲韻
   支: (s) => {
     if (
-      s.is合口 ||
+      s.is合口 &&
       !(
         initialGroups["見"].has(s.canonical母) ||
         initialGroups["影"].has(s.canonical母) ||

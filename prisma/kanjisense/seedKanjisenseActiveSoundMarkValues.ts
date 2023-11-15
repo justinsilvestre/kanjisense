@@ -5,6 +5,7 @@ import { toKatakana } from "wanakana";
 
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
+import { getActiveSoundMarkValueText } from "../../app/features/dictionary/getActiveSoundMarkValueText";
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
@@ -97,13 +98,6 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
         : soundMarkFigure.reading?.unihan15?.kJapaneseOn?.map(
             (s) => toKatakana(s) as string,
           ) ?? [];
-      if (soundMarkFigure.id === "者")
-        console.log(
-          "者 inferredOnReadingCandidates",
-          inferredOnReadingCandidates,
-        );
-      if (soundMarkFigure.id === "者")
-        console.log("者 katakanaOnReadings", katakanaOnReadings);
 
       const katakanaOnReadingsWithMatchingXiaoyuns = katakanaOnReadings
         .filter(Boolean)
@@ -115,7 +109,7 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
         return (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999);
       });
       const activeSoundMarkValue =
-        katakanaOnReadingsWithMatchingXiaoyuns?.[0] ??
+        katakanaOnReadingsWithMatchingXiaoyuns?.[0] ||
         Object.keys(inferredOnReadingCandidates)
           .filter(Boolean)
           .map((katakana) => ({
@@ -126,7 +120,7 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
             return (
               (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999)
             );
-          })?.[0]?.katakana ??
+          })?.[0]?.katakana ||
         null;
 
       const activeSoundMarkValueText =
@@ -143,26 +137,6 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
       }
     }
   }
-}
-
-function getActiveSoundMarkValueText(activeSoundMarkValue: {
-  katakana: string;
-  priority: {
-    priority: number;
-    xiaoyunsByMatchingType: Partial<Record<InferredOnyomiType, number[]>>;
-  } | null;
-}) {
-  if (!activeSoundMarkValue) return null;
-
-  return activeSoundMarkValue
-    ? `${activeSoundMarkValue.katakana}${
-        activeSoundMarkValue.priority
-          ? ` ${JSON.stringify(
-              activeSoundMarkValue.priority.xiaoyunsByMatchingType,
-            )}`
-          : ""
-      }`
-    : null;
 }
 
 function getKanOnPriority(

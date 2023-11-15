@@ -13,14 +13,16 @@ export function FigurePopoverBadge({
   id,
   badgeProps,
   className = "",
+  width,
 }: {
   id: string;
   badgeProps: BadgeProps;
   className?: string;
+  width?: number;
 }) {
   return (
     <FigurePopover figureId={id} badgeProps={badgeProps} className={className}>
-      <FigureBadge id={id} badgeProps={badgeProps} />
+      <FigureBadge id={id} badgeProps={badgeProps} width={width} />
     </FigurePopover>
   );
 }

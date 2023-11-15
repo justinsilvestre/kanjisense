@@ -131,6 +131,7 @@ const commonInclude = {
         select: {
           ...badgeFigureSelect,
           activeSoundMarkId: true,
+          activeSoundMarkValue: true,
           keyword: true,
           mnemonicKeyword: true,
           isPriority: true,
@@ -142,6 +143,7 @@ const commonInclude = {
           },
           reading: {
             select: {
+              selectedOnReadings: true,
               sbgyXiaoyuns: {
                 select: { sbgyXiaoyun: true },
               },
