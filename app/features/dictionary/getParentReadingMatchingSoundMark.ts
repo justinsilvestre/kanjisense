@@ -5,7 +5,13 @@ import { parseActiveSoundMarkValue } from "./getActiveSoundMarkValueText";
 
 export function getParentReadingMatchingSoundMark(
   soundMarkValueText: DictionaryPageFigureWithPriorityUses["firstClassUses"][number]["parent"]["activeSoundMarkValue"],
-  soundMarkReadings: DictionaryPageFigureWithPriorityUses["reading"],
+  soundMarkReadings:
+    | Pick<
+        NonNullable<DictionaryPageFigureWithPriorityUses["reading"]>,
+        "sbgyXiaoyuns"
+      >
+    | null
+    | undefined,
   parentReadings: DictionaryPageFigureWithPriorityUses["firstClassUses"][number]["parent"]["reading"],
 ) {
   if (!parentReadings)
@@ -48,12 +54,6 @@ export function getParentReadingMatchingSoundMark(
     matchingKatakanaOnReading ||
     parentReadings.selectedOnReadings?.[0] ||
     parentReadings.kanjidicEntry?.onReadings?.[0];
-  console.log({
-    matchingKatakanaOnReading,
-    parentReadingsSelectedOnReadings: parentReadings.selectedOnReadings,
-    parentReadingsKanjidicEntryOnReadings:
-      parentReadings.kanjidicEntry?.onReadings,
-  });
 
   const parentGuangyunReadingsByLevenshteinDistance =
     parentGuangyunReadings.sort((a, b) => {

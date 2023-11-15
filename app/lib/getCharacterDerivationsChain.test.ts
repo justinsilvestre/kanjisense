@@ -28,4 +28,38 @@ describe("getCharacterDerivationsChain", () => {
       new CharacterOriginReference("曐", "生", CharacterOriginType.phonetic),
     ]);
   });
+
+  it("works for 青", async () => {
+    const chain = await getCharacterDerivationsChain(
+      "青",
+      new CharacterOriginReference(
+        "青",
+        "靑",
+        CharacterOriginType.simplification,
+      ),
+      async (id) => {
+        const map = new Map<string, string>([
+          ["青", "→靑"],
+          ["靑", "→𤯞		1760010"],
+          ["𤯞", "⿱生丹	生聲"],
+          ["生", "象形	2150010"],
+        ]);
+        return map.get(id) ?? null;
+      },
+    );
+    console.log(chain);
+    expect(chain).toEqual([
+      new CharacterOriginReference(
+        "青",
+        "靑",
+        CharacterOriginType.simplification,
+      ),
+      new CharacterOriginReference(
+        "靑",
+        "𤯞",
+        CharacterOriginType.simplification,
+      ),
+      new CharacterOriginReference("𤯞", "生", CharacterOriginType.phonetic),
+    ]);
+  });
 });

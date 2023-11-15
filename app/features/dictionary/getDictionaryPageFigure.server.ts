@@ -28,24 +28,6 @@ export async function getDictionaryPageFigure(figureId: string) {
     include: {
       ...commonInclude,
 
-      // firstClassComponents: {
-      //   ...commonInclude.firstClassComponents,
-      //   include: {
-      //     ...commonInclude.firstClassComponents.include,
-      //     component: {
-      //       ...commonInclude.firstClassComponents.include.component,
-      //       select: {
-      //         ...commonInclude.firstClassComponents.include.component.select,
-      //         firstClassComponents: {
-      //           select: {
-      //             componentId: true,
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
-
       variantGroup: {
         select: {
           ...commonInclude.variantGroup.select,
@@ -126,6 +108,8 @@ const commonInclude = {
           id: true,
           keyword: true,
           mnemonicKeyword: true,
+          activeSoundMarkId: true,
+          activeSoundMarkValue: true,
 
           image: true,
 
@@ -137,9 +121,16 @@ const commonInclude = {
 
           reading: {
             select: {
+              selectedOnReadings: true,
               sbgyXiaoyuns: {
-                select: {
+                include: {
                   sbgyXiaoyun: true,
+                },
+              },
+              kanjidicEntry: {
+                select: {
+                  onReadings: true,
+                  kunReadings: true,
                 },
               },
             },

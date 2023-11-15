@@ -1,7 +1,6 @@
 import { KanjisenseFigure } from "@prisma/client";
 
 import { FigureBadge } from "~/components/FigureBadge";
-import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
@@ -11,11 +10,11 @@ import {
   isStandaloneCharacter,
   isStandaloneCharacterVariant,
 } from "~/features/dictionary/badgeFigure";
-import { ComponentUseJson } from "~/features/dictionary/ComponentUse";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
+import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { FigurePriorityUses } from "./FigurePriorityUses";
 
 export function SingleFigureDictionaryEntry({
@@ -66,7 +65,7 @@ export function SingleFigureDictionaryEntry({
           {headingsMeanings.obsoleteCharacter.join("; ")}
         </h1>
       ) : null}
-      {DictionaryEntryComponentsTree(figure)}
+      <DictionaryEntryComponentsTree figure={figure} />
 
       <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
       <h2>{figure.reading?.kanjidicEntry?.onReadings?.join(" ")}</h2>
@@ -103,53 +102,6 @@ export const kvgAttributes = {
     height: "7em",
   },
 } as const;
-
-function DictionaryEntryComponentsTreeMember({
-  componentFigure,
-}: {
-  entryFigure: DictionaryPageFigureWithPriorityUses;
-  componentFigure: DictionaryPageFigureWithPriorityUses["firstClassComponents"][0]["component"];
-}) {
-  return (
-    <div>
-      <FigurePopoverBadge
-        id={componentFigure.id}
-        badgeProps={getBadgeProps(componentFigure)}
-      />
-      <FigureKeywordDisplay figure={componentFigure} />
-      {componentFigure.firstClassComponents.length ? (
-        <div>
-          <button>expand</button>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function DictionaryEntryComponentsTree(
-  figure: DictionaryPageFigureWithPriorityUses,
-) {
-  const componentsTree = figure.componentsTree as ComponentUseJson[] | null;
-  if (!componentsTree) return null;
-  const firstClassComponents = new Map(
-    figure.firstClassComponents.map((c) => [c.componentId, c.component]),
-  );
-
-  return (
-    <section>
-      {componentsTree.map(([, componentId]) => {
-        if (!firstClassComponents.has(componentId)) return null;
-        return (
-          <DictionaryEntryComponentsTreeMember
-            key={componentId}
-            entryFigure={figure}
-            componentFigure={firstClassComponents.get(componentId)!}
-          />
-        );
-      })}
-    </section>
-  );
-}
 
 type KeywordDisplayFigure = Pick<
   KanjisenseFigure,

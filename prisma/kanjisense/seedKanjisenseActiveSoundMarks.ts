@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 
 import { simplifiedSoundMarks } from "~/lib/dic/simplifiedSoundMarks";
 
+import { ComponentUse } from "../../app/features/dictionary/ComponentUse";
 import { registerSeeded } from "../seedUtils";
 
-import { ComponentUse } from "./ComponentUse";
 import { executeAndLogTime } from "./executeAndLogTime";
 
 export async function seedKanjisenseActiveSoundMarks(

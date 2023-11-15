@@ -2,7 +2,7 @@ import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
 export function getActiveSoundMarkValueText(activeSoundMarkValue: {
   katakana: string;
-  priority: {
+  priority?: {
     priority: number;
     xiaoyunsByMatchingType: Partial<Record<InferredOnyomiType, number[]>>;
   } | null;

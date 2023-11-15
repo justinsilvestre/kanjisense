@@ -1,9 +1,9 @@
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
-import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
 import { getParentReadingMatchingSoundMark } from "./getParentReadingMatchingSoundMark";
+import { OnAndGuangyunReadings } from "./OnAndGuangyunReadings";
 import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
 
 export function FigurePriorityUses({
@@ -43,23 +43,10 @@ export function FigurePriorityUses({
                 badgeProps={getBadgeProps(u.parent)}
                 width={5}
               />
-              {parentReadingMatchingSoundMark ? (
-                <span className="text-sm rounded border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 p-1">
-                  {parentReadingMatchingSoundMark.katakanaOn}{" "}
-                  {parentReadingMatchingSoundMark.guangyun}
-                </span>
-              ) : (
-                <span className="text-sm">
-                  {u.parent.reading?.selectedOnReadings?.[0] ||
-                    u.parent.reading?.kanjidicEntry?.onReadings?.[0] ||
-                    null}{" "}
-                  {u.parent.reading?.sbgyXiaoyuns?.length
-                    ? transcribeSbgyXiaoyun(
-                        u.parent.reading.sbgyXiaoyuns[0].sbgyXiaoyun,
-                      )
-                    : null}
-                </span>
-              )}
+              <OnAndGuangyunReadings
+                parentReadingMatchingSoundMark={parentReadingMatchingSoundMark}
+                reading={u.parent.reading}
+              />
               <br />
               <FigureKeywordDisplay figure={u.parent} />
               <br />

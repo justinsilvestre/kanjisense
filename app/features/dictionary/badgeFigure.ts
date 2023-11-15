@@ -148,22 +148,22 @@ function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
   };
 }
 
-function _getBadgeProps(
-  figure: Pick<
-    KanjisenseFigure,
-    | "id"
-    | "variantGroupId"
-    | "listsAsCharacter"
-    | "listsAsComponent"
-    | "aozoraAppearances"
-  > &
-    StandaloneCharacterQueryFigure &
-    IsAtomicFigureQueryFigure &
-    IsPriorityComponentQueryFigure &
-    IsPrioritySoundMarkFigure & {
-      image?: KanjisenseFigureImage | null;
-    },
-): BadgeProps {
+export type BadgePropsFigure = Pick<
+  KanjisenseFigure,
+  | "id"
+  | "variantGroupId"
+  | "listsAsCharacter"
+  | "listsAsComponent"
+  | "aozoraAppearances"
+> &
+  StandaloneCharacterQueryFigure &
+  IsAtomicFigureQueryFigure &
+  IsPriorityComponentQueryFigure &
+  IsPrioritySoundMarkFigure & {
+    image?: KanjisenseFigureImage | null;
+  };
+
+function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
   const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
   const lists = getLists(figureIsStandaloneCharacter, figure);
   return {
