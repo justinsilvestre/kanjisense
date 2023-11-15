@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { BadgeHue, BadgeProps } from "~/features/dictionary/displayFigure";
+import { BadgeHue, BadgeProps } from "~/features/dictionary/badgeFigure";
 import { KvgJsonData } from "~/features/dictionary/KvgJsonData";
 
 const GETA_BLOCK_CHARACTER = "〓";

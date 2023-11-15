@@ -61,7 +61,7 @@ async function* parseChunk(
           "undefined entity",
         )
       ) {
-        console.error(error);
+        // console.error(error);
       } else throw error;
     }
 

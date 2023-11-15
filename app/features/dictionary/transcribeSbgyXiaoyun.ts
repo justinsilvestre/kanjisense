@@ -8,7 +8,10 @@ import {
 } from "~/lib/qys/transcribeXiaoyun";
 
 export function transcribeSbgyXiaoyun(
-  sbgyXiaoyun: SbgyXiaoyun,
+  sbgyXiaoyun: Pick<
+    SbgyXiaoyun,
+    "cycleHead" | "dengOrChongniu" | "initial" | "kaihe" | "tone"
+  >,
   options: { ascii?: boolean } = {},
 ) {
   const transcriptionProfile: QysTranscriptionProfile = {

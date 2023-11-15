@@ -1,10 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { files, readJsonSync } from "~/lib/files.server";
-import { forEachLine } from "~/lib/forEachLine.server";
-import { transcribe } from "~/lib/qys/transcribeXiaoyun";
 
 import { registerSeeded } from "../seedUtils";
+
+import { getYuntuJson } from "./getYuntuJson";
 
 // mostly ocr and xml structure corrections
 const replacementFanqie = {
@@ -49,18 +49,6 @@ export async function seedSbgy(prisma: PrismaClient, force = false) {
     await prisma.sbgyXiaoyun.deleteMany({});
 
     const dbInput = await getDbInput();
-
-    for (const [xiaoyunNumber, syl] of Object.entries(dbInput)) {
-      const transcription = transcribe({
-        is合口: syl.kaihe === "合",
-        is重紐A類: syl.dengOrChongniu === "A",
-        canonical母: syl.initial as CanonicalInitial,
-        tone聲: syl.tone as "平" | "上" | "去" | "入",
-        qieyunCycleHead韻: syl.cycleHead,
-        contrastiveRow等: syl.dengOrChongniu || null,
-      });
-      console.log(xiaoyunNumber, transcription, syl.exemplars);
-    }
 
     await prisma.sbgyXiaoyun.createMany({
       data: Object.values(dbInput).map(
@@ -130,7 +118,7 @@ async function getDbInput() {
   return dbInput;
 }
 
-type CanonicalInitial =
+export type CanonicalInitial =
   | "幫"
   | "滂"
   | "並"
@@ -179,7 +167,7 @@ export type XiaoyunCategoriesJson = [
   chongniuLetterOrDeng: string | null,
 ];
 
-const overrides: Record<number, XiaoyunCategoriesJson> = {
+export const overrides: Record<number, XiaoyunCategoriesJson> = {
   // no homophones so no fanqie was given
   1919: ["章", "蒸", "上", null, null], // 拯
   3177: ["影", "銜", "去", null, null], // 𪒠
@@ -205,40 +193,3 @@ const overrides: Record<number, XiaoyunCategoriesJson> = {
   // apparently corrections, judging by unt  https://www.zhihu.com/question/490585553/answer/2157640006
   1763: ["精", "歌", "上", "合", "一"], // 硰,
 };
-async function getYuntuJson() {
-  const json: Record<number, XiaoyunCategoriesJson> = {};
-  let firstSeen = false;
-  await forEachLine(files.nk2028GuangyunYuntu, (line) => {
-    if (!line || line.startsWith("#")) return;
-    if (!firstSeen) {
-      firstSeen = true;
-      return;
-    }
-    // 小韻號,小韻首字,上字,下字,被切字音韻描述們,上字音韻描述們,下字音韻描述們
-    const [number, , , , categories] = line.split(",");
-
-    const matchData = categories.match(
-      /^(.)([開合]?)([一二三AB]?)(.)([平上去入])$/u,
-    );
-    if (!matchData) {
-      console.error(categories);
-      return;
-    }
-    const [
-      ,
-      initial,
-      kaiheWhenContrastiveInRhyme,
-      chongniuLetterOrDeng,
-      guangyunRhymeWithoutTone,
-      tone,
-    ] = matchData;
-    json[+number] = [
-      initial as CanonicalInitial,
-      guangyunRhymeWithoutTone,
-      tone,
-      (!LABIAL_INITIALS.has(initial) && kaiheWhenContrastiveInRhyme) || null,
-      chongniuLetterOrDeng || null,
-    ];
-  });
-  return { ...json, ...overrides };
-}

@@ -1,4 +1,4 @@
-import { isStandaloneCharacterVariant } from "~/features/dictionary/displayFigure";
+import { isStandaloneCharacterVariant } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 
 export function getHeadingsMeanings(

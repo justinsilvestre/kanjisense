@@ -2,7 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import { PropsWithChildren, useEffect, createElement } from "react";
 import { createPortal } from "react-dom";
 
-import { BadgeProps, getBadgeProps } from "~/features/dictionary/displayFigure";
+import { BadgeProps, getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
 
 import { DictLink } from "./AppLink";

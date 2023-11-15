@@ -27,15 +27,18 @@ export function displayActiveSoundMark(
   if (!activeSoundMarkValue) return null;
 
   const [katakana, sbgyJsonText] = activeSoundMarkValue.split(" ");
-  const onyomiTypesToXiaoyunNumbers = JSON.parse(sbgyJsonText) as Record<
-    InferredOnyomiType,
-    number[]
-  >;
-  const xiaoyunNumbers = Object.values(onyomiTypesToXiaoyunNumbers).flat();
+  const onyomiTypesToXiaoyunNumbers = sbgyJsonText
+    ? (JSON.parse(sbgyJsonText) as Record<InferredOnyomiType, number[]>)
+    : null;
+  const xiaoyunNumbers =
+    onyomiTypesToXiaoyunNumbers &&
+    Object.values(onyomiTypesToXiaoyunNumbers).flat();
 
-  const xiaoyun = firstClassComponent.component.reading?.sbgyXiaoyuns.find(
-    ({ sbgyXiaoyun }) => xiaoyunNumbers.includes(sbgyXiaoyun.xiaoyun),
-  );
+  const xiaoyun = xiaoyunNumbers
+    ? firstClassComponent.component.reading?.sbgyXiaoyuns.find(
+        ({ sbgyXiaoyun }) => xiaoyunNumbers.includes(sbgyXiaoyun.xiaoyun),
+      )
+    : firstClassComponent.component.reading?.sbgyXiaoyuns?.[0];
   if (!xiaoyun) return katakana;
 
   const transcription = transcribeSbgyXiaoyun(xiaoyun.sbgyXiaoyun);

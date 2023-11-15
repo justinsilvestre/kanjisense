@@ -1,6 +1,6 @@
 import { prisma } from "~/db.server";
 
-import { badgeFigureSelect } from "./displayFigure";
+import { badgeFigureSelect } from "./badgeFigure";
 
 export type DictionaryPageSearchedFigure = NonNullable<
   Awaited<ReturnType<typeof getDictionaryPageFigure>>
@@ -11,11 +11,41 @@ export type DictionaryPageFigureWithPriorityUses = Omit<
   "variantGroup"
 >;
 
+export type BadgeFigure = NonNullable<
+  Awaited<ReturnType<typeof getBadgeFigure>>
+>;
+
+export async function getBadgeFigure(figureId: string) {
+  return await prisma.kanjisenseFigure.findUnique({
+    where: { id: figureId },
+    select: badgeFigureSelect,
+  });
+}
+
 export async function getDictionaryPageFigure(figureId: string) {
   return await prisma.kanjisenseFigure.findUnique({
     where: { id: figureId },
     include: {
       ...commonInclude,
+
+      // firstClassComponents: {
+      //   ...commonInclude.firstClassComponents,
+      //   include: {
+      //     ...commonInclude.firstClassComponents.include,
+      //     component: {
+      //       ...commonInclude.firstClassComponents.include.component,
+      //       select: {
+      //         ...commonInclude.firstClassComponents.include.component.select,
+      //         firstClassComponents: {
+      //           select: {
+      //             componentId: true,
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
+
       variantGroup: {
         select: {
           ...commonInclude.variantGroup.select,
@@ -98,6 +128,13 @@ const commonInclude = {
           mnemonicKeyword: true,
 
           image: true,
+
+          firstClassComponents: {
+            select: {
+              componentId: true,
+            },
+          },
+
           reading: {
             select: {
               sbgyXiaoyuns: {
@@ -118,6 +155,8 @@ const commonInclude = {
     },
   },
   firstClassUses: {
+    distinct: ["parentId" as const, "componentId" as const],
+
     orderBy: {
       parent: {
         aozoraAppearances: "desc" as const,

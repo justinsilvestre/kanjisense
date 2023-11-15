@@ -2,7 +2,6 @@ import { KanjisenseFigure } from "@prisma/client";
 
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
-import { displayActiveSoundMark } from "~/features/dictionary/displayActiveSoundMark";
 import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
@@ -11,7 +10,8 @@ import {
   isPrioritySoundMark,
   isStandaloneCharacter,
   isStandaloneCharacterVariant,
-} from "~/features/dictionary/displayFigure";
+} from "~/features/dictionary/badgeFigure";
+import { ComponentUseJson } from "~/features/dictionary/ComponentUse";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
@@ -35,6 +35,9 @@ export function SingleFigureDictionaryEntry({
           badgeProps={getBadgeProps(figure)}
           width={10}
         />
+      </div>
+      <div>
+        {/* <FigureKeywordDisplay figure={figure.firstClassComponents![0].component} /> */}
       </div>
 
       {headingsMeanings.currentCharacter ? (
@@ -63,20 +66,7 @@ export function SingleFigureDictionaryEntry({
           {headingsMeanings.obsoleteCharacter.join("; ")}
         </h1>
       ) : null}
-      <h2>
-        {figure.firstClassComponents.map((c) => (
-          <span key={c.indexInTree}>
-            <FigurePopoverBadge
-              id={c.componentId}
-              badgeProps={getBadgeProps(c.component)}
-            />{" "}
-            {c.parent.activeSoundMarkId === c.component.id
-              ? displayActiveSoundMark(c)
-              : ""}{" "}
-            <FigureKeywordDisplay figure={c.component} />
-          </span>
-        ))}
-      </h2>
+      {DictionaryEntryComponentsTree(figure)}
 
       <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
       <h2>{figure.reading?.kanjidicEntry?.onReadings?.join(" ")}</h2>
@@ -91,7 +81,7 @@ export function SingleFigureDictionaryEntry({
       <h2>standalone: {isStandaloneCharacter(figure) ? "yes" : "no"}</h2>
       <h2>priority sound mark: {isPrioritySoundMark(figure) ? "yes" : "no"}</h2>
       <h2>priority component: {isPriorityComponent(figure) ? "yes" : "no"}</h2>
-
+      <h2>active sound mark value: {figure.activeSoundMarkValue}</h2>
       <FigurePriorityUses
         componentFigure={figure}
         priorityUses={figure.firstClassUses}
@@ -114,15 +104,64 @@ export const kvgAttributes = {
   },
 } as const;
 
+function DictionaryEntryComponentsTreeMember({
+  componentFigure,
+}: {
+  entryFigure: DictionaryPageFigureWithPriorityUses;
+  componentFigure: DictionaryPageFigureWithPriorityUses["firstClassComponents"][0]["component"];
+}) {
+  return (
+    <div>
+      <FigurePopoverBadge
+        id={componentFigure.id}
+        badgeProps={getBadgeProps(componentFigure)}
+      />
+      <FigureKeywordDisplay figure={componentFigure} />
+      {componentFigure.firstClassComponents.length ? (
+        <div>
+          <button>expand</button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function DictionaryEntryComponentsTree(
+  figure: DictionaryPageFigureWithPriorityUses,
+) {
+  const componentsTree = figure.componentsTree as ComponentUseJson[] | null;
+  if (!componentsTree) return null;
+  const firstClassComponents = new Map(
+    figure.firstClassComponents.map((c) => [c.componentId, c.component]),
+  );
+
+  return (
+    <section>
+      {componentsTree.map(([, componentId]) => {
+        if (!firstClassComponents.has(componentId)) return null;
+        return (
+          <DictionaryEntryComponentsTreeMember
+            key={componentId}
+            entryFigure={figure}
+            componentFigure={firstClassComponents.get(componentId)!}
+          />
+        );
+      })}
+    </section>
+  );
+}
+
+type KeywordDisplayFigure = Pick<
+  KanjisenseFigure,
+  "keyword" | "mnemonicKeyword" | "listsAsCharacter"
+> &
+  IsPriorityComponentQueryFigure &
+  StandaloneCharacterVariantQueryFigure;
+
 export function FigureKeywordDisplay({
   figure,
 }: {
-  figure: Pick<
-    KanjisenseFigure,
-    "keyword" | "mnemonicKeyword" | "listsAsCharacter"
-  > &
-    IsPriorityComponentQueryFigure &
-    StandaloneCharacterVariantQueryFigure;
+  figure: KeywordDisplayFigure;
 }) {
   if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
 

@@ -53,23 +53,23 @@ async function seed() {
       seedKanjiDbCharacterDerivations(prisma),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
-      seedKanjisenseFigures(prisma),
+      seedKanjisenseFigures(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
-      seedKanjisenseActiveSoundMarks(prisma),
+      seedKanjisenseActiveSoundMarks(prisma, false),
     );
     await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
 
     await executeAndLogTime("seeding kanjisense figure readings", () =>
-      seedKanjisenseFigureReadings(prisma),
+      seedKanjisenseFigureReadings(prisma, false),
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValues(prisma),
+      seedKanjisenseActiveSoundMarkValues(prisma, false),
     );
 
     await executeAndLogTime("seed figure images", () =>
-      seedFigureImages(prisma),
+      seedFigureImages(prisma, false),
     );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);

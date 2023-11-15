@@ -157,13 +157,14 @@ model KanjisenseComponent {
 }
 
 model KanjisenseComponentUse {
-  componentId String
-  parentId    String
-  indexInTree Int?
-  component   KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  parent      KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  componentId        String
+  parentId           String
+  indexInTree        Int
+  appearanceInParent Int
+  component          KanjisenseFigure @relation("firstClassUses", fields: [componentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  parent             KanjisenseFigure @relation("firstClassComponents", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([componentId, parentId])
+  @@id([componentId, parentId, appearanceInParent])
 }
 
 model KanjisenseFigureReading {

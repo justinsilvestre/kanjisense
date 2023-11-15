@@ -2,13 +2,13 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 
 import { prisma } from "~/db.server";
-import { badgeFigureSelect } from "~/features/dictionary/displayFigure";
+import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";
 
 export interface DictPreviewLoaderData {
   figure: PopoverFigure;
 }
 
-type PopoverFigure = Awaited<ReturnType<typeof getPopoverFigure>>;
+export type PopoverFigure = Awaited<ReturnType<typeof getPopoverFigure>>;
 
 async function getPopoverFigure(figureId: string) {
   return await prisma.kanjisenseFigure.findFirst({

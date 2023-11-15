@@ -15,7 +15,7 @@ import {
   BadgeProps,
   badgeFigureSelect,
   getBadgeProps,
-} from "~/features/dictionary/displayFigure";
+} from "~/features/dictionary/badgeFigure";
 import {
   hyogaiKanji,
   jinmeiyoNotInHyogai,

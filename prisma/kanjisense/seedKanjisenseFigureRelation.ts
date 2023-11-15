@@ -187,9 +187,16 @@ async function analyzeFiguresRelations(
     if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
       console.log(`Arbitrarily choosing first sequence for ${figureId}`);
     }
-    const selectedIdsComponents = getComponentsFromIds(
-      ids.sequences[jLocaleIndex ?? 0],
-    ).filter((c) => c !== figureId);
+    const selectedIds = ids.sequences[jLocaleIndex ?? 0];
+    if (!selectedIds) {
+      console.error(
+        `Failed to get selectedIds for ${figureId} from ${idsText}`,
+      );
+      continue;
+    }
+    const selectedIdsComponents = getComponentsFromIds(selectedIds).filter(
+      (c) => c !== figureId,
+    );
 
     const variantGroupId =
       cached?.variantGroupId ??
@@ -238,10 +245,15 @@ async function analyzeFiguresRelations(
  * and empty array for atomic components
  */
 function getComponentsFromIds(ids: ParseIds.IDS): string[] {
-  return ParseIds.flatten(ids).map((component) => {
-    const key = component.type === "html" ? component.code : component.char;
-    return key;
-  });
+  try {
+    return ParseIds.flatten(ids).map((component) => {
+      const key = component.type === "html" ? component.code : component.char;
+      return key;
+    });
+  } catch (error) {
+    console.error("Failed to get components from IDS", ids);
+    throw error;
+  }
 }
 
 function parseLocaleTaggedIdss(key: string, idsSequences: string[]) {

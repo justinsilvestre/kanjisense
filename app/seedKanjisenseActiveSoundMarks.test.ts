@@ -128,14 +128,14 @@ async function isSoundMarkUseful(
           variantGroup: {
             AND: [
               {
-                KanjisenseFigure: {
+                figures: {
                   some: {
                     id: lostSoundMark,
                   },
                 },
               },
               {
-                KanjisenseFigure: {
+                figures: {
                   some: {
                     OR: [
                       {

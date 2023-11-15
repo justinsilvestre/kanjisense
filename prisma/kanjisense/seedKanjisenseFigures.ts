@@ -6,10 +6,10 @@ import yaml from "yaml";
 import { files } from "~/lib/files.server";
 import { getFigureById } from "~/models/figureRelation.server";
 
+import { ComponentUse } from "../../app/features/dictionary/ComponentUse";
 import { registerSeeded } from "../seedUtils";
 
 import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
-import { ComponentUse } from "./ComponentUse";
 import { executeAndLogTime } from "./executeAndLogTime";
 import { getAllCharacters } from "./getAllCharacters";
 import {
@@ -245,23 +245,26 @@ async function connectFirstClassComponents(
       const componentIsMeaningful = priorityFiguresMeanings.has(component);
       if (componentIsMeaningful) {
         resolved.add(`${chainString},${component}`);
-        acc.set(use.component, indexInTree);
+        const appearancesInParent = acc.get(use.component) || [];
+        appearancesInParent.push(indexInTree);
+        acc.set(use.component, appearancesInParent);
       }
 
       return acc;
-    }, new Map<string, number>());
+    }, new Map<string, number[]>());
 
     const firstClassComponentsInput = Array.from(
       firstClassComponents,
-      ([componentId, indexInTree]) => {
-        return {
+      ([componentId, indexesInTree]) => {
+        return indexesInTree.map((indexInTree, i) => ({
           indexInTree,
+          appearanceInParent: i + 1,
           component: {
             connect: { id: componentId },
           },
-        };
+        }));
       },
-    );
+    ).flat();
     await prisma.kanjisenseFigure.update({
       where: { id },
       data: {

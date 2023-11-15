@@ -15,8 +15,21 @@ export interface QysTranscriptionProfile {
   contrastiveRow等: string | null;
 }
 
+function changeRuShengCoda(isRuSheng: boolean, final: string) {
+  if (!isRuSheng) return final;
+  if (final.endsWith("m")) return final.slice(0, -1) + "p";
+  else if (final.endsWith("n")) return final.slice(0, -1) + "t";
+  else if (final.endsWith("ng")) return final.slice(0, -2) + "k";
+  else return final;
+}
+
 const asciiFinals = {
   iūng: "iuung",
+  ūng: "uung",
+  ūk: "uuk",
+  yūk: "yuuk",
+  ẁīk: "ywiik",
+  wīk: "wiik",
   wōng: "woong",
   ōng: "oong",
   ong: "ong",
@@ -56,14 +69,18 @@ const asciiFinals = {
   yạ: "yra",
   wạ: "rwa",
   ạ: "ra",
+  wâng: "wvang",
   wẹng: "rweng",
   ẹng: "reng",
+  wạng: "rwang",
   wạ̈ng: "rwaeng",
+  ạng: "rang",
   ạ̈ng: "raeng",
-  äm: "raem",
+  äm: "aem",
   ạm: "ram",
   wèi: "waei",
   èi: "aei",
+  èm: "aem",
   wèn: "waen",
   èn: "aen",
   èu: "aeu",
@@ -74,6 +91,7 @@ const asciiFinals = {
   wï: "wie",
   yï: "yie",
   ï: "ie",
+  i: "i",
   uī: "uii",
   ẁī: "ywii",
   wī: "wii",
@@ -82,6 +100,8 @@ const asciiFinals = {
   wî: "wvi",
   î: "vi",
   yo: "yo",
+  iu: "iu",
+  ạ̈m: "raem",
   u: "u",
   yu: "yu",
   ẁei: "ywei",
@@ -393,16 +413,10 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
 
   const 母組 = getInitialGroup(母);
 
-  let 韻母 =
+  const 韻母 =
     typeof transcribe韻母 === "string"
       ? transcribe韻母
       : transcribe韻母!(syllable);
-
-  if (聲 === "入") {
-    if (韻母.endsWith("m")) 韻母 = 韻母.slice(0, -1) + "p";
-    else if (韻母.endsWith("n")) 韻母 = 韻母.slice(0, -1) + "t";
-    else if (韻母.endsWith("ng")) 韻母 = 韻母.slice(0, -2) + "k";
-  }
 
   let initialRealization: string;
   // if (母組 === "莊" && (韻 === "臻" || 等 === "二" || 韻 === "庚"))
@@ -433,7 +447,10 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
     return (
       (asciiInitials[initialRealization as keyof typeof asciiInitials] ||
         initialRealization) +
-      asciiFinals[韻母 as keyof typeof asciiFinals] +
+      changeRuShengCoda(
+        聲 === "入",
+        asciiFinals[韻母 as keyof typeof asciiFinals],
+      ) +
       聲調
     );
   }
@@ -445,7 +462,7 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
     入: "",
   }[聲];
 
-  return initialRealization + 韻母 + 聲調;
+  return initialRealization + changeRuShengCoda(聲 === "入", 韻母) + 聲調;
 }
 
 const retroflexToDental = {

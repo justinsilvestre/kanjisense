@@ -1,5 +1,5 @@
 import { FigurePopoverBadge } from "~/components/FigurePopover";
-import { getBadgeProps } from "~/features/dictionary/displayFigure";
+import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
