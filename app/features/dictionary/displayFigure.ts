@@ -11,6 +11,47 @@ import {
   listCodes,
 } from "~/lib/dic/KanjiListCode";
 
+export interface BadgeProps {
+  image?: KanjisenseFigureImage | null;
+  aozoraAppearances: number;
+  hue: BadgeHue;
+  isStandaloneCharacter: boolean;
+  isPriorityComponent: boolean;
+  isSecondaryVariant: boolean;
+}
+
+export const badgeFigureSelect = {
+  id: true,
+  listsAsCharacter: true,
+  listsAsComponent: true,
+  variantGroupId: true,
+  aozoraAppearances: true,
+
+  _count: {
+    select: {
+      firstClassComponents: true,
+      firstClassUses: {
+        where: {
+          parent: {
+            isPriority: true,
+          },
+        },
+      },
+    },
+  },
+  asComponent: {
+    select: {
+      _count: {
+        select: {
+          soundMarkUses: {
+            where: { isPriority: true },
+          },
+        },
+      },
+    },
+  },
+};
+
 export enum BadgeHue {
   KYOIKU = "KYOIKU",
   JOYO = "JOYO",
@@ -133,13 +174,4 @@ function _getBadgeProps(
     isPriorityComponent: isPriorityComponent(figure),
     isSecondaryVariant: isSecondaryVariant(figure),
   };
-}
-
-export interface BadgeProps {
-  image?: KanjisenseFigureImage | null;
-  aozoraAppearances: number;
-  hue: BadgeHue;
-  isStandaloneCharacter: boolean;
-  isPriorityComponent: boolean;
-  isSecondaryVariant: boolean;
 }

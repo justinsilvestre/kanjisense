@@ -7,7 +7,6 @@ import {
 } from "@remix-run/react";
 
 import DictionaryLayout from "~/components/DictionaryLayout";
-import { prisma } from "~/db.server";
 import {
   getDictionaryPageFigure,
   DictionaryPageSearchedFigure,
@@ -22,7 +21,6 @@ export const meta: MetaFunction = () => [{ title: "Figure entry" }];
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { figureId } = params;
-
   const searchedFigure = figureId
     ? await getDictionaryPageFigure(figureId)
     : null;
@@ -41,13 +39,14 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
   const { searchedFigure: figure } = loaderData;
-  console.log(loaderData.searchedFigure.id, loaderData.searchedFigure);
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
-        <h1>
-          {figure.variantGroup?.id}: {figure.variantGroup?.variants.join(" ")}
-        </h1>
+        {figure.variantGroup ? (
+          <h1>
+            {figure.variantGroup?.id}: {figure.variantGroup?.variants.join(" ")}
+          </h1>
+        ) : null}
         {figure.variantGroup ? (
           figure.variantGroup.variants.map((variantId) => {
             const variant = figure.variantGroup?.figures.find(

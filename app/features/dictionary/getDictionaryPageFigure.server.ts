@@ -1,5 +1,6 @@
-import { badgeFigureSelect } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
+
+import { badgeFigureSelect } from "./displayFigure";
 
 export type DictionaryPageSearchedFigure = NonNullable<
   Awaited<ReturnType<typeof getDictionaryPageFigure>>

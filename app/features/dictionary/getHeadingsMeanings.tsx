@@ -1,12 +1,8 @@
-import {
-  type StandaloneCharacterQueryFigure,
-  isStandaloneCharacter,
-} from "~/features/dictionary/displayFigure";
+import { isStandaloneCharacterVariant } from "~/features/dictionary/displayFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 
 export function getHeadingsMeanings(
   figure: DictionaryPageFigureWithPriorityUses,
-  primaryVariantFigure: StandaloneCharacterQueryFigure,
 ): HeadingMeanings {
   const mnemonicKeyword = figure.mnemonicKeyword;
   const [, mnemonicKeywordText, , referenceTypeText, reference] =
@@ -22,10 +18,7 @@ export function getHeadingsMeanings(
       }
     : null;
 
-  const isStandaloneCharacterVariant =
-    isStandaloneCharacter(primaryVariantFigure);
-
-  if (isStandaloneCharacterVariant) {
+  if (isStandaloneCharacterVariant(figure)) {
     const currentCharacterMeanings: string[] = [];
     currentCharacterMeanings.push(figure.keyword);
     if (figure.meaning?.kanjidicEnglish?.length)

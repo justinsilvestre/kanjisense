@@ -1,8 +1,8 @@
 import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 
-import { badgeFigureSelect } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
+import { badgeFigureSelect } from "~/features/dictionary/displayFigure";
 
 export interface DictPreviewLoaderData {
   figure: PopoverFigure;

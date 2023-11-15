@@ -3,38 +3,6 @@ import { Prisma } from "@prisma/client";
 import { BadgeHue, BadgeProps } from "~/features/dictionary/displayFigure";
 import { KvgJsonData } from "~/features/dictionary/KvgJsonData";
 
-export const badgeFigureSelect = {
-  id: true,
-  listsAsCharacter: true,
-  listsAsComponent: true,
-  variantGroupId: true,
-  aozoraAppearances: true,
-
-  _count: {
-    select: {
-      firstClassComponents: true,
-      firstClassUses: {
-        where: {
-          parent: {
-            isPriority: true,
-          },
-        },
-      },
-    },
-  },
-  asComponent: {
-    select: {
-      _count: {
-        select: {
-          soundMarkUses: {
-            where: { isPriority: true },
-          },
-        },
-      },
-    },
-  },
-};
-
 const GETA_BLOCK_CHARACTER = "〓";
 
 export function FigureBadge({
