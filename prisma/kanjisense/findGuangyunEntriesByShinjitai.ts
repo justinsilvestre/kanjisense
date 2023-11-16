@@ -1,17 +1,18 @@
 import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
-// import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
+import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
 
-// const VARIANT_TYPES_PRIORITY = [
-//   "NewStyle",
-//   "kSemanticVariant",
-//   "kZVariant",
-//   "kTraditionalVariant",
-//   "HanyuDaCidianVariant",
-//   "TwEduVariant",
-//   "HanyuDaCidianVariantReverse",
-//   "CjkviVariant",
-// ] as KanjiVariant["variantType"][];
+const VARIANT_TYPES_PRIORITY = [
+  "NewStyle",
+  "kSemanticVariant",
+  "kZVariant",
+  "kTraditionalVariant",
+  "HanyuDaCidianVariant",
+  "TwEduVariant",
+  "HanyuDaCidianVariantReverse",
+  "CjkviVariant",
+] as KanjiVariant["variantType"][];
+const variantTypesPrioritySet = new Set(VARIANT_TYPES_PRIORITY);
 
 export async function findGuangyunEntriesByShinjitai(
   prisma: PrismaClient,
@@ -43,42 +44,40 @@ export async function findGuangyunEntriesByShinjitai(
     }
   }
 
-  // if (!entries.size) {
-  //   const zVariantForms = newToZVariants14.get(shinjitai);
-  //   if (zVariantForms) {
-  //     for (const zVariantForm of zVariantForms) {
-  //       const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
-  //         where: {
-  //           exemplars: { has: zVariantForm },
-  //         },
-  //       });
+  if (!entries.size) {
+    const zVariantForms = newToZVariants14.get(shinjitai);
+    if (zVariantForms) {
+      for (const zVariantForm of zVariantForms) {
+        const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
+          where: {
+            exemplars: { has: zVariantForm },
+          },
+        });
 
-  //       for (const zVariantEntry of zVariantEntries) {
-  //         addEntry(zVariantEntry, zVariantForm);
-  //       }
-  //     }
-  //   }
-  // }
+        for (const zVariantEntry of zVariantEntries) {
+          addEntry(zVariantEntry, zVariantForm);
+        }
+      }
+    }
+  }
 
-  // if (!entries.size) {
-  //   const backupVariants = (
-  //     await lookUpVariants(prisma, [shinjitai, ...kyuujitaiForms])
-  //   )
-  //     .filter((a) => variantTypesPrioritySet.has(a.variantType))
-  //     .sort((a, b) => {
-  //       const aTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(a.variantType);
-  //       const bTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(b.variantType);
-  //       return aTypeIndex - bTypeIndex;
-  //     });
-  //   for (const variant of backupVariants) {
-  //     const backupEntries = await prisma.sbgyXiaoyun.findMany({
-  //       where: { exemplars: { has: variant.character } },
-  //     });
-  //     for (const backupEntry of backupEntries) {
-  //       addEntry(backupEntry, variant.character);
-  //     }
-  //   }
-  // }
+  if (!entries.size) {
+    const backupVariants = (await lookUpVariants(prisma, shinkyuuForms))
+      .filter((a) => variantTypesPrioritySet.has(a.variantType))
+      .sort((a, b) => {
+        const aTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(a.variantType);
+        const bTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(b.variantType);
+        return aTypeIndex - bTypeIndex;
+      });
+    for (const variant of backupVariants) {
+      const backupEntries = await prisma.sbgyXiaoyun.findMany({
+        where: { exemplars: { has: variant.character } },
+      });
+      for (const backupEntry of backupEntries) {
+        addEntry(backupEntry, variant.character);
+      }
+    }
+  }
   return entries;
 
   function addEntry(xiaoyun: SbgyXiaoyun, char: string) {

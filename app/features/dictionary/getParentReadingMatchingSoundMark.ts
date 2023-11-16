@@ -1,7 +1,10 @@
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
-import { parseActiveSoundMarkValue } from "./getActiveSoundMarkValueText";
+import {
+  parseActiveSoundMarkValue,
+  transcribeSerializedXiaoyunProfile,
+} from "./getActiveSoundMarkValueText";
 
 export function getParentReadingMatchingSoundMark(
   soundMarkValueText: DictionaryPageFigureWithPriorityUses["firstClassUses"][number]["parent"]["activeSoundMarkValue"],
@@ -26,15 +29,6 @@ export function getParentReadingMatchingSoundMark(
       pretty: transcribeSbgyXiaoyun(sbgyXiaoyun),
     }),
   );
-  const soundMarkGuangyunReadings = new Map(
-    soundMarkReadings?.sbgyXiaoyuns.map(({ sbgyXiaoyun }) => [
-      sbgyXiaoyun.xiaoyun,
-      {
-        sbgyXiaoyun,
-        ascii: transcribeSbgyXiaoyun(sbgyXiaoyun, { ascii: true }),
-      },
-    ]),
-  );
 
   if (!soundMarkValueText) return null;
   const { katakana: soundMarkKatakanaOnReading, xiaoyunsByMatchingType } =
@@ -58,18 +52,18 @@ export function getParentReadingMatchingSoundMark(
   const parentGuangyunReadingsByLevenshteinDistance =
     parentGuangyunReadings.sort((a, b) => {
       const aDistance = Math.min(
-        ...soundMarkXiaoyuns.map(({ xiaoyun: soundMarkXiaoyunId }) =>
+        ...soundMarkXiaoyuns.map(({ profile }) =>
           getLevenshteinDistance(
             a.ascii,
-            soundMarkGuangyunReadings.get(soundMarkXiaoyunId)!.ascii,
+            transcribeSerializedXiaoyunProfile(profile, { ascii: true }),
           ),
         ),
       );
       const bDistance = Math.min(
-        ...soundMarkXiaoyuns.map(({ xiaoyun: soundMarkXiaoyunId }) =>
+        ...soundMarkXiaoyuns.map(({ profile }) =>
           getLevenshteinDistance(
             b.ascii,
-            soundMarkGuangyunReadings.get(soundMarkXiaoyunId)!.ascii,
+            transcribeSerializedXiaoyunProfile(profile, { ascii: true }),
           ),
         ),
       );

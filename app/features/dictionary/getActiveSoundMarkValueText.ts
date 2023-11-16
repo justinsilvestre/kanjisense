@@ -78,12 +78,16 @@ export function parseActiveSoundMarkValue(activeSoundMarkValueText: string) {
   };
 }
 
-export function transcribeSerializedXiaoyunProfile(profileText: string) {
+export function transcribeSerializedXiaoyunProfile(
+  profileText: string,
+  options?: { ascii?: boolean },
+) {
   const profile = deserializeXiaoyunProfile(profileText);
   return transcribeSbgyXiaoyun(
     profile as Pick<
       SbgyXiaoyun,
       "cycleHead" | "dengOrChongniu" | "initial" | "kaihe" | "tone"
     >,
+    options,
   );
 }
