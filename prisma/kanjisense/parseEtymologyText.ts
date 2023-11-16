@@ -41,7 +41,7 @@ export class CharacterOriginReference {
 export function parseEtymologyText(character: string, text: string) {
   if (text.includes("	或字	")) return null;
 
-  const [, parentMatch] = text.match(/^→(\S+)[^簡体]*(?<comment>#.+)?$/u) || [];
+  const [, parentMatch] = text.match(/^→(\S+)(\t(簡体))?/u) || [];
   if (parentMatch) {
     return new CharacterOriginReference(
       character,
@@ -51,7 +51,7 @@ export function parseEtymologyText(character: string, text: string) {
   }
 
   const [, soundMarkMatch] =
-    text.match(/[\s】／]([^形])[省亦]?[聲声](.*)?$/u) || [];
+    text.match(/^\S+[\s】／]([^形])[省亦]?[聲声](.*)?$/u) || [];
   if (soundMarkMatch) {
     return new CharacterOriginReference(
       character,
@@ -60,5 +60,21 @@ export function parseEtymologyText(character: string, text: string) {
     );
   }
 
+  if (text === "象形") return null;
+  if (/^\S+\t(象形|指事|指示|會意)([\t].+)?/.test(text)) return null;
+
+  if (/^←\S+/.test(text)) return null;
+
+  if (/^</.test(text)) return null;
+
+  // ⿰亻志	国字
+  if (/^\S+\t(\S+\t)?国字/.test(text)) return null;
+
+  //單	闕	0240050
+  if (/^\S+\t闕(\t|$)/.test(text)) return null;
+
+  if (/^\S(\t\d+)?/.test(text)) return null;
+
+  console.error(`Problem parsing etym text for ${character} ${text}`);
   return null;
 }

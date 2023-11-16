@@ -59,7 +59,11 @@ async function getDbInput() {
     const [, figureId, etymology] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
     if (!figureId || !etymology) throw new Error(line);
     if (!dbInput[figureId]) console.warn(`no id for ${figureId} in ${line}`);
-    if (dbInput[figureId]) dbInput[figureId].etymology = etymology;
+    if (dbInput[figureId]?.etymology) {
+      console.warn(
+        `duplicate etymology for ${figureId} prioritizing first:  ${dbInput[figureId].etymology}`,
+      );
+    } else if (dbInput[figureId]) dbInput[figureId].etymology = etymology;
   });
 
   const sbgyJson = readJsonSync<

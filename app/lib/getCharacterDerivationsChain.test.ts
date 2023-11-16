@@ -62,4 +62,31 @@ describe("getCharacterDerivationsChain", () => {
       new CharacterOriginReference("𤯞", "生", CharacterOriginType.phonetic),
     ]);
   });
+
+  it("works for 党", async () => {
+    const chain = await getCharacterDerivationsChain(
+      "党",
+      new CharacterOriginReference(
+        "党",
+        "黨",
+        CharacterOriginType.simplification,
+      ),
+      async (id) => {
+        const map = new Map<string, string>([
+          ["党", "→黨	簡体"],
+          ["黨", "⿰黑尚	尚聲	3840230"],
+        ]);
+        return map.get(id) ?? null;
+      },
+    );
+    console.log(chain);
+    expect(chain).toEqual([
+      new CharacterOriginReference(
+        "党",
+        "黨",
+        CharacterOriginType.simplification,
+      ),
+      new CharacterOriginReference("黨", "尚", CharacterOriginType.phonetic),
+    ]);
+  });
 });
