@@ -116,6 +116,19 @@ const commonInclude = {
           firstClassComponents: {
             select: {
               componentId: true,
+              component: {
+                select: {
+                  reading: {
+                    select: {
+                      sbgyXiaoyuns: {
+                        select: {
+                          sbgyXiaoyun: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
 

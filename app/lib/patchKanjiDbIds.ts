@@ -574,6 +574,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("掃", "⿰扌&GWS-U5E1A-G;")
       .replaceIds("婦", "⿰女&GWS-U5E1A-G;")
       .replaceIds("隡", "⿰阝産[G]	⿰阝產[TJ]")
+      .replaceIds("弐", "⿻一弍")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

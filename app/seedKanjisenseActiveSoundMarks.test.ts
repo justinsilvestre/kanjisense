@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { getAllCharacters } from "prisma/kanjisense/getAllCharacters";
+import { getAllCharactersAndVariantFigures } from "prisma/kanjisense/getAllCharacters";
 
 import { permittedLostSoundMarks } from "./lib/dic/permittedLostSoundMarks";
 
@@ -40,9 +40,10 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
     })
   ).map(({ id }) => id);
   const allFiguresIdsSet = new Set(allFiguresIds);
-  const { priorityCharacters } = await getAllCharacters(prisma);
-  const allPriorityCharactersIdsSet = new Set(
-    priorityCharacters.map(({ id }) => id),
+  const { priorityCharactersAndTheirNonComponentVariants } =
+    await getAllCharactersAndVariantFigures(prisma);
+  const allPriorityCharactersAndVariantsIdsSet = new Set(
+    priorityCharactersAndTheirNonComponentVariants.map(({ id }) => id),
   );
 
   const allLostSoundMarks: Record<string, Set<string>> = {};
@@ -79,7 +80,7 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
       await isSoundMarkUseful(
         prisma,
         allFiguresIdsSet,
-        allPriorityCharactersIdsSet,
+        allPriorityCharactersAndVariantsIdsSet,
         lostSoundMark,
         uses,
       )
@@ -94,7 +95,7 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
 async function isSoundMarkUseful(
   prisma: PrismaClient,
   allFiguresIdsSet: Set<string>,
-  allPriorityCharactersIdsSet: Set<string>,
+  allPriorityCharactersAndVariantsIdsSet: Set<string>,
   lostSoundMark: string,
   uses: Set<string>,
 ) {
@@ -102,7 +103,7 @@ async function isSoundMarkUseful(
 
   if (uses.size < 1) return false;
 
-  if (!allPriorityCharactersIdsSet.has(lostSoundMark)) return false;
+  if (!allPriorityCharactersAndVariantsIdsSet.has(lostSoundMark)) return false;
 
   const topLevelPriorityUsesCount = await prisma.kanjisenseComponentUse.count({
     where: {

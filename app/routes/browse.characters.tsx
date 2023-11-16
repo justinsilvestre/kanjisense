@@ -17,6 +17,7 @@ import {
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
 import {
+  baseKanjiSet,
   hyogaiKanji,
   jinmeiyoNotInHyogai,
   joyoNotInKyoiku,
@@ -25,6 +26,7 @@ import {
 
 interface LoaderData {
   characters: Record<string, BadgeProps>;
+  extraCharacters: Record<string, BadgeProps>;
   totalCharacters: number;
 }
 
@@ -43,8 +45,25 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
       return [figure.id, getBadgeProps(figure)];
     }),
   );
+  const extraCharacters: Record<string, BadgeProps> = Object.fromEntries(
+    await prisma.kanjisenseFigure
+      .findMany({
+        select: { ...badgeFigureSelect, image: true },
+        orderBy: { aozoraAppearances: "desc" },
+        where: {
+          isPriority: true,
+          id: { notIn: [...baseKanjiSet] },
+        },
+      })
+      .then((fs) =>
+        fs
+          .map((f) => [f.id, getBadgeProps(f)] as const)
+          .filter(([, bp]) => bp.isStandaloneCharacter),
+      ),
+  );
   return {
     characters: characters,
+    extraCharacters,
     totalCharacters: priorityCharacters.length,
   };
 }
@@ -57,7 +76,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
-  const { characters, totalCharacters } = loaderData;
+  const { characters, totalCharacters, extraCharacters } = loaderData;
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
@@ -137,6 +156,25 @@ export default function FigureDetailsPage() {
                   key={kanji}
                   id={kanji}
                   badgeProps={characters[kanji]}
+                />
+              );
+            })}
+        </section>
+
+        <section>
+          <h2>Extra</h2>
+          {Object.keys(extraCharacters)
+            .sort(
+              (a, b) =>
+                extraCharacters[b].aozoraAppearances -
+                extraCharacters[a].aozoraAppearances,
+            )
+            .map((kanji) => {
+              return (
+                <FigureBadgeLink
+                  key={kanji}
+                  id={kanji}
+                  badgeProps={extraCharacters[kanji]}
                 />
               );
             })}

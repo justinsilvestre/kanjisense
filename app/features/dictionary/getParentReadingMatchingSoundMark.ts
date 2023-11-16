@@ -58,7 +58,7 @@ export function getParentReadingMatchingSoundMark(
   const parentGuangyunReadingsByLevenshteinDistance =
     parentGuangyunReadings.sort((a, b) => {
       const aDistance = Math.min(
-        ...soundMarkXiaoyuns.map((soundMarkXiaoyunId) =>
+        ...soundMarkXiaoyuns.map(({ xiaoyun: soundMarkXiaoyunId }) =>
           getLevenshteinDistance(
             a.ascii,
             soundMarkGuangyunReadings.get(soundMarkXiaoyunId)!.ascii,
@@ -66,7 +66,7 @@ export function getParentReadingMatchingSoundMark(
         ),
       );
       const bDistance = Math.min(
-        ...soundMarkXiaoyuns.map((soundMarkXiaoyunId) =>
+        ...soundMarkXiaoyuns.map(({ xiaoyun: soundMarkXiaoyunId }) =>
           getLevenshteinDistance(
             b.ascii,
             soundMarkGuangyunReadings.get(soundMarkXiaoyunId)!.ascii,

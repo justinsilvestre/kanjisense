@@ -49,11 +49,13 @@ export async function getMeaningfulUses({
     );
 
     if (
-      await shouldComponentBeAssignedMeaning(prisma, {
-        id: directUse.id,
-        directUses: directUse.directUses,
-        variantGroupId: directUse.variantGroupId,
-      })
+      (
+        await shouldComponentBeAssignedMeaning(prisma, {
+          id: directUse.id,
+          directUses: directUse.directUses,
+          variantGroupId: directUse.variantGroupId,
+        })
+      ).result
     )
       meaningfulUses.push(
         new ComponentUseWithSignificance(

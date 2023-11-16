@@ -5,6 +5,7 @@ import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary
 import { getParentReadingMatchingSoundMark } from "./getParentReadingMatchingSoundMark";
 import { OnAndGuangyunReadings } from "./OnAndGuangyunReadings";
 import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
+import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 
 export function FigurePriorityUses({
   componentFigure,
@@ -23,17 +24,19 @@ export function FigurePriorityUses({
         {priorityUses.map((u) => {
           const figureIsSoundMarkUse =
             u.parent.activeSoundMarkId === componentFigure.id;
+          const parentReading = u.parent.reading;
           const parentReadingMatchingSoundMark = figureIsSoundMarkUse
             ? getParentReadingMatchingSoundMark(
                 u.parent.activeSoundMarkValue,
                 componentFigure.reading,
-                u.parent.reading,
+                parentReading,
               )
             : null;
+
           return (
             <li
               key={u.parentId}
-              className={`inline-block m-4 ${
+              className={`inline-block m-4 align-top ${
                 !u.parent.isPriority ? "bg-slate-200" : ""
               }`}
             >
@@ -43,13 +46,33 @@ export function FigurePriorityUses({
                 badgeProps={getBadgeProps(u.parent)}
                 width={5}
               />
-              <OnAndGuangyunReadings
-                parentReadingMatchingSoundMark={parentReadingMatchingSoundMark}
-                reading={u.parent.reading}
-              />
+
+              <span>
+                <FigureKeywordDisplay figure={u.parent} />
+              </span>
               <br />
-              <FigureKeywordDisplay figure={u.parent} />
-              <br />
+              {parentReadingMatchingSoundMark ? (
+                <OnAndGuangyunReadings
+                  katakanaOn={parentReadingMatchingSoundMark.katakanaOn}
+                  guangyun={parentReadingMatchingSoundMark.guangyun}
+                  hasSoundMarkHighlight
+                />
+              ) : (
+                <OnAndGuangyunReadings
+                  katakanaOn={
+                    parentReading?.selectedOnReadings?.[0] ||
+                    parentReading?.kanjidicEntry?.onReadings?.[0] ||
+                    null
+                  }
+                  guangyun={
+                    parentReading?.sbgyXiaoyuns?.length
+                      ? transcribeSbgyXiaoyun(
+                          parentReading.sbgyXiaoyuns[0].sbgyXiaoyun,
+                        )
+                      : null
+                  }
+                />
+              )}
             </li>
           );
         })}

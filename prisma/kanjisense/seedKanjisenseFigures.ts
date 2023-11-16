@@ -1,8 +1,14 @@
 import { readFileSync } from "node:fs";
 
-import { KanjisenseFigureRelation, PrismaClient } from "@prisma/client";
+import {
+  KanjiDbVariantType,
+  KanjisenseFigureRelation,
+  Prisma,
+  PrismaClient,
+} from "@prisma/client";
 import yaml from "yaml";
 
+import { baseKanjiSet } from "~/lib/baseKanji";
 import { files } from "~/lib/files.server";
 import { getFigureById } from "~/models/figureRelation.server";
 
@@ -11,11 +17,12 @@ import { registerSeeded } from "../seedUtils";
 
 import { shouldComponentBeAssignedMeaning } from "./componentMeanings";
 import { executeAndLogTime } from "./executeAndLogTime";
-import { getAllCharacters } from "./getAllCharacters";
+import { getAllCharactersAndVariantFigures } from "./getAllCharacters";
 import {
   ComponentMeaning,
   getFigureMeaningsText,
 } from "./getFigureMeaningsText";
+import { isComponentFirstClass } from "./isComponentFirstClass";
 import { getListsMembership } from "./seedKanjisenseFigureRelation";
 
 export async function seedKanjisenseFigures(
@@ -29,21 +36,34 @@ export async function seedKanjisenseFigures(
   else {
     console.log("Seeding figures...");
 
+    const readingIds = new Set(
+      await prisma.kanjisenseFigureReading
+        .findMany({
+          select: { id: true },
+        })
+        .then((rs) => rs.map((r) => r.id)),
+    );
+
     const componentsDictionary = yaml.parse(
       readFileSync(files.componentsDictionaryYml, "utf-8"),
     ) as Record<string, ComponentMeaning>;
 
     const {
-      allStandaloneCharacters,
-      priorityCharacters,
+      allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents,
+      priorityCharactersAndTheirNonComponentVariants,
       nonPriorityCharacters,
-    } = await getAllCharacters(prisma);
+      // priorityCharactersComponentVariants,
+    } = await getAllCharactersAndVariantFigures(prisma);
 
     const allAozoraCharacterFrequencies = Object.fromEntries(
       (
         await prisma.scriptinAozoraFrequency.findMany({
           where: {
-            character: { in: allStandaloneCharacters.map((c) => c.id) },
+            character: {
+              in: allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents.map(
+                (c) => c.id,
+              ),
+            },
           },
         })
       ).map((c) => [c.character, c]),
@@ -52,28 +72,36 @@ export async function seedKanjisenseFigures(
     console.log("Checking for figures needing meaning assignment...");
     const { meaningfulComponents, meaninglessComponents } =
       await executeAndLogTime("preparing figures for meaning assignments", () =>
-        prepareFiguresForMeaningAssignments(prisma, allStandaloneCharacters),
+        prepareFiguresForMeaningAssignments(
+          prisma,
+          allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents,
+        ),
       );
 
-    const { priorityFiguresMeanings } = await executeAndLogTime(
-      "preparing priority figures meanings",
+    const { charactersAndPriorityComponentsMeanings } = await executeAndLogTime(
+      "preparing characters and priority components meanings",
       () =>
-        preparePriorityFiguresMeanings(
+        prepareCharactersAndPriorityComponentsMeaningsMeanings(
           prisma,
           componentsDictionary,
-          allStandaloneCharacters,
+          allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents,
           meaningfulComponents,
         ),
     );
 
     console.log("preparing priority figures...");
     const dbInput = new Map<string, CreateKanjisenseFigureInput>();
-    for (const figure of [...priorityCharacters, ...meaningfulComponents]) {
+    for (const figure of [
+      ...priorityCharactersAndTheirNonComponentVariants,
+      ...meaningfulComponents,
+    ]) {
       const id = figure.id;
-      const meaning = priorityFiguresMeanings.get(figure.variantGroupId ?? id);
-      if (!meaning) console.error(`meaning not found for ${id}`);
-
-      if (!meaning?.keyword)
+      const meaning = charactersAndPriorityComponentsMeanings.get(
+        figure.variantGroupId ?? id,
+      );
+      if (!meaning)
+        console.error(`meaning not found for priority figure ${id}`);
+      else if (!meaning?.keyword)
         console.error(`keyword not found for priority figure ${id}`);
 
       const createFigureInput = getCreateFigureInput(
@@ -111,9 +139,6 @@ export async function seedKanjisenseFigures(
 
     console.log("creating entries...");
 
-    await prisma.kanjisenseComponentUse.deleteMany({});
-    await prisma.kanjisenseComponent.deleteMany({});
-    await prisma.kanjisenseFigureImage.deleteMany({});
     await prisma.kanjisenseFigure.deleteMany({});
 
     console.log("seeding figures");
@@ -127,6 +152,7 @@ export async function seedKanjisenseFigures(
         listsAsCharacter: { set: r.listsAsCharacter },
         aozoraAppearances: 0, // to fill in below
         variantGroupId: r.variantGroupId,
+        readingId: readingIds.has(r.id) ? r.id : undefined,
       })),
     });
 
@@ -140,25 +166,50 @@ export async function seedKanjisenseFigures(
       })),
     });
 
+    const figuresToVariantGroupIds = await getFiguresToVariantGroupsIds(prisma);
+
     console.log("building components trees");
-    const { componentsTreesInput, componentsToUses } =
-      await getAllComponentsTrees(dbInput.keys(), prisma);
+    const {
+      componentsTreesInput,
+      componentsToUses,
+      componentsToDirectUsesPrimaryVariants,
+    } = await getAllComponentsTrees(
+      prisma,
+      dbInput.keys(),
+      figuresToVariantGroupIds,
+    );
 
     await executeAndLogTime("connecting components trees entries", () =>
       connectComponentsTreesEntries(
+        prisma,
         componentsTreesInput,
         componentsToUses,
         allAozoraCharacterFrequencies,
-        prisma,
       ),
     );
 
-    await executeAndLogTime("connecting first-class components", () =>
-      connectFirstClassComponents(
-        componentsTreesInput,
-        priorityFiguresMeanings,
-        prisma,
-      ),
+    await prisma.kanjisenseComponentUse.deleteMany({});
+
+    await executeAndLogTime(
+      "connecting first-class components",
+      async () =>
+        await connectFirstClassComponents(
+          prisma,
+          componentsTreesInput,
+          // charactersAndPriorityComponentsMeanings,
+          new Set(
+            await prisma.kanjisenseFigure
+              .findMany({
+                where: {
+                  isPriority: true,
+                },
+                select: { id: true },
+              })
+              .then((fs) => fs.map((f) => f.id)),
+          ),
+          componentsToDirectUsesPrimaryVariants,
+          figuresToVariantGroupIds,
+        ),
     );
 
     await executeAndLogTime(
@@ -209,19 +260,54 @@ interface CreateKanjisenseFigureInput {
   meaning?: Awaited<ReturnType<typeof getFigureMeaningsText>>;
 }
 
+export async function getFiguresToVariantGroupsIds(prisma: PrismaClient) {
+  const allVariantGroupsWithoutRelations =
+    await prisma.kanjisenseVariantGroup.findMany({
+      select: { id: true, variants: true },
+    });
+  const figuresToVariantGroupIds = new Map<string, string>();
+  for (const variantGroup of allVariantGroupsWithoutRelations) {
+    for (const variant of variantGroup.variants) {
+      figuresToVariantGroupIds.set(variant, variantGroup.id);
+    }
+  }
+  return figuresToVariantGroupIds;
+}
+
 async function connectFirstClassComponents(
-  componentsTreesInput: Map<string, ComponentUse[]>,
-  priorityFiguresMeanings: Map<
-    string,
-    {
-      unihanDefinitionText: string | null;
-      kanjidicEnglish: string[];
-      keyword: string | null;
-      mnemonicKeyword: string | null;
-    } | null
-  >,
   prisma: PrismaClient,
+  componentsTreesInput: Map<string, ComponentUse[]>,
+  priorityFiguresIds: Set<string>,
+  componentsToDirectUsesPrimaryVariants: Map<string, Set<string>>,
+  figuresToVariantGroupIds: Map<string, string>,
 ) {
+  const standaloneCharactersIds = await prisma.kanjisenseFigureRelation
+    .findMany({
+      select: { id: true },
+      where: {
+        OR: [
+          { id: { in: [...baseKanjiSet] } },
+          {
+            directUses: {
+              hasSome: [...priorityFiguresIds],
+            },
+          },
+        ],
+      },
+    })
+    .then((fs) => fs.map((f) => f.id));
+  const standaloneCharactersOldVariants = await prisma.kanjiDbVariant.findMany({
+    where: {
+      base: { in: standaloneCharactersIds },
+      variantType: KanjiDbVariantType.OldStyle,
+    },
+  });
+  const oldToNewVariants = new Map<string, string[]>();
+  for (const variant of standaloneCharactersOldVariants) {
+    if (!oldToNewVariants.has(variant.base))
+      oldToNewVariants.set(variant.base, []);
+    oldToNewVariants.get(variant.base)!.push(variant.variant);
+  }
   for (const [id, tree] of componentsTreesInput.entries()) {
     const resolved = new Set<string>();
     let chain: string[] = [id];
@@ -242,8 +328,15 @@ async function connectFirstClassComponents(
         return acc;
       }
 
-      const componentIsMeaningful = priorityFiguresMeanings.has(component);
-      if (componentIsMeaningful) {
+      if (
+        isComponentFirstClass(
+          priorityFiguresIds,
+          parent,
+          component,
+          componentsToDirectUsesPrimaryVariants,
+          figuresToVariantGroupIds,
+        )
+      ) {
         resolved.add(`${chainString},${component}`);
         const appearancesInParent = acc.get(use.component) || [];
         appearancesInParent.push(indexInTree);
@@ -256,13 +349,15 @@ async function connectFirstClassComponents(
     const firstClassComponentsInput = Array.from(
       firstClassComponents,
       ([componentId, indexesInTree]) => {
-        return indexesInTree.map((indexInTree, i) => ({
-          indexInTree,
-          appearanceInParent: i + 1,
-          component: {
-            connect: { id: componentId },
-          },
-        }));
+        return indexesInTree.map((indexInTree, i) =>
+          createFirstClassComponentsInput({
+            indexInTree,
+            appearanceInParent: i + 1,
+            component: {
+              connect: { id: componentId },
+            },
+          }),
+        );
       },
     ).flat();
     await prisma.kanjisenseFigure.update({
@@ -277,6 +372,7 @@ async function connectFirstClassComponents(
 }
 
 async function connectComponentsTreesEntries(
+  prisma: PrismaClient,
   componentsTreesInput: Map<string, ComponentUse[]>,
   componentsToUses: Map<string, Set<string>>,
   allAozoraCharacterFrequencies: Record<
@@ -288,7 +384,6 @@ async function connectComponentsTreesEntries(
       rank: number;
     }
   >,
-  prisma: PrismaClient,
 ) {
   for (const [id, componentsTree] of componentsTreesInput.entries()) {
     const figureUsesAsComponent = componentsToUses.get(id);
@@ -345,10 +440,8 @@ async function prepareFiguresForMeaningAssignments(
   const meaningfulComponents: KanjisenseFigureRelation[] = [];
   const meaninglessComponents: KanjisenseFigureRelation[] = [];
   for (const figure of componentFiguresPotentiallyNeedingMeaningAssignment) {
-    const shouldBeAssignedMeaning = await shouldComponentBeAssignedMeaning(
-      prisma,
-      figure,
-    );
+    const { result: shouldBeAssignedMeaning } =
+      await shouldComponentBeAssignedMeaning(prisma, figure);
     if (shouldBeAssignedMeaning) meaningfulComponents.push(figure);
     else meaninglessComponents.push(figure);
   }
@@ -390,13 +483,13 @@ async function prepareFiguresForMeaningAssignments(
   }
   return { meaningfulComponents, meaninglessComponents };
 }
-async function preparePriorityFiguresMeanings(
+async function prepareCharactersAndPriorityComponentsMeaningsMeanings(
   prisma: PrismaClient,
   componentsDictionary: Record<string, ComponentMeaning>,
   allStandaloneCharacters: KanjisenseFigureRelation[],
   meaningfulComponents: KanjisenseFigureRelation[],
 ) {
-  const priorityFiguresMeanings = new Map<
+  const charactersAndPriorityComponentsMeanings = new Map<
     string,
     Awaited<ReturnType<typeof getFigureMeaningsText>>
   >();
@@ -432,23 +525,27 @@ async function preparePriorityFiguresMeanings(
         }
       }
       if (!meaning)
-        throw new Error(
+        console.error(
           `meaning not found for any variants of priority figure ${
             figure.id
           } having ${getVariantsMessage(variants)}`,
         );
-      if (!meaning.keyword) {
-        throw new Error(
+      if (meaning && !meaning.keyword) {
+        console.error(
           `keyword not found for priority figure ${
             figure.id
           } having ${getVariantsMessage(variants)}`,
         );
       }
     }
-    priorityFiguresMeanings.set(figure.id, meaning);
+    charactersAndPriorityComponentsMeanings.set(figure.id, meaning);
   }
 
-  return { priorityFiguresMeanings };
+  return {
+    /** not necesarily all characters and priority components */
+    charactersAndPriorityComponentsMeanings:
+      charactersAndPriorityComponentsMeanings,
+  };
 }
 
 function getVariantsMessage(variants: string[]) {
@@ -456,11 +553,13 @@ function getVariantsMessage(variants: string[]) {
 }
 
 async function getAllComponentsTrees(
-  figuresKeys: IterableIterator<string>,
   prisma: PrismaClient,
+  figuresKeys: IterableIterator<string>,
+  figuresToVariantGroupIds: Map<string, string>,
 ) {
   const componentsTreesInput = new Map<string, ComponentUse[]>();
   const componentsToUses = new Map<string, Set<string>>();
+  const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>();
   const charactersToComponents = new Map<string, Set<string>>();
   const getSelectedIdsComponentsCache = new Map<string, string[]>();
   for (const parent of figuresKeys) {
@@ -476,7 +575,17 @@ async function getAllComponentsTrees(
       getSelectedIdsComponentsCache.set(id, relation.selectedIdsComponents);
       return relation.selectedIdsComponents;
     });
-    for (const { component } of componentsTree) {
+    for (const { component, parent: treeMemberParent } of componentsTree) {
+      if (treeMemberParent === parent) {
+        if (!componentsToDirectUsesPrimaryVariants.has(component))
+          componentsToDirectUsesPrimaryVariants.set(component, new Set());
+        const parentPrimaryVariant =
+          figuresToVariantGroupIds.get(parent) || parent;
+        componentsToDirectUsesPrimaryVariants
+          .get(component)!
+          .add(parentPrimaryVariant);
+      }
+
       if (!componentsToUses.has(component))
         componentsToUses.set(component, new Set());
       componentsToUses.get(component)!.add(parent);
@@ -486,7 +595,11 @@ async function getAllComponentsTrees(
     }
     componentsTreesInput.set(parent, componentsTree);
   }
-  return { componentsTreesInput, componentsToUses };
+  return {
+    componentsTreesInput,
+    componentsToUses,
+    componentsToDirectUsesPrimaryVariants,
+  };
 }
 
 function getCreateFigureInput(
@@ -547,4 +660,16 @@ function setReduce<T, U>(
     acc = reducer(acc, next);
   }
   return acc;
+}
+
+function createFirstClassComponentsInput<
+  T extends
+    | Prisma.XOR<
+        Prisma.KanjisenseComponentUseCreateWithoutParentInput,
+        Prisma.KanjisenseComponentUseUncheckedCreateWithoutParentInput
+      >
+    | Prisma.KanjisenseComponentUseCreateWithoutParentInput[]
+    | Prisma.KanjisenseComponentUseUncheckedCreateWithoutParentInput[],
+>(input: T): T {
+  return input;
 }

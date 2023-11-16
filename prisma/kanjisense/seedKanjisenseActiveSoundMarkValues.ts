@@ -34,54 +34,12 @@ export async function seedKanjisenseActiveSoundMarkValues(
 }
 
 async function registerActiveSoundMarkValues(prisma: PrismaClient) {
-  const allActiveSoundMarks = await prisma.kanjisenseFigure.findMany({
-    where: {
-      asComponent: {
-        soundMarkUses: {
-          some: { id: { notIn: [] } },
-        },
-      },
-    },
-    include: {
-      reading: {
-        include: {
-          kanjidicEntry: {
-            select: {
-              onReadings: true,
-            },
-          },
-          unihan15: {
-            select: {
-              kJapaneseOn: true,
-            },
-          },
-        },
-      },
-      asComponent: {
-        include: {
-          soundMarkUses: {
-            include: {
-              reading: {
-                include: {
-                  kanjidicEntry: {
-                    select: {
-                      onReadings: true,
-                    },
-                  },
-                  unihan15: {
-                    select: {
-                      kJapaneseOn: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  const allActiveSoundMarks = await getAllActiveSoundMarks(prisma);
 
+  console.log(
+    "has 𫩠",
+    allActiveSoundMarks.some((f) => f.id === "𫩠"),
+  );
   for (const soundMarkFigure of allActiveSoundMarks) {
     if (!soundMarkFigure.reading) {
       console.log("no reading for", soundMarkFigure.id);
@@ -89,41 +47,19 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
       // sort sound mark's kanjidic readings by compatibility with inferred onyomi
       // assign activeSoundMarkValue on soundMarkUseFigure based on that.
 
-      const inferredOnReadingCandidates = soundMarkFigure.reading
-        .inferredOnReadingCandidates as OnReadingToTypeToXiaoyuns;
+      let activeSoundMarkValue = getValueFromSoundMarkReading(soundMarkFigure);
 
-      const katakanaOnReadings = soundMarkFigure.reading?.kanjidicEntry
-        ?.onReadings?.length
-        ? soundMarkFigure.reading?.kanjidicEntry?.onReadings
-        : soundMarkFigure.reading?.unihan15?.kJapaneseOn?.map(
-            (s) => toKatakana(s) as string,
-          ) ?? [];
-
-      const katakanaOnReadingsWithMatchingXiaoyuns = katakanaOnReadings
-        .filter(Boolean)
-        .map((katakana) => ({
-          katakana,
-          priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
-        }));
-      katakanaOnReadingsWithMatchingXiaoyuns.sort((a, b) => {
-        return (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999);
-      });
-      const activeSoundMarkValue =
-        katakanaOnReadingsWithMatchingXiaoyuns?.[0] ||
-        Object.keys(inferredOnReadingCandidates)
-          .filter(Boolean)
-          .map((katakana) => ({
-            katakana,
-            priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
-          }))
-          .sort((a, b) => {
-            return (
-              (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999)
-            );
-          })?.[0]?.katakana ||
-        null;
-
+      if (!activeSoundMarkValue?.katakana) {
+        for (const variantFigure of soundMarkFigure.variantGroup?.figures ||
+          []) {
+          if (!activeSoundMarkValue)
+            activeSoundMarkValue = getValueFromSoundMarkReading(variantFigure);
+        }
+      }
+      if (!activeSoundMarkValue)
+        console.log("no activeSoundMarkValue for", soundMarkFigure.id);
       const activeSoundMarkValueText =
+        activeSoundMarkValue &&
         getActiveSoundMarkValueText(activeSoundMarkValue);
 
       for (const soundMarkUseFigure of soundMarkFigure.asComponent!
@@ -139,11 +75,127 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
   }
 }
 
+async function getAllActiveSoundMarks(prisma: PrismaClient) {
+  const commonInclude = {
+    reading: {
+      include: {
+        kanjidicEntry: {
+          select: {
+            onReadings: true,
+          },
+        },
+        unihan15: {
+          select: {
+            kJapaneseOn: true,
+          },
+        },
+      },
+    },
+    asComponent: {
+      include: {
+        soundMarkUses: {
+          include: {
+            reading: {
+              include: {
+                kanjidicEntry: {
+                  select: {
+                    onReadings: true,
+                  },
+                },
+                unihan15: {
+                  select: {
+                    kJapaneseOn: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  return await prisma.kanjisenseFigure.findMany({
+    where: {
+      asComponent: {
+        soundMarkUses: {
+          some: {},
+        },
+      },
+    },
+    include: {
+      ...commonInclude,
+      variantGroup: {
+        include: {
+          figures: {
+            include: commonInclude,
+          },
+        },
+      },
+    },
+  });
+}
+
+type ActiveSoundMarkFigure = Omit<
+  Awaited<ReturnType<typeof getAllActiveSoundMarks>>[number],
+  "variantGroup"
+>;
+
+function getValueFromSoundMarkReading(soundMarkFigure: ActiveSoundMarkFigure) {
+  const { reading } = soundMarkFigure;
+  if (soundMarkFigure.id === "尚")
+    console.log({
+      x: reading?.kanjidicEntry?.onReadings,
+      reading,
+    });
+  if (!reading) return null;
+
+  const inferredOnReadingCandidates =
+    reading.inferredOnReadingCandidates as OnReadingToTypeToXiaoyuns;
+
+  const katakanaOnReadings = reading?.kanjidicEntry?.onReadings?.length
+    ? reading?.kanjidicEntry?.onReadings
+    : reading?.unihan15?.kJapaneseOn?.map((s) => toKatakana(s) as string) ?? [];
+
+  const katakanaOnReadingsWithMatchingXiaoyuns = katakanaOnReadings
+    .filter(Boolean)
+    .map((katakana) => ({
+      katakana,
+      priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
+    }))
+    .sort((a, b) => {
+      return (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999);
+    });
+  const matchingSoundMarkValue =
+    katakanaOnReadingsWithMatchingXiaoyuns?.[0] ||
+    Object.keys(inferredOnReadingCandidates)
+      .filter(Boolean)
+      .map((katakana) => ({
+        katakana,
+        priority: getKanOnPriority(inferredOnReadingCandidates[katakana]),
+      }))
+      .sort((a, b) => {
+        return (a.priority?.priority ?? 9999) - (b.priority?.priority ?? 9999);
+      })?.[0]?.katakana ||
+    null;
+  if (matchingSoundMarkValue?.katakana) return matchingSoundMarkValue;
+
+  if (soundMarkFigure.id === "尚")
+    console.log({
+      katakanaOnReadings,
+      x: reading.kanjidicEntry?.onReadings,
+    });
+  return katakanaOnReadings.filter(Boolean).length
+    ? {
+        katakana: katakanaOnReadings.filter(Boolean)![0],
+      }
+    : null;
+}
+
 function getKanOnPriority(
   inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns[string] | null,
 ): {
   priority: number;
-  xiaoyunsByMatchingType: Partial<Record<InferredOnyomiType, number[]>>;
+  xiaoyunsByMatchingType: OnReadingToTypeToXiaoyuns[string];
 } | null {
   if (!inferredOnReadingCandidates) return null;
   if (

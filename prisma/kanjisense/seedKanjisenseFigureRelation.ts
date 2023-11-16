@@ -122,7 +122,6 @@ export async function seedKanjisenseFigureRelation(
       },
     );
 
-    await prisma.kanjisenseFigure.deleteMany({});
     await prisma.kanjisenseFigureRelation.deleteMany({});
     await inBatchesOf(1000, [...dbInput.values()], async (batch) => {
       await prisma.kanjisenseFigureRelation.createMany({

@@ -1,16 +1,20 @@
 import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
 
+import { OnReadingToTypeToXiaoyuns } from "prisma/kanjisense/seedKanjisenseFigureReadings";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
-import { ComponentUseJson } from "~/features/dictionary/ComponentUse";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
+import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 import {
   ComponentsTreeMemberFigure,
   FigureComponentsAnalysisLoaderData,
 } from "~/routes/dict.$figureId.analyze";
 
-import { getParentReadingMatchingSoundMark } from "./getParentReadingMatchingSoundMark";
+import {
+  parseActiveSoundMarkValue,
+  transcribeSerializedXiaoyunProfile,
+} from "./getActiveSoundMarkValueText";
 import { OnAndGuangyunReadings } from "./OnAndGuangyunReadings";
 import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
 
@@ -19,28 +23,22 @@ export function DictionaryEntryComponentsTree({
 }: {
   figure: DictionaryPageFigureWithPriorityUses;
 }) {
-  const componentsTree = figure.componentsTree as ComponentUseJson[] | null;
-  if (!componentsTree) return null;
-  const firstClassComponents = new Map(
-    figure.firstClassComponents.map((c) => [c.componentId, c.component]),
-  );
-
   return (
     <section>
-      {componentsTree.map(([, componentId]) => {
-        if (!firstClassComponents.has(componentId)) return null;
-        return (
-          <DictionaryEntryComponentsTreeMember
-            key={componentId}
-            parentFigure={figure}
-            componentFigure={firstClassComponents.get(componentId)!}
-          />
-        );
-      })}
+      {figure.firstClassComponents
+        .sort((a, b) => a.indexInTree - b.indexInTree)
+        .map(({ componentId, component }) => {
+          return (
+            <DictionaryEntryComponentsTreeMember
+              key={componentId}
+              parentFigure={figure}
+              componentFigure={component}
+            />
+          );
+        })}
     </section>
   );
 }
-// type ComponentTreeMemberFigure = Pick<DictionaryPageFigureWithPriorityUses["firstClassComponents"][0]["component"], "id" | "keyword" | "mnemonicKeyword" | "firstClassComponents" | "reading"> & BadgePropsFigure;
 
 function DictionaryEntryComponentsTreeMember({
   parentFigure,
@@ -56,13 +54,10 @@ function DictionaryEntryComponentsTreeMember({
 
   const figureIsSoundMarkUse =
     parentFigure.activeSoundMarkId === componentFigure.id;
-  const parentReadingMatchingSoundMark = figureIsSoundMarkUse
-    ? getParentReadingMatchingSoundMark(
-        parentFigure.activeSoundMarkValue,
-        componentFigure.reading,
-        parentFigure.reading,
-      )
-    : null;
+  const parentActiveSoundMark =
+    figureIsSoundMarkUse && parentFigure.activeSoundMarkValue
+      ? parseActiveSoundMarkValue(parentFigure.activeSoundMarkValue)
+      : null;
   return (
     <div>
       <FigurePopoverBadge
@@ -70,10 +65,19 @@ function DictionaryEntryComponentsTreeMember({
         badgeProps={getBadgeProps(componentFigure)}
       />
       <FigureKeywordDisplay figure={componentFigure} />
-      <OnAndGuangyunReadings
-        parentReadingMatchingSoundMark={parentReadingMatchingSoundMark}
-        reading={componentFigure.reading}
-      />
+      <br />
+      {parentActiveSoundMark ? (
+        <OnAndGuangyunReadings
+          katakanaOn={parentActiveSoundMark.katakana}
+          guangyun={
+            parentActiveSoundMark.xiaoyunsByMatchingType
+              ? transcribeSoundMarkReading(
+                  parentActiveSoundMark.xiaoyunsByMatchingType,
+                )
+              : null
+          }
+        />
+      ) : null}
       {componentFigure.firstClassComponents.length && !isExpanded ? (
         <div>
           <button
@@ -106,6 +110,26 @@ function DictionaryEntryComponentsTreeMember({
       ) : null}
     </div>
   );
+}
+
+const SOUND_MARK_TYPE_PRIORITY: InferredOnyomiType[] = [
+  InferredOnyomiType.AttestedKan,
+  InferredOnyomiType.AttestedGo,
+  InferredOnyomiType.AttestedKanRare,
+  InferredOnyomiType.AttestedGoRare,
+  InferredOnyomiType.SpeculatedKan,
+  InferredOnyomiType.SpeculatedGo,
+];
+function transcribeSoundMarkReading(
+  xiaoyunsByMatchingType: OnReadingToTypeToXiaoyuns[string],
+) {
+  for (const type of SOUND_MARK_TYPE_PRIORITY) {
+    const xiaoyuns = xiaoyunsByMatchingType[type];
+    if (xiaoyuns?.length) {
+      return transcribeSerializedXiaoyunProfile(xiaoyuns[0].profile);
+    }
+  }
+  return null;
 }
 
 export function useAnalyzeFigureFetcher(figureId: string) {

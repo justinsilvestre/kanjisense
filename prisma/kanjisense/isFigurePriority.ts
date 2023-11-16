@@ -27,10 +27,13 @@ async function isPriorityComponent(
   prisma: PrismaClient,
   figure: KanjisenseFigureRelation,
 ): Promise<boolean> {
-  const hasMeaning = await shouldComponentBeAssignedMeaning(prisma, {
-    id: figure.id,
-    directUses: figure.directUses,
-    variantGroupId: figure.variantGroupId,
-  });
+  const { result: hasMeaning } = await shouldComponentBeAssignedMeaning(
+    prisma,
+    {
+      id: figure.id,
+      directUses: figure.directUses,
+      variantGroupId: figure.variantGroupId,
+    },
+  );
   return hasMeaning && figure.isPriorityCandidate;
 }

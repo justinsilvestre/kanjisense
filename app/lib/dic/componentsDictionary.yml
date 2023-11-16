@@ -1733,7 +1733,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: geo
 豊:
   historical: abundance
-  mnemonic: piles
+  mnemonic: heaps
   tag: geo
 午:
   historical: noon
@@ -3507,6 +3507,9 @@ GWS-U5BFD-G:
 𭃌:
   mnemonic: engrave
   reference: 契
+𠅃:
+  mnemonic: graduation cap
+  reference: 卒
 #######
 丱:
   historical: tufts of hair

@@ -16,6 +16,8 @@ export const forcedMeaninglessFiguresSet = new Set<string>([
   "𠫔",
 ]);
 
+const MINIMUM_USES_IN_PRIORITY_CANDIDATES = 2;
+
 /**
  * checks relations to see if the given component figure
  * should be assigned a name in kanjisense
@@ -28,19 +30,36 @@ export async function shouldComponentBeAssignedMeaning(
     variantGroupId,
   }: {
     id: string;
-    /* might include self? check. */
     directUses: string[];
     variantGroupId: string | null;
   },
 ) {
-  if (forcedMeaninglessFiguresSet.has(figureId)) return false;
+  if (forcedMeaninglessFiguresSet.has(figureId))
+    return {
+      result: false,
+      reason: "forced",
+    };
 
   const primaryVariantIsInBaseKanji = baseKanjiSet.has(
     variantGroupId ?? figureId,
   );
-  if (primaryVariantIsInBaseKanji) return true;
+  if (primaryVariantIsInBaseKanji)
+    return {
+      result: true,
+      reason: "base kanji or variant thereof",
+    };
 
-  if (!directUses.length) return false;
+  if (!directUses.length)
+    return {
+      result: false,
+      reason: "no direct uses in composition data",
+    };
+
+  if (directUses.length === 1)
+    return {
+      result: false,
+      reason: `only used in ${directUses[0]}`,
+    };
 
   const usesInPriorityCandidates =
     await allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVariants(
@@ -48,12 +67,18 @@ export async function shouldComponentBeAssignedMeaning(
       variantGroupId,
       directUses,
     );
-  const isAtomic = false;
-  const minimumUsesInPriorityCandidates = isAtomic ? 2 : 3;
 
-  return Boolean(
-    usesInPriorityCandidates.size >= minimumUsesInPriorityCandidates,
+  const enoughUses = Boolean(
+    usesInPriorityCandidates.size >= MINIMUM_USES_IN_PRIORITY_CANDIDATES,
   );
+  return {
+    result: enoughUses,
+    reason: enoughUses
+      ? `used in ${[...usesInPriorityCandidates].join(" ")}`
+      : usesInPriorityCandidates.size
+      ? `only used in ${[...usesInPriorityCandidates].join(" ")}`
+      : "not used in priority candidates",
+  };
 }
 
 async function allVariantsUsesInPriorityCandidatesCountingVariantsOncePrimaryVariants(

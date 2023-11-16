@@ -47,10 +47,10 @@ async function seed() {
       seedKanjisenseVariantGroups(prisma),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
-      seedKanjisenseFigureRelation(prisma),
+      seedKanjisenseFigureRelation(prisma, false),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
-      seedKanjiDbCharacterDerivations(prisma),
+      seedKanjiDbCharacterDerivations(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
       seedKanjisenseFigures(prisma, false),
