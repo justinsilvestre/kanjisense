@@ -1,7 +1,40 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
-import { usePopper } from "react-popper";
+import * as PopperJS from "@popperjs/core";
+import { useState, useCallback, useEffect } from "react";
+import { Modifier, Modifiers, usePopper } from "react-popper";
 
-export function usePaddedPopper() {
+export type PopperOptions = Omit<Partial<PopperJS.Options>, "modifiers"> & {
+  createPopper?: typeof PopperJS.createPopper;
+  modifiers?: readonly Modifier<Modifiers>[];
+};
+
+const defaultOptions: PopperOptions = {
+  placement: "bottom-start",
+  modifiers: [
+    {
+      name: "preventOverflow",
+      options: {
+        mainAxis: true,
+        altAxis: true,
+        tether: false,
+        padding: 0,
+      },
+    },
+    {
+      name: "offset",
+      options: {
+        offset: ({ reference }) => {
+          return [0, -reference.height];
+        },
+      },
+    },
+  ],
+};
+
+export function usePaddedPopper({
+  options = defaultOptions,
+}: {
+  options?: PopperOptions;
+} = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = useCallback(() => {
     setIsOpen((open) => !open);
@@ -23,31 +56,11 @@ export function usePaddedPopper() {
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
     null,
   );
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "bottom-start",
-    modifiers: useMemo(
-      () => [
-        {
-          name: "preventOverflow",
-          options: {
-            mainAxis: true,
-            altAxis: true,
-            tether: false,
-            padding: 0,
-          },
-        },
-        {
-          name: "offset",
-          options: {
-            offset: ({ reference }) => {
-              return [0, -reference.height];
-            },
-          },
-        },
-      ],
-      [],
-    ),
-  });
+  const { styles, attributes } = usePopper(
+    referenceElement,
+    popperElement,
+    options,
+  );
   const handleClickPopper = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
       e.stopPropagation();

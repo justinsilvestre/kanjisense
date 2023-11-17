@@ -5,6 +5,7 @@ import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
   getBadgeProps,
+  getLists,
   isPriorityComponent,
   isPrioritySoundMark,
   isStandaloneCharacter,
@@ -16,6 +17,7 @@ import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoy
 
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { FigurePriorityUses } from "./FigurePriorityUses";
+import { FigureTags } from "./FigureTags";
 
 export function SingleFigureDictionaryEntry({
   figure,
@@ -23,26 +25,21 @@ export function SingleFigureDictionaryEntry({
   figure: DictionaryPageFigureWithPriorityUses;
 }) {
   const headingsMeanings = getHeadingsMeanings(figure);
+  const badgeProps = getBadgeProps(figure);
+  const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
+  const figureIsPrioritySoundMark = isPrioritySoundMark(figure);
   return (
     <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
       <h1>
         {figure.id}: <FigureKeywordDisplay figure={figure} />
       </h1>
       <div>
-        <FigureBadge
-          id={figure.id}
-          badgeProps={getBadgeProps(figure)}
-          width={10}
-        />
-      </div>
-      <div>
-        {/* <FigureKeywordDisplay figure={figure.firstClassComponents![0].component} /> */}
+        <FigureBadge id={figure.id} badgeProps={badgeProps} width={10} />
       </div>
 
       {headingsMeanings.currentCharacter ? (
         <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
       ) : null}
-
       {headingsMeanings.componentHistoricalMeaning ? (
         <h1>{headingsMeanings.componentHistoricalMeaning}</h1>
       ) : null}
@@ -67,6 +64,17 @@ export function SingleFigureDictionaryEntry({
       ) : null}
       <DictionaryEntryComponentsTree figure={figure} />
 
+      <FigureTags
+        badgeProps={badgeProps}
+        lists={getLists(figureIsStandaloneCharacter, figure)}
+        isSoundMark={figureIsPrioritySoundMark}
+        isAtomic={
+          Array.isArray(figure.componentsTree)
+            ? figure.componentsTree.length === 0
+            : false
+        }
+      />
+
       <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
       <h2>{figure.reading?.kanjidicEntry?.onReadings?.join(" ")}</h2>
       <h2>{figure.reading?.kanjidicEntry?.kunReadings?.join(" ")}</h2>
@@ -77,7 +85,7 @@ export function SingleFigureDictionaryEntry({
       </h2>
 
       <h2>priority: {figure.isPriority ? "yes" : "no"}</h2>
-      <h2>standalone: {isStandaloneCharacter(figure) ? "yes" : "no"}</h2>
+      <h2>standalone: {figureIsStandaloneCharacter ? "yes" : "no"}</h2>
       <h2>priority sound mark: {isPrioritySoundMark(figure) ? "yes" : "no"}</h2>
       <h2>priority component: {isPriorityComponent(figure) ? "yes" : "no"}</h2>
       <h2>active sound mark value: {figure.activeSoundMarkValue}</h2>
@@ -88,20 +96,6 @@ export function SingleFigureDictionaryEntry({
     </section>
   );
 }
-
-export const kvgAttributes = {
-  ["xlmns"]: "http://www.w3.org/2000/svg",
-  viewBox: "-20 -20 149 149",
-  style: {
-    fill: "none",
-    stroke: "black",
-    strokeWidth: 3,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    width: "7em",
-    height: "7em",
-  },
-} as const;
 
 type KeywordDisplayFigure = Pick<
   KanjisenseFigure,

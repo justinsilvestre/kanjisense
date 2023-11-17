@@ -209,4 +209,5 @@ export const kanjijumpSpecificVariants = [
   ["歹", "歺", "𣦵"],
   ["GWS-U300EE", "𦥯"],
   ["臘","﨟","臈"],
+  ["算", "𮅕"]
 ]

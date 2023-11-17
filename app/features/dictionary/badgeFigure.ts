@@ -12,12 +12,13 @@ import {
 } from "~/lib/dic/KanjiListCode";
 
 export interface BadgeProps {
+  id: string;
   image?: KanjisenseFigureImage | null;
   aozoraAppearances: number;
   hue: BadgeHue;
   isStandaloneCharacter: boolean;
   isPriorityComponent: boolean;
-  isSecondaryVariant: boolean;
+  variantGroupId: string | null;
 }
 
 export const badgeFigureSelect = {
@@ -110,9 +111,10 @@ export function getBadgeHue(lists: KanjiListCode[]) {
 }
 
 export function isSecondaryVariant(
-  figure: Pick<KanjisenseFigure, "id" | "variantGroupId">,
+  figureId: string,
+  variantGroupId: KanjisenseFigure["variantGroupId"],
 ) {
-  return Boolean(figure.variantGroupId && figure.variantGroupId !== figure.id);
+  return Boolean(variantGroupId && variantGroupId !== figureId);
 }
 
 export type IsPriorityComponentQueryFigure = Pick<
@@ -167,11 +169,12 @@ function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
   const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
   const lists = getLists(figureIsStandaloneCharacter, figure);
   return {
+    id: figure.id,
     image: figure.image,
     aozoraAppearances: figure.aozoraAppearances,
     hue: getBadgeHue(lists),
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),
-    isSecondaryVariant: isSecondaryVariant(figure),
+    variantGroupId: figure.variantGroupId,
   };
 }

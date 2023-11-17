@@ -11,7 +11,11 @@ import { DictLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { FigureBadge } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
-import { BadgeProps, getBadgeProps } from "~/features/dictionary/badgeFigure";
+import {
+  BadgeProps,
+  badgeFigureSelect,
+  getBadgeProps,
+} from "~/features/dictionary/badgeFigure";
 
 interface LoaderData {
   components: Record<string, BadgeProps>;

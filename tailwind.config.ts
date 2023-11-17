@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
@@ -8,6 +9,13 @@ export default {
       fontFamily: {
         brush: ["yukyokasho", "tw-kai"],
         sans: ["Helvetica", ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        kyoiku: colors.blue,
+        joyo: colors.lime,
+        jinmeiyo: colors.red,
+        hyogai: colors.fuchsia,
+        extra: colors.stone,
       },
     },
   },

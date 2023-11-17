@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import type { ReactNode } from "react";
 
-type LinkProps<T> = T & {
+type LinkProps<T = object> = T & {
   children: ReactNode;
   className?: string;
 };
@@ -29,3 +29,14 @@ export function DictLink({
     </AppLink>
   );
 }
+
+export const BrowseCharactersLink = ({ children }: LinkProps) => (
+  <AppLink to="/browse/characters">{children}</AppLink>
+);
+
+export const BrowseComponentsLink = ({ children }: LinkProps) => (
+  <AppLink to="/browse/components">{children}</AppLink>
+);
+
+// also atomic components
+// sound components
