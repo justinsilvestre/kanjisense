@@ -15,19 +15,22 @@ const ATOMIC_COMPONENTS_COUNT = "TBD";
 
 export function FigureTags({
   badgeProps,
-  lists,
   isSoundMark,
   isAtomic,
   className,
 }: {
   badgeProps: BadgeProps;
-  lists: KanjiListCode[];
   isSoundMark: boolean;
   isAtomic: boolean;
   className?: string;
 }) {
-  const { isPriorityComponent, isStandaloneCharacter, id, variantGroupId } =
-    badgeProps;
+  const {
+    isPriorityComponent,
+    isStandaloneCharacter,
+    id,
+    variantGroupId,
+    lists,
+  } = badgeProps;
   return (
     <ul className={`${className} flex flex-row flex-wrap gap-1`}>
       <ListTags
@@ -267,7 +270,7 @@ function FigureTag({
           ? createPortal(
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <div
-                className={`-m-2 [border:2px inset #afafaf33] p-3 shadow-gray-400 shadow transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:95v] [max-height:88v]  [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl text-sm`}
+                className={`-m-2 [border:2px inset #afafaf33] p-3 shadow-gray-400 shadow transition-opacity duration-300 [width:18rem] [max-height:88v]  [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl text-sm`}
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}

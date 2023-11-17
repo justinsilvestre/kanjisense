@@ -2,7 +2,15 @@ import { useFetcher } from "@remix-run/react";
 import { PropsWithChildren, useEffect, createElement } from "react";
 import { createPortal } from "react-dom";
 
-import { BadgeProps, getBadgeProps } from "~/features/dictionary/badgeFigure";
+import {
+  BadgeProps,
+  getBadgeProps,
+  isPrioritySoundMark,
+} from "~/features/dictionary/badgeFigure";
+import { DictionaryHeadingMeanings } from "~/features/dictionary/DictionaryHeadingMeanings";
+import { FigureTags } from "~/features/dictionary/FigureTags";
+import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
+import { FigureKeywordDisplay } from "~/features/dictionary/SingleFigureDictionaryEntry";
 import type { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
 
 import { DictLink } from "./AppLink";
@@ -29,7 +37,7 @@ export function FigurePopoverBadge({
 
 export function FigurePopover({
   figureId,
-  badgeProps,
+  badgeProps: initialBadgeProps,
   children,
   element = "div",
   className = "",
@@ -56,6 +64,9 @@ export function FigurePopover({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [figureId]);
 
+  const figure = fetcher.data?.figure;
+  const badgeProps = figure ? getBadgeProps(figure) : initialBadgeProps;
+
   return createElement(
     element,
     {
@@ -74,6 +85,7 @@ export function FigurePopover({
       role: "contentinfo",
       onKeyDown: (e) => {
         if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
           loadFigure();
 
           open();
@@ -95,20 +107,58 @@ export function FigurePopover({
           onClick={handleClickPopper}
         >
           <div>
-            <DictLink figureId={figureId}>
-              <FigureBadge id={figureId} badgeProps={badgeProps} width={6} />
+            <DictLink figureId={figure?.id || figureId} focusOnLoad>
+              <FigureBadge
+                id={figure?.id || figureId}
+                badgeProps={badgeProps}
+                width={6}
+              />
             </DictLink>
           </div>
-          <div>
-            {fetcher.data?.figure?.firstClassComponents.map((c) => (
-              <FigureBadge
-                key={c.component.id}
-                id={c.component.id}
-                badgeProps={getBadgeProps(c.component)}
-                width={2.5}
+          {figure ? (
+            <div>
+              {figure?.firstClassComponents.map((c) => (
+                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+                <div
+                  key={c.component.id}
+                  className="cursor-pointer"
+                  onClick={() => loadFigure(c.component.id)}
+                  // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      loadFigure(c.component.id);
+                    }
+                  }}
+                >
+                  <FigureBadge
+                    id={c.component.id}
+                    badgeProps={getBadgeProps(c.component)}
+                    width={2.5}
+                  />
+                  <FigureKeywordDisplay figure={c.component} />
+                </div>
+              ))}
+
+              <br />
+
+              <DictionaryHeadingMeanings
+                headingsMeanings={getHeadingsMeanings(figure)}
               />
-            ))}
-          </div>
+
+              <br />
+              <FigureTags
+                badgeProps={badgeProps}
+                isSoundMark={isPrioritySoundMark(figure)}
+                isAtomic={
+                  figure.isPriority
+                    ? figure.firstClassComponents.length === 0
+                    : false
+                }
+              />
+            </div>
+          ) : null}
         </div>,
         document.body,
       ),
@@ -121,12 +171,12 @@ export function usePopoverFigureFetcher(figureId: string) {
   return {
     fetcher,
 
-    loadFigure() {
+    loadFigure(figureToFetchId: string = figureId) {
       if (
-        (!fetcher.data || fetcher.data.figure?.id !== figureId) &&
+        (!fetcher.data || fetcher.data.figure?.id !== figureToFetchId) &&
         fetcher.state === "idle"
       )
-        fetcher.load(`/dict/${figureId}/preview`);
+        fetcher.load(`/dict/${figureToFetchId}/preview`);
     },
   };
 }

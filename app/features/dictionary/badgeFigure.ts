@@ -17,6 +17,7 @@ export interface BadgeProps {
   aozoraAppearances: number;
   hue: BadgeHue;
   isStandaloneCharacter: boolean;
+  lists: KanjiListCode[];
   isPriorityComponent: boolean;
   variantGroupId: string | null;
 }
@@ -172,6 +173,7 @@ function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
     id: figure.id,
     image: figure.image,
     aozoraAppearances: figure.aozoraAppearances,
+    lists,
     hue: getBadgeHue(lists),
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),

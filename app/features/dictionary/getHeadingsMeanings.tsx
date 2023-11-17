@@ -1,8 +1,15 @@
-import { isStandaloneCharacterVariant } from "~/features/dictionary/badgeFigure";
+import {
+  StandaloneCharacterVariantQueryFigure,
+  isStandaloneCharacterVariant,
+} from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 
 export function getHeadingsMeanings(
-  figure: DictionaryPageFigureWithPriorityUses,
+  figure: Pick<
+    DictionaryPageFigureWithPriorityUses,
+    "keyword" | "mnemonicKeyword" | "meaning" | "isPriority"
+  > &
+    StandaloneCharacterVariantQueryFigure,
 ): HeadingMeanings {
   const mnemonicKeyword = figure.mnemonicKeyword;
   const [, mnemonicKeywordText, , referenceTypeText, reference] =

@@ -15,6 +15,12 @@ async function getPopoverFigure(figureId: string) {
     where: { id: figureId },
     select: {
       ...badgeFigureSelect,
+      keyword: true,
+      isPriority: true,
+      mnemonicKeyword: true,
+      listsAsCharacter: true,
+      listsAsComponent: true,
+
       firstClassComponents: {
         orderBy: { indexInTree: "asc" },
         select: {

@@ -227,7 +227,8 @@
   historical: towel
   tag: tools
 示:
-  historical: altar
+  historical: show
+  mnemonic: altar
   tag: place
 广:
   historical: cave

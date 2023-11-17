@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode, useRef } from "react";
 
 type LinkProps<T = object> = T & {
   children: ReactNode;
@@ -11,9 +11,15 @@ function AppLink({
   children,
   className = "underline hover:text-orange-600",
   as,
-}: LinkProps<{ to: string; as?: string }>) {
+  linkRef,
+}: LinkProps<{
+  to: string;
+  as?: string;
+
+  linkRef?: React.Ref<HTMLAnchorElement>;
+}>) {
   return (
-    <Link {...{ to, as }} className={className}>
+    <Link {...{ to, as }} className={className} ref={linkRef}>
       {children}
     </Link>
   );
@@ -22,9 +28,19 @@ function AppLink({
 export function DictLink({
   children,
   figureId,
-}: LinkProps<{ figureId: string }>) {
+  focusOnLoad,
+}: LinkProps<{ figureId: string; focusOnLoad?: boolean }>) {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    console.log("focusOnLoad?", figureId);
+    if (focusOnLoad) {
+      console.log("focusOnLoad!!", figureId);
+      linkRef.current?.focus();
+    }
+  }, [figureId, focusOnLoad]);
+
   return (
-    <AppLink key={figureId} to={`/dict/${figureId}`}>
+    <AppLink key={figureId} to={`/dict/${figureId}`} linkRef={linkRef}>
       {children}
     </AppLink>
   );

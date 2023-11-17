@@ -8,7 +8,6 @@ import {
   getLists,
   isPriorityComponent,
   isPrioritySoundMark,
-  isStandaloneCharacter,
   isStandaloneCharacterVariant,
 } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
@@ -16,6 +15,7 @@ import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
+import { DictionaryHeadingMeanings } from "./DictionaryHeadingMeanings";
 import { FigurePriorityUses } from "./FigurePriorityUses";
 import { FigureTags } from "./FigureTags";
 
@@ -24,9 +24,8 @@ export function SingleFigureDictionaryEntry({
 }: {
   figure: DictionaryPageFigureWithPriorityUses;
 }) {
-  const headingsMeanings = getHeadingsMeanings(figure);
   const badgeProps = getBadgeProps(figure);
-  const figureIsStandaloneCharacter = isStandaloneCharacter(figure);
+  const figureIsStandaloneCharacter = badgeProps.isStandaloneCharacter;
   const figureIsPrioritySoundMark = isPrioritySoundMark(figure);
   return (
     <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
@@ -37,42 +36,16 @@ export function SingleFigureDictionaryEntry({
         <FigureBadge id={figure.id} badgeProps={badgeProps} width={10} />
       </div>
 
-      {headingsMeanings.currentCharacter ? (
-        <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
-      ) : null}
-      {headingsMeanings.componentHistoricalMeaning ? (
-        <h1>{headingsMeanings.componentHistoricalMeaning}</h1>
-      ) : null}
-      {headingsMeanings.componentMnemonic ? (
-        <h1>
-          <div className="text-gray-500">component mnemonic:</div>
-          {headingsMeanings.componentMnemonic.text}
-          {headingsMeanings.componentMnemonic.reference ? (
-            <>
-              {" "}
-              ({headingsMeanings.componentMnemonic.referenceTypeText}{" "}
-              {headingsMeanings.componentMnemonic.reference})
-            </>
-          ) : null}
-        </h1>
-      ) : null}
-      {headingsMeanings.obsoleteCharacter ? (
-        <h1>
-          <div className="text-gray-500">historical character meaning:</div>
-          {headingsMeanings.obsoleteCharacter.join("; ")}
-        </h1>
-      ) : null}
+      <DictionaryHeadingMeanings
+        headingsMeanings={getHeadingsMeanings(figure)}
+      />
       <DictionaryEntryComponentsTree figure={figure} />
 
       <FigureTags
         badgeProps={badgeProps}
         lists={getLists(figureIsStandaloneCharacter, figure)}
         isSoundMark={figureIsPrioritySoundMark}
-        isAtomic={
-          Array.isArray(figure.componentsTree)
-            ? figure.componentsTree.length === 0
-            : false
-        }
+        isAtomic={figureIsAtomic(figure)}
       />
 
       <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
@@ -103,6 +76,12 @@ type KeywordDisplayFigure = Pick<
 > &
   IsPriorityComponentQueryFigure &
   StandaloneCharacterVariantQueryFigure;
+
+function figureIsAtomic(figure: DictionaryPageFigureWithPriorityUses): boolean {
+  return Array.isArray(figure.componentsTree)
+    ? figure.componentsTree.length === 0
+    : false;
+}
 
 export function FigureKeywordDisplay({
   figure,
