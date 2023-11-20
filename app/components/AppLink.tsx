@@ -32,9 +32,7 @@ export function DictLink({
 }: LinkProps<{ figureId: string; focusOnLoad?: boolean }>) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
-    console.log("focusOnLoad?", figureId);
     if (focusOnLoad) {
-      console.log("focusOnLoad!!", figureId);
       linkRef.current?.focus();
     }
   }, [figureId, focusOnLoad]);

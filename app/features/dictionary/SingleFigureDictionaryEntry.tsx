@@ -5,7 +5,6 @@ import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
   getBadgeProps,
-  getLists,
   isPriorityComponent,
   isPrioritySoundMark,
   isStandaloneCharacterVariant,
@@ -14,6 +13,7 @@ import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
+import { DictEntryReadings } from "./DictEntryReadings";
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { DictionaryHeadingMeanings } from "./DictionaryHeadingMeanings";
 import { FigurePriorityUses } from "./FigurePriorityUses";
@@ -43,9 +43,14 @@ export function SingleFigureDictionaryEntry({
 
       <FigureTags
         badgeProps={badgeProps}
-        lists={getLists(figureIsStandaloneCharacter, figure)}
         isSoundMark={figureIsPrioritySoundMark}
         isAtomic={figureIsAtomic(figure)}
+      />
+
+      <DictEntryReadings
+        figureId={figure.id}
+        readings={figure.reading}
+        isStandaloneCharacter={figureIsStandaloneCharacter}
       />
 
       <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
