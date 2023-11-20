@@ -11,15 +11,11 @@ import { serializeXiaoyunProfile } from "~/features/dictionary/getActiveSoundMar
 import { files } from "~/lib/files.server";
 import {
   InferredOnyomiType,
-  Kaihe,
-  QysSyllableProfile,
-  Tone,
   inferOnyomi,
   toModernKatakana,
 } from "~/lib/qys/inferOnyomi";
-import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
-import { QysInitial } from "~/lib/qys/QysInitial";
 
+import { sbgyXiaoyunToQysSyllableProfile } from "../../app/features/dictionary/sbgyXiaoyunToQysSyllableProfile";
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
@@ -473,20 +469,6 @@ export type OnReadingToTypeToXiaoyuns = Record<
   string,
   Partial<Record<InferredOnyomiType, { xiaoyun: number; profile: string }[]>>
 >;
-
-export function sbgyXiaoyunToQysSyllableProfile(
-  xiaoyun: SbgyXiaoyun,
-): QysSyllableProfile {
-  const initial = xiaoyun.initial as QysInitial;
-  return {
-    initial,
-    cycleHead: xiaoyun.cycleHead as QieyunRhymeCycleHead,
-    tone: xiaoyun.tone as Tone,
-    kaihe: xiaoyun.kaihe as Kaihe | null,
-    dengOrChongniu:
-      xiaoyun.dengOrChongniu as QysSyllableProfile["dengOrChongniu"],
-  };
-}
 
 const katakanaToHiraganaOnCache = new Map<string, string>();
 function katakanaOnyomiToHiragana(katakanaOnReading: string) {

@@ -52,5 +52,17 @@ export const BrowseComponentsLink = ({ children }: LinkProps) => (
   <AppLink to="/browse/components">{children}</AppLink>
 );
 
+export const MiddleChineseTranscriptionLink = ({
+  children,
+  hash,
+}: LinkProps<{ hash?: string }>) => (
+  <AppLink to={`/dict/middle-chinese-pronunciation${hash ? `#${hash}` : ""}`}>
+    {children}
+  </AppLink>
+);
+export const MiddleChineseLink = ({ children }: LinkProps) => (
+  <AppLink to={`/dict/middle-chinese`}>{children}</AppLink>
+);
+
 // also atomic components
 // sound components

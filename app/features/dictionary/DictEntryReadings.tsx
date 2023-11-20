@@ -7,6 +7,7 @@ import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureId.sino";
 import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
 import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.server";
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
+import { QysDialogContent } from "./QysDialogContent";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 
 export function DictEntryReadings({
@@ -131,7 +132,15 @@ export function DictEntryReadings({
               </div>
             </DialogTrigger>
             <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-gray-400 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:80vw] [max-height:80vh]  [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl">
-              <div className="">details</div>
+              <QysDialogContent
+                syllables={guangyunReadings}
+                sbgyXiaoyunsToExemplars={
+                  readings.sbgyXiaoyunsMatchingExemplars as Record<
+                    string,
+                    string[]
+                  >
+                }
+              />
             </DialogContent>
           </Dialog>
         ) : null}
@@ -184,6 +193,7 @@ export function DictEntryReadings({
           role="button"
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
               animationState === "entered" || animationState === "entering"
                 ? requestClose()
                 : requestOpen();

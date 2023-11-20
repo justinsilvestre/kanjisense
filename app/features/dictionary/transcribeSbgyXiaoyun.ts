@@ -5,6 +5,7 @@ import { QysInitial } from "~/lib/qys/QysInitial";
 import {
   QysTranscriptionProfile,
   transcribe,
+  TranscriptionOptions,
 } from "~/lib/qys/transcribeXiaoyun";
 
 export function transcribeSbgyXiaoyun(
@@ -12,7 +13,7 @@ export function transcribeSbgyXiaoyun(
     SbgyXiaoyun,
     "cycleHead" | "dengOrChongniu" | "initial" | "kaihe" | "tone"
   >,
-  options: { ascii?: boolean } = {},
+  options?: TranscriptionOptions,
 ) {
   const transcriptionProfile: QysTranscriptionProfile = {
     is合口: sbgyXiaoyun.kaihe === Kaihe.Closed,
@@ -22,5 +23,5 @@ export function transcribeSbgyXiaoyun(
     qieyunCycleHead韻: sbgyXiaoyun.cycleHead,
     contrastiveRow等: sbgyXiaoyun.dengOrChongniu,
   };
-  return transcribe(transcriptionProfile, options.ascii);
+  return transcribe(transcriptionProfile, options);
 }

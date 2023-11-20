@@ -6,6 +6,8 @@ import {
   QysInitial,
 } from "~/lib/qys/QysInitial";
 
+import { Kaihe, QysSyllableProfile } from "./inferOnyomi";
+
 export interface QysTranscriptionProfile {
   is合口: boolean;
   canonical母: QysInitial;
@@ -406,7 +408,15 @@ const rhymes: Record<
   凡: "âm",
 };
 
-export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
+export interface TranscriptionOptions {
+  ascii?: boolean;
+  separator?: string;
+}
+
+export function transcribe(
+  syllable: QysTranscriptionProfile,
+  { ascii = false, separator = "" }: TranscriptionOptions = {},
+) {
   const { canonical母, tone聲: 聲, qieyunCycleHead韻: 韻 } = syllable;
   const transcribe韻母 = rhymes[韻 as QieyunRhymeCycleHead];
   const 母 = canonical母;
@@ -433,7 +443,8 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
     /^r|^w?([viuy])|^w?e/.test(asciiFinals[韻母 as keyof typeof asciiFinals])
   ) {
     initialRealization = initials[母] + "h";
-  } else if (母 === "以" && /^[yŷẁ]/.test(韻母)) initialRealization = "";
+  } else if (!separator && 母 === "以" && /^[yŷẁ]/.test(韻母))
+    initialRealization = "";
   else initialRealization = initials[母];
 
   if (ascii) {
@@ -447,10 +458,12 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
     return (
       (asciiInitials[initialRealization as keyof typeof asciiInitials] ||
         initialRealization) +
+      separator +
       changeRuShengCoda(
         聲 === "入",
         asciiFinals[韻母 as keyof typeof asciiFinals],
       ) +
+      separator +
       聲調
     );
   }
@@ -462,7 +475,29 @@ export function transcribe(syllable: QysTranscriptionProfile, ascii = false) {
     入: "",
   }[聲];
 
-  return initialRealization + changeRuShengCoda(聲 === "入", 韻母) + 聲調;
+  return (
+    initialRealization +
+    separator +
+    changeRuShengCoda(聲 === "入", 韻母) +
+    separator +
+    聲調
+  );
+}
+export function transcribeSyllableProfile(
+  syllableProfile: QysSyllableProfile,
+  options?: TranscriptionOptions,
+) {
+  return transcribe(
+    {
+      is合口: syllableProfile.kaihe === Kaihe.Closed,
+      canonical母: syllableProfile.initial,
+      tone聲: syllableProfile.tone,
+      is重紐A類: syllableProfile.dengOrChongniu === "A",
+      qieyunCycleHead韻: syllableProfile.cycleHead,
+      contrastiveRow等: syllableProfile.dengOrChongniu,
+    },
+    options,
+  );
 }
 
 const retroflexToDental = {
