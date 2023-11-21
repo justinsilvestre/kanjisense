@@ -145,7 +145,7 @@ export const DialogContent = React.forwardRef<
 
   return (
     <FloatingPortal>
-      <FloatingOverlay className="grid place-items-center">
+      <FloatingOverlay className="grid place-items-center bg-black bg-opacity-40">
         <FloatingFocusManager context={floatingContext}>
           <div
             ref={ref}

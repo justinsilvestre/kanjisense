@@ -7,13 +7,11 @@ import {
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
   getBadgeProps,
-  isPriorityComponent,
   isPrioritySoundMark,
   isStandaloneCharacterVariant,
 } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
-import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoyun";
 
 import { DictEntryReadings } from "./DictEntryReadings";
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
@@ -97,11 +95,9 @@ export function SingleFigureDictionaryEntry({
         readings={figure.reading}
         isStandaloneCharacter={figureIsStandaloneCharacter}
       />
-
       {[...figure.id].length === 1 ? (
         <ExternalDictionaryLinks figureId={figure.id} />
       ) : null}
-
       <FigurePriorityUses
         componentFigure={figure}
         priorityUses={figure.firstClassUses}

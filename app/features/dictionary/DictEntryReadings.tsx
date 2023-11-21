@@ -130,7 +130,7 @@ export function DictEntryReadings({
                 </dd>
               </div>
             </DialogTrigger>
-            <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-gray-400 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:80vw] [max-height:80vh]  [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl">
+            <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:80vw] [max-height:80vh]  [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl">
               <QysDialogContent
                 syllables={guangyunReadings}
                 sbgyXiaoyunsToExemplars={
