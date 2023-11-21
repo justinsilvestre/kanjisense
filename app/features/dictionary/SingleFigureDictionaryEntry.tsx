@@ -40,7 +40,10 @@ export function SingleFigureDictionaryEntry({
   const kvgImage =
     figure.image?.type === KanjisenseFigureImageType.Kvg ? figure.image : null;
   return (
-    <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
+    <section
+      className={`${figure.isPriority ? "" : "bg-gray-200"}`}
+      key={figure.id}
+    >
       <h1>
         {figure.id}: <FigureKeywordDisplay figure={figure} />
       </h1>

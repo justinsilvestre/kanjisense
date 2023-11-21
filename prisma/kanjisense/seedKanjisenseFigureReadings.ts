@@ -244,16 +244,15 @@ export async function seedKanjisenseFigureReadings(
       selectedOnReadings: string[];
     }[] = [];
     for (const readingFigureId of figuresNeedingReadingsIds) {
-      const inferredOnyomiFor = getInferredOnReadings(
-        figuresToXiaoyunsWithMatchingExemplars,
-        readingFigureId,
+      const inferredOnyomiForFigure = getInferredOnReadings(
+        figuresToXiaoyunsWithMatchingExemplars.get(readingFigureId) || null,
       );
 
       const inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns = {};
       for (const [
         modernKatakanaOnReading,
         typeToXiaoyuns,
-      ] of inferredOnyomiFor) {
+      ] of inferredOnyomiForFigure) {
         for (const [type, xiaoyunsWithExemplars] of typeToXiaoyuns) {
           for (const { xiaoyun } of xiaoyunsWithExemplars) {
             const classifications =
@@ -354,11 +353,10 @@ function isSingleCharacter(readingFigureId: string) {
 }
 
 function getInferredOnReadings(
-  figuresToXiaoyunsWithMatchingExemplars: Map<
-    string,
-    Map<number, { xiaoyun: SbgyXiaoyun; matchingExemplars: Set<string> }>
-  >,
-  readingFigureId: string,
+  xiaoyunsWithMatchingExemplars: Map<
+    number,
+    { xiaoyun: SbgyXiaoyun; matchingExemplars: Set<string> }
+  > | null,
 ) {
   const inferredOnyomiModernKatakanaToTypeToXiaoyuns = new Map<
     string,
@@ -370,10 +368,12 @@ function getInferredOnReadings(
       }[]
     >
   >();
+  if (!xiaoyunsWithMatchingExemplars)
+    return inferredOnyomiModernKatakanaToTypeToXiaoyuns;
   for (const [
     ,
     xiaoyunWithMatchingExemplars,
-  ] of figuresToXiaoyunsWithMatchingExemplars.get(readingFigureId) || []) {
+  ] of xiaoyunsWithMatchingExemplars) {
     const { xiaoyun } = xiaoyunWithMatchingExemplars;
     const inferredOnReadings = inferOnyomi(
       sbgyXiaoyunToQysSyllableProfile(xiaoyun),

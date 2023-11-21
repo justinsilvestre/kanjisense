@@ -290,7 +290,7 @@ export function toModernKatakana(historicalOnyomiNotation: string) {
   return toKatakana(romaji);
 }
 
-function toKatakana(latinOnyomiNotation: string) {
+export function toKatakana(latinOnyomiNotation: string) {
   let kana = "";
 
   let pendingGyo: Record<string, string> | null = null;

@@ -6,26 +6,65 @@ import {
   MiddleChineseTranscriptionLink,
 } from "~/components/AppLink";
 import { sbgyXiaoyunToQysSyllableProfile } from "~/features/dictionary/sbgyXiaoyunToQysSyllableProfile";
+import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
+import {
+  InferredOnyomiType,
+  inferKanOn,
+  toKatakana,
+  toModernKatakana,
+} from "~/lib/qys/inferOnyomi";
 import { transcribeSyllableProfile } from "~/lib/qys/transcribeXiaoyun";
 
+import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
 import { ConsonantHint, MedialHint, ToneHint, VowelHint } from "./QysHints";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
+
+const KAN_TYPES_PRIORITY = [
+  InferredOnyomiType.AttestedKan,
+  InferredOnyomiType.AttestedKanRare,
+  InferredOnyomiType.SpeculatedKan,
+];
 
 export const QysDialogContent = ({
   syllables,
   sbgyXiaoyunsToExemplars,
+  inferredOnReadingCandidates,
+  attestedOnReadings,
 }: {
   syllables: SbgyXiaoyun[];
   sbgyXiaoyunsToExemplars: Record<string, string[]>;
+  inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns;
+  attestedOnReadings: string[];
 }) => {
-  // const syllables = guangyunYunjing.map((syllableJson) =>
-  //   SyllableProfile.fromJSON(syllableJson)
-  // );
-
   const [activeTab, setActiveTab] = useState(0);
   const getSetActiveTab = (index: number) => () => {
     setActiveTab(index);
   };
+  console.log({ attestedOnReadings });
+
+  const xiaoyunsToInferredKanCandidatesToTypes = new Map<
+    number,
+    Record<string, InferredOnyomiType[]>
+  >();
+  for (const [onReading, typesToXiaoyuns] of Object.entries(
+    inferredOnReadingCandidates,
+  )) {
+    for (const [type, xiaoyuns] of Object.entries(typesToXiaoyuns)) {
+      for (const { xiaoyun } of xiaoyuns) {
+        if (xiaoyunsToInferredKanCandidatesToTypes.has(xiaoyun)) {
+          xiaoyunsToInferredKanCandidatesToTypes.get(xiaoyun)![onReading] ||=
+            [];
+          xiaoyunsToInferredKanCandidatesToTypes
+            .get(xiaoyun)!
+            [onReading].push(type as InferredOnyomiType);
+        } else {
+          xiaoyunsToInferredKanCandidatesToTypes.set(xiaoyun, {
+            [onReading]: [type as InferredOnyomiType],
+          });
+        }
+      }
+    }
+  }
 
   return (
     <>
@@ -74,6 +113,7 @@ export const QysDialogContent = ({
         <div className="rounded-b-lg border-2 border-solid border-slate-500 bg-white p-2">
           {syllables.map((syllable, i) => {
             const syllableProfile = sbgyXiaoyunToQysSyllableProfile(syllable);
+            const transcription = transcribeSyllableProfile(syllableProfile);
             const asciiTranscription = transcribeSyllableProfile(
               syllableProfile,
               { ascii: true },
@@ -82,7 +122,6 @@ export const QysDialogContent = ({
               syllableProfile,
               { separator: " " },
             ).split(" ");
-            console.log({ syllableProfile, initial, final });
 
             const medial = /^[yŷẁw]/.test(initial)
               ? null
@@ -91,22 +130,47 @@ export const QysDialogContent = ({
             const medialHint = medial ? (
               <MedialHint medial={medial[0]} final={final} />
             ) : null;
-            // const matchingKanOn = readings.getKanjidicOnForGuangyun(i, "kan");
+
+            const inferredKanCandidatesToTypes =
+              xiaoyunsToInferredKanCandidatesToTypes.get(syllable.xiaoyun);
+            const attestedOnReadingsMatchingGuangyun =
+              inferredKanCandidatesToTypes &&
+              attestedOnReadings
+                .filter(
+                  (katakanaOn) =>
+                    inferredKanCandidatesToTypes?.[katakanaOn]?.some((t) =>
+                      KAN_TYPES_PRIORITY.includes(t),
+                    ),
+                )
+                .sort((a, b) => {
+                  return (
+                    Math.min(
+                      ...inferredKanCandidatesToTypes[a].map((type) =>
+                        KAN_TYPES_PRIORITY.indexOf(type),
+                      ),
+                    ) -
+                    Math.min(
+                      ...inferredKanCandidatesToTypes[b].map((type) =>
+                        KAN_TYPES_PRIORITY.indexOf(type),
+                      ),
+                    )
+                  );
+                });
+
             return (
               <div
                 key={asciiTranscription}
                 className={`mt-0 mb-3 ${activeTab === i ? "" : "hidden"}`}
               >
-                {/* <KanOnDevelopment
+                <KanOnDevelopment
                   className="mb-3 mt-0 text-center"
-                  syllableProfile={syllableProfile}
-                  matchingAttestedKanOn={
-                    !matchingKanOn ||
-                    matchingKanOn?.tags.includes(OnyomiTypes.INFERRED_KAN)
-                      ? null
-                      : matchingKanOn?.reading
+                  transcription={transcription}
+                  finalTranscription={final}
+                  xiaoyun={syllable}
+                  modernKatakanaMatchingInference={
+                    attestedOnReadingsMatchingGuangyun?.[0] || null
                   }
-                /> */}
+                />
                 <p className={`mb-3 mt-0 text-center`}>
                   <b>syllable initial</b>: {syllable.initial} ⟨{initial}⟩
                 </p>
@@ -176,4 +240,113 @@ export const QysDialogContent = ({
 
 function PopoverBottom({ children }: PropsWithChildren) {
   return <div className={" text-right"}>{children}</div>;
+}
+
+function KanOnDevelopment({
+  xiaoyun,
+  transcription,
+  finalTranscription: finalTranscription,
+  modernKatakanaMatchingInference,
+  className,
+}: {
+  xiaoyun: SbgyXiaoyun;
+  transcription: string;
+  finalTranscription: string;
+  modernKatakanaMatchingInference: string | null;
+  className?: string;
+}) {
+  const kanCandidates = inferKanOn(sbgyXiaoyunToQysSyllableProfile(xiaoyun));
+  const matchingKanCandidates = [...kanCandidates].flatMap(
+    ([inferredOnyomiType, latinOn]) => {
+      return latinOn.flatMap((latinOn) => {
+        if (
+          modernKatakanaMatchingInference &&
+          toModernKatakana(latinOn) !== modernKatakanaMatchingInference
+        )
+          return [];
+        return {
+          type: inferredOnyomiType,
+          katakana: toKatakana(
+            latinOn
+              .replace(/p/g, "h")
+              .replace("Y", "y")
+              .replace("W", "w")
+              .replace(/^iy/, "y")
+              .replace(/^uw/, "w"),
+          ),
+          ipaKanon: toIPAKanon(latinOn, finalTranscription),
+        };
+      });
+    },
+  );
+
+  const modernOnyomi = modernKatakanaMatchingInference
+    ? [modernKatakanaMatchingInference]
+    : [
+        ...new Set(
+          [
+            ...inferKanOn(
+              sbgyXiaoyunToQysSyllableProfile(xiaoyun),
+              toModernKatakana,
+            ).values(),
+          ].flat(),
+        ),
+      ];
+
+  return (
+    <div
+      className={`${className} my-4 flex flex-row flex-wrap items-end justify-center gap-4`}
+    >
+      <span className="inline-flex flex-col text-center align-middle">
+        <span className="mb-2 basis-full text-xs [line-height:1em]">
+          Middle Chinese
+        </span>
+        <span>{transcription}</span>
+      </span>
+      <span className="inline-block text-center">→</span>
+      <span className="inline-flex flex-col text-center align-middle">
+        <span className="mb-2 basis-full text-xs [line-height:1em]">
+          {modernKatakanaMatchingInference ? null : <>expected </>} historical{" "}
+          <i>on&apos;yomi</i>
+        </span>
+        <span>
+          {matchingKanCandidates
+            ?.map((x) => `${x.katakana} *${x.ipaKanon}`)
+            .join(" or ")}
+        </span>
+      </span>
+      <span className="inline-block text-center">→</span>
+      <span className="inline-flex flex-col text-center align-middle">
+        <span className="mb-2 basis-full text-xs [line-height:1em]">
+          {modernKatakanaMatchingInference ? null : <>expected </>}modern{" "}
+          <i>on&apos;yomi</i>
+        </span>
+        <span>
+          {modernOnyomi
+            .map(
+              (kana) => `${kana} ${kanjidicKanaToRomaji(kana).toUpperCase()}`,
+            )
+            .join(" or ")}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+export function toIPAKanon(
+  historicalOnyomiNotation: string,
+  finalTranscription: string,
+) {
+  const velarNasalEnding = finalTranscription.endsWith("ng");
+  return (
+    historicalOnyomiNotation
+      .replace(/(?<=[aou])u$/, velarNasalEnding ? "ũ" : "u")
+      .replace(/ei$/, velarNasalEnding ? "eĩ" : "ei")
+      .replace(/(?<!w)iY/, "y")
+      .replace(/uW/i, "w")
+      .replace(/wiY/, "wiy")
+      .replace(/tu$/, "t")
+      // .replace(/y/i, "j")
+      .replace(/Mu$/, finalTranscription.endsWith("m") ? "m" : "n")
+  );
 }

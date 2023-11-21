@@ -44,7 +44,10 @@ export function usePaddedPopper({
   useEffect(() => {
     if (isOpen) {
       const closeOnEsc = (e: KeyboardEvent) => {
-        if (e.key === "Escape") close();
+        if (e.key === "Escape") {
+          e.preventDefault();
+          close();
+        }
       };
       document.addEventListener("keydown", closeOnEsc);
       return () => document.removeEventListener("keydown", closeOnEsc);

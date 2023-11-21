@@ -3,6 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
 import { Fragment, useRef, useState } from "react";
 
+import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureId.sino";
 
 import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
@@ -132,7 +133,15 @@ export function DictEntryReadings({
             </DialogTrigger>
             <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:80vw] [max-height:80vh]  [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl">
               <QysDialogContent
+                attestedOnReadings={
+                  readings.selectedOnReadings.length
+                    ? readings.selectedOnReadings
+                    : readings.kanjidicEntry?.onReadings || []
+                }
                 syllables={guangyunReadings}
+                inferredOnReadingCandidates={
+                  readings.inferredOnReadingCandidates as OnReadingToTypeToXiaoyuns
+                }
                 sbgyXiaoyunsToExemplars={
                   readings.sbgyXiaoyunsMatchingExemplars as Record<
                     string,
@@ -324,53 +333,6 @@ function UnavailableNote() {
     </div>
   );
 }
-
-// export function parseAndAbbreviateGuangyun({
-//   guangyunJsons,
-// }: {
-//   guangyunJsons: string[];
-// }) {
-//   const transcriptions = guangyunJsons.map((r) => {
-//     return parseGuangyunReading(r);
-//   });
-
-//   if (
-//     (transcriptions.length === 1 &&
-//       transcriptions[0].syllableProfile!.tone === 1) ||
-//     transcriptions[0].syllableProfile!.tone === 4
-//   ) {
-//     return { transcriptions, abbreviated: [transcriptions[0].reading] };
-//   }
-
-//   function getToneMark(tone: number) {
-//     if (tone === 2) return "ˬ";
-//     if (tone === 3) return "ˎ";
-//     return "";
-//   }
-
-//   const guangyunByCore = transcriptions.reduce((acc, transcription) => {
-//     const core = transcription.reading.replace(/ˬ|ˎ/g, "");
-//     acc.set(
-//       core,
-//       (acc.get(core) ?? new Set()).add(transcription.syllableProfile!.tone),
-//     );
-//     return acc;
-//   }, new Map<string, Set<number>>());
-
-//   const abbreviated =
-//     guangyunByCore &&
-//     Array.from(guangyunByCore, ([core, toneNumbers]) => {
-//       const toneMarks = Array.from(toneNumbers, getToneMark).join("");
-//       const withParens =
-//         toneNumbers.size > 1 && toneNumbers.has(1)
-//           ? (toneMarks: string) => `₍${toneMarks}₎`
-//           : (toneMarks: string) => toneMarks;
-
-//       return `${core}${withParens(toneMarks)}`;
-//     });
-
-//   return { abbreviated, transcriptions };
-// }
 
 const SUPERSCRIPT_NUMBERS = {
   "0": "⁰",

@@ -142,11 +142,7 @@ type ActiveSoundMarkFigure = Omit<
 
 function getValueFromSoundMarkReading(soundMarkFigure: ActiveSoundMarkFigure) {
   const { reading } = soundMarkFigure;
-  if (soundMarkFigure.id === "尚")
-    console.log({
-      x: reading?.kanjidicEntry?.onReadings,
-      reading,
-    });
+
   if (!reading) return null;
 
   const inferredOnReadingCandidates =

@@ -40,9 +40,9 @@ export function AncientCharacterFormSection({
             >
               <p className="mb-4">
                 These ancient character forms are provided here to help you
-                understand the evolution of the characters. They are mostly
-                obsolete, but can still be found on <i>hanko</i> seals (stamps)
-                used in Japan as a way of signing documents.
+                understand the evolution of the kanji. They are mostly obsolete,
+                but can still be found on <i>hanko</i> seals (stamps) used in
+                Japan as a way of signing documents.
               </p>
               <p className="mb-4">
                 These &quot;seal script&quot; characters are based on the
