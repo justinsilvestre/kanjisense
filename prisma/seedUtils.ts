@@ -23,6 +23,7 @@ export type SetupStep =
   | "Unihan15"
   | "Unihan15"
   | "KanjisenseFigureImage"
+  | "ShuowenImage"
   | "KanjisenseVariantGroup";
 
 export async function registerSeeded(prisma: PrismaClient, step: SetupStep) {

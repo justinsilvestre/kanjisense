@@ -64,7 +64,7 @@ export async function seedFigureImages(prisma: PrismaClient, force = false) {
 
     await prisma.kanjisenseFigureImage.deleteMany({});
 
-    executeAndLogTime("seeding images data", () =>
+    await executeAndLogTime("seeding images data", () =>
       prisma.kanjisenseFigureImage.createMany({
         data: Array.from(dbInput.entries()).map(([id, { type, content }]) => ({
           id,

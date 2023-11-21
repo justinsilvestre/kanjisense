@@ -13,6 +13,7 @@ import {
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 
+import { AncientCharacterFormSection } from "./AncientCharacterFormSection";
 import { DictEntryReadings } from "./DictEntryReadings";
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { DictionaryHeadingMeanings } from "./DictionaryHeadingMeanings";
@@ -36,6 +37,8 @@ export function SingleFigureDictionaryEntry({
 
   const [animationIsShowing, setAnimationIsShowing] = useState(false);
 
+  const kvgImage =
+    figure.image?.type === KanjisenseFigureImageType.Kvg ? figure.image : null;
   return (
     <section className={`${figure.isPriority ? "" : "bg-gray-200"}`}>
       <h1>
@@ -55,34 +58,42 @@ export function SingleFigureDictionaryEntry({
         }}
       >
         <FigureBadge id={figure.id} badgeProps={badgeProps} width={10} />
-        {animationIsShowing &&
-        figure.image?.type === KanjisenseFigureImageType.Kvg ? (
+        {animationIsShowing && kvgImage ? (
           <>
             <FigureStrokesAnimation
               className="[width:100%] [height:100%] absolute top-0 left-0 bottom-0 right-0 border-solid border border-black"
-              kvg={figure.image.content as unknown as KvgJsonData}
+              kvg={kvgImage.content as unknown as KvgJsonData}
             />
           </>
         ) : (
           <></>
         )}
-        <button className="absolute bottom-1 p-1 right-1 text-sm bg-slate-300 rounded-md opacity-0 group-hover:opacity-100 focus:opacity-100">
-          {animationIsShowing ? (
-            <>
-              <span role="img">◾️</span> stop
-            </>
-          ) : (
-            <>
-              <span role="img">▶</span> stroke order
-            </>
-          )}
-        </button>
+        {kvgImage ? (
+          <button className="absolute bottom-1 p-1 right-1 text-sm bg-slate-300 rounded-md opacity-0 group-hover:opacity-100 focus:opacity-100">
+            {animationIsShowing ? (
+              <>
+                <span role="img">◾️</span> stop
+              </>
+            ) : (
+              <>
+                <span role="img">▶</span> stroke order
+              </>
+            )}
+          </button>
+        ) : null}
       </div>
 
       <DictionaryHeadingMeanings
         headingsMeanings={getHeadingsMeanings(figure)}
       />
+
       <DictionaryEntryComponentsTree figure={figure} />
+
+      {figure.shuowenImage ? (
+        <div className="mt-4">
+          <AncientCharacterFormSection svgPaths={figure.shuowenImage.paths} />
+        </div>
+      ) : null}
 
       <FigureTags
         badgeProps={badgeProps}
@@ -95,7 +106,8 @@ export function SingleFigureDictionaryEntry({
         readings={figure.reading}
         isStandaloneCharacter={figureIsStandaloneCharacter}
       />
-      {[...figure.id].length === 1 ? (
+      {figureIsStandaloneCharacter ||
+      (!figure.isPriority && [...figure.id].length === 1) ? (
         <ExternalDictionaryLinks figureId={figure.id} />
       ) : null}
       <FigurePriorityUses

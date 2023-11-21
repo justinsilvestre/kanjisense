@@ -19,6 +19,7 @@ import { seedKanjisenseFigureReadings } from "./kanjisense/seedKanjisenseFigureR
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
+import { seedShuowenImages } from "./kanjisense/seedShuowenImages";
 import { seedJMDict } from "./seedJMDict";
 
 const prisma = new PrismaClient();
@@ -70,6 +71,10 @@ async function seed() {
 
     await executeAndLogTime("seed figure images", () =>
       seedFigureImages(prisma, false),
+    );
+
+    await executeAndLogTime("seeding shuowen images", () =>
+      seedShuowenImages(prisma, false),
     );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);

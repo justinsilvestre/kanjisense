@@ -5,7 +5,7 @@ import { toKatakana } from "wanakana";
 
 import { getActiveSoundMarkValueText } from "~/features/dictionary/getActiveSoundMarkValueText";
 import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
-import type { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
+import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
 import { registerSeeded } from "../seedUtils";
 

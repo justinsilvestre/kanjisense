@@ -1,5 +1,7 @@
 import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
+import { toukeiBetsujiMappings } from "../../app/lib/dic/toukeiBetsujiMappings";
+
 import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
 
 const VARIANT_TYPES_PRIORITY = [
@@ -28,8 +30,9 @@ export async function findGuangyunEntriesByShinjitai(
       matchingExemplars: string[];
     }
   >();
-  const shinkyuuForms = newToOldFiguresIds.get(shinjitai) || [];
-  shinkyuuForms.push(shinjitai);
+  const shinkyuuForms =
+    toukeiBetsujiMappings[shinjitai] ||
+    (newToOldFiguresIds.get(shinjitai) || []).concat(shinjitai);
 
   for (const jiForm of shinkyuuForms) {
     const jiXiaoyunNumbers = sbgyCharactersToXiaoyunNumbers.get(jiForm);

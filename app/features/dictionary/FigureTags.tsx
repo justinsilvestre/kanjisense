@@ -1,13 +1,15 @@
-import { PropsWithChildren, useRef, useState } from "react";
+import { PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 
 import {
   BrowseCharactersLink,
   BrowseComponentsLink,
 } from "~/components/AppLink";
-import { PopperOptions, usePaddedPopper } from "~/components/usePaddedPopper";
+import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
 import { KanjiListCode } from "~/lib/dic/KanjiListCode";
+
+import { useHoverPopper } from "./useHoverPopper";
 
 const JOYO_COUNT = 2316;
 
@@ -210,6 +212,7 @@ const popperOptions: PopperOptions = {
     },
   ],
 };
+
 function FigureTag({
   children,
   className,
@@ -225,33 +228,9 @@ function FigureTag({
     attributes,
     styles,
     isOpen,
-    open,
-    close,
-  } = usePaddedPopper({ options: popperOptions });
-
-  const closeTimer = useRef<number | null>(null);
-  const [, setClosing] = useState(false);
-
-  const openPopper = () => {
-    if (closeTimer.current) {
-      window.clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-
-    open();
-    setClosing(false);
-  };
-  const closePopper = () => {
-    if (closeTimer.current) {
-      window.clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-
-    closeTimer.current = window.setTimeout(() => {
-      close();
-      setClosing(false);
-    }, 100);
-  };
+    open: openPopper,
+    close: closePopper,
+  } = useHoverPopper(popperOptions);
 
   return (
     <>

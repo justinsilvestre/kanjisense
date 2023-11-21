@@ -1,10 +1,10 @@
 import * as PopperJS from "@popperjs/core";
 import { useState, useCallback, useEffect } from "react";
-import { Modifier, Modifiers, usePopper } from "react-popper";
+import { Modifier, StrictModifierNames, usePopper } from "react-popper";
 
 export type PopperOptions = Omit<Partial<PopperJS.Options>, "modifiers"> & {
   createPopper?: typeof PopperJS.createPopper;
-  modifiers?: readonly Modifier<Modifiers>[];
+  modifiers?: readonly Modifier<StrictModifierNames>[];
 };
 
 const defaultOptions: PopperOptions = {

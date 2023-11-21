@@ -63,6 +63,7 @@ const commonInclude = {
   },
 
   image: true,
+  shuowenImage: true,
   asComponent: {
     select: {
       _count: {
