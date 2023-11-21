@@ -1,10 +1,10 @@
 import { useFetcher } from "@remix-run/react";
 import { useState } from "react";
 
-import { OnReadingToTypeToXiaoyuns } from "prisma/kanjisense/seedKanjisenseFigureReadings";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
+import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 import {
   ComponentsTreeMemberFigure,

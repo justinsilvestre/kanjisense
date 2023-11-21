@@ -8,14 +8,15 @@ import {
 } from "@prisma/client";
 
 import { serializeXiaoyunProfile } from "~/features/dictionary/getActiveSoundMarkValueText";
+import { sbgyXiaoyunToQysSyllableProfile } from "~/features/dictionary/sbgyXiaoyunToQysSyllableProfile";
 import { files } from "~/lib/files.server";
+import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import {
   InferredOnyomiType,
   inferOnyomi,
   toModernKatakana,
 } from "~/lib/qys/inferOnyomi";
 
-import { sbgyXiaoyunToQysSyllableProfile } from "../../app/features/dictionary/sbgyXiaoyunToQysSyllableProfile";
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
@@ -464,11 +465,6 @@ async function prepareGuangyunEntries({
   }
   return figuresToXiaoyunsWithMatchingExemplars;
 }
-
-export type OnReadingToTypeToXiaoyuns = Record<
-  string,
-  Partial<Record<InferredOnyomiType, { xiaoyun: number; profile: string }[]>>
->;
 
 const katakanaToHiraganaOnCache = new Map<string, string>();
 function katakanaOnyomiToHiragana(katakanaOnReading: string) {

@@ -3,13 +3,13 @@ import { PrismaClient } from "@prisma/client";
 // @ts-expect-error
 import { toKatakana } from "wanakana";
 
-import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
+import { getActiveSoundMarkValueText } from "~/features/dictionary/getActiveSoundMarkValueText";
+import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
+import type { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
-import { getActiveSoundMarkValueText } from "../../app/features/dictionary/getActiveSoundMarkValueText";
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
-import { OnReadingToTypeToXiaoyuns } from "./seedKanjisenseFigureReadings";
 
 export async function seedKanjisenseActiveSoundMarkValues(
   prisma: PrismaClient,
