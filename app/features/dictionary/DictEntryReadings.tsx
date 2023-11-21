@@ -78,7 +78,7 @@ export function DictEntryReadings({
 
   return (
     <section
-      className={`flex flex-col rounded-lg [box-shadow:3px_3px_12px_rgba(0,0,0,.3)] ${className}`}
+      className={`flex flex-col rounded-lg shadow-lg shadow-black/20 bg-gray-50 ${className}`}
     >
       <div className=" flex flex-row flex-wrap justify-evenly gap-4 px-4 py-4">
         <div className="text-left">
@@ -207,7 +207,7 @@ export function DictEntryReadings({
                 : requestOpen();
             }
           }}
-          className={`cursor-pointer px-4 pb-2 text-right hover:text-orange-700 hover:underline`}
+          className={`  cursor-pointer px-4 pb-2 text-right hover:text-orange-700 hover:underline`}
           onClick={() =>
             animationState === "entered" || animationState === "entering"
               ? requestClose()
@@ -317,10 +317,10 @@ function OnReading({ onReading, i }: { onReading: string; i: number }) {
     <span key={onReading} className="inline-block">
       <span className="block">
         {i !== 0 ? "・" : ""}
-        {onReading.replace(/[a-z0-9]*$/g, "")}{" "}
+        {onReading.replace(/-/g, "")}{" "}
       </span>
       <span className=" block text-center text-sm uppercase">
-        {kanjidicKanaToRomaji(onReading.replace(/[a-z0-9]*$/g, ""))}
+        {kanjidicKanaToRomaji(onReading.replace(/-/g, ""))}
       </span>
     </span>
   );

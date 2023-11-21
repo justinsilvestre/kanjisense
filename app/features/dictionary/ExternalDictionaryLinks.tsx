@@ -2,9 +2,15 @@ import * as MdIcons from "react-icons/md";
 
 import A from "~/components/ExternalLink";
 
-export function ExternalDictionaryLinks({ figureId }: { figureId: string }) {
+export function ExternalDictionaryLinks({
+  figureId,
+  className,
+}: {
+  figureId: string;
+  className?: string;
+}) {
   return (
-    <section className="">
+    <section className={className}>
       <ul className="text-sm">
         <li className="">
           <A

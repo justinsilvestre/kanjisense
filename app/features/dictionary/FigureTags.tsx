@@ -173,7 +173,7 @@ export function FigureTags({
                 <strong>identical or similar</strong> pronunciation.
               </p>
               <p className="mt-0 mb-3">
-                Note that this only works with <i>on*apos;yomi</i>.
+                Note that this only works with <i>on&apos;yomi</i>.
               </p>
               <PopoverBottom>
                 <BrowseComponentsLink>

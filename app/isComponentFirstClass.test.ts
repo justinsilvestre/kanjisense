@@ -26,4 +26,29 @@ describe("isComponentFirstClass", () => {
     );
     expect(result).toEqual(false);
   });
+
+  it("works with 𠚍", async () => {
+    const priorityFiguresIds = await prisma.kanjisenseFigure
+      .findMany({
+        where: {
+          isPriority: true,
+        },
+      })
+      .then((fs) => fs.map((f) => f.id));
+    const parent = "鬯";
+    const component = "𠚍";
+    const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
+      ["𠚍", new Set(["鬯", "𡕰"])],
+      ["鬯", new Set(["鬱"])],
+    ]);
+    const figuresToVariantGroupIds = await getFiguresToVariantGroupsIds(prisma);
+    const result = isComponentFirstClass(
+      new Set(priorityFiguresIds),
+      parent,
+      component,
+      componentsToDirectUsesPrimaryVariants,
+      figuresToVariantGroupIds,
+    );
+    expect(result).toEqual(false);
+  });
 });

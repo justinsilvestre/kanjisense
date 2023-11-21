@@ -6,7 +6,7 @@ export default function DictionaryLayout({
   className,
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <body
+    <div
       className={`relative mx-auto flex h-full min-h-screen max-w-5xl flex-col gap-4 bg-white px-2 pb-8 pt-4 ${
         className || ""
       }`}
@@ -21,6 +21,6 @@ export default function DictionaryLayout({
       <ScrollRestoration />
       <Scripts />
       <LiveReload />
-    </body>
+    </div>
   );
 }

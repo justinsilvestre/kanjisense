@@ -20,11 +20,15 @@ import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
 
 export function DictionaryEntryComponentsTree({
   figure,
+  className,
 }: {
   figure: DictionaryPageFigureWithPriorityUses;
+  className?: string;
 }) {
   return (
-    <section>
+    <section
+      className={`${className} flex flex-row flex-wrap gap-4 justify-evenly`}
+    >
       {figure.firstClassComponents
         .sort((a, b) => a.indexInTree - b.indexInTree)
         .map(({ componentId, component }) => {
@@ -63,6 +67,7 @@ function DictionaryEntryComponentsTreeMember({
       <FigurePopoverBadge
         id={componentFigure.id}
         badgeProps={getBadgeProps(componentFigure)}
+        width={6}
       />
       <FigureKeywordDisplay figure={componentFigure} />
       <br />

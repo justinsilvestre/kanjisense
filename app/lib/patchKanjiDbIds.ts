@@ -580,6 +580,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("蘭", "⿰⿱艹闌	⿰⿱艹䦨[J]")
       .replaceIds("煉", "⿰火柬")
 
+      .replaceIds("鬱", "⿳⿴林缶冖⿰鬯彡")
+
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );
 };

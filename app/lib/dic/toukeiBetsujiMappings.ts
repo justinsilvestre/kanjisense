@@ -8,6 +8,7 @@ export const toukeiBetsujiMappings: Partial<Record<string, string[]>> = {
   弁: ["辦", "辧", "瓣", "辮", "辯"],
   圣: ["巠", "圣"],
   欠: ["缺", "欠"],
+  缶: ["罐", "缶"],
   // meaning/reading of ancient form is obsolete in modern Japanese
   礼: ["禮"],
   湿: ["濕"],

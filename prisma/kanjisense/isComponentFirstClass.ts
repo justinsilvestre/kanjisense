@@ -16,8 +16,10 @@ export function isComponentFirstClass(
     );
     if (componentIsPriorityFigureVariant) return true;
 
-    const componentIsUsedInMultipleFiguresOfAnyPriority =
-      (componentsToDirectUsesPrimaryVariants.get(component)?.size ?? 0) > 1;
-    return componentIsUsedInMultipleFiguresOfAnyPriority;
+    const priorityDirectUses = [
+      ...(componentsToDirectUsesPrimaryVariants.get(component) || []),
+    ].filter((f) => priorityFiguresIds.has(f));
+
+    return priorityDirectUses.length > 1;
   }
 }

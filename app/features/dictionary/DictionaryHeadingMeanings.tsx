@@ -2,11 +2,13 @@ import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 
 export function DictionaryHeadingMeanings({
   headingsMeanings,
+  className,
 }: {
   headingsMeanings: ReturnType<typeof getHeadingsMeanings>;
+  className?: string;
 }) {
   return (
-    <div>
+    <div className={`${className} gap-4 flex flex-col`}>
       {headingsMeanings.currentCharacter ? (
         <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
       ) : null}
@@ -15,7 +17,7 @@ export function DictionaryHeadingMeanings({
       ) : null}
       {headingsMeanings.componentMnemonic ? (
         <h1>
-          <div className="text-gray-500">component mnemonic:</div>
+          <div className="text-gray-500 text-sm">component mnemonic:</div>
           {headingsMeanings.componentMnemonic.text}
           {headingsMeanings.componentMnemonic.reference ? (
             <>
@@ -28,7 +30,9 @@ export function DictionaryHeadingMeanings({
       ) : null}
       {headingsMeanings.obsoleteCharacter ? (
         <h1>
-          <div className="text-gray-500">historical character meaning:</div>
+          <div className="text-gray-500 text-sm">
+            historical character meaning:
+          </div>
           {headingsMeanings.obsoleteCharacter.join("; ")}
         </h1>
       ) : null}

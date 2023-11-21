@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         brush: ["yukyokasho", "tw-kai"],
-        sans: ["Helvetica", ...defaultTheme.fontFamily.sans],
+        sans: ["Noto Sans JP", "Helvetica", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         kyoiku: colors.blue,
