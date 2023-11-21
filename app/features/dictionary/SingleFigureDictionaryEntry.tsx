@@ -18,6 +18,7 @@ import { transcribeSbgyXiaoyun } from "~/features/dictionary/transcribeSbgyXiaoy
 import { DictEntryReadings } from "./DictEntryReadings";
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { DictionaryHeadingMeanings } from "./DictionaryHeadingMeanings";
+import { ExternalDictionaryLinks } from "./ExternalDictionaryLinks";
 import { FigurePriorityUses } from "./FigurePriorityUses";
 import { FigureStrokesAnimation } from "./FigureStrokesAnimation";
 import { FigureTags } from "./FigureTags";
@@ -97,20 +98,10 @@ export function SingleFigureDictionaryEntry({
         isStandaloneCharacter={figureIsStandaloneCharacter}
       />
 
-      <h2>{figure.reading?.selectedOnReadings?.join(" ") || "-"}</h2>
-      <h2>{figure.reading?.kanjidicEntry?.onReadings?.join(" ")}</h2>
-      <h2>{figure.reading?.kanjidicEntry?.kunReadings?.join(" ")}</h2>
-      <h2>
-        {figure.reading?.sbgyXiaoyuns
-          ?.map((x) => transcribeSbgyXiaoyun(x.sbgyXiaoyun))
-          ?.join(" ")}
-      </h2>
+      {[...figure.id].length === 1 ? (
+        <ExternalDictionaryLinks figureId={figure.id} />
+      ) : null}
 
-      <h2>priority: {figure.isPriority ? "yes" : "no"}</h2>
-      <h2>standalone: {figureIsStandaloneCharacter ? "yes" : "no"}</h2>
-      <h2>priority sound mark: {isPrioritySoundMark(figure) ? "yes" : "no"}</h2>
-      <h2>priority component: {isPriorityComponent(figure) ? "yes" : "no"}</h2>
-      <h2>active sound mark value: {figure.activeSoundMarkValue}</h2>
       <FigurePriorityUses
         componentFigure={figure}
         priorityUses={figure.firstClassUses}

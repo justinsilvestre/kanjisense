@@ -6,6 +6,8 @@ import { Kaihe, QysSyllableProfile } from "~/lib/qys/inferOnyomi";
 import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
 import { initialGroups } from "~/lib/qys/QysInitial";
 
+import A from "../../components/ExternalLink";
+
 const noMDentilabializationFinals = new Set<QieyunRhymeCycleHead>(["尤", "東"]);
 const alwaysDentilabializationFinals = new Set<QieyunRhymeCycleHead>([
   "元",
@@ -1779,22 +1781,5 @@ export function B({ children }: PropsWithChildren) {
     <strong>
       <u>{children}</u>
     </strong>
-  );
-}
-
-export default function A({
-  href,
-  children,
-  className,
-}: PropsWithChildren<{ href: string; className?: string }>) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-    >
-      {children}
-    </a>
   );
 }
