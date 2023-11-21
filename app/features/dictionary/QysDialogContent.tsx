@@ -1,4 +1,4 @@
-import { SbgyXiaoyun } from "@prisma/client";
+import type { SbgyXiaoyun } from "@prisma/client";
 import { PropsWithChildren, useState } from "react";
 
 import {

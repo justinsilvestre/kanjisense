@@ -1,4 +1,4 @@
-import { SbgyXiaoyun } from "@prisma/client";
+import type { SbgyXiaoyun } from "@prisma/client";
 
 import { Kaihe, QysSyllableProfile, Tone } from "~/lib/qys/inferOnyomi";
 import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";

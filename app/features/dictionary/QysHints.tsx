@@ -1145,7 +1145,7 @@ export const VowelHint = ({
       return syllable.dengOrChongniu === "二" ? (
         <VowelHints.A2 />
       ) : (
-        <VowelHints.A3Y />
+        <VowelHints.E3Underdot />
       );
     case "耕":
       return (

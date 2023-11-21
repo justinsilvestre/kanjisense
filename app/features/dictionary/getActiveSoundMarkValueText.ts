@@ -1,6 +1,6 @@
 import { SbgyXiaoyun } from "@prisma/client";
 
-import { OnReadingToTypeToXiaoyuns } from "prisma/kanjisense/seedKanjisenseFigureReadings";
+import type { OnReadingToTypeToXiaoyuns } from "prisma/kanjisense/seedKanjisenseFigureReadings";
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";

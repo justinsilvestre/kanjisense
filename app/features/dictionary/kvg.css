@@ -1,0 +1,22 @@
+@keyframes kvg-strokes {
+  0% {
+    stroke-dasharray: var(--kvg-stroke-dasharray);
+    stroke-dashoffset: var(--kvg-stroke-dashoffset);
+  }
+  20% {
+    stroke-dasharray: var(--kvg-stroke-dasharray);
+    stroke-dashoffset: var(--kvg-stroke-dashoffset);
+  }
+
+  100% {
+    stroke-dasharray: var(--kvg-stroke-dasharray);
+    stroke-dashoffset: 0;
+  }
+}
+
+.kvg-stroke {
+  transition: none;
+  animation: kvg-strokes 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  color: var(--test-var);
+  stroke-dashoffset: none;
+}

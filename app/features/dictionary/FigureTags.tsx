@@ -36,11 +36,11 @@ export function FigureTags({
       <ListTags
         lists={lists}
         isStandaloneCharacter={isStandaloneCharacter}
-        className={` font-bold rounded-sm uppercase px-1 text-sm border border-solid`}
+        className={` font-bold rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm border border-solid`}
       />
       {isPriorityComponent && !isStandaloneCharacter ? (
         <FigureTag
-          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 text-sm  border border-black border-solid`}
+          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm  border border-black border-solid`}
           popoverContent={
             <>
               <p className="mt-0 mb-3">
@@ -64,7 +64,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && !isPriorityComponent ? (
         <FigureTag
-          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 text-sm  border border-black border-solid`}
+          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm  border border-black border-solid`}
           popoverContent={
             <>
               <p className="mt-0 mb-3">
@@ -97,7 +97,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && isPriorityComponent ? (
         <FigureTag
-          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 text-sm  border border-black border-solid`}
+          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm  border border-black border-solid`}
           popoverContent={
             <>
               <p className="mt-0 mb-3">
@@ -123,7 +123,7 @@ export function FigureTags({
       ) : null}
       {variantGroupId && variantGroupId !== id ? (
         <FigureTag
-          className={` font-bold outline outline-1 -outline-offset-2 bg-slate-800 text-white rounded-sm uppercase px-1 text-sm  border border-black border-solid`}
+          className={` font-bold outline outline-1 -outline-offset-2 bg-slate-800 text-white rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm  border border-black border-solid`}
           popoverContent={
             <VariantPopoverContent
               isStandaloneCharacter={isStandaloneCharacter}
@@ -136,7 +136,7 @@ export function FigureTags({
       ) : null}
       {isAtomic ? (
         <FigureTag
-          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 text-sm  border border-black border-solid`}
+          className={` font-bold bg-slate-800 text-white rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm  border border-black border-solid`}
           popoverContent={
             <>
               The{" "}
@@ -162,7 +162,7 @@ export function FigureTags({
       ) : null}
       {isSoundMark ? (
         <FigureTag
-          className={` font-bold  border-yellow-400 bg-yellow-100 bg-opacity-50 rounded-sm uppercase px-1 text-sm border border-solid`}
+          className={` font-bold  border-yellow-400 bg-yellow-100 bg-opacity-50 rounded-sm uppercase px-1 [padding-top:0.2rem] text-sm border border-solid`}
           popoverContent={
             <>
               <p className="mt-0 mb-3">

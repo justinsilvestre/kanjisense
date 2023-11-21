@@ -1,4 +1,8 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,
@@ -11,13 +15,18 @@ import {
   getDictionaryPageFigure,
   DictionaryPageSearchedFigure,
 } from "~/features/dictionary/getDictionaryPageFigure.server";
-import { SingleFigureDictionaryEntry } from "~/features/dictionary/SingleFigureDictionaryEntry";
+import {
+  links as kvgLinks,
+  SingleFigureDictionaryEntry,
+} from "~/features/dictionary/SingleFigureDictionaryEntry";
 
 interface LoaderData {
   searchedFigure: DictionaryPageSearchedFigure;
 }
 
 export const meta: MetaFunction = () => [{ title: "Figure entry" }];
+
+export const links: LinksFunction = () => [...kvgLinks()];
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { figureId } = params;

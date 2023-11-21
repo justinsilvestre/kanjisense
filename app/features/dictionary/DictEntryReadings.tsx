@@ -1,3 +1,4 @@
+import { SbgyXiaoyun } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
 import { Fragment, useRef, useState } from "react";
@@ -124,9 +125,7 @@ export function DictEntryReadings({
                 <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
                 <dd className="text-xl leading-9 text-gray-700 drop-shadow-md">
                   <div className="scallop text-center">
-                    {guangyunReadings
-                      .map((xy) => transcribeSbgyXiaoyun(xy))
-                      .join(" ")}
+                    {abbreviateAndTranscribe(guangyunReadings)}
                   </div>
                 </dd>
               </div>
@@ -266,6 +265,42 @@ export function DictEntryReadings({
       </div>
     </section>
   );
+}
+
+function abbreviateAndTranscribe(guangyunReadings: SbgyXiaoyun[]) {
+  if (!guangyunReadings.length) return null;
+  if (guangyunReadings.length === 1)
+    return transcribeSbgyXiaoyun(guangyunReadings[0]);
+
+  const tonelessTranscriptionsToTones = new Map<string, string[]>();
+  for (const reading of guangyunReadings) {
+    const transcription = transcribeSbgyXiaoyun(reading);
+    const toneMark = /[ˬˎ]/.test(transcription.at(-1) || "")
+      ? transcription.at(-1) || ""
+      : "";
+    const tonelessTranscription = toneMark
+      ? transcription.slice(0, -1)
+      : transcription;
+    const tones =
+      tonelessTranscriptionsToTones.get(tonelessTranscription) ?? [];
+    tonelessTranscriptionsToTones.set(tonelessTranscription, tones);
+    tones.push(toneMark);
+  }
+  const abbreviated: string[] = [];
+  for (const [tonelessTranscription, tones] of tonelessTranscriptionsToTones) {
+    if (tones.length === 1) {
+      abbreviated.push(tonelessTranscription + tones[0]);
+    } else {
+      const withParens =
+        tones.length > 1 && tones.includes("")
+          ? (toneMarks: string) => `₍${toneMarks}₎`
+          : (toneMarks: string) => toneMarks;
+
+      abbreviated.push(`${tonelessTranscription}${withParens(tones.join(""))}`);
+    }
+  }
+
+  return abbreviated.join(" ");
 }
 
 function OnReading({ onReading, i }: { onReading: string; i: number }) {
