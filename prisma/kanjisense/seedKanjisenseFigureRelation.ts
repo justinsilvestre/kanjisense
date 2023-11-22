@@ -2,6 +2,7 @@ import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
 import {
   baseKanji,
+  baseKanjiSet,
   hyogaiKanji,
   jinmeiyoKanji,
   joyoKanji,
@@ -93,14 +94,33 @@ export async function seedKanjisenseFigureRelation(
       },
     );
 
-    const variants = allVariantGroups.flatMap((g) =>
-      g.filter((v) => !dbInput.has(v)),
+    const priorityVariants = allVariantGroups.flatMap((g) =>
+      g.some((v) => baseKanjiSet.has(v))
+        ? g.filter((v) => !dbInput.has(v))
+        : [],
     );
-    console.log(`Analyzing ${variants.length} variants...`);
+    console.log(`Analyzing ${priorityVariants.length} priority variants...`);
     await analyzeFiguresRelations(
       prisma,
       allVariantGroups,
-      variants,
+      priorityVariants,
+      dbInput,
+      patchedIds,
+      {
+        isPriority: true,
+      },
+    );
+
+    const nonPriorityVariants = allVariantGroups.flatMap((g) =>
+      g.filter((v) => !dbInput.has(v)),
+    );
+    console.log(
+      `Analyzing ${nonPriorityVariants.length} non-priority variants...`,
+    );
+    await analyzeFiguresRelations(
+      prisma,
+      allVariantGroups,
+      nonPriorityVariants,
       dbInput,
       patchedIds,
       {

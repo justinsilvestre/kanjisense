@@ -14,18 +14,24 @@ import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 
 import { AncientCharacterFormSection } from "./AncientCharacterFormSection";
-import { DictEntryReadings } from "./DictEntryReadings";
+import {
+  DictEntryReadings,
+  links as readingsStyles,
+} from "./DictEntryReadings";
 import { DictionaryEntryComponentsTree } from "./DictionaryEntryComponentsTree";
 import { DictionaryHeadingMeanings } from "./DictionaryHeadingMeanings";
 import { ExternalDictionaryLinks } from "./ExternalDictionaryLinks";
 import { FigurePriorityUses } from "./FigurePriorityUses";
 import { FigureStrokesAnimation } from "./FigureStrokesAnimation";
 import { FigureTags } from "./FigureTags";
-import styles from "./kvg.css";
+import { GlyphsJson } from "./GlyphsJson";
+import kvgStyles from "./kvg.css";
 import type { KvgJsonData } from "./KvgJsonData";
 
-export const links = () => [{ rel: "stylesheet", href: styles }];
-
+export const links = () => [
+  { rel: "stylesheet", href: kvgStyles },
+  ...readingsStyles(),
+];
 export function SingleFigureDictionaryEntry({
   figure,
 }: {
@@ -41,6 +47,11 @@ export function SingleFigureDictionaryEntry({
     figure.image?.type === KanjisenseFigureImageType.Kvg ? figure.image : null;
   const isUnicodeCharacter = [...figure.id].length === 1;
   const figureIsAtomic = isFigureAtomic(figure);
+
+  const glyphsJson = figure.glyphImage
+    ? (figure.glyphImage.json as GlyphsJson)
+    : null;
+
   return (
     <section
       className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap ${
@@ -114,14 +125,21 @@ export function SingleFigureDictionaryEntry({
           )}
         </div>
 
-        <div className="SingleFigureDictionaryEntry_middle flex flex-col gap-4">
-          <DictEntryReadings
-            figureId={figure.id}
-            readings={figure.reading}
-            isStandaloneCharacter={figureIsStandaloneCharacter}
-            className=""
-          />
-        </div>
+        {figure.reading &&
+        !(
+          !figureIsStandaloneCharacter &&
+          figure.isPriority &&
+          !isPrioritySoundMark(figure)
+        ) ? (
+          <div className="SingleFigureDictionaryEntry_middle flex flex-col gap-4">
+            <DictEntryReadings
+              figureId={figure.id}
+              readings={figure.reading}
+              isStandaloneCharacter={figureIsStandaloneCharacter}
+              className=""
+            />
+          </div>
+        ) : null}
         <div className="SingleFigureDictionaryEntry_bottom flex flex-row gap-4">
           <FigurePriorityUses
             componentFigure={figure}
@@ -133,22 +151,51 @@ export function SingleFigureDictionaryEntry({
       </div>
       {isUnicodeCharacter ? (
         <div>
-          <p>
-            <span className="text-2xl">{figure.id}</span> +U
-            {figure.id.codePointAt(0)?.toString(16).toUpperCase()}
-          </p>
-          <p className="text-5xl">
-            <span className="font-serif">{figure.id}</span>
-            <span className="font-sans">{figure.id}</span>
-            <span className="[font-family:Yuji_Syuku]">{figure.id}</span>
-            <span className="[font-family:Hachi_Maru_Pop]">{figure.id}</span>
-          </p>
-
           {figure.shuowenImage ? (
             <div className="">
               <AncientCharacterFormSection
                 svgPaths={figure.shuowenImage.paths}
               />
+            </div>
+          ) : null}
+
+          {glyphsJson ? (
+            <div className="flex-1">
+              <h2 className="text-center text-gray-500">modern forms</h2>
+              <div className="flex-1 flex flex-row flex-wrap gap-4">
+                {glyphsJson.kk ? (
+                  <svg
+                    viewBox="0 -870 1000 1000"
+                    className="inline-block [width:5rem] [height:5rem]"
+                  >
+                    <path d={glyphsJson.kk} />
+                  </svg>
+                ) : null}
+                {glyphsJson.twk ? (
+                  <svg
+                    viewBox="0 -870 1000 1000"
+                    className="inline-block [width:5rem] [height:5rem]"
+                  >
+                    <path d={glyphsJson.twk} />
+                  </svg>
+                ) : null}
+                {glyphsJson.gw ? (
+                  <svg
+                    viewBox="-30 -30 260 260"
+                    className="inline-block [width:5rem] [height:5rem]"
+                  >
+                    <path d={glyphsJson.gw} />
+                  </svg>
+                ) : null}
+                {glyphsJson.ns ? (
+                  <svg
+                    viewBox="0 -870 1000 1000"
+                    className="inline-block [width:5rem] [height:5rem]"
+                  >
+                    <path d={glyphsJson.ns} />
+                  </svg>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
@@ -158,6 +205,11 @@ export function SingleFigureDictionaryEntry({
               className="[min-width:18rem]"
             />
           ) : null}
+
+          <p>
+            <span className="text-2xl">{figure.id}</span> +U
+            {figure.id.codePointAt(0)?.toString(16).toUpperCase()}
+          </p>
         </div>
       ) : null}
     </section>

@@ -47,6 +47,8 @@ const commonInclude = {
     select: {
       firstClassComponents: true,
       firstClassUses: {
+        // distinct: ["parentId" as const, "componentId" as const],
+
         where: {
           parent: {
             isPriority: true,
@@ -64,6 +66,7 @@ const commonInclude = {
 
   image: true,
   shuowenImage: true,
+  glyphImage: true,
   asComponent: {
     select: {
       _count: {
@@ -160,6 +163,8 @@ const commonInclude = {
     },
   },
   firstClassUses: {
+    take: 15,
+
     distinct: ["parentId" as const, "componentId" as const],
 
     orderBy: {
@@ -167,9 +172,7 @@ const commonInclude = {
         aozoraAppearances: "desc" as const,
       },
     },
-    where: {
-      OR: [{ parent: { isPriority: true } }],
-    },
+    where: { parent: { isPriority: true } },
     include: {
       parent: {
         select: {

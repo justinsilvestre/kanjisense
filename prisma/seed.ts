@@ -11,6 +11,7 @@ import { seedUnihan12 } from "./external/seedUnihan12";
 import { seedUnihan14 } from "./external/seedUnihan14";
 import { seedUnihan15 } from "./external/seedUnihan15";
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
+import { seedGlyphImages } from "./kanjisense/seedGlyphImages";
 import { seedKanjiDbCharacterDerivations } from "./kanjisense/seedKanjiDbCharacterDerivations";
 import { seedKanjisenseActiveSoundMarks } from "./kanjisense/seedKanjisenseActiveSoundMarks";
 import { seedKanjisenseActiveSoundMarkValues } from "./kanjisense/seedKanjisenseActiveSoundMarkValues";
@@ -75,6 +76,9 @@ async function seed() {
 
     await executeAndLogTime("seeding shuowen images", () =>
       seedShuowenImages(prisma, false),
+    );
+    await executeAndLogTime("seeding glyph images", () =>
+      seedGlyphImages(prisma, false),
     );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);

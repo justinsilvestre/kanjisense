@@ -1,0 +1,11 @@
+/* https://css-tricks.com/css-borders-using-masks/ */
+/* https://css-generators.com/custom-borders/ */
+.scallop {
+  --mask: linear-gradient(#000 0 0) 50% / calc(100% - 12.95px)
+      calc(100% - 12.95px) no-repeat,
+    radial-gradient(farthest-side, #000 98%, #0000) 0 0/14px 14px round;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+  background-color: white;
+  padding: 10px;
+}

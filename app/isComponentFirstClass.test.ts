@@ -1,5 +1,5 @@
 import { isComponentFirstClass } from "prisma/kanjisense/isComponentFirstClass";
-import { getFiguresToVariantGroupsIds } from "prisma/kanjisense/seedKanjisenseFigures";
+import { getFiguresToVariantGroups } from "prisma/kanjisense/seedKanjisenseFigures";
 import { prisma } from "~/db.server";
 
 describe("isComponentFirstClass", () => {
@@ -16,13 +16,13 @@ describe("isComponentFirstClass", () => {
     const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
       ["CDP-8CAB", new Set(["帰"])],
     ]);
-    const figuresToVariantGroupIds = await getFiguresToVariantGroupsIds(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
     const result = isComponentFirstClass(
       new Set(priorityFiguresIds),
       parent,
       component,
       componentsToDirectUsesPrimaryVariants,
-      figuresToVariantGroupIds,
+      figuresToVariantGroups,
     );
     expect(result).toEqual(false);
   });
@@ -41,14 +41,39 @@ describe("isComponentFirstClass", () => {
       ["𠚍", new Set(["鬯", "𡕰"])],
       ["鬯", new Set(["鬱"])],
     ]);
-    const figuresToVariantGroupIds = await getFiguresToVariantGroupsIds(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
     const result = isComponentFirstClass(
       new Set(priorityFiguresIds),
       parent,
       component,
       componentsToDirectUsesPrimaryVariants,
-      figuresToVariantGroupIds,
+      figuresToVariantGroups,
     );
     expect(result).toEqual(false);
+  });
+
+  it("works with 旡", async () => {
+    const priorityFiguresIds = await prisma.kanjisenseFigure
+      .findMany({
+        where: {
+          isPriority: true,
+        },
+      })
+      .then((fs) => fs.map((f) => f.id));
+    const parent = "既";
+    const component = "旡";
+    const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
+      ["旡", new Set(["既", "炁"])],
+      ["兂", new Set(["兓"])],
+    ]);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const result = isComponentFirstClass(
+      new Set(priorityFiguresIds),
+      parent,
+      component,
+      componentsToDirectUsesPrimaryVariants,
+      figuresToVariantGroups,
+    );
+    expect(result).toEqual(true);
   });
 });

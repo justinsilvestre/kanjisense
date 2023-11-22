@@ -3,7 +3,7 @@ export function isComponentFirstClass(
   parent: string,
   component: string,
   componentsToDirectUsesPrimaryVariants: Map<string, Set<string>>,
-  figuresToVariantGroupIds: Map<string, string>,
+  figuresToVariantGroups: Map<string, string[]>,
 ) {
   const componentIsPriorityFigure = priorityFiguresIds.has(component);
   if (componentIsPriorityFigure) {
@@ -11,15 +11,23 @@ export function isComponentFirstClass(
   } else {
     if (priorityFiguresIds.has(parent)) return false;
 
+    const variants = figuresToVariantGroups.get(component);
     const componentIsPriorityFigureVariant = priorityFiguresIds.has(
-      figuresToVariantGroupIds.get(component) || component,
+      variants?.[0] || component,
     );
     if (componentIsPriorityFigureVariant) return true;
 
-    const priorityDirectUses = [
-      ...(componentsToDirectUsesPrimaryVariants.get(component) || []),
-    ].filter((f) => priorityFiguresIds.has(f));
+    if (!variants) {
+      const priorityDirectUses = [
+        ...(componentsToDirectUsesPrimaryVariants.get(component) || []),
+      ].filter((f) => priorityFiguresIds.has(f));
 
-    return priorityDirectUses.length > 1;
+      return priorityDirectUses.length > 1;
+    }
+
+    const allVariantsPriorityDirectUses = variants.flatMap(
+      (v) => componentsToDirectUsesPrimaryVariants.get(v) || [],
+    );
+    return allVariantsPriorityDirectUses.length > 1;
   }
 }

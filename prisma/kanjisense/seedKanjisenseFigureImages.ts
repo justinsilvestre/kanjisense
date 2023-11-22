@@ -5,11 +5,12 @@ import SVGPathCommander from "svg-path-commander";
 
 import { registerSeeded } from "prisma/seedUtils";
 import { kanjivgExtractedComponents } from "~/lib/dic/kanjivgExtractedComponents";
-import { getGlyphwikiSvgPath, getKvgPath } from "~/lib/files.server";
+import { getKvgFilePath } from "~/lib/files.server";
 
 import { KvgJsonData } from "../../app/features/dictionary/KvgJsonData";
 
 import { executeAndLogTime } from "./executeAndLogTime";
+import { getGlyphWikiSvgPath } from "./getGlyphWikiSvgPath";
 
 export async function seedFigureImages(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
@@ -36,7 +37,7 @@ export async function seedFigureImages(prisma: PrismaClient, force = false) {
         }
     >();
     for (const { id } of allFiguresIds) {
-      const kvgPath = getKvgPath(id);
+      const kvgPath = getKvgFilePath(id);
       const kvgJson = await getKvgJson(id, kvgPath);
       if (kvgJson) {
         dbInput.set(id, {
@@ -44,21 +45,12 @@ export async function seedFigureImages(prisma: PrismaClient, force = false) {
           content: kvgJson as unknown as KvgJsonData,
         });
       } else {
-        const glyphwikiSvgPath = getGlyphwikiSvgPath(id);
-        const glyphwikiSvgText = await getFileTextIfPresent(glyphwikiSvgPath);
-        if (glyphwikiSvgText) {
-          const pathStart = glyphwikiSvgText.indexOf('d="') + 3;
-          if (pathStart === -1)
-            throw new Error(
-              `Invalid GlyphWiki SVG file for ${id} at ${glyphwikiSvgPath}`,
-            );
-          const pathEnd = glyphwikiSvgText.indexOf(' "', pathStart) + 1;
-          const path = glyphwikiSvgText.slice(pathStart, pathEnd);
+        const path = await getGlyphWikiSvgPath(id);
+        if (path)
           dbInput.set(id, {
             type: KanjisenseFigureImageType.GlyphWiki,
             content: JSON.stringify(path),
           });
-        }
       }
     }
 
@@ -123,7 +115,7 @@ async function getKvgJson(
   } as const;
 }
 
-async function getFileTextIfPresent(path: string | null) {
+export async function getFileTextIfPresent(path: string | null) {
   if (!path) return null;
   try {
     return await readFile(path, "utf-8");

@@ -42,7 +42,7 @@ export function readJsonSync<T>(filepath: string) {
   return JSON.parse(readTextFileSync(filepath)) as T;
 }
 
-export function getKvgPath(character: string) {
+export function getKvgFilePath(character: string) {
   const sourceCharacter =
     kanjivgExtractedComponents[character]?.[0] || character;
   const filename = `${sourceCharacter
@@ -52,7 +52,7 @@ export function getKvgPath(character: string) {
   return path.resolve(__dirname, "vendor", "kanjivg", "svgs", filename);
 }
 
-export function getGlyphwikiSvgPath(figureId: string) {
+export function getGlyphwikiSvgFilePath(figureId: string) {
   const filename = `${
     [...figureId].length === 1 ? getGlyphWikiCode(figureId) : figureId
   }.svg`;
@@ -72,7 +72,7 @@ function getGlyphWikiCode(key: string) {
   }
 }
 
-export function getShuowenPath(filenameCharacters: string) {
+export function getShuowenFilePath(filenameCharacters: string) {
   return path.resolve(
     __dirname,
     "dic",
@@ -80,5 +80,14 @@ export function getShuowenPath(filenameCharacters: string) {
     Array.from(filenameCharacters, (char) =>
       char.codePointAt(0)!.toString(16),
     ).join("-") + ".svg",
+  );
+}
+
+export function getGlyphsFilePath(char: string) {
+  return path.resolve(
+    __dirname,
+    "dic",
+    "glyphs",
+    char.codePointAt(0)!.toString(16) + ".json",
   );
 }

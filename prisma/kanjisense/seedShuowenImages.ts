@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { PrismaClient } from "@prisma/client";
 
 import { registerSeeded } from "prisma/seedUtils";
-import { files, getShuowenPath } from "~/lib/files.server";
+import { files, getShuowenFilePath } from "~/lib/files.server";
 
 import { toukeiBetsujiMappings } from "../../app/lib/dic/toukeiBetsujiMappings";
 
@@ -90,7 +90,7 @@ export async function seedShuowenImages(prisma: PrismaClient, force = false) {
 
         if (!dbInput.has(id)) {
           const svgPaths = shuowenGroups.map((group) => {
-            const filepath = getShuowenPath(group);
+            const filepath = getShuowenFilePath(group);
             const shuowenText = readFileSync(filepath, "utf-8");
             const pathStart = shuowenText.indexOf('d="') + 3;
             if (pathStart === -1)

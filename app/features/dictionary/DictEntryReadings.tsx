@@ -1,4 +1,5 @@
 import { SbgyXiaoyun } from "@prisma/client";
+import { LinksFunction } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
 import { Fragment, useRef, useState } from "react";
@@ -10,7 +11,12 @@ import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
 import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.server";
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
 import { QysDialogContent } from "./QysDialogContent";
+import scallopBorder from "./scallopBorder.css";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: scallopBorder },
+];
 
 export function DictEntryReadings({
   figureId,
@@ -78,9 +84,9 @@ export function DictEntryReadings({
 
   return (
     <section
-      className={`flex flex-col rounded-lg shadow-lg shadow-black/20 bg-gray-50 ${className}`}
+      className={`flex flex-row rounded-lg shadow-lg shadow-black/20 bg-gray-50 ${className}`}
     >
-      <div className=" flex flex-row flex-wrap justify-evenly gap-4 px-4 py-4">
+      <div className=" flex flex-row flex-wrap justify-evenly gap-4 p-3">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>on&apos;yomi</i>{" "}
@@ -124,7 +130,7 @@ export function DictEntryReadings({
             <DialogTrigger>
               <div className="text-left">
                 <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
-                <dd className="text-xl leading-9 text-gray-700 drop-shadow-md">
+                <dd className="text-xl leading-9 text-gray-700 drop-shadow-[0_2px_2px_rgb(0_0_0_/_.4)]">
                   <div className="scallop text-center">
                     {abbreviateAndTranscribe(guangyunReadings)}
                   </div>
@@ -207,7 +213,7 @@ export function DictEntryReadings({
                 : requestOpen();
             }
           }}
-          className={`  cursor-pointer px-4 pb-2 text-right hover:text-orange-700 hover:underline`}
+          className={`basis-full ml-10 cursor-pointer text-left  hover:text-orange-700 hover:underline`}
           onClick={() =>
             animationState === "entered" || animationState === "entering"
               ? requestClose()
@@ -218,58 +224,58 @@ export function DictEntryReadings({
             ? "less"
             : "more"}
         </div>
-        <div className="border-t-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-t border-t-gray-600 border-opacity-30 px-4 py-4 text-center transition-all">
-          <div>
-            <dt className="mb-1 text-sm text-gray-500">
-              Japanese <i>kun&apos;yomi</i>
-            </dt>
-            <dd className="text-center text-xl font-light leading-9">
-              <div className="">
-                {!readings?.kanjidicEntry?.kunReadings?.length ? (
-                  <UnavailableNote />
-                ) : null}
-                {readings.kanjidicEntry?.kunReadings?.map((kana, i) => {
-                  const [kanaBeforeDot, kanaAfterDot] = kana.split(".");
-                  const [romaji, romajiAfterDot] = kanjidicKanaToRomaji(
-                    kana.replaceAll("-", ""),
-                    true,
-                  ).split(".");
+      </div>
+      <div className="border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-l border-l-gray-600 border-opacity-30 p-4 text-center transition-all">
+        <div>
+          <dt className="mb-1 text-sm text-gray-500">
+            Japanese <i>kun&apos;yomi</i>
+          </dt>
+          <dd className="text-center text-xl font-light leading-9">
+            <div className="">
+              {!readings?.kanjidicEntry?.kunReadings?.length ? (
+                <UnavailableNote />
+              ) : null}
+              {readings.kanjidicEntry?.kunReadings?.map((kana, i) => {
+                const [kanaBeforeDot, kanaAfterDot] = kana.split(".");
+                const [romaji, romajiAfterDot] = kanjidicKanaToRomaji(
+                  kana.replaceAll("-", ""),
+                  true,
+                ).split(".");
 
-                  return (
-                    <Fragment key={kana}>
-                      <div
-                        key={kana}
-                        className="inline-block text-center [max-width:10em]"
+                return (
+                  <Fragment key={kana}>
+                    <div
+                      key={kana}
+                      className="inline-block text-center [max-width:10em]"
+                    >
+                      <span className="block">
+                        {i !== 0 ? "・" : ""}
+                        {kanaBeforeDot}
+                        {kanaAfterDot ? (
+                          <span className=" text-yellow-900 text-opacity-70">
+                            {kanaAfterDot}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span
+                        key={romaji + romajiAfterDot}
+                        className="-mt-1 block text-sm"
                       >
-                        <span className="block">
-                          {i !== 0 ? "・" : ""}
-                          {kanaBeforeDot}
-                          {kanaAfterDot ? (
-                            <span className=" text-yellow-900 text-opacity-70">
-                              {kanaAfterDot}
-                            </span>
-                          ) : null}
-                        </span>
-                        <span
-                          key={romaji + romajiAfterDot}
-                          className="-mt-1 block text-sm"
-                        >
-                          {kana.startsWith("-") ? "-" : ""}
-                          {romaji}
-                          {romajiAfterDot ? (
-                            <span className=" text-yellow-900 text-opacity-70">
-                              {romajiAfterDot}
-                            </span>
-                          ) : null}
-                          {kana.endsWith("-") ? "-" : ""}
-                        </span>
-                      </div>
-                    </Fragment>
-                  );
-                })}
-              </div>
-            </dd>
-          </div>
+                        {kana.startsWith("-") ? "-" : ""}
+                        {romaji}
+                        {romajiAfterDot ? (
+                          <span className=" text-yellow-900 text-opacity-70">
+                            {romajiAfterDot}
+                          </span>
+                        ) : null}
+                        {kana.endsWith("-") ? "-" : ""}
+                      </span>
+                    </div>
+                  </Fragment>
+                );
+              })}
+            </div>
+          </dd>
         </div>
       </div>
     </section>

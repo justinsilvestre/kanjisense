@@ -577,7 +577,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("弐", "⿻一弍")
       // bottom of 纂
       .replaceIds("𮅕", "⿳⺮目大")
-      .replaceIds("蘭", "⿰⿱艹闌	⿰⿱艹䦨[J]")
+      .replaceIds("蘭", "⿱艹闌	⿱艹䦨[J]")
       .replaceIds("煉", "⿰火柬")
 
       .replaceIds("鬱", "⿳⿴林缶冖⿰鬯彡")

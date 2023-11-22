@@ -23,11 +23,10 @@ export function FigurePriorityUses({
   if (!priorityUses.length) return null;
 
   return (
-    <section className={`${className} flex flex-row  justify-center`}>
+    <section className={`${className} flex flex-row p-4 justify-center`}>
       <div className="">
-        <h2>used as a component in:</h2>
-
-        <ul>
+        <h2 className="ml-4 mb-4 text-gray-600">used as a component in:</h2>
+        <ul className="flex flex-row flex-wrap gap-4">
           {priorityUses.map((u) => {
             const figureIsSoundMarkUse =
               u.parent.activeSoundMarkId === componentFigure.id;
@@ -43,7 +42,7 @@ export function FigurePriorityUses({
             return (
               <li
                 key={u.parentId}
-                className={`inline-block m-4 align-top ${
+                className={`inline-block align-top ${
                   !u.parent.isPriority ? "bg-slate-200" : ""
                 }`}
               >
@@ -54,10 +53,9 @@ export function FigurePriorityUses({
                   width={5}
                 />
 
-                <span>
+                <div className="[max-width:10rem]">
                   <FigureKeywordDisplay figure={u.parent} />
-                </span>
-                <br />
+                </div>
                 {parentReadingMatchingSoundMark ? (
                   <OnAndGuangyunReadings
                     katakanaOn={parentReadingMatchingSoundMark.katakanaOn}
