@@ -85,6 +85,7 @@ export function FigurePriorityUses({
                         )
                       : null
                   }
+                  hasSoundMarkHighlight={figureIsSoundMarkUse}
                 />
               )}
             </li>

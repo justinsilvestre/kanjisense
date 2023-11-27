@@ -71,7 +71,6 @@ export async function seedShuowenImages(prisma: PrismaClient, force = false) {
       };
 
       const toukeiBetsujiMapping = toukeiBetsujiMappings[figureId];
-      if (figureId === "余") console.log({ toukeiBetsujiMapping });
       if (toukeiBetsujiMapping) {
         for (const traditionalCharacter of toukeiBetsujiMapping)
           addShuowenGroup(traditionalCharacter);

@@ -208,7 +208,7 @@ export function SingleFigureDictionaryEntry({
           ) : null}
 
           <p>
-            <span className="text-2xl">{figure.id}</span> +U
+            <span className="text-2xl">{figure.id}</span> U+
             {figure.id.codePointAt(0)?.toString(16).toUpperCase()}
           </p>
           {radicalIndexes?.length ? (

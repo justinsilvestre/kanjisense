@@ -16,6 +16,10 @@ const VARIANT_TYPES_PRIORITY = [
 ] as KanjiVariant["variantType"][];
 const variantTypesPrioritySet = new Set(VARIANT_TYPES_PRIORITY);
 
+const entrySourceOverrides: Partial<Record<string, string[]>> = {
+  罙: ["深"], // was treating 罙 as a variant of 冞
+};
+
 export async function findGuangyunEntriesByShinjitai(
   prisma: PrismaClient,
   newToOldFiguresIds: Map<string, string[]>,
@@ -31,6 +35,7 @@ export async function findGuangyunEntriesByShinjitai(
     }
   >();
   const shinkyuuForms =
+    entrySourceOverrides[shinjitai] ||
     toukeiBetsujiMappings[shinjitai] ||
     (newToOldFiguresIds.get(shinjitai) || []).concat(shinjitai);
 

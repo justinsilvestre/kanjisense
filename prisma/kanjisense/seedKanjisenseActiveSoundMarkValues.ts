@@ -36,10 +36,6 @@ export async function seedKanjisenseActiveSoundMarkValues(
 async function registerActiveSoundMarkValues(prisma: PrismaClient) {
   const allActiveSoundMarks = await getAllActiveSoundMarks(prisma);
 
-  console.log(
-    "has 𫩠",
-    allActiveSoundMarks.some((f) => f.id === "𫩠"),
-  );
   for (const soundMarkFigure of allActiveSoundMarks) {
     if (!soundMarkFigure.reading) {
       console.log("no reading for", soundMarkFigure.id);
@@ -175,11 +171,6 @@ function getValueFromSoundMarkReading(soundMarkFigure: ActiveSoundMarkFigure) {
     null;
   if (matchingSoundMarkValue?.katakana) return matchingSoundMarkValue;
 
-  if (soundMarkFigure.id === "尚")
-    console.log({
-      katakanaOnReadings,
-      x: reading.kanjidicEntry?.onReadings,
-    });
   return katakanaOnReadings.filter(Boolean).length
     ? {
         katakana: katakanaOnReadings.filter(Boolean)![0],

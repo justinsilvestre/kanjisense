@@ -41,6 +41,7 @@ export async function seedKanjiDbCharacterDerivations(
     kanjiDbEtymologiesCache.set("摒", "⿰扌屛	屛聲");
     kanjiDbEtymologiesCache.set("將", "⿰爿⿱肉寸	會意	0890030"); // comment threw parsing off: # 【字通】醬聲はありえない
     kanjiDbEtymologiesCache.set("㓞", "⿰丰刀	會意");
+    kanjiDbEtymologiesCache.set("雧", "⿱雥木	會意"); // 木 doesn't fit as phonetic
 
     for (const { id, etymology: etymologyText } of kanjiDbEtymologies) {
       const originCharacter = parseEtymologyText(id, etymologyText!);

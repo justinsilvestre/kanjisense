@@ -592,7 +592,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         componentIdsSegment: "⿱雨",
         extractedFigureId: "⻗",
         newCompleteIds: "⿱一⿻冖⿻丨&CDP-89AE;",
-        replacementIdsSegment: "⿱一⻗",
+        replacementIdsSegment: "⿱⻗",
       })
 
       .replaceIds("肉", "⿵内人")
