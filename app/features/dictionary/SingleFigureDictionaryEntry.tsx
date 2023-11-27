@@ -2,6 +2,7 @@
 import { KanjisenseFigure, KanjisenseFigureImageType } from "@prisma/client";
 import { useState } from "react";
 
+import { DictLink } from "~/components/AppLink";
 import { FigureBadge } from "~/components/FigureBadge";
 import {
   IsPriorityComponentQueryFigure,
@@ -25,6 +26,7 @@ import { FigurePriorityUses } from "./FigurePriorityUses";
 import { FigureStrokesAnimation } from "./FigureStrokesAnimation";
 import { FigureTags } from "./FigureTags";
 import { GlyphsJson } from "./GlyphsJson";
+import { kangxiRadicals } from "./kangxiRadicals";
 import kvgStyles from "./kvg.css";
 import type { KvgJsonData } from "./KvgJsonData";
 
@@ -52,14 +54,16 @@ export function SingleFigureDictionaryEntry({
     ? (figure.glyphImage.json as GlyphsJson)
     : null;
 
+  const radicalIndexes = figure.reading?.unihan15?.kRSUnicode?.flatMap(
+    (text) => parseRadicalNumbers(text) || [],
+  );
+
   return (
     <section
-      className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap ${
-        figure.isPriority ? "" : "bg-gray-200"
-      }`}
+      className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap`}
       key={figure.id}
     >
-      <div className="SingleFigureDictionaryEntry_left flex gap-4 flex-col flex-grow">
+      <div className="SingleFigureDictionaryEntry_left lg:[min-width:calc(100%-19rem)] flex gap-4 flex-col flex-grow">
         <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center  flex-grow flex-shrink">
           <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3">
             <div
@@ -150,7 +154,7 @@ export function SingleFigureDictionaryEntry({
         </div>
       </div>
       {isUnicodeCharacter ? (
-        <div>
+        <div className="flex flex-row flex-wrap flex-grow max-lg:[min-width:19rem]">
           {figure.shuowenImage ? (
             <div className="">
               <AncientCharacterFormSection
@@ -161,7 +165,7 @@ export function SingleFigureDictionaryEntry({
 
           {glyphsJson ? (
             <div className="flex-1">
-              <h2 className="text-center text-gray-500">modern forms</h2>
+              <h2 className="text-center text-gray-500">modern typography</h2>
               <div className="flex-1 flex flex-row flex-wrap gap-4">
                 {glyphsJson.kk ? (
                   <svg
@@ -200,16 +204,26 @@ export function SingleFigureDictionaryEntry({
           ) : null}
 
           {figureIsStandaloneCharacter || figure.isPriority ? (
-            <ExternalDictionaryLinks
-              figureId={figure.id}
-              className="[min-width:18rem]"
-            />
+            <ExternalDictionaryLinks figureId={figure.id} className="" />
           ) : null}
 
           <p>
             <span className="text-2xl">{figure.id}</span> +U
             {figure.id.codePointAt(0)?.toString(16).toUpperCase()}
           </p>
+          {radicalIndexes?.length ? (
+            <section>
+              <h3>radical</h3>
+              {radicalIndexes?.map((radicalIndex) => (
+                <p key={radicalIndex?.radical.character}>
+                  <DictLink figureId={radicalIndex.radical.character}>
+                    {radicalIndex.radical.character} (
+                    {radicalIndex.radical.number}+{radicalIndex.remainder})
+                  </DictLink>
+                </p>
+              ))}
+            </section>
+          ) : null}
         </div>
       ) : null}
     </section>
@@ -250,4 +264,21 @@ export function FigureKeywordDisplay({
     );
 
   return <>&quot;{mnemonicKeywordWithoutReference}&quot;</>;
+}
+
+function parseRadicalNumbers(unicodeRadicalText: string) {
+  try {
+    // one apostrophe: chinese-simplified radical
+    // two apostrophes: other-simplified radical
+    const [radicalNumber, remainder] = unicodeRadicalText.split(/'*\./);
+    return {
+      radical: {
+        number: +radicalNumber,
+        character: kangxiRadicals[+radicalNumber - 1][0],
+      },
+      remainder: +remainder,
+    };
+  } catch (e) {
+    return null;
+  }
 }

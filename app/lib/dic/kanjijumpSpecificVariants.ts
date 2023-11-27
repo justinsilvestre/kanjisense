@@ -96,7 +96,7 @@ export const kanjijumpSpecificVariants = [
   ["戸", "户"],
   ["犬", "犭"],
   ["舛", "夅"],
-  ["臣", "𦣞"],
+  ["臣", "𦣞", "𦣝"],
   ["甫", "GWS-U752B-03-VAR-001"],
   ["尃", "GWS-U5C03-VAR-001"],
   ["溥", "GWS-U6EA5-VAR-003"],

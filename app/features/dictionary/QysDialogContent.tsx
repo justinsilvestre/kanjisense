@@ -40,7 +40,6 @@ export const QysDialogContent = ({
   const getSetActiveTab = (index: number) => () => {
     setActiveTab(index);
   };
-  console.log({ attestedOnReadings });
 
   const xiaoyunsToInferredKanCandidatesToTypes = new Map<
     number,
@@ -66,6 +65,8 @@ export const QysDialogContent = ({
     }
   }
 
+  const characterHasMultipleEntries = syllables.length > 1;
+
   return (
     <>
       <p className="mt-0 mb-3">
@@ -88,21 +89,27 @@ export const QysDialogContent = ({
               <span
                 key={xiaoyun.fanqie}
                 className={`flex-1 rounded-3xl p-1 text-center text-lg transition-colors ${
-                  syllables.length > 1 ? "cursor-pointer" : ""
+                  characterHasMultipleEntries ? "cursor-pointer" : ""
                 } ${
-                  syllables.length > 1 && i === activeTab
+                  characterHasMultipleEntries && i === activeTab
                     ? "bg-slate-100"
                     : `bg-slate-700  text-white`
                 }`}
-                role="button"
-                tabIndex={0}
-                onClick={syllables.length > 1 ? getSetActiveTab(i) : undefined}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    if (syllables.length > 1) getSetActiveTab(i)();
-                  }
-                }}
+                role={characterHasMultipleEntries ? "button" : undefined}
+                tabIndex={characterHasMultipleEntries ? 0 : undefined}
+                onClick={
+                  characterHasMultipleEntries ? getSetActiveTab(i) : undefined
+                }
+                onKeyDown={
+                  characterHasMultipleEntries
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          getSetActiveTab(i)();
+                        }
+                      }
+                    : undefined
+                }
               >
                 {sbgyXiaoyunsToExemplars[xiaoyun.xiaoyun].join(" ")}{" "}
                 {transcribeSbgyXiaoyun(xiaoyun)}

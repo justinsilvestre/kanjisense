@@ -53,11 +53,6 @@ async function analyzeFigureComponents(figureId: string) {
               firstClassComponents: {
                 select: {
                   componentId: true,
-                  // component: {
-                  //   select: {
-                  //     id: true,
-                  //   },
-                  // },
                 },
               },
             },

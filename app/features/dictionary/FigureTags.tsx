@@ -7,7 +7,7 @@ import {
 } from "~/components/AppLink";
 import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
-import { KanjiListCode } from "~/lib/dic/KanjiListCode";
+import { KanjiListCode, isKyoikuCode } from "~/lib/dic/KanjiListCode";
 
 import { useHoverPopper } from "./useHoverPopper";
 
@@ -235,7 +235,7 @@ function FigureTag({
   return (
     <>
       <li
-        className={`${className}`}
+        className={`${className} cursor-default`}
         ref={setReferenceElement}
         onMouseEnter={openPopper}
         onMouseLeave={closePopper}
@@ -272,21 +272,6 @@ function ListTags({
   isStandaloneCharacter: boolean;
   className?: string;
 }) {
-  if (isStandaloneCharacter)
-    return lists.map((listCode) => (
-      <KanjiListTag
-        key={listCode}
-        code={listCode}
-        className={className}
-        popoverContent={
-          <KanjiListTagPopoverContent
-            listCode={listCode}
-            isStandaloneCharacter={isStandaloneCharacter}
-          />
-        }
-      />
-    ));
-
   const kyoiku = lists.find(
     (c) =>
       c === "1" ||
@@ -296,18 +281,40 @@ function ListTags({
       c === "5" ||
       c === "6",
   );
-  if (kyoiku)
-    return (
-      <KanjiListTag
-        code={kyoiku}
-        className={className}
-        popoverContent={
-          <KyoikuTagPopoverContent
-            isStandaloneCharacter={isStandaloneCharacter}
+  const kyoikuTag = kyoiku && (
+    <KanjiListTag
+      key={kyoiku}
+      code={kyoiku}
+      className={className}
+      popoverContent={
+        <KyoikuTagPopoverContent
+          isStandaloneCharacter={isStandaloneCharacter}
+        />
+      }
+    />
+  );
+  if (isStandaloneCharacter) {
+    return (kyoikuTag ? [kyoikuTag] : []).concat(
+      lists.flatMap((listCode) =>
+        isKyoikuCode(listCode) ? (
+          []
+        ) : (
+          <KanjiListTag
+            key={listCode}
+            code={listCode}
+            className={className}
+            popoverContent={
+              <KanjiListTagPopoverContent
+                listCode={listCode}
+                isStandaloneCharacter={isStandaloneCharacter}
+              />
+            }
           />
-        }
-      />
+        ),
+      ),
     );
+  }
+  if (kyoikuTag) return kyoikuTag;
   if (lists.includes("j"))
     return (
       <KanjiListTag

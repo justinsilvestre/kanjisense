@@ -22,21 +22,23 @@ model KanjidicEntry {
 }
 
 model Unihan15 {
-  id            String                   @id
-  kDefinition   String?
-  kCantonese    String[]
-  kHangul       String[]
-  kHanyuPinlu   String[]
-  kHanyuPinyin  String[]
-  kJapaneseKun  String[]
-  kJapaneseOn   String[]
-  kKorean       String[]
-  kMandarin     String[]
-  kTang         String[]
-  kTGHZ2013     String[]
-  kVietnamese   String[]
-  kXHC1983      String[]
-  figureReading KanjisenseFigureReading? @relation("unihan15")
+  id                String                   @id
+  kDefinition       String?
+  kCantonese        String[]
+  kHangul           String[]
+  kHanyuPinlu       String[]
+  kHanyuPinyin      String[]
+  kJapaneseKun      String[]
+  kJapaneseOn       String[]
+  kKorean           String[]
+  kMandarin         String[]
+  kTang             String[]
+  kTGHZ2013         String[]
+  kVietnamese       String[]
+  kXHC1983          String[]
+  kRSAdobe_Japan1_6 String[]
+  kRSUnicode        String[]
+  figureReading     KanjisenseFigureReading? @relation("unihan15")
 }
 
 model Unihan12 {

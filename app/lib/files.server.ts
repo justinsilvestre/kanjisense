@@ -7,6 +7,8 @@ export const files = {
   kanjidicInput1: vendor("kanjidic/kanji_bank_1.json"),
   kanjidicInput2: vendor("kanjidic/kanji_bank_2.json"),
   unihanReadings15: vendor("unihan/Unihan_Readings.txt"),
+  unihanRadicals15: vendor("unihan/Unihan_RadicalStrokeCounts.txt"),
+  unihanIrgSources15: vendor("unihan/Unihan_IRGSources.txt"),
   unihanVariants12: vendor("unihan/Unihan_Variants_12.txt"),
   unihanVariants14: vendor("unihan/Unihan_Variants_14.txt"),
   kanjiDbOldStyle: vendor("kanjiDb/jp-old-style.txt"),

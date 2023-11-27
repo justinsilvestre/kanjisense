@@ -95,7 +95,7 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
   if (hue === BadgeHue.KYOIKU) {
     switch (frequencyClass) {
       case FrequencyClass.Class1:
-        className = "bg-kyoiku-700 outline-kyoiku-700";
+        className = "bg-kyoiku-700 outline-kyoiku-800";
         break;
       case FrequencyClass.Class2:
         className = "bg-kyoiku-700 outline-kyoiku-600";
@@ -119,14 +119,14 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
         className = "bg-kyoiku-300 outline-kyoiku-500";
         break;
       case FrequencyClass.Class9:
-        className = " bg-kyoiku-200 outline-kyoiku-500";
+        className = "bg-kyoiku-200 outline-kyoiku-500";
         break;
     }
   }
   if (hue === BadgeHue.JOYO) {
     switch (frequencyClass) {
       case FrequencyClass.Class1:
-        className = "bg-joyo-700 outline-joyo-700";
+        className = "bg-joyo-700 outline-joyo-800";
         break;
       case FrequencyClass.Class2:
         className = "bg-joyo-700 outline-joyo-600";
@@ -150,7 +150,7 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
         className = "bg-joyo-300 outline-joyo-500";
         break;
       case FrequencyClass.Class9:
-        className = " bg-joyo-200 outline-joyo-500";
+        className = "bg-joyo-200 outline-joyo-500";
         break;
     }
   }
@@ -181,7 +181,7 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
         className = "bg-hyogai-400 outline-hyogai-400";
         break;
       case FrequencyClass.Class9:
-        className = " bg-hyogai-300 outline-hyogai-500";
+        className = "bg-hyogai-300 outline-hyogai-500";
         break;
     }
   }
@@ -212,7 +212,7 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
         className = "bg-jinmeiyo-500 outline-jinmeiyo-600";
         break;
       case FrequencyClass.Class9:
-        className = " bg-jinmeiyo-400 outline-jinmeiyo-600";
+        className = "bg-jinmeiyo-400 outline-jinmeiyo-600";
         break;
     }
   }
@@ -243,7 +243,7 @@ function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
         className = "bg-extra-500 outline-extra-600";
         break;
       case FrequencyClass.Class9:
-        className = " bg-extra-400 outline-extra-600";
+        className = "bg-extra-400 outline-extra-600";
         break;
     }
   }
