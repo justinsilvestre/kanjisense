@@ -26,15 +26,15 @@ export async function getDictionaryPageFigure(figureId: string) {
   return await prisma.kanjisenseFigure.findUnique({
     where: { id: figureId },
     include: {
-      ...commonInclude,
+      ...dictionaryPageFigureInclude,
 
       variantGroup: {
         select: {
-          ...commonInclude.variantGroup.select,
+          ...dictionaryPageFigureInclude.variantGroup.select,
           id: true,
           variants: true,
           figures: {
-            include: commonInclude,
+            include: dictionaryPageFigureInclude,
           },
         },
       },
@@ -42,13 +42,11 @@ export async function getDictionaryPageFigure(figureId: string) {
   });
 }
 
-const commonInclude = {
+export const dictionaryPageFigureInclude = {
   _count: {
     select: {
       firstClassComponents: true,
       firstClassUses: {
-        // distinct: ["parentId" as const, "componentId" as const],
-
         where: {
           parent: {
             isPriority: true,
@@ -90,6 +88,11 @@ const commonInclude = {
       sbgyXiaoyuns: {
         include: {
           sbgyXiaoyun: true,
+        },
+      },
+      unihan15: {
+        select: {
+          kRSUnicode: true,
         },
       },
       kanjidicEntry: {
