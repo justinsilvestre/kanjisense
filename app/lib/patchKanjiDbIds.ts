@@ -591,7 +591,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿱雨",
         extractedFigureId: "⻗",
-        newCompleteIds: "⿱一⿻冖⿻丨&CDP-89AE;",
+        newCompleteIds: "⿱一⿻冖&GWS-CDP-8C41-VAR-003;",
         replacementIdsSegment: "⿱⻗",
       })
 

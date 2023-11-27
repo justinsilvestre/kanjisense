@@ -53,7 +53,8 @@ export const kanjivgExtractedComponents: {
   夅: ["降", [4, 10], takeWideRightElement],
   粦: ["隣", [4, 16], takeWideRightElement],
   'GWS-U8FF7-K': ["謎", [8, 17]],
-  'GWS-U6728-01': ["林", [1,4]],
+  'GWS-U6728-01': ["林", [1, 4]],
+  '⻗': ['雲', [1, 8]],
 };
 
 

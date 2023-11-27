@@ -25,7 +25,8 @@ export async function getFigureMeaningsText(
     mnemonicSource = ` {{cf. ${mnemonicKeywords.reference}}}`;
   else if (mnemonicKeywords?.standin)
     mnemonicSource = ` {{via ${mnemonicKeywords.standin}}}`;
-
+  else if (mnemonicKeywords?.full)
+    mnemonicSource = ` {{cf. ${mnemonicKeywords.full}}}`;
   const unihanDefinitionText =
     (await unihanDefinitionLookup)?.kDefinition || null;
   const kanjidicEnglish =
@@ -66,6 +67,8 @@ export interface ComponentMeaning {
   mnemonic?: string;
   /** for this component's mnemonic keyword, it borrows the meaning of a common kanji containing it. */
   standin?: string;
+  /** this component is no longer used as a character in favor of this standalone character with added components */
+  full?: string;
   /** this component derives its mnemonic keyword from a common kanji using it. */
   reference?: string;
   /** for grouping components by meaning */

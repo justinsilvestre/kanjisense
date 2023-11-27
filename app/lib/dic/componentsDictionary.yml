@@ -656,10 +656,9 @@ CDP-8D46: # 鼠,巤,臘,蠟,獵
   tag: nature
 攵:
   historical: knock
-  full: 敲
   tag: actions
 从:
-  historical: twins
+  mnemonic: twins
   tag: personal
 屮:
   historical: sprout
@@ -882,8 +881,8 @@ CDP-8BA8: # 興,與,輿,擧,譽,欅,襷
   mnemonic: lifting hands
   tag: hands
 GWS-U2FFA-U200CA-U7C73: # 継,断,繼,斷
-  historical: patch
-  full: 継
+  mnemonic: patch
+  reference: 継
   tag: fabric
 戠:
   historical: sword, potter's clay
@@ -980,8 +979,8 @@ GWS-U5F56-ITAIJI-001: # 縁,篆,緣
   standin: 縁
   tag: fabric
 犮:
-  historical: extract
-  full: 拔
+  mnemonic: extract
+  standin: 拔
   tag: actions
 㕣:
   historical: marsh at foot of hill
@@ -1218,8 +1217,9 @@ CDP-89BD: # 亀,縄,竈,蠅,繩
   full: 堅
   tag: geo
 粦:
-  historical: neighbor
-  full: 隣
+  historical: will o' the wisp
+  mnemonic: neighbor
+  standin: 隣
   tag: personal
 㚘:
   historical: walk together
@@ -1335,8 +1335,8 @@ GWS-U2FF1-U2008A-U65E7: # 陥,焰,閻,陷
   historical: prattle
   tag: actions
 隶:
-  historical: servant
-  full: 隷
+  mnemonic: servant
+  standin: 隷
   tag: personal
 矣:
   historical: grammatical particle
@@ -1353,8 +1353,8 @@ GWS-U23A8A-VAR-001: # 殻,穀,穀,殼
   standin: 殻
   tag: plants
 夸:
-  historical: boast
-  full: 誇
+  mnemonic: boast
+  standin: 誇
   tag: actions
 賁:
   historical: energetic, bright
@@ -2971,8 +2971,8 @@ GWS-U914B-G:
   historical: violence
   tag: feeling
 采:
-  historical: gather
-  full: 採
+  mnemonic: gather
+  standin: 採
   tag: place
 隊:
   historical: squadron
