@@ -14,7 +14,6 @@ function encodeFigure(key: string) {
 
 // TODO:
 // - 牙 needs variant
-// - 肉 made with 内
 // - 灼 right part has ichi. check leopard as well
 // - CDP-8BF8 really not the same glyph as CDP-876E here (top stroke pokes out/doesn't):
 //    .replaceIds("CDP-8BF8", "⿱&CDP-876E;十")
@@ -24,7 +23,6 @@ function encodeFigure(key: string) {
 // - perhaps should have crown and not cover
 //    睿 top part
 // - 藤 should have 'pump', not 'water'
-// - 录 has wrong "pig snout" - KVG is wrong, actually
 
 // leaving alone for now:
 // 朩 different in e.g. 術茶 (hane vs no hane)
@@ -366,7 +364,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["營", "⿱𤇾呂"],
         ["串", "⿻中口"],
         ["捌", "⿰扌別"],
-        ["槪", "⿰木既"],
+        ["槪", "⿰&GWS-U6728-01;既"],
         ["翟", "⿱羽隹"],
         ["車", "⿻&CDP-8BF1;日"],
         ["睿", "⿱𣦵⿴谷二"], // maybe should incorporate eye
@@ -414,7 +412,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⻏",
       })
       .addAtomicIdsLine("⻌")
-      .replaceIds("辶", "⿱⻌丶")
+      .replaceIds("辶", "⿱丶⻌")
 
       .replaceEverywhere("⿱爫夫", encodeFigure("GWS-U595A-ITAIJI-001"))
       .addIdsAfterTransforms("GWS-U595A-ITAIJI-001", "⿱⺤夫") // simplified component form of 奚    ⿱爫夫
@@ -596,6 +594,16 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⿱一⿻冖⿻丨&CDP-89AE;",
         replacementIdsSegment: "⿱一⻗",
       })
+
+      .replaceIds("肉", "⿵内人")
+      .replaceIds("CDP-8B5E", "⿵𠂊⺀")
+      .replaceIds("⺼", "⿵冂⺀")
+
+      .replaceManyIds([
+        ["豹", "⿰豸勺"],
+        ["杓", "⿰&GWS-U6728-01;勺"],
+        ["灼", "⿰火勺"],
+      ])
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

@@ -7,7 +7,8 @@ import {
   dictionaryPageFigureInclude,
 } from "~/features/dictionary/getDictionaryPageFigure.server";
 
-export interface FigureSinoReadingsLoaderData {
+export interface FigurePriorityUsesLoaderData {
+  id: string;
   firstClassUses: FigurePriorityUses | null;
 }
 
@@ -18,6 +19,7 @@ async function getComponentPriorityUses(figureId: string) {
   return await prisma.kanjisenseFigure.findUnique({
     where: { id: figureId },
     select: {
+      id: true,
       firstClassUses: {
         ...deleteProperty(dictionaryPageFigureInclude.firstClassUses, "take"),
         skip: dictionaryPageFigureInclude.firstClassUses.take,
@@ -38,7 +40,8 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<FigureSinoReadingsLoaderData>({
+  return json<FigurePriorityUsesLoaderData>({
+    id: figure.id,
     firstClassUses: figure.firstClassUses || null,
   });
 };

@@ -1,4 +1,5 @@
 export const easilyConfusedFigures = [
+  ["人", "入"],
   ["土", "士"],
   ["日", "曰"],
   ["未", "末"],
