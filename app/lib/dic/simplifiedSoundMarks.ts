@@ -84,4 +84,5 @@ export const simplifiedSoundMarks = {
   "𣅼": ["早"],
   瞢: ["CDP-8D60"],
   塞: ["𡨄"],
+  𡲬: ["屈"]
 };

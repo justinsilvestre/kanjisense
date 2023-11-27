@@ -14,7 +14,6 @@ function encodeFigure(key: string) {
 
 // TODO:
 // - 牙 needs variant
-// - 謎 needs double-dot variant of mayou
 // - 肉 made with 内
 // - 灼 right part has ichi. check leopard as well
 // - CDP-8BF8 really not the same glyph as CDP-876E here (top stroke pokes out/doesn't):
@@ -23,14 +22,13 @@ function encodeFigure(key: string) {
 // - check left/right radical assignments are correct:
 //     右友有左布厷絨
 // - perhaps should have crown and not cover
-//    睿, 雪 top part
+//    睿 top part
 // - 藤 should have 'pump', not 'water'
 // - 录 has wrong "pig snout" - KVG is wrong, actually
 
 // leaving alone for now:
 // 朩 different in e.g. 術茶 (hane vs no hane)
 // 小 different in e.g. 少絲 (hane vs no hane)
-// 巸 left is not registered at all, but is not priority in kanjijump
 
 export const patchIds = (patchedIds: PatchedIds) => {
   return (
@@ -581,6 +579,23 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("煉", "⿰火柬")
 
       .replaceIds("鬱", "⿳⿴林缶冖⿰鬯彡")
+
+      .replaceIds("謎", "⿰言&GWS-U8FF7-K;")
+      .addIdsAfterTransforms("GWS-U8FF7-K", "⿺辶米")
+
+      .extractFigureFromIdsSegment({
+        componentIdsSegment: "⿰木",
+        extractedFigureId: "GWS-U6728-01",
+        newCompleteIds: "&GWS-U6728-01;",
+        replacementIdsSegment: "⿰&GWS-U6728-01;",
+      })
+
+      .extractFigureFromIdsSegment({
+        componentIdsSegment: "⿱雨",
+        extractedFigureId: "⻗",
+        newCompleteIds: "⿱一⿻冖⿻丨&CDP-89AE;",
+        replacementIdsSegment: "⿱一⻗",
+      })
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );
