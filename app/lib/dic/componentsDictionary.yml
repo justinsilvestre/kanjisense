@@ -2750,7 +2750,7 @@ GWS-U914B-G:
   historical: stay
   tag: action
 那:
-  historical: phonetic &quot;na&quot;
+  historical: phonetic "na"
   tag: phonetic
 屈:
   historical: bend
@@ -3026,7 +3026,7 @@ GWS-U914B-G:
   historical: boot
   tag: fabric
 曼:
-  historical: phonetic &quot;man&quot;
+  historical: phonetic "man"
   reference: 慢
   tag: phonetic
 著:
@@ -3106,7 +3106,7 @@ GWS-U914B-G:
   historical: rib
   tag: body
 耶:
-  historical: phonetic &quot;ya&quot;
+  historical: phonetic "ya"
   tag: phonetic
 遣:
   historical: dispatch
@@ -3295,7 +3295,7 @@ GWS-U914B-G:
   historical: tow
   tag: action
 沙:
-  historical: phonetic &quot;sa&quot;
+  historical: phonetic "sa"
   tag: phonetic
 勅:
   historical: imperial decree

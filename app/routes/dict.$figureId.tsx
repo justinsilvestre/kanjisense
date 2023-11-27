@@ -11,6 +11,7 @@ import {
 } from "@remix-run/react";
 
 import DictionaryLayout from "~/components/DictionaryLayout";
+import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import {
   getDictionaryPageFigure,
   DictionaryPageSearchedFigure,
@@ -48,6 +49,11 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
   const { searchedFigure: figure } = loaderData;
+  const variants = figure.variantGroup?.variants
+    .flatMap((vid) => {
+      return figure.variantGroup?.figures.find((f) => f.id === vid) || [];
+    })
+    .map((f) => getBadgeProps(f));
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
@@ -56,19 +62,7 @@ export default function FigureDetailsPage() {
             {figure.variantGroup?.id}: {figure.variantGroup?.variants.join(" ")}
           </h1>
         ) : null}
-        {figure.variantGroup ? (
-          figure.variantGroup.variants.map((variantId) => {
-            const variant = figure.variantGroup?.figures.find(
-              (f) => f.id === variantId,
-            );
-            if (!variant) return null;
-            return (
-              <SingleFigureDictionaryEntry key={variantId} figure={variant} />
-            );
-          })
-        ) : (
-          <SingleFigureDictionaryEntry figure={figure} />
-        )}
+        <SingleFigureDictionaryEntry figure={figure} variants={variants} />
       </main>
     </DictionaryLayout>
   );

@@ -4,7 +4,9 @@ import { useState } from "react";
 
 import { DictLink } from "~/components/AppLink";
 import { FigureBadge } from "~/components/FigureBadge";
+import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
+  BadgeProps,
   IsPriorityComponentQueryFigure,
   StandaloneCharacterVariantQueryFigure,
   getBadgeProps,
@@ -36,8 +38,10 @@ export const links = () => [
 ];
 export function SingleFigureDictionaryEntry({
   figure,
+  variants = [],
 }: {
   figure: DictionaryPageFigureWithPriorityUses;
+  variants?: BadgeProps[];
 }) {
   const badgeProps = getBadgeProps(figure);
   const figureIsStandaloneCharacter = badgeProps.isStandaloneCharacter;
@@ -60,11 +64,11 @@ export function SingleFigureDictionaryEntry({
 
   return (
     <section
-      className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap`}
+      className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap items-start`}
       key={figure.id}
     >
-      <div className="SingleFigureDictionaryEntry_left lg:[min-width:calc(100%-19rem)] flex gap-4 flex-col flex-grow">
-        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center  flex-grow flex-shrink">
+      <div className="SingleFigureDictionaryEntry_left max-lg:basis-full [min-width:calc(100%-18rem)] flex gap-4 flex-col flex-grow ">
+        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center ">
           <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -116,17 +120,74 @@ export function SingleFigureDictionaryEntry({
               isAtomic={figureIsAtomic}
             />
           </div>
-          {figureIsAtomic ? null : (
-            <div className="SingleFigureDictionaryEntry_topRight flex-1 border-4 border-solid border-black/10 rounded-lg p-2 [min-width:15rem] flex gap-4 flex-col">
-              <div className="flex-1 flex flex-col justify-center gap-4">
-                <h2 className="text-center text-gray-500">components</h2>
-                <DictionaryEntryComponentsTree
-                  figure={figure}
-                  className="basis-0"
-                />
+
+          <div className="flex flex-1 flex-col gap-4">
+            {
+              <div className="SingleFigureDictionaryEntry_topRight basis-full flex-1 border-4 border-solid border-black/10 rounded-lg p-2 [min-width:15rem] flex gap-4 flex-col">
+                <div className="flex-1 flex flex-col justify-center gap-4">
+                  {figureIsAtomic ? (
+                    <div className="text-center">atomic component</div>
+                  ) : (
+                    <>
+                      <h2 className="text-center text-gray-500">components</h2>
+                      <DictionaryEntryComponentsTree
+                        figure={figure}
+                        className="basis-0"
+                      />
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            }
+            {isUnicodeCharacter && (glyphsJson || figure.shuowenImage) ? (
+              <div className="flex flex-row flex-wrap flex-grow p-4  justify-evenly">
+                {glyphsJson ? (
+                  <div className="">
+                    <div className="flex-1 flex flex-row justify-center flex-wrap gap-4">
+                      {glyphsJson.ns ? (
+                        <svg
+                          viewBox="0 -870 1000 1000"
+                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                        >
+                          <path d={glyphsJson.ns} />
+                        </svg>
+                      ) : null}
+                      {glyphsJson.gw ? (
+                        <svg
+                          viewBox="0 0 200 200"
+                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                        >
+                          <path d={glyphsJson.gw} />
+                        </svg>
+                      ) : null}
+                      {glyphsJson.twk ? (
+                        <svg
+                          viewBox="0 -870 1000 1000"
+                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                        >
+                          <path d={glyphsJson.twk} />
+                        </svg>
+                      ) : null}
+                      {glyphsJson.kk ? (
+                        <svg
+                          viewBox="0 -870 1000 1000"
+                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                        >
+                          <path d={glyphsJson.kk} />
+                        </svg>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+                {figure.shuowenImage ? (
+                  <AncientCharacterFormSection
+                    className=""
+                    svgPaths={figure.shuowenImage.paths}
+                  />
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {figure.reading &&
@@ -153,76 +214,69 @@ export function SingleFigureDictionaryEntry({
           />
         </div>
       </div>
-      {isUnicodeCharacter ? (
-        <div className="flex flex-row flex-wrap flex-grow max-lg:[min-width:19rem]">
-          {figure.shuowenImage ? (
-            <div className="">
-              <AncientCharacterFormSection
-                svgPaths={figure.shuowenImage.paths}
-              />
-            </div>
-          ) : null}
 
-          {glyphsJson ? (
-            <div className="flex-1">
-              <h2 className="text-center text-gray-500">modern typography</h2>
-              <div className="flex-1 flex flex-row flex-wrap gap-4">
-                {glyphsJson.kk ? (
-                  <svg
-                    viewBox="0 -870 1000 1000"
-                    className="inline-block [width:5rem] [height:5rem]"
-                  >
-                    <path d={glyphsJson.kk} />
-                  </svg>
-                ) : null}
-                {glyphsJson.twk ? (
-                  <svg
-                    viewBox="0 -870 1000 1000"
-                    className="inline-block [width:5rem] [height:5rem]"
-                  >
-                    <path d={glyphsJson.twk} />
-                  </svg>
-                ) : null}
-                {glyphsJson.gw ? (
-                  <svg
-                    viewBox="-30 -30 260 260"
-                    className="inline-block [width:5rem] [height:5rem]"
-                  >
-                    <path d={glyphsJson.gw} />
-                  </svg>
-                ) : null}
-                {glyphsJson.ns ? (
-                  <svg
-                    viewBox="0 -870 1000 1000"
-                    className="inline-block [width:5rem] [height:5rem]"
-                  >
-                    <path d={glyphsJson.ns} />
-                  </svg>
-                ) : null}
+      {isUnicodeCharacter || variants?.length ? (
+        <div className="flex flex-row lg:flex-col lg:items-center self-stretch flex-shrink flex-grow lg:[min-width:19rem]">
+          {variants?.length ? (
+            <div className="flex-1 flex flex-col justify-center">
+              <h3 className="text-center">
+                {variants.findIndex((v) => v.id === figure.id) + 1} of{" "}
+                {variants.length} variants
+              </h3>
+              <div className="flex flex-wrap lg:flex-col  bg-black/10 p-2">
+                {variants.map((v) => {
+                  return v.id === figure.id ? (
+                    <span
+                      key={v.id}
+                      className=" border-solid rounded-xl bg-white"
+                    >
+                      <FigureBadge
+                        width={6}
+                        key={v.id}
+                        id={v.id}
+                        badgeProps={v}
+                        className={`inline-block m-2 hover:opacity-100 `}
+                      />
+                    </span>
+                  ) : (
+                    <FigurePopoverBadge
+                      width={6}
+                      key={v.id}
+                      id={v.id}
+                      badgeProps={v}
+                      className={`inline-block m-2 hover:opacity-100 opacity-70`}
+                    />
+                  );
+                })}
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="flex-1"> </div>
+          )}
+          {isUnicodeCharacter ? (
+            <div>
+              <p>
+                in your browser: <span className="text-2xl">{figure.id}</span>
+                U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
+              </p>
+              {radicalIndexes?.length ? (
+                <section>
+                  radical:{" "}
+                  {radicalIndexes?.map((radicalIndex) => (
+                    <span key={radicalIndex?.radical.character}>
+                      <DictLink figureId={radicalIndex.radical.character}>
+                        {radicalIndex.radical.character} (
+                        {radicalIndex.radical.number}+{radicalIndex.remainder})
+                      </DictLink>{" "}
+                    </span>
+                  ))}
+                </section>
+              ) : null}
 
-          {figureIsStandaloneCharacter || figure.isPriority ? (
-            <ExternalDictionaryLinks figureId={figure.id} className="" />
-          ) : null}
-
-          <p>
-            <span className="text-2xl">{figure.id}</span> U+
-            {figure.id.codePointAt(0)?.toString(16).toUpperCase()}
-          </p>
-          {radicalIndexes?.length ? (
-            <section>
-              <h3>radical</h3>
-              {radicalIndexes?.map((radicalIndex) => (
-                <p key={radicalIndex?.radical.character}>
-                  <DictLink figureId={radicalIndex.radical.character}>
-                    {radicalIndex.radical.character} (
-                    {radicalIndex.radical.number}+{radicalIndex.remainder})
-                  </DictLink>
-                </p>
-              ))}
-            </section>
+              {figureIsStandaloneCharacter || figure.isPriority ? (
+                <ExternalDictionaryLinks figureId={figure.id} className="" />
+              ) : null}
+            </div>
           ) : null}
         </div>
       ) : null}

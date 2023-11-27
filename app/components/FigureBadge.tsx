@@ -13,10 +13,12 @@ export function FigureBadge({
   id: figureId,
   badgeProps,
   width: outerWidth = 3.5,
+  className,
 }: {
   id: string;
   badgeProps: BadgeProps;
   width?: number;
+  className?: string;
 }) {
   const innerWidth = outerWidth - outerWidth / 7;
 
@@ -37,7 +39,7 @@ export function FigureBadge({
 
   return (
     <div
-      className={`inline-block text-center align-bottom ${getColorClassName(
+      className={`inline-block text-center align-bottom ${className} ${getColorClassName(
         badgeProps.hue,
         badgeProps.aozoraAppearances,
       )} ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} $`}

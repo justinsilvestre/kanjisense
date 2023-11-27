@@ -47,9 +47,11 @@ export function DictionaryEntryComponentsTree({
 function DictionaryEntryComponentsTreeMember({
   parentFigure,
   componentFigure,
+  expandable = false,
 }: {
   parentFigure: ComponentsTreeMemberFigure;
   componentFigure: ComponentsTreeMemberFigure;
+  expandable?: boolean;
 }) {
   const { analyzeFigure, fetcher } = useAnalyzeFigureFetcher(
     componentFigure.id,
@@ -83,7 +85,9 @@ function DictionaryEntryComponentsTreeMember({
           }
         />
       ) : null}
-      {componentFigure.firstClassComponents.length && !isExpanded ? (
+      {expandable &&
+      componentFigure.firstClassComponents.length &&
+      !isExpanded ? (
         <div>
           <button
             onClick={() => {
@@ -95,7 +99,9 @@ function DictionaryEntryComponentsTreeMember({
           </button>
         </div>
       ) : null}
-      {componentFigure.firstClassComponents.length && isExpanded ? (
+      {expandable &&
+      componentFigure.firstClassComponents.length &&
+      isExpanded ? (
         <div>
           <button
             onClick={() => {

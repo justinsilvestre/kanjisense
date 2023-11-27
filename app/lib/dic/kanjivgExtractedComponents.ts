@@ -55,6 +55,7 @@ export const kanjivgExtractedComponents: {
   'GWS-U8FF7-K': ["謎", [8, 17]],
   'GWS-U6728-01': ["林", [1, 4]],
   '⻗': ['雲', [1, 8]],
+  '𠂭': ['鹵', [5, 10]]
 };
 
 

@@ -4,14 +4,16 @@ import { useHoverPopper } from "./useHoverPopper";
 
 export function AncientCharacterFormSection({
   svgPaths: paths,
+  className,
 }: {
   svgPaths: string[];
+  className?: string;
 }) {
   const popper = useHoverPopper({});
 
   return (
     <div
-      className="relative text-center flex flex-col gap-4 align-center justify-center"
+      className={`relative text-center flex flex-col gap-4 align-center justify-center ${className}`}
       ref={popper.setReferenceElement}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}
@@ -21,14 +23,11 @@ export function AncientCharacterFormSection({
       onFocus={popper.handleFocus}
       onBlur={popper.handleBlur}
     >
-      <h2 className="text-center text-gray-500">
-        ancient form{paths.length > 1 ? "s" : ""}
-      </h2>
       <div>
         {paths.map((path) => (
           <div
             key={path}
-            className="inline-block [width:4rem] [height:4rem] border-solid border-2 border-red-900/80 rounded-md"
+            className="inline-block [width:3rem] [height:3rem] border-solid border-2 border-red-900/80 rounded-md"
           >
             <ShuowenSvg path={path} />
           </div>
