@@ -84,7 +84,7 @@ export function DictEntryReadings({
 
   return (
     <section
-      className={`flex flex-row rounded-lg shadow-lg shadow-black/20 bg-gray-50 ${className}`}
+      className={`flex flex-row rounded-lg shadow-md shadow-black/20 bg-gray-50 ${className}`}
     >
       <div className=" flex flex-row flex-wrap justify-evenly gap-4 p-3">
         <div className="text-left">

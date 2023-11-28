@@ -1507,9 +1507,8 @@ export const VowelHints = {
         earlier borrowings
       </MiddleChineseTranscriptionLink>{" "}
       into Japanese, <G g="î" /> was sometimes interpreted with Japanese{" "}
-      <R>-e</R>
-      rather than <R>-i</R>. Before <i>labial consonants</i> <G g="p" />{" "}
-      <G g="pʻ" /> <G g="b" /> <G g="m" />, this vowel triggered{" "}
+      <R>-e</R> rather than <R>-i</R>. Before <i>labial consonants</i>{" "}
+      <G g="p" /> <G g="pʻ" /> <G g="b" /> <G g="m" />, this vowel triggered{" "}
       <MiddleChineseTranscriptionLink hash="dentilabialization">
         dentilabialization
       </MiddleChineseTranscriptionLink>

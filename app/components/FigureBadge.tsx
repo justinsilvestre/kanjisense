@@ -5,7 +5,7 @@ import {
   BadgeProps,
   isSecondaryVariant,
 } from "~/features/dictionary/badgeFigure";
-import { KvgJsonData } from "~/features/dictionary/KvgJsonData";
+import type { KvgJsonData } from "~/features/dictionary/KvgJsonData";
 
 const GETA_BLOCK_CHARACTER = "〓";
 

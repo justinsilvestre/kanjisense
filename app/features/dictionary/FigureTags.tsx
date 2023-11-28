@@ -237,7 +237,7 @@ function FigureTag({
       <li
         className={`${className} cursor-default`}
         ref={setReferenceElement}
-        onMouseEnter={openPopper}
+        onMouseMove={openPopper}
         onMouseLeave={closePopper}
         onFocus={openPopper}
         onBlur={closePopper}
@@ -249,14 +249,14 @@ function FigureTag({
           ? createPortal(
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <div
-                className={`-m-2 [border:2px inset #afafaf33] p-3 shadow-gray-400 shadow transition-opacity duration-300 [width:18rem] [max-height:88v]  [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl text-sm`}
+                className={`-m-2 [border:2px inset #afafaf33] p-3 shadow-gray-400 shadow transition-opacity duration-300 [width:18rem] [max-height:88v]  [background-color:rgba(255,255,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl text-sm`}
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}
               >
                 {popoverContent}
               </div>,
-              document.body,
+              document.getElementById("overlay") || document.body,
             )
           : null}
       </li>

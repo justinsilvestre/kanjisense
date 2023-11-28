@@ -69,7 +69,7 @@ export function SingleFigureDictionaryEntry({
     >
       <div className="SingleFigureDictionaryEntry_left max-lg:basis-full [min-width:calc(100%-18rem)] flex gap-4 flex-col flex-grow ">
         <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center ">
-          <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3">
+          <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3 flex-grow">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
@@ -110,7 +110,7 @@ export function SingleFigureDictionaryEntry({
             </div>
 
             <DictionaryHeadingMeanings
-              className="flex-1 text-xl"
+              className="flex-1 text-xl flex-col"
               headingsMeanings={getHeadingsMeanings(figure)}
             />
 
@@ -121,9 +121,9 @@ export function SingleFigureDictionaryEntry({
             />
           </div>
 
-          <div className="flex flex-1 flex-col gap-4">
+          <div className="flex flex-grow-[9999] flex-col gap-4">
             {
-              <div className="SingleFigureDictionaryEntry_topRight basis-full flex-1 border-4 border-solid border-black/10 rounded-lg p-2 [min-width:15rem] flex gap-4 flex-col">
+              <div className="SingleFigureDictionaryEntry_topRight basis-full flex-1 [min-height:5rem] border-4 border-solid border-black/10 rounded-lg p-2 [min-width:15rem] flex gap-4 flex-col">
                 <div className="flex-1 flex flex-col justify-center gap-4">
                   {figureIsAtomic ? (
                     <div className="text-center">atomic component</div>
@@ -216,62 +216,73 @@ export function SingleFigureDictionaryEntry({
       </div>
 
       {isUnicodeCharacter || variants?.length ? (
-        <div className="flex flex-row lg:flex-col lg:items-center self-stretch flex-shrink flex-grow lg:[min-width:19rem]">
+        <div className="flex flex-row flex-wrap gap-4 mb-4 lg:flex-col lg:items-center self-stretch flex-shrink flex-grow ">
           {variants?.length ? (
-            <div className="flex-1 flex flex-col justify-center">
-              <h3 className="text-center">
-                {variants.findIndex((v) => v.id === figure.id) + 1} of{" "}
-                {variants.length} variants
-              </h3>
-              <div className="flex flex-wrap lg:flex-col  bg-black/10 p-2">
-                {variants.map((v) => {
-                  return v.id === figure.id ? (
-                    <span
-                      key={v.id}
-                      className=" border-solid rounded-xl bg-white"
-                    >
-                      <FigureBadge
+            <section className="flex-grow-[9999] [min-width:14rem] lg:[min-width:none] flex justify-center items-center ">
+              <div className="lg:overflow-auto lg:[max-height:60vh] p-4 justify-center  bg-black/10 shadow-inner shadow-black/25">
+                <h3 className="text-center text-gray-600 mb-4">
+                  <strong>
+                    {variants.findIndex((v) => v.id === figure.id) + 1}
+                  </strong>{" "}
+                  of <strong>{variants.length}</strong> variants
+                </h3>
+                <div className="flex flex-wrap lg:flex-col justify-center">
+                  {variants.map((v) => {
+                    return v.id === figure.id ? (
+                      <span
+                        key={v.id}
+                        className=" border-solid rounded-xl bg-white shadow-md shadow-black/20"
+                      >
+                        <FigureBadge
+                          width={6}
+                          key={v.id}
+                          id={v.id}
+                          badgeProps={v}
+                          className={`inline-block m-2 hover:opacity-100 `}
+                        />
+                      </span>
+                    ) : (
+                      <FigurePopoverBadge
                         width={6}
                         key={v.id}
                         id={v.id}
                         badgeProps={v}
-                        className={`inline-block m-2 hover:opacity-100 `}
+                        className={`inline-block m-2 hover:opacity-100 opacity-80`}
                       />
-                    </span>
-                  ) : (
-                    <FigurePopoverBadge
-                      width={6}
-                      key={v.id}
-                      id={v.id}
-                      badgeProps={v}
-                      className={`inline-block m-2 hover:opacity-100 opacity-70`}
-                    />
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            </section>
           ) : (
             <div className="flex-1"> </div>
           )}
           {isUnicodeCharacter ? (
-            <div>
-              <p>
-                in your browser: <span className="text-2xl">{figure.id}</span>
+            <div className="[min-width:17rem] flex-grow flex lg:flex-col">
+              <p className="px-2">
+                in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
+                <br />{" "}
+                {radicalIndexes?.length ? (
+                  <section>
+                    traditional radical:{" "}
+                    {radicalIndexes?.map((radicalIndex) => (
+                      <span key={radicalIndex?.radical.character}>
+                        <DictLink
+                          figureId={radicalIndex.radical.character}
+                          className="no-underline hover:underline"
+                        >
+                          {radicalIndex.radical.number}&nbsp;
+                          <span className="">
+                            {radicalIndex.radical.character}
+                          </span>
+                          &nbsp; (+{radicalIndex.remainder})
+                        </DictLink>{" "}
+                      </span>
+                    ))}
+                  </section>
+                ) : null}
               </p>
-              {radicalIndexes?.length ? (
-                <section>
-                  radical:{" "}
-                  {radicalIndexes?.map((radicalIndex) => (
-                    <span key={radicalIndex?.radical.character}>
-                      <DictLink figureId={radicalIndex.radical.character}>
-                        {radicalIndex.radical.character} (
-                        {radicalIndex.radical.number}+{radicalIndex.remainder})
-                      </DictLink>{" "}
-                    </span>
-                  ))}
-                </section>
-              ) : null}
 
               {figureIsStandaloneCharacter || figure.isPriority ? (
                 <ExternalDictionaryLinks figureId={figure.id} className="" />

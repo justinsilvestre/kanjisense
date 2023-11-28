@@ -57,11 +57,6 @@ export default function FigureDetailsPage() {
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
-        {figure.variantGroup ? (
-          <h1>
-            {figure.variantGroup?.id}: {figure.variantGroup?.variants.join(" ")}
-          </h1>
-        ) : null}
         <SingleFigureDictionaryEntry figure={figure} variants={variants} />
       </main>
     </DictionaryLayout>

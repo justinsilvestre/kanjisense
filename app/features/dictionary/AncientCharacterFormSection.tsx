@@ -59,7 +59,7 @@ export function AncientCharacterFormSection({
                 <span className="[font-variant:small-caps]">CE</span>).
               </p>
             </div>,
-            document.body,
+            document.getElementById("overlay") || document.body,
           )
         : null}
     </div>

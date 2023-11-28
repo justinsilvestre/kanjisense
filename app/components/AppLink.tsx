@@ -29,6 +29,7 @@ export function DictLink({
   children,
   figureId,
   focusOnLoad,
+  className,
 }: LinkProps<{ figureId: string; focusOnLoad?: boolean }>) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
@@ -38,18 +39,27 @@ export function DictLink({
   }, [figureId, focusOnLoad]);
 
   return (
-    <AppLink key={figureId} to={`/dict/${figureId}`} linkRef={linkRef}>
+    <AppLink
+      key={figureId}
+      to={`/dict/${figureId}`}
+      linkRef={linkRef}
+      className={className}
+    >
       {children}
     </AppLink>
   );
 }
 
-export const BrowseCharactersLink = ({ children }: LinkProps) => (
-  <AppLink to="/browse/characters">{children}</AppLink>
+export const BrowseCharactersLink = ({ children, className }: LinkProps) => (
+  <AppLink to="/browse/characters" className={className}>
+    {children}
+  </AppLink>
 );
 
-export const BrowseComponentsLink = ({ children }: LinkProps) => (
-  <AppLink to="/browse/components">{children}</AppLink>
+export const BrowseComponentsLink = ({ children, className }: LinkProps) => (
+  <AppLink to="/browse/components" className={className}>
+    {children}
+  </AppLink>
 );
 
 export const MiddleChineseTranscriptionLink = ({

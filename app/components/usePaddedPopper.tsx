@@ -59,7 +59,7 @@ export function usePaddedPopper({
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
     null,
   );
-  const { styles, attributes } = usePopper(
+  const { styles, attributes, state, update, forceUpdate } = usePopper(
     referenceElement,
     popperElement,
     options,
@@ -98,6 +98,9 @@ export function usePaddedPopper({
     ) => void,
     styles,
     attributes,
+    state,
+    update,
+    forceUpdate,
     handleClickPopper,
   };
 }

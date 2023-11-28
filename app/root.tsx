@@ -31,11 +31,15 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full relative">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <div
+          id="overlay"
+          className="fixed w-full h-full top-0 left-0 bottom-0 right-0 overflow-hidden pointer-events-none"
+        ></div>
       </body>
     </html>
   );
