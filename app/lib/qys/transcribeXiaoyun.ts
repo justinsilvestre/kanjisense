@@ -429,7 +429,6 @@ export function transcribe(
       : transcribe韻母!(syllable);
 
   let initialRealization: string;
-  // if (母組 === "莊" && (韻 === "臻" || 等 === "二" || 韻 === "庚"))
   if (
     母組 === "莊" &&
     // 2rd row or having underdot 臻庚

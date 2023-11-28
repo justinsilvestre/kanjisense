@@ -114,6 +114,16 @@ async function getDbInput() {
       kaihe: yuntuJson[xiaoyunNumber][3] || null,
       dengOrChongniu: yuntuJson[xiaoyunNumber][4] || null,
     };
+
+    if (
+      dbInput[xiaoyunNumber].cycleHead === "庚" &&
+      dbInput[xiaoyunNumber].dengOrChongniu === "三" &&
+      dbInput[xiaoyunNumber].initial === "生" &&
+      dbInput[xiaoyunNumber].tone === "入"
+    ) {
+      // undoing inconsistency with Kan-on
+      dbInput[xiaoyunNumber].dengOrChongniu = "二";
+    }
   }
   return dbInput;
 }
