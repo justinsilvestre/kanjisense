@@ -65,14 +65,18 @@ function DictionaryEntryComponentsTreeMember({
       ? parseActiveSoundMarkValue(parentFigure.activeSoundMarkValue)
       : null;
   return (
-    <div>
+    <div className="relative flex flex-col">
       <FigurePopoverBadge
         id={componentFigure.id}
         badgeProps={getBadgeProps(componentFigure)}
         width={6}
+        className="mx-auto "
       />
-      <FigureKeywordDisplay figure={componentFigure} />
-      <br />
+      <div className="inline-flex flex-col items-center [max-width:10rem] mt-2 mb-1">
+        <div>
+          <FigureKeywordDisplay figure={componentFigure} />
+        </div>
+      </div>
       {parentActiveSoundMark ? (
         <OnAndGuangyunReadings
           katakanaOn={parentActiveSoundMark.katakana}

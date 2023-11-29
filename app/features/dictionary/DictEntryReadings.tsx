@@ -60,14 +60,6 @@ export function DictEntryReadings({
 
   if (!readings) return null;
 
-  // const guangyun = readings?.guangyunYunjing
-  //   ? parrseAndAbbreviateGuangyun({ guangyunJsons: readings.guangyunYunjing })
-  //   : null;
-
-  // const syllables = guangyun?.transcriptions.flatMap((x) =>
-  //   x.syllableProfile ? x : [],
-  // );
-
   const unihanReadings = fetcherData?.readings?.unihan15;
   const mandarinReadings = unihanReadings?.kMandarin?.length
     ? unihanReadings.kMandarin
@@ -84,9 +76,9 @@ export function DictEntryReadings({
 
   return (
     <section
-      className={`flex flex-row rounded-lg shadow-md shadow-black/20 bg-gray-50 ${className}`}
+      className={`flex flex-col md:flex-row rounded-lg shadow-md shadow-black/20 bg-gray-50 ${className}`}
     >
-      <div className=" flex flex-row flex-wrap justify-evenly gap-4 p-3">
+      <div className="basis-full md:basis-7/12  flex flex-row flex-wrap justify-evenly gap-4 p-3">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>on&apos;yomi</i>{" "}
@@ -225,7 +217,7 @@ export function DictEntryReadings({
             : "more"}
         </div>
       </div>
-      <div className="border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-l border-l-gray-600 border-opacity-30 p-4 text-center transition-all">
+      <div className="md:basis-5/12 border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-t-gray-600/40 border-t md:border-t-0 md:border-l md:border-l-gray-600/40 p-4 text-center transition-all">
         <div>
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>kun&apos;yomi</i>

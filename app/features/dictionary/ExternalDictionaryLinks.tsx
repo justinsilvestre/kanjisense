@@ -11,14 +11,14 @@ export function ExternalDictionaryLinks({
 }) {
   return (
     <section className={className}>
-      <ul className="text-sm">
+      <ul className="p-2">
         <li className="">
           <A
             href={`https://jisho.org/search/*${encodeURIComponent(figureId)}*`}
-            className="group"
+            className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle px-2 py-1">
+              <span className="inline-block align-middle pr-3">
                 <MdIcons.MdList />
               </span>
               words containing {figureId}
@@ -28,15 +28,15 @@ export function ExternalDictionaryLinks({
             </span>
           </A>
         </li>
-        <li className="">
+        <li className=" leading-loose">
           <A
             href={`https://tatoeba.org/eng/sentences/search?query=${encodeURIComponent(
               figureId,
             )}&from=jpn&to=und`}
-            className="group"
+            className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle px-2 py-1">
+              <span className="inline-block align-middle pr-3">
                 <MdIcons.MdChatBubbleOutline />
               </span>
               sentences containing {figureId}
@@ -46,15 +46,15 @@ export function ExternalDictionaryLinks({
             </span>
           </A>
         </li>
-        <li className="">
+        <li className=" leading-loose">
           <A
             href={`https://en.wiktionary.org/wiki/${encodeURIComponent(
               figureId,
             )}#Japanese`}
-            className="group"
+            className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle px-2 py-1">
+              <span className="inline-block align-middle pr-3">
                 <MdIcons.MdTranslate />
               </span>
               multilingual definitions
@@ -64,15 +64,20 @@ export function ExternalDictionaryLinks({
             </span>
           </A>
         </li>
-        <li className="">
+        <li className=" leading-loose">
           <A
             href={`https://dictionary.goo.ne.jp/word/kanji/${encodeURIComponent(
               figureId,
             )}/`}
-            className="group"
+            className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle px-2 py-1">和</span>
+              <span
+                className="inline-block align-middle pr-3 text-sm"
+                role="img"
+              >
+                和
+              </span>
               in Japanese
             </span>
             <span className="ml-2 opacity-70 group-hover:opacity-100 group-hover:underline text-xs">

@@ -157,7 +157,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("殻", "⿹&GWS-U23A8A-VAR-001;几")
       .replaceIds("穀", "⿹𣪊禾")
 
-      .addIdsAfterTransforms("GWS-U20087-11", "⿻丿一") // reverse stroke order	𠂇
+      .addAtomicIdsLine("GWS-U20087-11") // reverse stroke order	𠂇
       .replaceIds("有", "⿸&GWS-U20087-11;月")
       .replaceIds("右", "⿸&GWS-U20087-11;口")
       .replaceIds("㡀", "⿻丷⿻巾八[GT]	⿱小⿵冂小[JK]	⿱⺌⿵冂小[X]")
@@ -356,7 +356,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["𤴔", "⿱乛止"],
         ["犬", "⿻大丶"],
         ["舟", "⿱丶⿻丹丨"],
-        ["𠂇", "⿻一丿"],
 
         ["卑", "⿱&CDP-89BE;十[GTK]	⿱甶⿶十丿[J]"],
         ["𤰞", "⿱田⿶十丿"], // not in kanjijump; might be used for traditional zh

@@ -29,7 +29,11 @@ export function FigurePopoverBadge({
   width?: number;
 }) {
   return (
-    <FigurePopover figureId={id} badgeProps={badgeProps} className={className}>
+    <FigurePopover
+      figureId={id}
+      badgeProps={badgeProps}
+      className={`${className}`}
+    >
       <FigureBadge id={id} badgeProps={badgeProps} width={width} />
     </FigurePopover>
   );

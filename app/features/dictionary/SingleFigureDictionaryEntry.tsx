@@ -67,7 +67,7 @@ export function SingleFigureDictionaryEntry({
       className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap items-start`}
       key={figure.id}
     >
-      <div className="SingleFigureDictionaryEntry_left max-lg:basis-full [min-width:calc(100%-18rem)] flex gap-4 flex-col flex-grow ">
+      <div className="SingleFigureDictionaryEntry_left max-lg:basis-full [min-width:calc(100%-20rem)] flex gap-4 flex-col flex-grow ">
         <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center ">
           <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3 flex-grow">
             <div
@@ -191,6 +191,9 @@ export function SingleFigureDictionaryEntry({
         </div>
 
         {figure.reading &&
+        (figure.reading.selectedOnReadings?.length ||
+          figure.reading.kanjidicEntry?.onReadings?.length ||
+          figure.reading.kanjidicEntry?.kunReadings?.length) &&
         !(
           !figureIsStandaloneCharacter &&
           figure.isPriority &&
@@ -258,7 +261,7 @@ export function SingleFigureDictionaryEntry({
             <div className=""> </div>
           )}
           {isUnicodeCharacter ? (
-            <div className="[min-width:17rem] flex-wrap gap-4 flex-grow flex lg:flex-col lg:flex-nowrap justify-between">
+            <div className="[min-width:19rem] flex-wrap gap-4 flex-grow flex lg:flex-col lg:flex-nowrap lg:justify-end max-lg:justify-between">
               <p className="px-2 [min-width:10rem]">
                 in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
@@ -287,7 +290,7 @@ export function SingleFigureDictionaryEntry({
               {figureIsStandaloneCharacter || figure.isPriority ? (
                 <ExternalDictionaryLinks
                   figureId={figure.id}
-                  className="[min-width:17rem] "
+                  className="[min-width:19rem] text-sm"
                 />
               ) : null}
             </div>
@@ -324,16 +327,16 @@ export function FigureKeywordDisplay({
     figure.mnemonicKeyword.split(" {{")[0];
 
   if (figure.mnemonicKeyword === figure.keyword)
-    return <>&quot;{mnemonicKeywordWithoutReference}&quot;</>;
+    return <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>;
 
   if (isStandaloneCharacterVariant(figure))
     return (
       <>
-        {figure.keyword} &quot;{mnemonicKeywordWithoutReference}&quot;
+        {figure.keyword} <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>
       </>
     );
 
-  return <>&quot;{mnemonicKeywordWithoutReference}&quot;</>;
+  return <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>;
 }
 
 function parseRadicalNumbers(unicodeRadicalText: string) {

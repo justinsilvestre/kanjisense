@@ -26,6 +26,7 @@ interface LoaderData {
 
 const isPriorityComponentWhere = {
   isPriority: true,
+  listsAsComponent: { isEmpty: false },
   asComponent: {
     allUses: {
       some: {
@@ -38,7 +39,10 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
   const priorityAtomicComponents = await prisma.kanjisenseFigure.findMany({
     select: { ...badgeFigureSelect, image: true },
     orderBy: { aozoraAppearances: "desc" },
-    where: { ...isPriorityComponentWhere, componentsTree: { equals: [] } },
+    where: {
+      ...isPriorityComponentWhere,
+      componentsTree: { equals: [] },
+    },
   });
   const priorityCompoundComponents = await prisma.kanjisenseFigure.findMany({
     select: { ...badgeFigureSelect, image: true },

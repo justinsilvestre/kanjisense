@@ -17,7 +17,9 @@ const VARIANT_TYPES_PRIORITY = [
 const variantTypesPrioritySet = new Set(VARIANT_TYPES_PRIORITY);
 
 const entrySourceOverrides: Partial<Record<string, string[]>> = {
-  罙: ["深"], // was treating 罙 as a variant of 冞
+  罙: ["深"], // was treating 罙 as a variant of 冞,
+  様: ["样"], // was taking 橡
+  樣: ["样"], // was taking 橡
 };
 
 export async function findGuangyunEntriesByShinjitai(

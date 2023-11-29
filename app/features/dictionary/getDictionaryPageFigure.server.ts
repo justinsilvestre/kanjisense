@@ -1,6 +1,7 @@
 import { prisma } from "~/db.server";
 
 import { badgeFigureSelect } from "./badgeFigure";
+import { PRELOADED_USES_COUNT } from "./PRELOADED_USES_COUNT";
 
 export type DictionaryPageSearchedFigure = NonNullable<
   Awaited<ReturnType<typeof getDictionaryPageFigure>>
@@ -166,7 +167,7 @@ export const dictionaryPageFigureInclude = {
     },
   },
   firstClassUses: {
-    take: 15,
+    take: PRELOADED_USES_COUNT,
 
     distinct: ["parentId" as const, "componentId" as const],
 
