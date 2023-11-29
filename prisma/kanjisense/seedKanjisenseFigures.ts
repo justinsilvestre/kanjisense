@@ -338,6 +338,7 @@ async function connectFirstClassComponents(
           component,
           componentsToDirectUsesPrimaryVariants,
           figuresToVariantGroups,
+          componentsTreesInput,
         )
       ) {
         resolved.add(`${chainString},${component}`);

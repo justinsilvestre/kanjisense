@@ -18,33 +18,48 @@ import {
 } from "~/features/dictionary/badgeFigure";
 
 interface LoaderData {
-  components: Record<string, BadgeProps>;
-  totalComponents: number;
+  atomicComponents: Record<string, BadgeProps>;
+  compoundComponents: Record<string, BadgeProps>;
+  totalAtomicComponents: number;
+  totalCompoundComponents: number;
 }
 
-async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
-  const priorityComponents = await prisma.kanjisenseFigure.findMany({
-    select: { ...badgeFigureSelect, image: true },
-    orderBy: { aozoraAppearances: "desc" },
-    where: {
-      isPriority: true,
-      asComponent: {
-        allUses: {
-          some: {
-            isPriority: true,
-          },
-        },
+const isPriorityComponentWhere = {
+  isPriority: true,
+  asComponent: {
+    allUses: {
+      some: {
+        isPriority: true,
       },
     },
+  },
+};
+async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
+  const priorityAtomicComponents = await prisma.kanjisenseFigure.findMany({
+    select: { ...badgeFigureSelect, image: true },
+    orderBy: { aozoraAppearances: "desc" },
+    where: { ...isPriorityComponentWhere, componentsTree: { equals: [] } },
   });
-  const components: Record<string, BadgeProps> = Object.fromEntries(
-    priorityComponents.map((figure) => {
-      return [figure.id, getBadgeProps(figure)];
-    }),
-  );
+  const priorityCompoundComponents = await prisma.kanjisenseFigure.findMany({
+    select: { ...badgeFigureSelect, image: true },
+    orderBy: { aozoraAppearances: "desc" },
+    where: { ...isPriorityComponentWhere, componentsTree: { not: [] } },
+  });
+
+  const atomicMap: Record<string, BadgeProps> = {};
+  const compoundMap: Record<string, BadgeProps> = {};
+
+  for (const figure of priorityAtomicComponents) {
+    atomicMap[figure.id] = getBadgeProps(figure);
+  }
+  for (const figure of priorityCompoundComponents) {
+    compoundMap[figure.id] = getBadgeProps(figure);
+  }
   return {
-    components: components,
-    totalComponents: priorityComponents.length,
+    atomicComponents: atomicMap,
+    compoundComponents: compoundMap,
+    totalAtomicComponents: priorityAtomicComponents.length,
+    totalCompoundComponents: priorityCompoundComponents.length,
   };
 }
 
@@ -56,13 +71,26 @@ export const loader: LoaderFunction = async () => {
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
-  const { components, totalComponents } = loaderData;
+  const {
+    atomicComponents,
+    compoundComponents,
+    totalAtomicComponents,
+    totalCompoundComponents,
+  } = loaderData;
+  const totalComponents = totalAtomicComponents + totalCompoundComponents;
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
-        <h1>{totalComponents} components total</h1>
+        <h1>{totalComponents} componentstotal</h1>
+        <h2>{totalAtomicComponents} atomic components total</h2>
         <section>
-          {Object.entries(components).map(([id, badgeProps]) => (
+          {Object.entries(atomicComponents).map(([id, badgeProps]) => (
+            <FigureBadgeLink key={id} id={id} badgeProps={badgeProps} />
+          ))}
+        </section>
+        <h2>{totalCompoundComponents} compound components total</h2>
+        <section>
+          {Object.entries(compoundComponents).map(([id, badgeProps]) => (
             <FigureBadgeLink key={id} id={id} badgeProps={badgeProps} />
           ))}
         </section>

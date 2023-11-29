@@ -255,11 +255,11 @@ export function SingleFigureDictionaryEntry({
               </div>
             </section>
           ) : (
-            <div className="flex-1"> </div>
+            <div className=""> </div>
           )}
           {isUnicodeCharacter ? (
-            <div className="[min-width:17rem] flex-grow flex lg:flex-col">
-              <p className="px-2">
+            <div className="[min-width:17rem] flex-wrap gap-4 flex-grow flex lg:flex-col lg:flex-nowrap justify-between">
+              <p className="px-2 [min-width:10rem]">
                 in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
                 <br />{" "}
@@ -285,7 +285,10 @@ export function SingleFigureDictionaryEntry({
               </p>
 
               {figureIsStandaloneCharacter || figure.isPriority ? (
-                <ExternalDictionaryLinks figureId={figure.id} className="" />
+                <ExternalDictionaryLinks
+                  figureId={figure.id}
+                  className="[min-width:17rem] "
+                />
               ) : null}
             </div>
           ) : null}
@@ -302,7 +305,9 @@ type KeywordDisplayFigure = Pick<
   IsPriorityComponentQueryFigure &
   StandaloneCharacterVariantQueryFigure;
 
-function isFigureAtomic(figure: DictionaryPageFigureWithPriorityUses): boolean {
+function isFigureAtomic(
+  figure: Pick<KanjisenseFigure, "componentsTree">,
+): boolean {
   return Array.isArray(figure.componentsTree)
     ? figure.componentsTree.length === 0
     : false;

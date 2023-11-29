@@ -775,7 +775,7 @@ export const ConsonantHints = {
       initial consonant usually shows up as a plain /j/ sound in <i>on'yomi</i>,
       in which case it is written <G g="y" />. But where it shows up as a W-
       sound in <i>on'yomi</i>, we write it like this, with the grave accent{" "}
-      <G g="◌̀" /> there to distinguish it from <G g="w" />, which didn't involve
+      <G g="`" /> there to distinguish it from <G g="w" />, which didn't involve
       an initial [j] Y-like glide.
     </>
   ),
@@ -964,7 +964,7 @@ export const MedialHints = {
     <>
       like [w] or [u]. It may have been fronted to something like [y] or [ʉ] in
       certain contexts, especially before <i>front vowels</i> (written here{" "}
-      <G g="e" /> and <G g="i" />. The grave accent <G g="◌̀" /> marks that this
+      <G g="e" /> and <G g="i" />. The grave accent <G g="`" /> marks that this
       final belongs to the category{" "}
       <i>
         <MiddleChineseTranscriptionLink hash={chongniuLinkHash}>
@@ -1241,7 +1241,7 @@ export const VowelHints = {
   // for those with macron OR distinguished from macron
   AMacron: () => (
     <>
-      The <strong>macron</strong> <G g="◌̄" /> is used to distinguish{" "}
+      The <strong>macron</strong> <G g="¯" /> is used to distinguish{" "}
       <G g="āi" /> <G g="ām" /> <G g="āp" /> from bare <G g="ai" /> <G g="am" />{" "}
       <G g="ap" />. These groups eventually merged, but at the start, the group
       with bare <G g="a" /> may have had vowels that were relatively more
@@ -1272,7 +1272,7 @@ export const VowelHints = {
   ),
   A2: () => (
     <>
-      The <strong>underdot</strong> <G g="◌̣" /> in this notation marks finals in
+      The <strong>underdot</strong> <G g=" ̣" /> in this notation marks finals in
       the category <b>Division II</b>. Scholars tend to reconstruct these finals
       with a more front vowel than Division I, so something like [a], [æ], or
       even [aɨ]. It's widely agreed that these finals had an R-like or L-like
@@ -1291,7 +1291,7 @@ export const VowelHints = {
   ),
   A2DoubleDot: () => (
     <>
-      The <strong>double-dot</strong> <G g="◌̈" /> in this notations marks finals
+      The <strong>double-dot</strong> <G g="¨" /> in this notations marks finals
       that were likely pronounced with a more front or higher vowel compared to
       finals with only the underdot, something like [ɛ] or [ai], though some
       scholars have posited a distinction of vowel length between these finals.
@@ -1313,7 +1313,7 @@ export const VowelHints = {
   ),
   A2Ring: () => (
     <>
-      The <strong>ring</strong> <G g="◌̊" /> in this notation is used in finals
+      The <strong>ring</strong> <G g="°" /> in this notation is used in finals
       ending in <G g="ạ̊ng" /> and <G g="ạ̊k" />, which scholars tend to
       reconstruct with an element of roundedness or height, like [ɔ] or [aɨw].
       As with all the other vowels with the underdot, these may have had a
@@ -1350,7 +1350,7 @@ export const VowelHints = {
   ),
   A3Circumflex: () => (
     <>
-      The <strong>circumflex accent</strong> <G g="◌̂" /> is used in this
+      The <strong>circumflex accent</strong> <G g="^" /> is used in this
       notation to mark finals <G g="âng" /> <G g="âk" /> <G g="âi" />{" "}
       <G g="ân" /> <G g="ât" /> <G g="âm" /> <G g="âp" />. These finals may have
       had a Y-like sound before the vowel, and where this is reflected in{" "}
@@ -1379,7 +1379,7 @@ export const VowelHints = {
   ),
   E3Circumflex: () => (
     <>
-      The <strong>circumflex</strong> accent <G g="◌̂" /> is used in this
+      The <strong>circumflex</strong> accent <G g="^" /> is used in this
       notation to mark finals <G g="(w)ên" /> <G g="(w)êt" /> <G g="(w)êm" />{" "}
       <G g="(w)êp" />
       , which modern scholars generally agree had the same respective vowels as
@@ -1395,7 +1395,7 @@ export const VowelHints = {
   ),
   E3Underdot: () => (
     <>
-      The <strong>underdot</strong> <G g="◌̣" /> is used to mark some finals in
+      The <strong>underdot</strong> <G g=" ̣" /> is used to mark some finals in
       this notation <G g="ẹng" /> <G g="ẹk" /> which, at least at an early stage
       of Middle Chinese, were probably identical to the{" "}
       <a href="#division-ii">Division II</a> finals <G g="ạng" /> <G g="ạk" />,
@@ -1405,7 +1405,7 @@ export const VowelHints = {
   ),
   E4: () => (
     <>
-      The <strong>grave accent</strong> <G g="◌̀" /> over E in this notation
+      The <strong>grave accent</strong> <G g="`" /> over E in this notation
       marks finals in the category <b>Division IV</b>. At earlier stages of
       Middle Chinese, these finals were probably pronounced with a vowel
       something like [ɛ] or [e]. That is, they were identical to the
@@ -1526,14 +1526,14 @@ export const VowelHints = {
   ),
   IUnderdot: () => (
     <>
-      The <strong>underdot</strong> <G g="ị" /> in this notation is used for
+      The <strong>underdot</strong> <G g=" ̣" /> in this notation is used for
       finals <G g="ịn" /> and <G g="ịt" />, which scholars suspect were
       originally identical to those written here <G g="īn" /> and <G g="īt" />,
       i.e. with a high, front vowel like [i]. But at an early stage of Middle
-      Chinese, preceding <i>retroflex consonants</i> slightly changed the vowel
-      to something lower, more like [ɪ]. These finals were still usually
-      considered good rhymes, and they would merge back together again in later
-      stages of Chinese.
+      Chinese, preceding <i>retroflex consonants</i> (also written with the
+      underdot in this notation) slightly changed the vowel to something lower,
+      more like [ɪ]. These finals were still usually considered good rhymes, and
+      they would merge back together again in later stages of Chinese.
     </>
   ),
   O1: () => (
@@ -1568,7 +1568,7 @@ export const VowelHints = {
       The <strong>breve</strong> <G g="ŏ" /> in this notation is used to mark
       finals <G g="ŏng" /> <G g="ŏk" /> which were pronounced with a more
       central vowel than their counterparts without breve, something like [ə].
-      All these finals with breve remained distinct after the merger of{" "}
+      These finals with O-breve remained a distinct group after the merger of{" "}
       <G g="ōng" /> <G g="ōk" /> with <G g="ong" /> <G g="ok" />.
     </>
   ),

@@ -12,6 +12,9 @@ function encodeFigure(key: string) {
   return key.match(/^[A-Z]+-/) ? `&${key};` : key;
 }
 
+// ids chars:
+// ⿰ ⿱ ⿲ ⿳ ⿴ ⿵ ⿶ ⿷ ⿸ ⿹ ⿺ ⿻
+
 // TODO:
 // - 牙 needs variant
 // - 灼 right part has ichi. check leopard as well
@@ -72,7 +75,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["旆", "⿸&GWS-U3AC3-05;巿"],
         ["旂", "⿸&GWS-U3AC3-05;斤"],
         ["𣃘", "⿸&GWS-U3AC3-05;丨"],
-        ["旅", "⿸&GWS-U3AC3-05;&CDP-8C66;"],
+        ["旅", "⿸&GWS-U3AC3-05;&GWS-CDP-8C66-VAR-001;"], // different in kyuujitai?
         ["旋", "⿸&GWS-U3AC3-05;疋"],
         ["族", "⿸&GWS-U3AC3-05;矢"],
         ["旜", "⿸&GWS-U3AC3-05;亶"],
@@ -87,6 +90,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["旛", "⿸&GWS-U3AC3-05;番"],
       ])
 
+      .addAtomicIdsLine("GWS-CDP-8C66-VAR-001")
       .addIdsAfterTransforms("GWS-U2FF3-U5405-U2000E-U27607", "⿱&CDP-8CA3;𧘇")
       .replaceIds("囊", "⿳&CDP-8DDD;冖&GWS-U2FF3-U5405-U2000E-U27607;")
 
@@ -127,7 +131,10 @@ export const patchIds = (patchedIds: PatchedIds) => {
         "GWS-U2FF1-CDP-88A1-U4E00",
         "&GWS-U2FF1-CDP-88A1-U4E00;",
       )
-      .replaceIds("壺", "⿱士&GWS-U2FF1-CDP-88A1-U4E00;")
+      .replaceIds("壺", "⿲士冖&GWS-U2FF1-CDP-88A1-U4E00;")
+      // bottom of 壷
+      .replaceIds("CDP-8A49", "⿱冖&GWS-FITZGERALD_COP17;")
+      .addAtomicIdsLine("GWS-FITZGERALD_COP17")
 
       .extractFigure("⿹⺄𠂇", "GWS-U5342-VAR-001")
       .addIdsAfterTransforms("GWS-U524D-UE0101", "⿱䒑&GWS-U5216-VAR-002;")
@@ -604,6 +611,18 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["杓", "⿰&GWS-U6728-01;勺"],
         ["灼", "⿰火勺"],
       ])
+
+      .replaceIds("考", "⿸耂&CDP-89BF;")
+      .addAtomicIdsLine("CDP-89BF")
+      .replaceIds("呉", "⿳⿴口𠃑一八[GJ]	⿱⿳口𠃑一八[T]")
+
+      .extractFigureFromIdsSegment({
+        // 牛 from 牜 left
+        componentIdsSegment: "⿰牛",
+        extractedFigureId: "牜",
+        newCompleteIds: "牜",
+        replacementIdsSegment: "⿰牜",
+      })
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );
