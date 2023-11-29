@@ -74,5 +74,9 @@ export const MiddleChineseLink = ({ children }: LinkProps) => (
   <AppLink to={`/dict/middle-chinese`}>{children}</AppLink>
 );
 
+export const BrowseSoundComponentsLink = ({ children }: LinkProps) => (
+  <AppLink to="/browse/sound-components">{children}</AppLink>
+);
+
 // also atomic components
 // sound components

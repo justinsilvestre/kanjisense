@@ -215,6 +215,7 @@ export default function MiddleChinese() {
       [{isOpen ? "hide" : "show"} contents]
     </button>
   );
+
   useTocHighlighting();
 
   return (
@@ -1006,7 +1007,8 @@ export default function MiddleChinese() {
               <section>
                 <p>
                   Here are a couple more sound changes in addition to those
-                  affecting <a href="#sibilants">sibilants</a> mentioned above.
+                  affecting <ScrollLink hash="sibilants">sibilants</ScrollLink>{" "}
+                  mentioned above.
                 </p>
                 <p>
                   While linguists broadly agree about all the sound changes
@@ -1206,11 +1208,11 @@ export default function MiddleChinese() {
                 <p>
                   These voiced sounds also had an effect on the pitch of the
                   following vowel, causing some{" "}
-                  <a href="#tones">tonal splits and mergers</a>. The comparison
-                  to Korean consonants may be especially apt, as these Korean
-                  "voiced" or "breathy" also have the effect of lowering the
-                  pitch of following vowels, and have merged recently with their
-                  unvoiced aspirated counterparts.
+                  <ScrollLink hash="tones">tonal splits and mergers</ScrollLink>
+                  . The comparison to Korean consonants may be especially apt,
+                  as these Korean "voiced" or "breathy" also have the effect of
+                  lowering the pitch of following vowels, and have merged
+                  recently with their unvoiced aspirated counterparts.
                 </p>
               </section>
               <section
@@ -1447,44 +1449,47 @@ export default function MiddleChinese() {
               scholars today flat-out deny the existence of "Middle Chinese" as
               a single coherent spoken language.
             </p>
-            <h5 id="a-thought-experiment">A thought experiment</h5>
-            <p>
-              So let's leave reconstructions aside for a moment, and instead,
-              let's work through a little thought experiment.
-            </p>
-            <p>
-              Say we were to travel back in time to around the Heian period in
-              Japan, circa 800 C.E., give or take a century or two—in other
-              words, the same time as the Tang/Song dynasties. If we came across
-              one of the many Japanese speakers at the time who were familiar
-              with Chinese, and asked them to{" "}
-              <strong>
-                learn the Latin alphabet and try writing down Chinese in it
-              </strong>
-              , what kind of system might they come up with?
-            </p>
-            <p>
-              This might seem like a strange question, but in answering it, we
-              can go actually a long way towards answering questions about
-              Middle Chinese sounds in a satisfying way.
-            </p>
+            <div id="a-thought-experiment">
+              <h5>A thought experiment</h5>
+              <p>
+                So let's leave reconstructions aside for a moment, and instead,
+                let's work through a little thought experiment.
+              </p>
+              <p>
+                Say we were to travel back in time to around the Heian period in
+                Japan, circa 800 C.E., give or take a century or two—in other
+                words, the same time as the Tang/Song dynasties. If we came
+                across one of the many Japanese speakers at the time who were
+                familiar with Chinese, and asked them to{" "}
+                <strong>
+                  learn the Latin alphabet and try writing down Chinese in it
+                </strong>
+                , what kind of system might they come up with?
+              </p>
+              <p>
+                This might seem like a strange question, but in answering it, we
+                can go actually a long way towards answering questions about
+                Middle Chinese sounds in a satisfying way.
+              </p>
 
-            <p>
-              So let's think. Our new Japanese friend from 800 C.E. probably
-              would come up with a rather flawed system for writing Chinese
-              sounds. With no training in modern linguistics, they might
-              represent some consonants and vowels ambiguously. There would also
-              be some interference from their native Early Middle Japanese,
-              causing them to confuse some sounds, and leave out some sounds
-              altogether. But despite these shortcomings, they would likely
-              represent the sounds of Middle Chinese more faithfully than you or
-              I could possibly manage to. After all, this is a living, breathing
-              contemporary of Tang China—some Japanese people at the time
-              actually traveled to China and joined the upper ranks of society
-              there. So this person would have learned the language from actual
-              speakers of Tang-era Chinese, giving them such insight into the
-              language as we could only dream of.
-            </p>
+              <p>
+                So let's think. Our new Japanese friend from 800 C.E. probably
+                would come up with a rather flawed system for writing Chinese
+                sounds. With no training in modern linguistics, they might
+                represent some consonants and vowels ambiguously. There would
+                also be some interference from their native Early Middle
+                Japanese, causing them to confuse some sounds, and leave out
+                some sounds altogether. But despite these shortcomings, they
+                would likely represent the sounds of Middle Chinese more
+                faithfully than you or I could possibly manage to. After all,
+                this is a living, breathing contemporary of Tang China—some
+                Japanese people at the time actually traveled to China and
+                joined the upper ranks of society there. So this person would
+                have learned the language from actual speakers of Tang-era
+                Chinese, giving them such insight into the language as we could
+                only dream of.
+              </p>
+            </div>
             <section
               className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id="kan-on"
@@ -1496,9 +1501,12 @@ export default function MiddleChinese() {
               </h4>
               <p>
                 I invite you to think of the Middle Chinese notation used here
-                as something like our imaginary friend from Heian Japan might
-                have come up with. It doesn't reconstruct specific consonants
-                and vowels, but it's designed to bring you{" "}
+                as something like{" "}
+                <ScrollLink hash="a-thought-experiment">
+                  our imaginary friend from Heian Japan
+                </ScrollLink>{" "}
+                might have come up with. It doesn't reconstruct specific
+                consonants and vowels, but it's designed to bring you{" "}
                 <b>closer to the source</b> than any scholarly reconstruction.
               </p>
               <p>
@@ -1642,7 +1650,10 @@ export default function MiddleChinese() {
                 the biggest challenge by far because of the lack of direct
                 evidence for Middle Chinese vowels (as opposed to the
                 consonants, which scholars back in the day so kindly{" "}
-                <a href="#consonants">named and listed out for us</a>).
+                <ScrollLink hash="consonants">
+                  named and listed out for us
+                </ScrollLink>
+                ).
               </p>
               <p>
                 So while we may never know exactly what the vowels of Middle
@@ -1675,9 +1686,9 @@ export default function MiddleChinese() {
               <h4>Caveats {showContentsButton}</h4>
               <p>
                 The{" "}
-                <a href="#kan-on">
+                <ScrollLink hash="kan-on">
                   <i>Kan-on</i>
-                </a>{" "}
+                </ScrollLink>{" "}
                 are a good starting point for understanding the sounds of Middle
                 Chinese, because, <i>in the vast majority of cases</i>, the
                 compilers of <i>Kan-on</i> wrote down Middle Chinese sounds in a
@@ -1695,9 +1706,10 @@ export default function MiddleChinese() {
                 there are some places where it deviates from <i>Kan-on</i>.
                 Thankfully, these cases are few, since the <i>Kan-on</i> are
                 mostly consistent. In the following section on the{" "}
-                <a href="#finals">finals</a>, I go into specific cases of
-                inconsistencies within the <i>Kan-on</i>. But here's the general
-                idea of how this writing system handles these inconsistencies.
+                <ScrollLink hash="finals">finals</ScrollLink>, I go into
+                specific cases of inconsistencies within the <i>Kan-on</i>. But
+                here's the general idea of how this writing system handles these
+                inconsistencies.
               </p>
               <h5>
                 Plain old inconsistencies in <i>Kan-on</i>
@@ -1744,13 +1756,15 @@ export default function MiddleChinese() {
                 some of these patterns, above all when they are especially
                 conspicuous and easy to explain with a general rule. This helps
                 maintain some consistency with <i>Kan-on</i>, and keeps us from{" "}
-                <a href="#the-problem-with-reconstructions">
+                <ScrollLink hash="the-problem-with-reconstructions">
                   encroaching on the territory of reconstructions
-                </a>
+                </ScrollLink>
                 . Thus, we write those example characters' readings as 水{" "}
                 <G g="śuīˬ" /> and 軌 <G g="kwīˬ" /> You may consider the{" "}
-                <a href="#kan-on-diacritics">diacritics on the vowel</a> in such
-                cases as a hint that the vowel in question might exhibit
+                <ScrollLink hash="kan-on-diacritics">
+                  diacritics on the vowel
+                </ScrollLink>{" "}
+                in such cases as a hint that the vowel in question might exhibit
                 alternation like this.
               </p>
               <p>
@@ -1804,9 +1818,9 @@ export default function MiddleChinese() {
                   <thead>
                     <th>
                       sound in{" "}
-                      <a href="#kan-on">
+                      <ScrollLink hash="kan-on">
                         <i>Kan-on</i>
-                      </a>
+                      </ScrollLink>
                     </th>
                     <th>spelling</th>
                   </thead>
@@ -1890,17 +1904,19 @@ export default function MiddleChinese() {
                   As an exception, the <G g="w" /> in syllables <G g="ʾwo" />{" "}
                   <G g="ʾwōng" /> <G g="ʾwōk" /> <G g="ʾwīk" /> likely does not
                   correspond to a Chinese medial /w/, but represents{" "}
-                  <a href="#vowel-alternation">vowel alternation</a> in those
-                  finals.
+                  <ScrollLink hash="vowel-alternation">
+                    vowel alternation
+                  </ScrollLink>{" "}
+                  in those finals.
                 </p>
                 <p>
                   The <G g="y" /> written here{" "}
-                  <a href="#e-chongniu">before E</a> and{" "}
-                  <a href="#i-chongniu">before I</a> here is not exactly a
-                  medial, and is not a relic of <i>Kan-on</i>. This is a way of
-                  marking certain syllables in a category called{" "}
-                  <i>Chongniu IV</i>, which is discussed in more detail in the
-                  sections for those "main vowels" below. When these{" "}
+                  <ScrollLink hash="e-chongniu">before E</ScrollLink> and{" "}
+                  <ScrollLink hash="i-chongniu">before I</ScrollLink> here is
+                  not exactly a medial, and is not a relic of <i>Kan-on</i>.
+                  This is a way of marking certain syllables in a category
+                  called <i>Chongniu IV</i>, which is discussed in more detail
+                  in the sections for those "main vowels" below. When these{" "}
                   <i>Chongniu IV</i> syllables also had a [w]-like medial in
                   Middle Chinese, they take the grave accent over the W{" "}
                   <G g="ẁ" />, rather than an added <G g="y" />.
@@ -2751,9 +2767,9 @@ export default function MiddleChinese() {
               Chinese, but there were certainly more than five. So this notation
               makes heavy use of diacritic marks to represent vowel distinctions
               that were not recorded in the{" "}
-              <a href="#kan-on">
+              <ScrollLink hash="kan-on">
                 <i>Kan-on</i>
-              </a>{" "}
+              </ScrollLink>{" "}
               tradition. As this isn't a precise phonetic notation, these
               diacritic marks are applied in a way that is to some extent
               arbitrary. But there are some general principles that are worth
@@ -2862,9 +2878,9 @@ export default function MiddleChinese() {
                   <thead>
                     <th>
                       main vowel in{" "}
-                      <a href="#kan-on">
+                      <ScrollLink hash="kan-on">
                         <i>Kan-on</i>
-                      </a>
+                      </ScrollLink>
                     </th>
                     <th className="">Div. I</th>
                     <th className="">Div. II</th>
@@ -2943,9 +2959,9 @@ export default function MiddleChinese() {
                 <i>Go-on</i> originate from a wave of borrowings into Japanese
                 that happened early on in the Middle Chinese period. The{" "}
                 <i>Go-on</i> readings were largely replaced by the{" "}
-                <a href="#kan-on">
+                <ScrollLink hash="kan-on">
                   <i>Kan-on</i>
-                </a>{" "}
+                </ScrollLink>{" "}
                 which form the basis for the vowels in this notation. Not all
                 characters have an attested <i>Go-on</i> reading, but some{" "}
                 <i>Go-on</i> readings are used in very common words, and are
@@ -3056,9 +3072,11 @@ export default function MiddleChinese() {
                 circumflex is a characteristic mark of Division III. The
                 circumflex on <G g="î" /> doesn't mark Division III (since that
                 job is done by the main vowel I), but it doubles as a mark of{" "}
-                <a href="#dentilabialiation">dentilabialization</a> on preceding
-                labial consonants <G g="p" /> <G g="pʻ" /> <G g="b" />{" "}
-                <G g="m" />.
+                <ScrollLink hash="dentilabialiation">
+                  dentilabialization
+                </ScrollLink>{" "}
+                on preceding labial consonants <G g="p" /> <G g="pʻ" />{" "}
+                <G g="b" /> <G g="m" />.
               </p>
             </section>
             <section
@@ -3371,9 +3389,9 @@ function Nav({
   return (
     <nav className={`${isOpen ? "" : "hiddenNav"} md:block ${className}`}>
       <h5 className="leading-6">
-        <a href="#top">
-          A rough guide to Middle&nbsp;Chinese&nbsp;pronunciation
-        </a>{" "}
+        <ScrollLink hash="top">
+          A rough guide to Middle Chinese pronunciation
+        </ScrollLink>{" "}
       </h5>
       <ul>
         {sections.map(({ level, id, navText, children }) => (
@@ -3452,5 +3470,24 @@ export function B({ children }: PropsWithChildren) {
     <strong>
       <u>{children}</u>
     </strong>
+  );
+}
+
+function ScrollLink({ hash, children }: PropsWithChildren<{ hash: string }>) {
+  const handleClick = (e: React.MouseEvent) => {
+    const browserIsFirefox =
+      navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+    console.log({ browserIsFirefox });
+    if (browserIsFirefox) {
+      e.preventDefault();
+      document.querySelector(`#${hash}`)?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  };
+  return (
+    <a href={`#${hash}`} onClick={handleClick}>
+      {children}
+    </a>
   );
 }

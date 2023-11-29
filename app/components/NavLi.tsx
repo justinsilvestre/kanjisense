@@ -13,7 +13,7 @@ export function NavLi({
       behavior: "smooth",
     });
     clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => (window.location.hash = hash), 1000);
+    timeout.current = setTimeout(() => (window.location.hash = hash), 1200);
     e.preventDefault();
   };
   useEffect(() => {
