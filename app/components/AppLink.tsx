@@ -78,5 +78,6 @@ export const BrowseSoundComponentsLink = ({ children }: LinkProps) => (
   <AppLink to="/browse/sound-components">{children}</AppLink>
 );
 
-// also atomic components
-// sound components
+export const AboutLink = ({ children }: LinkProps) => (
+  <AppLink to="/about">{children}</AppLink>
+);

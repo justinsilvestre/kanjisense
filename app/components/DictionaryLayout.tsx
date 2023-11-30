@@ -1,6 +1,13 @@
 import { ScrollRestoration, Scripts, LiveReload } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
 
+import {
+  AboutLink,
+  BrowseCharactersLink,
+  BrowseComponentsLink,
+  BrowseSoundComponentsLink,
+} from "./AppLink";
+
 export default function DictionaryLayout({
   children,
   className,
@@ -23,6 +30,22 @@ export default function DictionaryLayout({
           <span className=" text-gray-700">kanji</span>
           <span className=" text-blue-900">sense</span>
         </h1>
+        <ul>
+          <li>
+            <BrowseComponentsLink>components</BrowseComponentsLink>
+          </li>
+          <li>
+            <BrowseCharactersLink>characters</BrowseCharactersLink>
+          </li>
+          <li>
+            <BrowseSoundComponentsLink>
+              sound components
+            </BrowseSoundComponentsLink>
+          </li>
+          <li>
+            <AboutLink>about Kanjisense</AboutLink>
+          </li>
+        </ul>
       </footer>
       <ScrollRestoration />
       <Scripts />

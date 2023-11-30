@@ -472,7 +472,7 @@ export const ConsonantHints = {
   ),
   Ts: () => (
     <>
-      [t͡s] as in{" "}
+      [ts] as in{" "}
       <i>
         ca<B>ts</B>
       </i>
@@ -481,7 +481,7 @@ export const ConsonantHints = {
   ),
   Dz: () => (
     <>
-      [d͡z]
+      [dz]
       <i>
         {" "}
         as in a<B>dz</B>e
@@ -490,12 +490,12 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [t͡s] or [t͡sʰ].
+      , thus shifting towards [ts] or [tsʰ].
     </>
   ),
   Tsx: () => (
     <>
-      [t͡sʰ] as in the consecutive <G g="ts h" bold /> in the phrase{" "}
+      [tsʰ] as in the consecutive <G g="ts h" bold /> in the phrase{" "}
       <i>
         hi<B>ts h</B>ard
       </i>
@@ -561,36 +561,36 @@ export const ConsonantHints = {
   ),
   Tsr: () => (
     <>
-      [t͡ʂ] like Mandarin <G g="zh" />.
+      [tʂ] like Mandarin <G g="zh" />.
     </>
   ),
   Tsj: {
     Early: () => (
       <>
-        [t͡ɕ] like Mandarin <G g="j" />.
+        [tɕ] like Mandarin <G g="j" />.
       </>
     ),
     Late: () => (
       <>
-        [t͡ʂ] like Mandarin <G g="zh" />.
+        [tʂ] like Mandarin <G g="zh" />.
       </>
     ),
   },
   Tsrx: () => (
     <>
-      [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+      [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
     </>
   ),
   Tsjx: {
     Early: () => (
       <>
-        [t͡ɕʰ] like Polish <G g="ć" /> or Mandarin <G g="q" />.
+        [tɕʰ] like Polish <G g="ć" /> or Mandarin <G g="q" />.
       </>
     ),
     Late: () => (
       <>
         <>
-          [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+          [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
         </>
       </>
     ),
@@ -618,7 +618,7 @@ export const ConsonantHints = {
     Late: () => (
       <>
         [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />
-        , and sometimes [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+        , and sometimes [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
         At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
@@ -636,7 +636,7 @@ export const ConsonantHints = {
     Late: () => (
       <>
         [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />
-        , and sometimes [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+        , and sometimes [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
         At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
@@ -661,12 +661,12 @@ export const ConsonantHints = {
   Dzr: {
     Early: () => (
       <>
-        [d͡ȥ] like Polish <G g="dż" /> or <G g="drz" />, or Russian <G g="дж" />.
+        [dȥ] like Polish <G g="dż" /> or <G g="drz" />, or Russian <G g="дж" />.
       </>
     ),
     Late: () => (
       <>
-        [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
+        [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
         this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
@@ -678,12 +678,12 @@ export const ConsonantHints = {
   Dzj: {
     Early: () => (
       <>
-        [d͡ʑ] like Polish <G g="dź" />.
+        [dʑ] like Polish <G g="dź" />.
       </>
     ),
     Late: () => (
       <>
-        [t͡ʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
+        [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
         this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy

@@ -11,7 +11,7 @@ export function ExternalDictionaryLinks({
 }) {
   return (
     <section className={className}>
-      <ul className="p-2">
+      <ul className=" pl-1">
         <li className="">
           <A
             href={`https://jisho.org/search/*${encodeURIComponent(figureId)}*`}

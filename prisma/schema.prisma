@@ -130,6 +130,7 @@ model KanjisenseFigure {
   isPriority           Boolean
   listsAsComponent     String[]
   listsAsCharacter     String[]
+  shinjitaiInBaseKanji String?
   aozoraAppearances    Int
   // aozoraAppearancesCountingVariants Int
   activeSoundMarkValue String?

@@ -1,4 +1,3 @@
-import { SbgyXiaoyun } from "@prisma/client";
 import { LinksFunction } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
@@ -7,6 +6,7 @@ import { Fragment, useRef, useState } from "react";
 import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureId.sino";
 
+import { abbreviateTranscriptions } from "./abbreviateTranscriptions";
 import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
 import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.server";
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
@@ -108,10 +108,10 @@ export function DictEntryReadings({
               return (
                 <Fragment key={onReading}>
                   <OnReading
+                    rare={readings.selectedOnReadings.length !== 0}
                     onReading={onReading}
                     i={i + readings.selectedOnReadings.length}
                   />
-                  {readings.selectedOnReadings.length ? "*" : ""}
                 </Fragment>
               );
             })}
@@ -124,7 +124,9 @@ export function DictEntryReadings({
                 <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
                 <dd className="text-xl leading-9 text-gray-700 drop-shadow-[0_2px_2px_rgb(0_0_0_/_.4)]">
                   <div className="scallop text-center">
-                    {abbreviateAndTranscribe(guangyunReadings)}
+                    {abbreviateTranscriptions(
+                      guangyunReadings.map((g) => transcribeSbgyXiaoyun(g)),
+                    )}
                   </div>
                 </dd>
               </div>
@@ -274,51 +276,25 @@ export function DictEntryReadings({
   );
 }
 
-function abbreviateAndTranscribe(guangyunReadings: SbgyXiaoyun[]) {
-  if (!guangyunReadings.length) return null;
-  if (guangyunReadings.length === 1)
-    return transcribeSbgyXiaoyun(guangyunReadings[0]);
-
-  const tonelessTranscriptionsToTones = new Map<string, string[]>();
-  for (const reading of guangyunReadings) {
-    const transcription = transcribeSbgyXiaoyun(reading);
-    const toneMark = /[ˬˎ]/.test(transcription.at(-1) || "")
-      ? transcription.at(-1) || ""
-      : "";
-    const tonelessTranscription = toneMark
-      ? transcription.slice(0, -1)
-      : transcription;
-    const tones =
-      tonelessTranscriptionsToTones.get(tonelessTranscription) ?? [];
-    tonelessTranscriptionsToTones.set(tonelessTranscription, tones);
-    tones.push(toneMark);
-  }
-  const abbreviated: string[] = [];
-  for (const [tonelessTranscription, tones] of tonelessTranscriptionsToTones) {
-    if (tones.length === 1) {
-      abbreviated.push(tonelessTranscription + tones[0]);
-    } else {
-      const withParens =
-        tones.length > 1 && tones.includes("")
-          ? (toneMarks: string) => `₍${toneMarks}₎`
-          : (toneMarks: string) => toneMarks;
-
-      abbreviated.push(`${tonelessTranscription}${withParens(tones.join(""))}`);
-    }
-  }
-
-  return abbreviated.join(" ");
-}
-
-function OnReading({ onReading, i }: { onReading: string; i: number }) {
+function OnReading({
+  onReading,
+  i,
+  rare = false,
+}: {
+  onReading: string;
+  i: number;
+  rare?: boolean;
+}) {
   return (
     <span key={onReading} className="inline-block">
-      <span className="block">
+      <span className={`block ${rare ? "text-yellow-950/60" : ""}`}>
         {i !== 0 ? "・" : ""}
-        {onReading.replace(/-/g, "")}{" "}
+        {onReading.replace(/-/g, "")}
       </span>
       <span className=" block text-center text-sm uppercase">
-        {kanjidicKanaToRomaji(onReading.replace(/-/g, ""))}
+        {rare ? <span className="text-yellow-950/60">(</span> : null}
+        <span>{kanjidicKanaToRomaji(onReading.replace(/-/g, ""))}</span>
+        {rare ? <span className="text-yellow-950/60">)</span> : null}{" "}
       </span>
     </span>
   );

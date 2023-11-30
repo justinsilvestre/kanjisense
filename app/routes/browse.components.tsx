@@ -17,12 +17,7 @@ import {
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
 
-interface LoaderData {
-  atomicComponents: Record<string, BadgeProps>;
-  compoundComponents: Record<string, BadgeProps>;
-  totalAtomicComponents: number;
-  totalCompoundComponents: number;
-}
+type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
 const isPriorityComponentWhere = {
   isPriority: true,
@@ -44,26 +39,53 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
       componentsTree: { equals: [] },
     },
   });
+  const priorityCompoundComponentCharacters =
+    await prisma.kanjisenseFigure.findMany({
+      select: { ...badgeFigureSelect, image: true },
+      orderBy: { aozoraAppearances: "desc" },
+      where: {
+        ...isPriorityComponentWhere,
+        componentsTree: { not: [] },
+        OR: [
+          { listsAsCharacter: { isEmpty: false } },
+          {
+            shinjitaiInBaseKanji: { not: null },
+          },
+        ],
+      },
+    });
   const priorityCompoundComponents = await prisma.kanjisenseFigure.findMany({
     select: { ...badgeFigureSelect, image: true },
     orderBy: { aozoraAppearances: "desc" },
-    where: { ...isPriorityComponentWhere, componentsTree: { not: [] } },
+    where: {
+      ...isPriorityComponentWhere,
+      componentsTree: { not: [] },
+      id: {
+        notIn: priorityCompoundComponentCharacters.map((c) => c.id),
+      },
+    },
   });
-
   const atomicMap: Record<string, BadgeProps> = {};
-  const compoundMap: Record<string, BadgeProps> = {};
+  const compoundComponentsMap: Record<string, BadgeProps> = {};
+  const compoundComponentCharacterssMap: Record<string, BadgeProps> = {};
 
   for (const figure of priorityAtomicComponents) {
     atomicMap[figure.id] = getBadgeProps(figure);
   }
   for (const figure of priorityCompoundComponents) {
-    compoundMap[figure.id] = getBadgeProps(figure);
+    compoundComponentsMap[figure.id] = getBadgeProps(figure);
+  }
+  for (const figure of priorityCompoundComponentCharacters) {
+    compoundComponentCharacterssMap[figure.id] = getBadgeProps(figure);
   }
   return {
     atomicComponents: atomicMap,
-    compoundComponents: compoundMap,
+    compoundComponents: compoundComponentsMap,
+    compoundComponentCharacters: compoundComponentCharacterssMap,
     totalAtomicComponents: priorityAtomicComponents.length,
     totalCompoundComponents: priorityCompoundComponents.length,
+    totalCompoundComponentCharacters:
+      priorityCompoundComponentCharacters.length,
   };
 }
 
@@ -78,10 +100,15 @@ export default function FigureDetailsPage() {
   const {
     atomicComponents,
     compoundComponents,
+    compoundComponentCharacters,
     totalAtomicComponents,
     totalCompoundComponents,
+    totalCompoundComponentCharacters,
   } = loaderData;
-  const totalComponents = totalAtomicComponents + totalCompoundComponents;
+  const totalComponents =
+    totalAtomicComponents +
+    totalCompoundComponents +
+    totalCompoundComponentCharacters;
   return (
     <DictionaryLayout>
       <main className="flex flex-col gap-2">
@@ -92,11 +119,26 @@ export default function FigureDetailsPage() {
             <FigureBadgeLink key={id} id={id} badgeProps={badgeProps} />
           ))}
         </section>
-        <h2>{totalCompoundComponents} compound components total</h2>
+        <h2>
+          {totalCompoundComponents} compound components <em>not</em> doubling as
+          standalone characters
+        </h2>
         <section>
           {Object.entries(compoundComponents).map(([id, badgeProps]) => (
             <FigureBadgeLink key={id} id={id} badgeProps={badgeProps} />
           ))}
+        </section>
+
+        <h2>
+          {totalCompoundComponentCharacters} compound components doubling as
+          standalone characters
+        </h2>
+        <section>
+          {Object.entries(compoundComponentCharacters).map(
+            ([id, badgeProps]) => (
+              <FigureBadgeLink key={id} id={id} badgeProps={badgeProps} />
+            ),
+          )}
         </section>
       </main>
     </DictionaryLayout>

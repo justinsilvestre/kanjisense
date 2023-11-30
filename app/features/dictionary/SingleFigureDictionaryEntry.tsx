@@ -219,10 +219,10 @@ export function SingleFigureDictionaryEntry({
       </div>
 
       {isUnicodeCharacter || variants?.length ? (
-        <div className="flex flex-row flex-wrap gap-4 mb-4 lg:flex-col lg:items-center self-stretch flex-shrink flex-grow ">
+        <div className="lg:[max-height:100vh] flex flex-row flex-wrap gap-4 mb-4 lg:flex-col lg:items-center self-stretch flex-shrink flex-grow ">
           {variants?.length ? (
             <section className="flex-grow-[9999] [min-width:14rem] lg:[min-width:none] flex justify-center items-center ">
-              <div className="lg:overflow-auto lg:[max-height:60vh] p-4 justify-center  bg-black/10 shadow-inner shadow-black/25">
+              <div className="lg:overflow-auto lg:[max-height:57vh] p-4 justify-center  bg-black/10 shadow-inner shadow-black/25">
                 <h3 className="text-center text-gray-600 mb-4">
                   <strong>
                     {variants.findIndex((v) => v.id === figure.id) + 1}
@@ -262,7 +262,7 @@ export function SingleFigureDictionaryEntry({
           )}
           {isUnicodeCharacter ? (
             <div className="[min-width:19rem] flex-wrap gap-4 flex-grow flex lg:flex-col lg:flex-nowrap lg:justify-end max-lg:justify-between">
-              <p className="px-2 [min-width:10rem]">
+              <p className="px-4 [min-width:10rem]">
                 in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
                 <br />{" "}

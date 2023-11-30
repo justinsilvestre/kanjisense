@@ -50,7 +50,15 @@ export const dictionaryPageFigureInclude = {
       firstClassUses: {
         where: {
           parent: {
-            isPriority: true,
+            isPriority: { equals: true },
+            OR: [
+              {
+                listsAsCharacter: {
+                  isEmpty: false,
+                },
+              },
+              { shinjitaiInBaseKanji: { not: null } },
+            ],
           },
         },
       },

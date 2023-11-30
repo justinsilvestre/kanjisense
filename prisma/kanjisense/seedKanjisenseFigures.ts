@@ -8,7 +8,7 @@ import {
 } from "@prisma/client";
 import yaml from "yaml";
 
-import { baseKanjiSet } from "~/lib/baseKanji";
+import { baseKanji, baseKanjiSet } from "~/lib/baseKanji";
 import { files } from "~/lib/files.server";
 import { getFigureById } from "~/models/figureRelation.server";
 
@@ -106,6 +106,19 @@ export async function seedKanjisenseFigures(
         ),
     );
 
+    const oldVariantsToBaseKanji = new Map<string, string>(
+      await prisma.kanjiDbVariant
+        .findMany({
+          where: {
+            base: { in: [...baseKanji] },
+            variantType: KanjiDbVariantType.OldStyle,
+          },
+        })
+        .then((variants) =>
+          variants.map((v) => [v.variant, v.base] as [string, string]),
+        ),
+    );
+
     console.log("preparing priority figures...");
     const dbInput = new Map<string, CreateKanjisenseFigureInput>();
     for (const figure of [
@@ -127,6 +140,7 @@ export async function seedKanjisenseFigures(
         meaning?.mnemonicKeyword ?? null,
         true,
         meaning ?? null,
+        oldVariantsToBaseKanji.get(id),
       );
       dbInput.set(id, createFigureInput);
     }
@@ -150,6 +164,7 @@ export async function seedKanjisenseFigures(
         null,
         false,
         meaning,
+        oldVariantsToBaseKanji.get(id),
       );
       dbInput.set(id, createFigureInput);
     }
@@ -170,6 +185,7 @@ export async function seedKanjisenseFigures(
         aozoraAppearances: 0, // to fill in below
         variantGroupId: r.variantGroupId,
         readingId: readingIds.has(r.id) ? r.id : undefined,
+        shinjitaiInBaseKanji: r.shinjitaiInBaseKanji,
       })),
     });
 
@@ -261,6 +277,7 @@ interface CreateKanjisenseFigureInput {
   listsAsCharacter: string[];
   variantGroupId: string | null;
   meaning?: Awaited<ReturnType<typeof getFigureMeaningsText>>;
+  shinjitaiInBaseKanji: string | null;
 }
 
 export async function getFiguresToVariantGroups(prisma: PrismaClient) {
@@ -627,7 +644,8 @@ function getCreateFigureInput(
   mnemonicKeyword: string | null,
   isPriority: boolean,
   meaning: Awaited<ReturnType<typeof getFigureMeaningsText>> | null,
-) {
+  shinjitaiInBaseKanji: string | null = null,
+): CreateKanjisenseFigureInput {
   const figureId = figure.id;
 
   return {
@@ -639,6 +657,7 @@ function getCreateFigureInput(
     listsAsCharacter: [...getListsMembership(figureId)],
     variantGroupId: figure.variantGroupId,
     meaning,
+    shinjitaiInBaseKanji,
   };
 }
 

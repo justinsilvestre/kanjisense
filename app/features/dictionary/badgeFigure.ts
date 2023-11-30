@@ -28,6 +28,7 @@ export const badgeFigureSelect = {
   listsAsComponent: true,
   variantGroupId: true,
   aozoraAppearances: true,
+  shinjitaiInBaseKanji: true,
 
   _count: {
     select: {
@@ -64,11 +65,14 @@ export enum BadgeHue {
 
 export type StandaloneCharacterQueryFigure = Pick<
   DictionaryPageFigureWithPriorityUses,
-  "_count" | "listsAsCharacter"
+  "_count" | "listsAsCharacter" | "shinjitaiInBaseKanji"
 >;
+// different for characters in lists vs. variants of characters in lists.
 export function isStandaloneCharacter(figure: StandaloneCharacterQueryFigure) {
   return Boolean(
-    figure.listsAsCharacter.length || !figure._count.firstClassUses,
+    figure.listsAsCharacter.length ||
+      !figure._count.firstClassUses ||
+      figure.shinjitaiInBaseKanji,
   );
 }
 

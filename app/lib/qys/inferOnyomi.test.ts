@@ -39,4 +39,18 @@ describe("getAttestedOnFinals", () => {
       [InferredOnyomiType.AttestedGo]: ["ショウ"],
     });
   });
+
+  it("infers kanOn of 女", () => {
+    const syllable: QysSyllableProfile = {
+      initial: "孃",
+      cycleHead: "魚",
+      dengOrChongniu: null,
+      tone: Tone.上,
+      kaihe: null,
+    };
+    const inferredOnReadings = inferOnyomi(syllable);
+    expect(Object.fromEntries(inferredOnReadings)).toMatchObject({
+      [InferredOnyomiType.AttestedKan]: ["diYo", "niYo"],
+    });
+  });
 });

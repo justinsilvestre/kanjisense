@@ -1441,13 +1441,13 @@ export default function MiddleChinese() {
               "reconstructions" at all. This has to do with the peculiar nature
               of the most central pieces of evidence in Middle Chinese
               reconstructions, the <i>Qieyun</i> rhyme dictionary and the
-              so-called "rime tables". The historical importance of these
-              sources is beyond dispute, but it's equally unquestionable that
-              these sources offer little in the way of <b>direct evidence</b>{" "}
-              for reconstructing Chinese sounds. Because the very concept of
-              "Middle Chinese" is so intimately tied to these sources, many
-              scholars today flat-out deny the existence of "Middle Chinese" as
-              a single coherent spoken language.
+              so-called "rime tables". To sum it up briefly, the historical
+              importance of these sources is beyond dispute, but it's equally
+              unquestionable that these sources offer little in the way of{" "}
+              <b>direct evidence</b> for reconstructing Chinese sounds. Because
+              the very concept of "Middle Chinese" is so intimately tied to
+              these sources, many scholars today flat-out deny the existence of
+              "Middle Chinese" as a single coherent spoken language.
             </p>
             <div id="a-thought-experiment">
               <h5>A thought experiment</h5>
@@ -1516,7 +1516,7 @@ export default function MiddleChinese() {
                 Chinese to write down the sounds of the language. This has made
                 the <i>on'yomi</i> an invaluable resource for scholars and
                 anyone else trying to understand the sounds of Middle Chinese.
-                Therefore, this notation uses the <i>on'yomi</i> a starting
+                Therefore, this notation uses the <i>on'yomi</i> as a starting
                 point—in particular, those <i>on'yomi</i> which were recorded by
                 Japanese speakers around the Tang dynasty, known as{" "}
                 <b>

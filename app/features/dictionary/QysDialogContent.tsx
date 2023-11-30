@@ -152,12 +152,12 @@ export const QysDialogContent = ({
                 .sort((a, b) => {
                   return (
                     Math.min(
-                      ...inferredKanCandidatesToTypes[a].map((type) =>
+                      ...inferredKanCandidatesToTypes[b].map((type) =>
                         KAN_TYPES_PRIORITY.indexOf(type),
                       ),
                     ) -
                     Math.min(
-                      ...inferredKanCandidatesToTypes[b].map((type) =>
+                      ...inferredKanCandidatesToTypes[a].map((type) =>
                         KAN_TYPES_PRIORITY.indexOf(type),
                       ),
                     )

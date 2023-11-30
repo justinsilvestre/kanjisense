@@ -7,6 +7,8 @@ import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 
+const SUPPRESSED_SOUND_MARKS = new Set(["丿", "丶"]);
+
 export async function seedKanjisenseActiveSoundMarks(
   prisma: PrismaClient,
   force = false,
@@ -93,7 +95,10 @@ async function registerActiveSoundMarks(
       return phoneticMatchInDerivationChain;
     });
     const activeSoundMark = soundMarkCandidates[0];
-    if (activeSoundMark) {
+    if (
+      activeSoundMark &&
+      !SUPPRESSED_SOUND_MARKS.has(activeSoundMark.component)
+    ) {
       await prisma.kanjisenseFigure.update({
         where: { id },
         data: {
