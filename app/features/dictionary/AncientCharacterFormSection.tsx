@@ -13,7 +13,7 @@ export function AncientCharacterFormSection({
 
   return (
     <div
-      className={`relative text-center flex flex-col gap-4 align-center justify-center ${className}`}
+      className={`align-center relative flex flex-col justify-center gap-4 text-center ${className}`}
       ref={popper.setReferenceElement}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}
@@ -27,7 +27,7 @@ export function AncientCharacterFormSection({
         {paths.map((path) => (
           <div
             key={path}
-            className="inline-block [width:3rem] [height:3rem] border-solid border-2 border-red-900/80 rounded-md"
+            className="inline-block rounded-md border-2 border-solid border-red-900/80 [height:3rem] [width:3rem]"
           >
             <ShuowenSvg path={path} />
           </div>
@@ -36,7 +36,7 @@ export function AncientCharacterFormSection({
       {popper.isOpen
         ? createPortal(
             <div
-              className={`-m-2 [border:2px inset #afafaf33] p-3 shadow-gray-400 shadow transition-opacity duration-300 [width:18rem] [max-height:88v]  [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl text-sm`}
+              className={`[border:2px inset #afafaf33] -m-2 p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-xl`}
               ref={popper.setPopperElement}
               style={popper.styles.popper}
               {...popper.attributes.popper}

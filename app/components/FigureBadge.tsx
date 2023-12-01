@@ -39,7 +39,7 @@ export function FigureBadge({
 
   return (
     <div
-      className={`inline-block text-center align-bottom ${className} ${getColorClassName(
+      className={`inline-block text-center align-bottom ${className} ${getColorClasses(
         badgeProps.hue,
         badgeProps.aozoraAppearances,
       )} ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} $`}
@@ -58,10 +58,10 @@ export function FigureBadge({
       }}
     >
       <div
-        className={`bg-white text-lg outline-2 outline ${
+        className={`bg-white text-lg outline outline-2 ${
           badgeProps.isPriorityComponent ? "rounded-full" : ""
         } ${
-          getColorClassName(badgeProps.hue, badgeProps.aozoraAppearances).split(
+          getColorClasses(badgeProps.hue, badgeProps.aozoraAppearances).split(
             " ",
           )[1]
         }`}
@@ -90,167 +90,9 @@ export function FigureBadge({
   );
 }
 
-function getColorClassName(hue: BadgeHue, aozoraAppearances: number) {
-  let className = "";
+function getColorClasses(hue: BadgeHue, aozoraAppearances: number) {
   const frequencyClass = getFrequencyClass(aozoraAppearances);
-
-  if (hue === BadgeHue.KYOIKU) {
-    switch (frequencyClass) {
-      case FrequencyClass.Class1:
-        className = "bg-kyoiku-700 outline-kyoiku-800";
-        break;
-      case FrequencyClass.Class2:
-        className = "bg-kyoiku-700 outline-kyoiku-600";
-        break;
-      case FrequencyClass.Class3:
-        className = "bg-kyoiku-600 outline-kyoiku-700";
-        break;
-      case FrequencyClass.Class4:
-        className = "bg-kyoiku-600 outline-kyoiku-600";
-        break;
-      case FrequencyClass.Class5:
-        className = "bg-kyoiku-600 outline-kyoiku-500";
-        break;
-      case FrequencyClass.Class6:
-        className = "bg-kyoiku-500 outline-kyoiku-500";
-        break;
-      case FrequencyClass.Class7:
-        className = "bg-kyoiku-400 outline-kyoiku-500";
-        break;
-      case FrequencyClass.Class8:
-        className = "bg-kyoiku-300 outline-kyoiku-500";
-        break;
-      case FrequencyClass.Class9:
-        className = "bg-kyoiku-200 outline-kyoiku-500";
-        break;
-    }
-  }
-  if (hue === BadgeHue.JOYO) {
-    switch (frequencyClass) {
-      case FrequencyClass.Class1:
-        className = "bg-joyo-700 outline-joyo-800";
-        break;
-      case FrequencyClass.Class2:
-        className = "bg-joyo-700 outline-joyo-600";
-        break;
-      case FrequencyClass.Class3:
-        className = "bg-joyo-600 outline-joyo-700";
-        break;
-      case FrequencyClass.Class4:
-        className = "bg-joyo-600 outline-joyo-600";
-        break;
-      case FrequencyClass.Class5:
-        className = "bg-joyo-600 outline-joyo-500";
-        break;
-      case FrequencyClass.Class6:
-        className = "bg-joyo-500 outline-joyo-500";
-        break;
-      case FrequencyClass.Class7:
-        className = "bg-joyo-400 outline-joyo-500";
-        break;
-      case FrequencyClass.Class8:
-        className = "bg-joyo-300 outline-joyo-500";
-        break;
-      case FrequencyClass.Class9:
-        className = "bg-joyo-200 outline-joyo-500";
-        break;
-    }
-  }
-  if (hue === BadgeHue.HYOGAI) {
-    switch (frequencyClass) {
-      case FrequencyClass.Class1:
-        className = "bg-hyogai-700 outline-hyogai-800";
-        break;
-      case FrequencyClass.Class2:
-        className = "bg-hyogai-700 outline-hyogai-700";
-        break;
-      case FrequencyClass.Class3:
-        className = "bg-hyogai-700 outline-hyogai-600";
-        break;
-      case FrequencyClass.Class4:
-        className = "bg-hyogai-600 outline-hyogai-600";
-        break;
-      case FrequencyClass.Class5:
-        className = "bg-hyogai-600 outline-hyogai-500";
-        break;
-      case FrequencyClass.Class6:
-        className = "bg-hyogai-500 outline-hyogai-500";
-        break;
-      case FrequencyClass.Class7:
-        className = "bg-hyogai-500 outline-hyogai-400";
-        break;
-      case FrequencyClass.Class8:
-        className = "bg-hyogai-400 outline-hyogai-400";
-        break;
-      case FrequencyClass.Class9:
-        className = "bg-hyogai-300 outline-hyogai-500";
-        break;
-    }
-  }
-  if (hue === BadgeHue.JINMEIYO) {
-    switch (frequencyClass) {
-      case FrequencyClass.Class1:
-        className = "bg-jinmeiyo-700 outline-jinmeiyo-800";
-        break;
-      case FrequencyClass.Class2:
-        className = "bg-jinmeiyo-700 outline-jinmeiyo-700";
-        break;
-      case FrequencyClass.Class3:
-        className = "bg-jinmeiyo-600 outline-jinmeiyo-700";
-        break;
-      case FrequencyClass.Class4:
-        className = "bg-jinmeiyo-600 outline-jinmeiyo-600";
-        break;
-      case FrequencyClass.Class5:
-        className = "bg-jinmeiyo-600 outline-jinmeiyo-500";
-        break;
-      case FrequencyClass.Class6:
-        className = "bg-jinmeiyo-500 outline-jinmeiyo-600";
-        break;
-      case FrequencyClass.Class7:
-        className = "bg-jinmeiyo-500 outline-jinmeiyo-500";
-        break;
-      case FrequencyClass.Class8:
-        className = "bg-jinmeiyo-500 outline-jinmeiyo-600";
-        break;
-      case FrequencyClass.Class9:
-        className = "bg-jinmeiyo-400 outline-jinmeiyo-600";
-        break;
-    }
-  }
-  if (hue === BadgeHue.EXTRA) {
-    switch (frequencyClass) {
-      case FrequencyClass.Class1:
-        className = "bg-extra-700 outline-extra-800";
-        break;
-      case FrequencyClass.Class2:
-        className = "bg-extra-700 outline-extra-700";
-        break;
-      case FrequencyClass.Class3:
-        className = "bg-extra-600 outline-extra-700";
-        break;
-      case FrequencyClass.Class4:
-        className = "bg-extra-600 outline-extra-600";
-        break;
-      case FrequencyClass.Class5:
-        className = "bg-extra-600 outline-extra-500";
-        break;
-      case FrequencyClass.Class6:
-        className = "bg-extra-500 outline-extra-600";
-        break;
-      case FrequencyClass.Class7:
-        className = "bg-extra-500 outline-extra-500";
-        break;
-      case FrequencyClass.Class8:
-        className = "bg-extra-500 outline-extra-600";
-        break;
-      case FrequencyClass.Class9:
-        className = "bg-extra-400 outline-extra-600";
-        break;
-    }
-  }
-
-  return className;
+  return colorClasses[hue][frequencyClass];
 }
 
 enum FrequencyClass {
@@ -264,6 +106,64 @@ enum FrequencyClass {
   Class8,
   Class9,
 }
+
+const colorClasses = {
+  [BadgeHue.KYOIKU]: {
+    [FrequencyClass.Class1]: "bg-kyoiku-700 outline-kyoiku-800",
+    [FrequencyClass.Class2]: "bg-kyoiku-700 outline-kyoiku-600",
+    [FrequencyClass.Class3]: "bg-kyoiku-600 outline-kyoiku-700",
+    [FrequencyClass.Class4]: "bg-kyoiku-600 outline-kyoiku-600",
+    [FrequencyClass.Class5]: "bg-kyoiku-600 outline-kyoiku-500",
+    [FrequencyClass.Class6]: "bg-kyoiku-500 outline-kyoiku-500",
+    [FrequencyClass.Class7]: "bg-kyoiku-400 outline-kyoiku-500",
+    [FrequencyClass.Class8]: "bg-kyoiku-300 outline-kyoiku-500",
+    [FrequencyClass.Class9]: "bg-kyoiku-200 outline-kyoiku-500",
+  },
+  [BadgeHue.JOYO]: {
+    [FrequencyClass.Class1]: "bg-joyo-700 outline-joyo-800",
+    [FrequencyClass.Class2]: "bg-joyo-700 outline-joyo-600",
+    [FrequencyClass.Class3]: "bg-joyo-600 outline-joyo-700",
+    [FrequencyClass.Class4]: "bg-joyo-600 outline-joyo-600",
+    [FrequencyClass.Class5]: "bg-joyo-600 outline-joyo-500",
+    [FrequencyClass.Class6]: "bg-joyo-500 outline-joyo-500",
+    [FrequencyClass.Class7]: "bg-joyo-400 outline-joyo-500",
+    [FrequencyClass.Class8]: "bg-joyo-300 outline-joyo-500",
+    [FrequencyClass.Class9]: "bg-joyo-200 outline-joyo-500",
+  },
+  [BadgeHue.HYOGAI]: {
+    [FrequencyClass.Class1]: "bg-hyogai-700 outline-hyogai-800",
+    [FrequencyClass.Class2]: "bg-hyogai-700 outline-hyogai-700",
+    [FrequencyClass.Class3]: "bg-hyogai-700 outline-hyogai-600",
+    [FrequencyClass.Class4]: "bg-hyogai-600 outline-hyogai-600",
+    [FrequencyClass.Class5]: "bg-hyogai-600 outline-hyogai-500",
+    [FrequencyClass.Class6]: "bg-hyogai-500 outline-hyogai-500",
+    [FrequencyClass.Class7]: "bg-hyogai-500 outline-hyogai-400",
+    [FrequencyClass.Class8]: "bg-hyogai-400 outline-hyogai-400",
+    [FrequencyClass.Class9]: "bg-hyogai-300 outline-hyogai-500",
+  },
+  [BadgeHue.JINMEIYO]: {
+    [FrequencyClass.Class1]: "bg-jinmeiyo-700 outline-jinmeiyo-800",
+    [FrequencyClass.Class2]: "bg-jinmeiyo-700 outline-jinmeiyo-700",
+    [FrequencyClass.Class3]: "bg-jinmeiyo-600 outline-jinmeiyo-700",
+    [FrequencyClass.Class4]: "bg-jinmeiyo-600 outline-jinmeiyo-600",
+    [FrequencyClass.Class5]: "bg-jinmeiyo-600 outline-jinmeiyo-500",
+    [FrequencyClass.Class6]: "bg-jinmeiyo-500 outline-jinmeiyo-600",
+    [FrequencyClass.Class7]: "bg-jinmeiyo-500 outline-jinmeiyo-500",
+    [FrequencyClass.Class8]: "bg-jinmeiyo-500 outline-jinmeiyo-600",
+    [FrequencyClass.Class9]: "bg-jinmeiyo-400 outline-jinmeiyo-600",
+  },
+  [BadgeHue.EXTRA]: {
+    [FrequencyClass.Class1]: "bg-extra-700 outline-extra-800",
+    [FrequencyClass.Class2]: "bg-extra-700 outline-extra-700",
+    [FrequencyClass.Class3]: "bg-extra-600 outline-extra-700",
+    [FrequencyClass.Class4]: "bg-extra-600 outline-extra-600",
+    [FrequencyClass.Class5]: "bg-extra-600 outline-extra-500",
+    [FrequencyClass.Class6]: "bg-extra-500 outline-extra-600",
+    [FrequencyClass.Class7]: "bg-extra-500 outline-extra-500",
+    [FrequencyClass.Class8]: "bg-extra-500 outline-extra-600",
+    [FrequencyClass.Class9]: "bg-extra-400 outline-extra-600",
+  },
+};
 
 const class1Threshold = 200000;
 const class2Threshold = 100000;

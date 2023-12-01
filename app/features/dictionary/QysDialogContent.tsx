@@ -69,7 +69,7 @@ export const QysDialogContent = ({
 
   return (
     <>
-      <p className="mt-0 mb-3">
+      <p className="mb-3 mt-0">
         This is a <strong>rough sketch</strong> of how this character may have
         been pronounced in the{" "}
         <MiddleChineseLink>historical variety of Chinese</MiddleChineseLink>{" "}
@@ -167,7 +167,7 @@ export const QysDialogContent = ({
             return (
               <div
                 key={asciiTranscription}
-                className={`mt-0 mb-3 ${activeTab === i ? "" : "hidden"}`}
+                className={`mb-3 mt-0 ${activeTab === i ? "" : "hidden"}`}
               >
                 <KanOnDevelopment
                   className="mb-3 mt-0 text-center"
@@ -181,7 +181,7 @@ export const QysDialogContent = ({
                 <p className={`mb-3 mt-0 text-center`}>
                   <b>syllable initial</b>: {syllable.initial} ⟨{initial}⟩
                 </p>
-                <p className="mt-0 mb-3 ">
+                <p className="mb-3 mt-0 ">
                   {initial ? (
                     <>
                       The initial ⟨{initial}⟩ was probably pronounced{" "}
@@ -203,12 +203,12 @@ export const QysDialogContent = ({
                     More on the consonants of Middle Chinese
                   </MiddleChineseTranscriptionLink>
                 </p>
-                <p className="mt-0 mb-3 text-center">
+                <p className="mb-3 mt-0 text-center">
                   <b>syllable final</b>: {syllable.cycleHead}
                   {syllable.dengOrChongniu} ⟨{final}⟩
                 </p>
-                {medialHint ? <p className="mt-0 mb-3">{medialHint}</p> : null}
-                <p className="mt-0 mb-3">
+                {medialHint ? <p className="mb-3 mt-0">{medialHint}</p> : null}
+                <p className="mb-3 mt-0">
                   <VowelHint
                     syllable={syllableProfile}
                     asciiTranscription={asciiTranscription}
@@ -217,14 +217,14 @@ export const QysDialogContent = ({
                     More on the finals of Middle Chinese
                   </MiddleChineseTranscriptionLink>
                 </p>
-                <p className="mt-0 mb-3 text-center">
+                <p className="mb-3 mt-0 text-center">
                   <b>tone</b>:{" "}
                   {syllable.tone === "平" ? '平 "level" tone' : null}
                   {syllable.tone === "上" ? '上 "rising" tone ⟨ˬ⟩' : null}
                   {syllable.tone === "去" ? '去 "departing" tone ⟨ˎ⟩' : null}
                   {syllable.tone === "入" ? '入 "entering" tone' : null}
                 </p>
-                <p className="mt-0 mb-3">
+                <p className="mb-3 mt-0">
                   <ToneHint syllable={syllableProfile} />{" "}
                   <MiddleChineseTranscriptionLink hash="finals">
                     More on the tones of Middle Chinese

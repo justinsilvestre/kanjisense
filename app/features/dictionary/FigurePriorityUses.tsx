@@ -31,10 +31,10 @@ export function FigurePriorityUses({
 
   return (
     <section
-      className={`${className} flex flex-wrap flex-row gap-4 max-sm:p-4 p-8 `}
+      className={`${className} flex flex-row flex-wrap gap-4 p-8 max-sm:p-4 `}
     >
-      <h2 className=" text-gray-600 basis-full">used as a component in:</h2>
-      <ul className="basis-full flex flex-row flex-wrap max-sm:gap-1 gap-4 justify-between">
+      <h2 className=" basis-full text-gray-600">used as a component in:</h2>
+      <ul className="flex basis-full flex-row flex-wrap justify-between gap-4 max-sm:gap-1">
         {priorityUses.concat(fetcherData?.firstClassUses || []).map((u) => {
           const figureIsSoundMarkUse =
             u.parent.activeSoundMarkId === componentFigure.id;
@@ -50,7 +50,7 @@ export function FigurePriorityUses({
           return (
             <li
               key={u.parentId}
-              className={`group [flex-basis:6rem] align-top ${
+              className={`group align-top [flex-basis:6rem] ${
                 !u.parent.isPriority ? "bg-slate-200" : ""
               }`}
             >
@@ -61,9 +61,9 @@ export function FigurePriorityUses({
                 width={5}
               />
 
-              <div className="relative [width:5.5rem] [height:1.5em] ">
-                <div className='[width:6.25rem] group-hover:[width:8rem] group-hover:whitespace-normal  overflow-hidden  [text-overflow:"…"] whitespace-nowrap  group-hover:overflow-visible  group-hover:z-50 group-hover:absolute '>
-                  <span className="group-hover:bg-white group-hover:outline-neutral-100 group-hover:outline">
+              <div className="relative [height:1.5em] [width:5.5rem] ">
+                <div className='overflow-hidden whitespace-nowrap [text-overflow:"…"]  [width:6.25rem]  group-hover:absolute group-hover:z-50  group-hover:overflow-visible  group-hover:whitespace-normal group-hover:[width:8rem] '>
+                  <span className="group-hover:bg-white group-hover:outline group-hover:outline-neutral-100">
                     <FigureKeywordDisplay figure={u.parent} />
                     &nbsp;
                   </span>
@@ -98,7 +98,7 @@ export function FigurePriorityUses({
 
         {!fetcherData?.firstClassUses && count > PRELOADED_USES_COUNT ? (
           <li
-            className="[flex-basis:6rem] flex-grow pb-10 [height:5rem]"
+            className="flex-grow pb-10 [flex-basis:6rem] [height:5rem]"
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
             role="button"
             onClick={() => getFigurePriorityUses()}
@@ -112,7 +112,7 @@ export function FigurePriorityUses({
             + <strong>{count - PRELOADED_USES_COUNT}</strong> more
           </li>
         ) : (
-          <li className="[flex-basis:6rem] flex-grow"> </li>
+          <li className="flex-grow [flex-basis:6rem]"> </li>
         )}
       </ul>
     </section>

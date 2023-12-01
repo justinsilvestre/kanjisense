@@ -110,7 +110,7 @@ export function FigurePopover({
       createPortal(
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
-          className={`pointer-events-auto [min-height:12rem] [border:2px inset #afafaf33] p-3 shadow-xl shadow-gray-400 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:95v] [max-height:88v]  [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl`}
+          className={`[border:2px inset #afafaf33] pointer-events-auto p-3 shadow-xl shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box] [max-height:88v] [max-width:95v]  [min-height:12rem] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl`}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
@@ -128,7 +128,7 @@ export function FigurePopover({
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <div
                 key={c.component.id}
-                className="cursor-pointer inline-block m-1"
+                className="m-1 inline-block cursor-pointer"
                 onClick={() => loadFigure(c.component.id)}
                 // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 tabIndex={0}

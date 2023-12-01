@@ -76,9 +76,9 @@ export function DictEntryReadings({
 
   return (
     <section
-      className={`flex flex-col md:flex-row rounded-lg shadow-md shadow-black/20 bg-gray-50 ${className}`}
+      className={`flex flex-col rounded-lg bg-gray-50 shadow-md shadow-black/20 md:flex-row ${className}`}
     >
-      <div className="basis-full md:basis-7/12  flex flex-row flex-wrap justify-evenly gap-4 p-3">
+      <div className="flex basis-full  flex-row flex-wrap justify-evenly gap-4 p-3 md:basis-7/12">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>on&apos;yomi</i>{" "}
@@ -131,7 +131,7 @@ export function DictEntryReadings({
                 </dd>
               </div>
             </DialogTrigger>
-            <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [width:40v] [min-width:17rem] [max-width:80vw] [max-height:80vh]  [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box]  [overflow-y:auto] md:max-w-xl">
+            <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box] [min-width:17rem]  [overflow-y:auto]  [width:40v] [max-height:80vh]  [max-width:80vw] md:max-w-xl">
               <QysDialogContent
                 attestedOnReadings={
                   readings.selectedOnReadings.length
@@ -207,7 +207,7 @@ export function DictEntryReadings({
                 : requestOpen();
             }
           }}
-          className={`basis-full ml-10 cursor-pointer text-left  hover:text-orange-700 hover:underline`}
+          className={`ml-10 basis-full cursor-pointer text-left  hover:text-orange-700 hover:underline`}
           onClick={() =>
             animationState === "entered" || animationState === "entering"
               ? requestClose()
@@ -219,7 +219,7 @@ export function DictEntryReadings({
             : "more"}
         </div>
       </div>
-      <div className="md:basis-5/12 border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-t-gray-600/40 border-t md:border-t-0 md:border-l md:border-l-gray-600/40 p-4 text-center transition-all">
+      <div className="border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-t border-t-gray-600/40 p-4 text-center transition-all md:basis-5/12 md:border-l md:border-t-0 md:border-l-gray-600/40">
         <div>
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>kun&apos;yomi</i>

@@ -255,7 +255,7 @@ export default function MiddleChinese() {
           </section>
 
           <section
-            className="mb-10 pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+            className="mb-10 pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
             id={SectionIds["initial-consonants"]}
           >
             <h3>Initial consonants {showContentsButton}</h3>
@@ -274,7 +274,7 @@ export default function MiddleChinese() {
               cover all the most important ground in our discussion of initials.
             </p>
             <section
-              className="pt-14 pb-0 md:pt-0"
+              className="pb-0 pt-14 md:pt-0"
               id={SectionIds["initial-consonants-like-english"]}
             >
               <h4>Initial consonants like English {showContentsButton}</h4>
@@ -454,7 +454,7 @@ export default function MiddleChinese() {
             </section>
 
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["initial-consonants-like-english-2"]}
             >
               <h5>
@@ -561,7 +561,7 @@ export default function MiddleChinese() {
               </div>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["sibilants"]}
             >
               <h4>Sibilant sounds {showContentsButton}</h4>
@@ -766,7 +766,7 @@ export default function MiddleChinese() {
               </div>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["initial-consonants-not-found-in-english"]}
             >
               <h4>
@@ -838,7 +838,7 @@ export default function MiddleChinese() {
             </section>
 
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["dental-vs-retroflex-stops"]}
             >
               <h4>"Tongue-head" vs. "tongue-up" sounds {showContentsButton}</h4>
@@ -998,7 +998,7 @@ export default function MiddleChinese() {
             </section>
 
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["on-sound-changes"]}
             >
               <h4>
@@ -1042,7 +1042,7 @@ export default function MiddleChinese() {
                 </p>
               </section>
               <section
-                className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+                className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
                 id={SectionIds["a-note-on-voiced-sounds"]}
               >
                 <h4>Voiced sounds and breathy sounds {showContentsButton}</h4>
@@ -1216,7 +1216,7 @@ export default function MiddleChinese() {
                 </p>
               </section>
               <section
-                className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+                className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
                 id={SectionIds["dentilabialization"]}
               >
                 <h4>Dentilabialization {showContentsButton}</h4>
@@ -1352,7 +1352,7 @@ export default function MiddleChinese() {
                 </div>
               </section>
               <section
-                className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+                className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
                 id={SectionIds["denasalization"]}
               >
                 <h4>
@@ -1388,7 +1388,7 @@ export default function MiddleChinese() {
           </section>
 
           <section
-            className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+            className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
             id={SectionIds["final-consonants"]}
           >
             <h3>Final consonants {showContentsButton}</h3>
@@ -1410,7 +1410,7 @@ export default function MiddleChinese() {
           </section>
 
           <section
-            className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+            className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
             id={SectionIds["vowels"]}
           >
             <h3>Vowels {showContentsButton}</h3>
@@ -1491,7 +1491,7 @@ export default function MiddleChinese() {
               </p>
             </div>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id="kan-on"
             >
               <h4>
@@ -1598,7 +1598,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["japanese-vowels"]}
             >
               <h4>From Japanese to Chinese vowels {showContentsButton}</h4>
@@ -1680,7 +1680,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["caveats"]}
             >
               <h4>Caveats {showContentsButton}</h4>
@@ -1792,7 +1792,7 @@ export default function MiddleChinese() {
           </section>
 
           <section
-            className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+            className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
             id={SectionIds["finals"]}
           >
             <h3>Finals {showContentsButton}</h3>
@@ -1804,7 +1804,7 @@ export default function MiddleChinese() {
               about vowels in the context of specific finals.
             </p>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["structure-of-finals"]}
             >
               <h5>The structure of a final in this notation</h5>
@@ -1871,7 +1871,7 @@ export default function MiddleChinese() {
               </div>
 
               <section
-                className="pt-14 pb-0  md:pt-0"
+                className="pb-0 pt-14  md:pt-0"
                 id={SectionIds["medials"]}
               >
                 <h5>Medials</h5>
@@ -1922,7 +1922,7 @@ export default function MiddleChinese() {
                   <G g="ẁ" />, rather than an added <G g="y" />.
                 </p>
               </section>
-              <section className="pt-14 pb-0  md:pt-0" id={SectionIds["coda"]}>
+              <section className="pb-0 pt-14  md:pt-0" id={SectionIds["coda"]}>
                 <h5>Coda</h5>
                 <p>
                   As for the <b>coda</b> at the very end of the syllable,{" "}
@@ -1964,7 +1964,7 @@ export default function MiddleChinese() {
                 </ul>
               </section>
               <section
-                className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+                className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
                 id={SectionIds["main-vowels"]}
               >
                 <h5>"Main vowels"</h5>
@@ -1986,7 +1986,7 @@ export default function MiddleChinese() {
               </section>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["tones"]}
             >
               <h4>Tones {showContentsButton}</h4>
@@ -2050,7 +2050,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["a-finals"]}
             >
               <h4>Finals with main vowel A {showContentsButton}</h4>
@@ -2197,7 +2197,7 @@ export default function MiddleChinese() {
               </ul>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["e-finals"]}
             >
               <h4>Finals with main vowel E {showContentsButton}</h4>
@@ -2355,7 +2355,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id="i-finals"
             >
               <h4>Finals with main vowel I {showContentsButton}</h4>
@@ -2576,7 +2576,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["o-finals"]}
             >
               <h4>Finals with main vowel O {showContentsButton}</h4>
@@ -2688,7 +2688,7 @@ export default function MiddleChinese() {
               </ul>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["u-finals"]}
             >
               <h4>Finals with main vowel U {showContentsButton}</h4>
@@ -2756,7 +2756,7 @@ export default function MiddleChinese() {
           </section>
 
           <section
-            className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+            className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
             id={SectionIds["diacritics"]}
           >
             <h3>
@@ -2776,7 +2776,7 @@ export default function MiddleChinese() {
               noting.
             </p>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["four-rows"]}
             >
               <h4>The four rows of the rime tables {showContentsButton}</h4>
@@ -2836,7 +2836,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["four-divisions"]}
             >
               <h4>
@@ -2936,7 +2936,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["go-on"]}
             >
               <h4>
@@ -3080,7 +3080,7 @@ export default function MiddleChinese() {
               </p>
             </section>
             <section
-              className="pt-14 pb-0 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+              className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
               id={SectionIds["kan-on-diacritics"]}
             >
               <h4>

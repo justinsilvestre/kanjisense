@@ -12,18 +12,18 @@ export function ExternalDictionaryLinks({
   return (
     <section className={className}>
       <ul className=" pl-1">
-        <li className="">
+        <li className=" leading-loose">
           <A
             href={`https://jisho.org/search/*${encodeURIComponent(figureId)}*`}
             className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle pr-3">
+              <span className="inline-block pr-3 align-middle">
                 <MdIcons.MdList />
               </span>
               words containing {figureId}
             </span>
-            <span className="ml-2 opacity-70 group-hover:opacity-100 group-hover:underline text-xs">
+            <span className="ml-2 text-xs opacity-70 group-hover:underline group-hover:opacity-100">
               jisho.org
             </span>
           </A>
@@ -36,12 +36,12 @@ export function ExternalDictionaryLinks({
             className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle pr-3">
+              <span className="inline-block pr-3 align-middle">
                 <MdIcons.MdChatBubbleOutline />
               </span>
               sentences containing {figureId}
             </span>
-            <span className="ml-2 opacity-70 group-hover:opacity-100 group-hover:underline text-xs">
+            <span className="ml-2 text-xs opacity-70 group-hover:underline group-hover:opacity-100">
               tatoeba.org
             </span>
           </A>
@@ -54,12 +54,12 @@ export function ExternalDictionaryLinks({
             className="group p-3"
           >
             <span className="">
-              <span className="inline-block align-middle pr-3">
+              <span className=" inline-block pr-3 align-middle">
                 <MdIcons.MdTranslate />
               </span>
               multilingual definitions
             </span>
-            <span className="ml-2 opacity-70 group-hover:opacity-100 group-hover:underline text-xs">
+            <span className="ml-2  text-xs opacity-70 group-hover:underline group-hover:opacity-100">
               en.wiktionary.org
             </span>
           </A>
@@ -73,14 +73,14 @@ export function ExternalDictionaryLinks({
           >
             <span className="">
               <span
-                className="inline-block align-middle pr-3 text-sm"
+                className="inline-block pr-3 align-middle text-sm"
                 role="img"
               >
                 和
               </span>
               in Japanese
             </span>
-            <span className="ml-2 opacity-70 group-hover:opacity-100 group-hover:underline text-xs">
+            <span className="ml-2 text-xs opacity-70 group-hover:underline group-hover:opacity-100">
               dictionary.goo.ne.jp
             </span>
           </A>

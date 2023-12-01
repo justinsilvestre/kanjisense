@@ -14,7 +14,7 @@ export default function DictionaryLayout({
 }: PropsWithChildren<{ className?: string }>) {
   return (
     <div
-      className={`relative mx-auto py-4 flex  min-h-screen max-w-5xl flex-col gap-4 bg-white max-lg:px-2 ${
+      className={`relative mx-auto flex min-h-screen  max-w-5xl flex-col gap-4 bg-white py-4 max-lg:px-2 ${
         className || ""
       }`}
     >

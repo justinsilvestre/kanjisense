@@ -8,7 +8,7 @@ export function DictionaryHeadingMeanings({
   className?: string;
 }) {
   return (
-    <div className={`${className} gap-4 flex `}>
+    <div className={`${className} flex gap-4 `}>
       {headingsMeanings.currentCharacter ? (
         <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
       ) : null}
@@ -17,7 +17,7 @@ export function DictionaryHeadingMeanings({
       ) : null}
       {headingsMeanings.componentMnemonic ? (
         <h1>
-          <div className="text-gray-500 text-sm">component mnemonic:</div>
+          <div className="text-sm text-gray-500">component mnemonic:</div>
           {headingsMeanings.componentMnemonic.text}
           {headingsMeanings.componentMnemonic.reference ? (
             <>
@@ -30,7 +30,7 @@ export function DictionaryHeadingMeanings({
       ) : null}
       {headingsMeanings.obsoleteCharacter ? (
         <h1>
-          <div className="text-gray-500 text-sm">
+          <div className="text-sm text-gray-500">
             historical character meaning:
           </div>
           {headingsMeanings.obsoleteCharacter.join("; ")}

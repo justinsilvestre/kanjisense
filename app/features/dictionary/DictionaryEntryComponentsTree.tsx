@@ -27,7 +27,7 @@ export function DictionaryEntryComponentsTree({
 }) {
   return (
     <section
-      className={`${className} flex flex-row flex-wrap gap-4 justify-evenly`}
+      className={`${className} flex flex-row flex-wrap justify-evenly gap-4`}
     >
       {figure.firstClassComponents
         .sort((a, b) => a.indexInTree - b.indexInTree)
@@ -72,7 +72,7 @@ function DictionaryEntryComponentsTreeMember({
         width={6}
         className="mx-auto "
       />
-      <div className="inline-flex flex-col items-center [max-width:10rem] mt-2 mb-1">
+      <div className="mb-1 mt-2 inline-flex flex-col items-center [max-width:10rem]">
         <div>
           <FigureKeywordDisplay figure={componentFigure} />
         </div>

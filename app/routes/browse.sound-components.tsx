@@ -154,11 +154,11 @@ export default function FigureDetailsPage() {
               return (
                 <Fragment key={id}>
                   {newGroup ? (
-                    <h2 className="basis-full text-center text-lg m-4">
+                    <h2 className="m-4 basis-full text-center text-lg">
                       Seen in {newGroup} or more places
                     </h2>
                   ) : null}
-                  <div className="inline-flex flex-row gap-2 m-1" key={id}>
+                  <div className="m-1 inline-flex flex-row gap-2" key={id}>
                     <FigureBadgeLink key={id} id={id} badgeProps={badge} />
                     <div className="flex flex-col">
                       <div>

@@ -61,16 +61,16 @@ export function SingleFigureDictionaryEntry({
 
   return (
     <section
-      className={`flex gap-4 flex-row flex-wrap lg:flex-nowrap items-start`}
+      className={`flex flex-row flex-wrap items-start gap-4 lg:flex-nowrap`}
       key={figure.id}
     >
-      <div className="SingleFigureDictionaryEntry_left max-lg:basis-full [min-width:calc(100%-20rem)] flex gap-4 flex-col flex-grow ">
-        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap gap-4 justify-center ">
-          <div className="SingleFigureDictionaryEntry_topLeft flex-col flex gap-4 [min-width:15.05rem]  items-center basis-1/3 flex-grow">
+      <div className="SingleFigureDictionaryEntry_left flex flex-grow flex-col gap-4 [min-width:calc(100%-20rem)] max-lg:basis-full ">
+        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap justify-center gap-4 ">
+          <div className="SingleFigureDictionaryEntry_topLeft flex flex-grow basis-1/3 flex-col  items-center gap-4 [min-width:15.05rem]">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
-              className="relative [width:15.05em] [height:15.05em] cursor-pointer group"
+              className="group relative cursor-pointer [height:15.05em] [width:15.05em]"
               onClick={() => setAnimationIsShowing((b) => !b)}
               role="img"
               onKeyDown={(e) => {
@@ -84,7 +84,7 @@ export function SingleFigureDictionaryEntry({
               {animationIsShowing && kvgImage ? (
                 <>
                   <FigureStrokesAnimation
-                    className="[width:100%] [height:100%] absolute top-0 left-0 bottom-0  right-0 border-solid border border-black"
+                    className="absolute bottom-0 left-0 right-0 top-0 border  border-solid border-black [height:100%] [width:100%]"
                     kvg={kvgImage.content as unknown as KvgJsonData}
                   />
                 </>
@@ -92,7 +92,7 @@ export function SingleFigureDictionaryEntry({
                 <></>
               )}
               {kvgImage ? (
-                <button className="absolute bottom-1 p-1 right-1 text-sm bg-slate-300 rounded-md opacity-0 group-hover:opacity-100 focus:opacity-100">
+                <button className="absolute bottom-1 right-1 rounded-md bg-slate-300 p-1 text-sm opacity-0 focus:opacity-100 group-hover:opacity-100">
                   {animationIsShowing ? (
                     <>
                       <span role="img">◾️</span> stop
@@ -107,7 +107,7 @@ export function SingleFigureDictionaryEntry({
             </div>
 
             <DictionaryHeadingMeanings
-              className="flex-1 text-xl flex-col"
+              className="flex-1 flex-col text-xl"
               headingsMeanings={getHeadingsMeanings(figure)}
             />
 
@@ -120,8 +120,8 @@ export function SingleFigureDictionaryEntry({
 
           <div className="flex flex-grow-[9999] flex-col gap-4">
             {
-              <div className="SingleFigureDictionaryEntry_topRight basis-full flex-1 [min-height:5rem] border-4 border-solid border-black/10 rounded-lg p-2 [min-width:15rem] flex gap-4 flex-col">
-                <div className="flex-1 flex flex-col justify-center gap-4">
+              <div className="SingleFigureDictionaryEntry_topRight flex flex-1 basis-full flex-col gap-4 rounded-lg border-4 border-solid border-black/10 p-2 [min-height:5rem] [min-width:15rem]">
+                <div className="flex flex-1 flex-col justify-center gap-4">
                   {figureIsAtomic ? (
                     <div className="text-center">atomic component</div>
                   ) : (
@@ -137,14 +137,14 @@ export function SingleFigureDictionaryEntry({
               </div>
             }
             {isUnicodeCharacter && (glyphsJson || figure.shuowenImage) ? (
-              <div className="flex flex-row flex-wrap flex-grow p-4  justify-evenly">
+              <div className="flex flex-grow flex-row flex-wrap justify-evenly  p-4">
                 {glyphsJson ? (
                   <div className="">
-                    <div className="flex-1 flex flex-row justify-center flex-wrap gap-4">
+                    <div className="flex flex-1 flex-row flex-wrap justify-center gap-4">
                       {glyphsJson.ns ? (
                         <svg
                           viewBox="0 -870 1000 1000"
-                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                          className="inline-block [height:2.5rem] [width:2.5rem]"
                         >
                           <path d={glyphsJson.ns} />
                         </svg>
@@ -152,7 +152,7 @@ export function SingleFigureDictionaryEntry({
                       {glyphsJson.gw ? (
                         <svg
                           viewBox="0 0 200 200"
-                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                          className="inline-block [height:2.5rem] [width:2.5rem]"
                         >
                           <path d={glyphsJson.gw} />
                         </svg>
@@ -160,7 +160,7 @@ export function SingleFigureDictionaryEntry({
                       {glyphsJson.twk ? (
                         <svg
                           viewBox="0 -870 1000 1000"
-                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                          className="inline-block [height:2.5rem] [width:2.5rem]"
                         >
                           <path d={glyphsJson.twk} />
                         </svg>
@@ -168,7 +168,7 @@ export function SingleFigureDictionaryEntry({
                       {glyphsJson.kk ? (
                         <svg
                           viewBox="0 -870 1000 1000"
-                          className="inline-block [width:2.5rem] [height:2.5rem]"
+                          className="inline-block [height:2.5rem] [width:2.5rem]"
                         >
                           <path d={glyphsJson.kk} />
                         </svg>
@@ -210,35 +210,35 @@ export function SingleFigureDictionaryEntry({
             componentFigure={figure}
             priorityUses={figure.firstClassUses}
             count={figure._count.firstClassUses}
-            className="border-4 border-solid border-black/10 rounded-lg p-2 flex-1 "
+            className="flex-1 rounded-lg border-4 border-solid border-black/10 p-2 "
           />
         </div>
       </div>
 
       {isUnicodeCharacter || variants?.length ? (
-        <div className="lg:[max-height:100vh] flex flex-row flex-wrap gap-4 mb-4 lg:flex-col lg:items-center self-stretch flex-shrink flex-grow ">
+        <div className="mb-4 flex flex-shrink flex-grow flex-row flex-wrap gap-4 self-stretch lg:flex-col lg:items-center lg:[max-height:100vh] ">
           {variants?.length ? (
-            <section className="flex-grow-[9999] [min-width:14rem] lg:[min-width:none] flex justify-center items-center ">
-              <div className="lg:overflow-auto lg:[max-height:57vh] p-4 justify-center  bg-black/10 shadow-inner shadow-black/25">
-                <h3 className="text-center text-gray-600 mb-4">
+            <section className="flex flex-grow-[9999] items-center justify-center [min-width:14rem] lg:[min-width:none] ">
+              <div className="justify-center bg-black/10 p-4 shadow-inner  shadow-black/25 lg:overflow-auto lg:[max-height:57vh]">
+                <h3 className="mb-4 text-center text-gray-600">
                   <strong>
                     {variants.findIndex((v) => v.id === figure.id) + 1}
                   </strong>{" "}
                   of <strong>{variants.length}</strong> variants
                 </h3>
-                <div className="flex flex-wrap lg:flex-col justify-center">
+                <div className="flex flex-wrap justify-center lg:flex-col">
                   {variants.map((v) => {
                     return v.id === figure.id ? (
                       <span
                         key={v.id}
-                        className=" border-solid rounded-xl bg-white shadow-md shadow-black/20"
+                        className=" rounded-xl border-solid bg-white shadow-md shadow-black/20"
                       >
                         <FigureBadge
                           width={6}
                           key={v.id}
                           id={v.id}
                           badgeProps={v}
-                          className={`inline-block m-2 hover:opacity-100 `}
+                          className={`m-2 inline-block hover:opacity-100 `}
                         />
                       </span>
                     ) : (
@@ -247,7 +247,7 @@ export function SingleFigureDictionaryEntry({
                         key={v.id}
                         id={v.id}
                         badgeProps={v}
-                        className={`inline-block m-2 hover:opacity-100 opacity-80`}
+                        className={`m-2 inline-block opacity-80 hover:opacity-100`}
                       />
                     );
                   })}
@@ -258,7 +258,7 @@ export function SingleFigureDictionaryEntry({
             <div className=""> </div>
           )}
           {isUnicodeCharacter ? (
-            <div className="[min-width:19rem] flex-wrap gap-4 flex-grow flex lg:flex-col lg:flex-nowrap lg:justify-end max-lg:justify-between">
+            <div className="flex flex-grow flex-wrap gap-4 [min-width:19rem] max-lg:justify-between lg:flex-col lg:flex-nowrap lg:justify-end">
               <p className="px-4 [min-width:10rem]">
                 in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
@@ -287,7 +287,7 @@ export function SingleFigureDictionaryEntry({
               {figureIsStandaloneCharacter || figure.isPriority ? (
                 <ExternalDictionaryLinks
                   figureId={figure.id}
-                  className="[min-width:19rem] text-sm"
+                  className="text-sm [min-width:19rem]"
                 />
               ) : null}
             </div>
