@@ -51,7 +51,7 @@ export enum IpaSymbols {
   chi = "χ",
   uvularR = "ʁ",
 }
-const chartUrl =
+export const ipaChartUrl =
   "https://www.internationalphoneticassociation.org/IPAcharts/inter_chart_2018/IPA_2018.html";
 const ipaUrls: Record<string, string> = {
   a: "https://en.wikipedia.org/wiki/Open_front_unrounded_vowel",
@@ -115,8 +115,8 @@ const ipaUrls: Record<string, string> = {
     "https://en.wikipedia.org/wiki/Voiceless_velar_plosive",
   [IpaSymbols.sAspirated]: "https://en.wikipedia.org/wiki/Aspirated_consonant",
   [IpaSymbols.tsAspirated]: "https://en.wikipedia.org/wiki/Aspirated_consonant",
-  [IpaSymbols.tCWithCurlAspirated]: chartUrl,
-  [IpaSymbols.tSWithLoopAspirated]: chartUrl,
+  [IpaSymbols.tCWithCurlAspirated]: ipaChartUrl,
+  [IpaSymbols.tSWithLoopAspirated]: ipaChartUrl,
   [IpaSymbols.pBreathy]: "https://en.wikipedia.org/wiki/Breathy_voice",
   [IpaSymbols.tBreathy]: "https://en.wikipedia.org/wiki/Breathy_voice",
   [IpaSymbols.retroflexTBreathy]:
@@ -125,8 +125,8 @@ const ipaUrls: Record<string, string> = {
   [IpaSymbols.tsBreathy]:
     "https://en.wikipedia.org/wiki/Voiceless_alveolar_affricate",
   [IpaSymbols.sBreathy]: "https://en.wikipedia.org/wiki/Breathy_voice",
-  [IpaSymbols.tCWithCurlBreathy]: chartUrl,
-  [IpaSymbols.tSWithLoopBreathy]: chartUrl,
+  [IpaSymbols.tCWithCurlBreathy]: ipaChartUrl,
+  [IpaSymbols.tSWithLoopBreathy]: ipaChartUrl,
   [IpaSymbols.cWithCurl]:
     "https://en.wikipedia.org/wiki/Voiceless_alveolo-palatal_fricative",
   [IpaSymbols.sWithLoop]:
@@ -139,7 +139,7 @@ const ipaUrls: Record<string, string> = {
     "https://en.wikipedia.org/wiki/Voiced_retroflex_nasal",
   [IpaSymbols.nWithLeftHook]:
     "https://en.wikipedia.org/wiki/Voiced_palatal_nasal",
-  [IpaSymbols.nWithLeftHookZwithLoop]: chartUrl,
+  [IpaSymbols.nWithLeftHookZwithLoop]: ipaChartUrl,
   [IpaSymbols.gamma]: "https://en.wikipedia.org/wiki/Voiced_velar_fricative",
   [IpaSymbols.retroflexApproximant]:
     "https://en.wikipedia.org/wiki/Voiced_retroflex_approximant",
@@ -164,7 +164,7 @@ export function IpaLink({
 }) {
   return (
     <A
-      href={ipaUrls[linkSound || sound] || chartUrl}
+      href={ipaUrls[linkSound || sound] || ipaChartUrl}
       className="text-orange-700 no-underline hover:underline"
     >
       {broad ? <>/{sound}/</> : <>[{sound}]</>}

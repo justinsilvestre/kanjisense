@@ -19,7 +19,11 @@ import {
   VowelHints,
 } from "~/features/dictionary/QysHints";
 
-import { IpaLink, IpaSymbols } from "../features/dictionary/IpaLink";
+import {
+  IpaLink,
+  IpaSymbols,
+  ipaChartUrl,
+} from "../features/dictionary/IpaLink";
 
 export const links = () => [{ rel: "stylesheet", href: css }];
 
@@ -287,7 +291,12 @@ export default function MiddleChinese() {
                 represent sounds that are roughly equivalent to common English
                 sounds, as far as we know. The symbols in [] brackets enclose
                 scholars' reconstructions, in the International Phonetic
-                Alphabet.
+                Alphabet. For a chart of IPA symbols with sound recordings, you
+                can visit{" "}
+                <A href={ipaChartUrl}>
+                  the International Phonetic Association website
+                </A>
+                .
               </p>
               <div className="overflow-x-auto">
                 <table className={"pronunciationTable"}>
@@ -3351,8 +3360,8 @@ export default function MiddleChinese() {
             <p>
               The problem is that, while Baxter's transcription technically does
               not <em>denote</em> particular sounds, it certainly{" "}
-              <em>connotes</em> them. It appears that it never occurred to
-              Baxter just how important those connotations are. When these{" "}
+              <em>connotes</em> them, and Baxter failed to realize just how
+              important those connotations are. When these{" "}
               <strong>abstract categories</strong> are represented using letters
               borrowed from the International Phonetic Alphabet, users can't
               help but associate them with <strong>concrete sounds</strong>.
@@ -3404,8 +3413,9 @@ export default function MiddleChinese() {
               <strong>strong guiding principle</strong>: the reconstructor's
               motivation to put forth a clear, internally consistent argument
               about the concrete sounds of the language. Since Baxter had no
-              argument to make, he thought it right to dispense with any strong
-              guiding principle. But a good design just can't do without one.
+              such argument to make, he thought it right to dispense with any
+              strong guiding principle. But a good design just can't do without
+              one.
             </p>
             <p>
               I hope to have improved on Baxter's notation by reintroducing a{" "}
