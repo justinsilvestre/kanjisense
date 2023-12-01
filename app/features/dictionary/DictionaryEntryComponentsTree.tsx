@@ -11,12 +11,12 @@ import {
   FigureComponentsAnalysisLoaderData,
 } from "~/routes/dict.$figureId.analyze";
 
+import { FigureKeywordDisplay } from "./FigureKeywordDisplay";
 import {
   parseActiveSoundMarkValue,
   transcribeSerializedXiaoyunProfile,
 } from "./getActiveSoundMarkValueText";
 import { OnAndGuangyunReadings } from "./OnAndGuangyunReadings";
-import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
 
 export function DictionaryEntryComponentsTree({
   figure,

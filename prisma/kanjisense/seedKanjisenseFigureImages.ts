@@ -1,5 +1,3 @@
-import { readFile } from "fs/promises";
-
 import { PrismaClient, KanjisenseFigureImageType } from "@prisma/client";
 import SVGPathCommander from "svg-path-commander";
 
@@ -10,6 +8,7 @@ import { getKvgFilePath } from "~/lib/files.server";
 import { KvgJsonData } from "../../app/features/dictionary/KvgJsonData";
 
 import { executeAndLogTime } from "./executeAndLogTime";
+import { getFileTextIfPresent } from "./getFileTextIfPresent";
 import { getGlyphWikiSvgPath } from "./getGlyphWikiSvgPath";
 
 export async function seedFigureImages(prisma: PrismaClient, force = false) {
@@ -113,19 +112,4 @@ async function getKvgJson(
       ? numbers.slice(strokesSegment[0] - 1, strokesSegment[1])
       : numbers,
   } as const;
-}
-
-export async function getFileTextIfPresent(path: string | null) {
-  if (!path) return null;
-  try {
-    return await readFile(path, "utf-8");
-  } catch (error) {
-    if (error && typeof error === "object" && "code" in error) {
-      if ((error as unknown as { code: string }).code === "ENOENT") {
-        return null;
-      } else {
-        throw error;
-      }
-    }
-  }
 }

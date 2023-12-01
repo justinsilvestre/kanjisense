@@ -4,7 +4,7 @@ import { files, readJsonSync } from "~/lib/files.server";
 
 import { registerSeeded } from "../seedUtils";
 
-import { getYuntuJson } from "./getYuntuJson";
+import { getYuntuJson, XiaoyunCategoriesJson } from "./getYuntuJson";
 
 // mostly ocr and xml structure corrections
 const replacementFanqie = {
@@ -127,55 +127,6 @@ async function getDbInput() {
   }
   return dbInput;
 }
-
-export type CanonicalInitial =
-  | "幫"
-  | "滂"
-  | "並"
-  | "明"
-  | "端"
-  | "透"
-  | "定"
-  | "泥"
-  | "來"
-  | "知"
-  | "徹"
-  | "澄"
-  | "孃"
-  | "精"
-  | "清"
-  | "從"
-  | "心"
-  | "邪"
-  | "莊"
-  | "初"
-  | "崇"
-  | "生"
-  | "俟"
-  | "章"
-  | "昌"
-  | "常"
-  | "書"
-  | "船"
-  | "日"
-  | "見"
-  | "溪"
-  | "羣"
-  | "疑"
-  | "影"
-  | "曉"
-  | "匣"
-  | "云"
-  | "以";
-export const LABIAL_INITIALS = new Set("幫滂並明");
-
-export type XiaoyunCategoriesJson = [
-  initial: CanonicalInitial,
-  guangyunRhymeCycleHead: string,
-  tone: string,
-  kaihe: string | null,
-  chongniuLetterOrDeng: string | null,
-];
 
 export const overrides: Record<number, XiaoyunCategoriesJson> = {
   // no homophones so no fanqie was given

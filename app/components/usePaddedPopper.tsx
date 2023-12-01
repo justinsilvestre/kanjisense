@@ -85,7 +85,8 @@ export function usePaddedPopper({
       document.body.addEventListener("click", closeOnClick);
       return () => document.body.removeEventListener("click", closeOnClick);
     }
-  }, [isOpen, popperElement]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   return {
     isOpen,

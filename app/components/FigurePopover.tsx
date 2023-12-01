@@ -8,10 +8,10 @@ import {
   isPrioritySoundMark,
 } from "~/features/dictionary/badgeFigure";
 import { DictionaryHeadingMeanings } from "~/features/dictionary/DictionaryHeadingMeanings";
+import { FigureKeywordDisplay } from "~/features/dictionary/FigureKeywordDisplay";
 import { FigureTags } from "~/features/dictionary/FigureTags";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
-import { FigureKeywordDisplay } from "~/features/dictionary/SingleFigureDictionaryEntry";
-import type { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
+import { PopoverFigure } from "~/features/dictionary/PopoverFigure";
 
 import { DictLink } from "./AppLink";
 import { FigureBadge } from "./FigureBadge";
@@ -176,7 +176,7 @@ export function FigurePopover({
 }
 
 export function usePopoverFigureFetcher(figureId: string) {
-  const fetcher = useFetcher<DictPreviewLoaderData>();
+  const fetcher = useFetcher<{ figure: PopoverFigure }>();
 
   return {
     fetcher,

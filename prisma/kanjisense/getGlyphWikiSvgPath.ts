@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { getGlyphwikiSvgFilePath } from "~/lib/files.server";
 
-import { getFileTextIfPresent } from "./seedKanjisenseFigureImages";
+import { getFileTextIfPresent } from "./getFileTextIfPresent";
 
 export async function getGlyphWikiSvgPath(id: string) {
   const glyphwikiSvgPath = getGlyphwikiSvgFilePath(id);

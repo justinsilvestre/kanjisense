@@ -7,11 +7,8 @@ import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
   BadgeProps,
-  IsPriorityComponentQueryFigure,
-  StandaloneCharacterVariantQueryFigure,
   getBadgeProps,
   isPrioritySoundMark,
-  isStandaloneCharacterVariant,
 } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
@@ -301,42 +298,12 @@ export function SingleFigureDictionaryEntry({
   );
 }
 
-type KeywordDisplayFigure = Pick<
-  KanjisenseFigure,
-  "keyword" | "mnemonicKeyword" | "listsAsCharacter"
-> &
-  IsPriorityComponentQueryFigure &
-  StandaloneCharacterVariantQueryFigure;
-
 function isFigureAtomic(
   figure: Pick<KanjisenseFigure, "componentsTree">,
 ): boolean {
   return Array.isArray(figure.componentsTree)
     ? figure.componentsTree.length === 0
     : false;
-}
-
-export function FigureKeywordDisplay({
-  figure,
-}: {
-  figure: KeywordDisplayFigure;
-}) {
-  if (!figure.mnemonicKeyword) return <>{figure.keyword}</>;
-
-  const mnemonicKeywordWithoutReference =
-    figure.mnemonicKeyword.split(" {{")[0];
-
-  if (figure.mnemonicKeyword === figure.keyword)
-    return <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>;
-
-  if (isStandaloneCharacterVariant(figure))
-    return (
-      <>
-        {figure.keyword} <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>
-      </>
-    );
-
-  return <i>&quot;{mnemonicKeywordWithoutReference}&quot;</i>;
 }
 
 function parseRadicalNumbers(unicodeRadicalText: string) {

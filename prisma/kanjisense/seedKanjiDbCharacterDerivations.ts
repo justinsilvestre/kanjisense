@@ -2,11 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 import { registerSeeded } from "../seedUtils";
 
-import { getCharacterDerivationsChain } from "./getCharacterDerivationsChain";
 import {
-  parseEtymologyText,
+  getCharacterDerivationsChain,
   CharacterOriginReference,
-} from "./parseEtymologyText";
+  parseEtymologyText,
+} from "./getCharacterDerivationsChain";
 
 export async function seedKanjiDbCharacterDerivations(
   prisma: PrismaClient,
@@ -79,11 +79,6 @@ class CreateSoundMarkInput {
     public character: string,
     public chain: CharacterOriginReference[],
   ) {}
-}
-
-export enum CharacterOriginType {
-  phonetic,
-  simplification,
 }
 
 async function lookUpKanjiDbEtymology(

@@ -5,10 +5,10 @@ import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 import { FigurePriorityUsesLoaderData } from "~/routes/dict.$figureId.uses";
 
+import { FigureKeywordDisplay } from "./FigureKeywordDisplay";
 import { getParentReadingMatchingSoundMark } from "./getParentReadingMatchingSoundMark";
 import { OnAndGuangyunReadings } from "./OnAndGuangyunReadings";
 import { PRELOADED_USES_COUNT } from "./PRELOADED_USES_COUNT";
-import { FigureKeywordDisplay } from "./SingleFigureDictionaryEntry";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 
 export function FigurePriorityUses({

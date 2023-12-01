@@ -77,6 +77,7 @@ module.exports = {
         "prettier",
       ],
       rules: {
+        "import/no-cycle": "error",
         "import/order": [
           "error",
           {

@@ -1,6 +1,8 @@
-import { getCharacterDerivationsChain } from "../../prisma/kanjisense/getCharacterDerivationsChain";
-import { CharacterOriginReference } from "../../prisma/kanjisense/parseEtymologyText";
-import { CharacterOriginType } from "../../prisma/kanjisense/seedKanjiDbCharacterDerivations";
+import {
+  getCharacterDerivationsChain,
+  CharacterOriginReference,
+  CharacterOriginType,
+} from "prisma/kanjisense/getCharacterDerivationsChain";
 
 describe("getCharacterDerivationsChain", () => {
   it("works for 星", async () => {
