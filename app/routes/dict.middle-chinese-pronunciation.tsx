@@ -3460,7 +3460,7 @@ export default function MiddleChinese() {
               . Therefore the time they've invested in Baxter's system won't
               provide any payoff until they've wrapped their head around the
               basics of the <em>Qieyun</em> system. And remember&mdash;this
-              system is meant to be accessible to non-specialists.
+              notation is meant to be accessible to non-specialists.
             </p>
             <p>
               On the other hand, if a user of my system mistakes the symbols for
