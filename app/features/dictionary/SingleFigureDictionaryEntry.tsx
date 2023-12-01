@@ -216,7 +216,7 @@ export function SingleFigureDictionaryEntry({
       </div>
 
       {isUnicodeCharacter || variants?.length ? (
-        <div className="mb-4 flex flex-shrink flex-grow flex-row flex-wrap gap-4 self-stretch lg:flex-col lg:items-center lg:[max-height:100vh] ">
+        <div className="mb-4 flex flex-shrink flex-grow flex-row flex-wrap gap-4 self-stretch lg:flex-col lg:items-center lg:[max-height:85vh] ">
           {variants?.length ? (
             <section className="flex flex-grow-[9999] items-center justify-center [min-width:14rem] lg:[min-width:none] ">
               <div className="justify-center bg-black/10 p-4 shadow-inner  shadow-black/25 lg:overflow-auto lg:[max-height:57vh]">
@@ -259,7 +259,7 @@ export function SingleFigureDictionaryEntry({
           )}
           {isUnicodeCharacter ? (
             <div className="flex flex-grow flex-wrap gap-4 [min-width:19rem] max-lg:justify-between lg:flex-col lg:flex-nowrap lg:justify-end">
-              <p className="px-4 [min-width:10rem]">
+              <div className="px-4 [min-width:10rem]">
                 in your browser: <span className="text-2xl">{figure.id}</span>{" "}
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
                 <br />{" "}
@@ -282,7 +282,7 @@ export function SingleFigureDictionaryEntry({
                     ))}
                   </section>
                 ) : null}
-              </p>
+              </div>
 
               {figureIsStandaloneCharacter || figure.isPriority ? (
                 <ExternalDictionaryLinks

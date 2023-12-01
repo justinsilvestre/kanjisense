@@ -14,7 +14,7 @@ export default function DictionaryLayout({
 }: PropsWithChildren<{ className?: string }>) {
   return (
     <div
-      className={`relative mx-auto flex min-h-screen  max-w-5xl flex-col gap-4 bg-white py-4 max-lg:px-2 ${
+      className={`relative mx-auto flex min-h-screen  max-w-5xl flex-col gap-4 bg-white px-1 py-4 max-lg:px-2 ${
         className || ""
       }`}
     >
@@ -25,25 +25,31 @@ export default function DictionaryLayout({
         </h1>
       </header>
       {children}
-      <footer className="flex flex-row flex-wrap  bg-gray-200 p-2 sm:gap-4">
-        <h1 className="w-full self-center text-4xl font-bold text-slate-900 sm:w-auto sm:text-5xl">
+      <footer className="  bg-gray-50 p-2 sm:gap-4">
+        <h1 className="w-full self-center text-base font-bold text-slate-900 sm:w-auto">
           <span className=" text-gray-700">kanji</span>
           <span className=" text-blue-900">sense</span>
         </h1>
-        <ul>
+        <ul className="">
           <li>
-            <BrowseComponentsLink>components</BrowseComponentsLink>
+            <BrowseComponentsLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
+              the kanji components
+            </BrowseComponentsLink>
           </li>
           <li>
-            <BrowseCharactersLink>characters</BrowseCharactersLink>
+            <BrowseCharactersLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
+              the 3500 most important characters
+            </BrowseCharactersLink>
           </li>
           <li>
-            <BrowseSoundComponentsLink>
+            <BrowseSoundComponentsLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
               sound components
             </BrowseSoundComponentsLink>
           </li>
           <li>
-            <AboutLink>about Kanjisense</AboutLink>
+            <AboutLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
+              about Kanjisense
+            </AboutLink>
           </li>
         </ul>
       </footer>

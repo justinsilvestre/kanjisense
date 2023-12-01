@@ -74,10 +74,17 @@ export const MiddleChineseLink = ({ children }: LinkProps) => (
   <AppLink to={`/dict/middle-chinese`}>{children}</AppLink>
 );
 
-export const BrowseSoundComponentsLink = ({ children }: LinkProps) => (
-  <AppLink to="/browse/sound-components">{children}</AppLink>
+export const BrowseSoundComponentsLink = ({
+  children,
+  className,
+}: LinkProps) => (
+  <AppLink to="/browse/sound-components" className={className}>
+    {children}
+  </AppLink>
 );
 
-export const AboutLink = ({ children }: LinkProps) => (
-  <AppLink to="/about">{children}</AppLink>
+export const AboutLink = ({ children, className }: LinkProps) => (
+  <AppLink to="/about" className={className}>
+    {children}
+  </AppLink>
 );

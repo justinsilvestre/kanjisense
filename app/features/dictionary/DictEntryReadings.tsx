@@ -1,3 +1,4 @@
+import { SbgyXiaoyun } from "@prisma/client";
 import { LinksFunction } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
@@ -7,7 +8,12 @@ import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureId.sino";
 
 import { abbreviateTranscriptions } from "./abbreviateTranscriptions";
-import { Dialog, DialogContent, DialogTrigger } from "./Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  useDialogContext,
+} from "./Dialog";
 import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.server";
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
 import { QysDialogContent } from "./QysDialogContent";
@@ -119,37 +125,10 @@ export function DictEntryReadings({
         </div>
         {guangyunReadings?.length ? (
           <Dialog>
-            <DialogTrigger>
-              <div className="text-left">
-                <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
-                <dd className="text-xl leading-9 text-gray-700 drop-shadow-[0_2px_2px_rgb(0_0_0_/_.4)]">
-                  <div className="scallop text-center">
-                    {abbreviateTranscriptions(
-                      guangyunReadings.map((g) => transcribeSbgyXiaoyun(g)),
-                    )}
-                  </div>
-                </dd>
-              </div>
-            </DialogTrigger>
-            <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box] [min-width:17rem]  [overflow-y:auto]  [width:40v] [max-height:80vh]  [max-width:80vw] md:max-w-xl">
-              <QysDialogContent
-                attestedOnReadings={
-                  readings.selectedOnReadings.length
-                    ? readings.selectedOnReadings
-                    : readings.kanjidicEntry?.onReadings || []
-                }
-                syllables={guangyunReadings}
-                inferredOnReadingCandidates={
-                  readings.inferredOnReadingCandidates as OnReadingToTypeToXiaoyuns
-                }
-                sbgyXiaoyunsToExemplars={
-                  readings.sbgyXiaoyunsMatchingExemplars as Record<
-                    string,
-                    string[]
-                  >
-                }
-              />
-            </DialogContent>
+            <QysDialog
+              guangyunReadings={guangyunReadings}
+              readings={readings}
+            />
           </Dialog>
         ) : null}
         {animationState !== "exited" ? (
@@ -273,6 +252,49 @@ export function DictEntryReadings({
         </div>
       </div>
     </section>
+  );
+}
+
+function QysDialog({
+  guangyunReadings,
+  readings,
+}: {
+  guangyunReadings: SbgyXiaoyun[];
+  readings: NonNullable<DictionaryPageFigureWithPriorityUses["reading"]>;
+}) {
+  const { setOpen } = useDialogContext();
+  return (
+    <>
+      <DialogTrigger>
+        <div className="text-left">
+          <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
+          <dd className="text-xl leading-9 text-gray-700 drop-shadow-[0_2px_2px_rgb(0_0_0_/_.4)]">
+            <div className="scallop text-center">
+              {abbreviateTranscriptions(
+                guangyunReadings.map((g) => transcribeSbgyXiaoyun(g)),
+              )}
+            </div>
+          </dd>
+        </div>
+      </DialogTrigger>
+      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:95vh] [max-width:95vw] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
+        <QysDialogContent
+          onClickClose={() => setOpen(false)}
+          attestedOnReadings={
+            readings.selectedOnReadings.length
+              ? readings.selectedOnReadings
+              : readings.kanjidicEntry?.onReadings || []
+          }
+          syllables={guangyunReadings}
+          inferredOnReadingCandidates={
+            readings.inferredOnReadingCandidates as OnReadingToTypeToXiaoyuns
+          }
+          sbgyXiaoyunsToExemplars={
+            readings.sbgyXiaoyunsMatchingExemplars as Record<string, string[]>
+          }
+        />
+      </DialogContent>
+    </>
   );
 }
 

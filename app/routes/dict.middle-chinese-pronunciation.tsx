@@ -19,6 +19,8 @@ import {
   VowelHints,
 } from "~/features/dictionary/QysHints";
 
+import { IpaLink, IpaSymbols } from "../features/dictionary/IpaLink";
+
 export const links = () => [{ rel: "stylesheet", href: css }];
 
 export function ErrorBoundary() {
@@ -300,7 +302,7 @@ export default function MiddleChinese() {
                       <G g="pʻ" bold />
                     </td>
                     <td>
-                      [pʰ] as in{" "}
+                      <IpaLink sound={IpaSymbols.pAspirated} /> as in{" "}
                       <i>
                         <B>p</B>ool
                       </i>
@@ -321,7 +323,7 @@ export default function MiddleChinese() {
                       <G g="b" bold />
                     </td>
                     <td>
-                      [b] as in{" "}
+                      <IpaLink sound="b" /> as in{" "}
                       <i>
                         <B>b</B>ig
                       </i>
@@ -342,17 +344,17 @@ export default function MiddleChinese() {
                       <G g="m" bold />
                     </td>
                     <td>
-                      [m] as in{" "}
+                      <IpaLink sound="m" /> as in{" "}
                       <i>
                         <B>m</B>uch
                       </i>
                       . Around the Tang dynasty, this sound shifted{" "}
                       <MiddleChineseTranscriptionLink hash="denasalization">
-                        closer to a [b] sound{" "}
+                        closer to a <IpaLink sound="b" /> sound{" "}
                       </MiddleChineseTranscriptionLink>
                       or{" "}
                       <MiddleChineseTranscriptionLink hash="dentilabialization">
-                        a [ʋ] sound
+                        a <IpaLink sound={IpaSymbols.vWithHook} /> sound
                       </MiddleChineseTranscriptionLink>
                       , depending on the following vowel.
                     </td>
@@ -496,7 +498,7 @@ export default function MiddleChinese() {
                     </td>
                     <td>
                       <>
-                        [p] as in{" "}
+                        <IpaLink sound="p" /> as in{" "}
                         <i>
                           s<B>p</B>oon
                         </i>
@@ -1072,13 +1074,13 @@ export default function MiddleChinese() {
                         <G g="b" bold />
                       </td>
                       <td>
-                        [b] as in{" "}
+                        <IpaLink sound="b" /> as in{" "}
                         <i>
                           <B>b</B>ig
                         </i>
                       </td>
                       <td>
-                        [pʱ] like Korean{" "}
+                        <IpaLink sound={IpaSymbols.pBreathy} /> like Korean{" "}
                         <i>
                           <B>b</B>ap
                         </i>
@@ -1094,13 +1096,13 @@ export default function MiddleChinese() {
                         <G g="d" bold />
                       </td>
                       <td>
-                        [d] as in{" "}
+                        <IpaLink sound="d" /> as in{" "}
                         <i>
                           <B>d</B>og
                         </i>
                       </td>
                       <td>
-                        [tʱ] like Korean{" "}
+                        <IpaLink sound={IpaSymbols.tBreathy} /> like Korean{" "}
                         <i>
                           <B>d</B>oenjang
                         </i>
@@ -1116,13 +1118,14 @@ export default function MiddleChinese() {
                         <G g="z" bold />
                       </td>
                       <td>
-                        [z] as in{" "}
+                        <IpaLink sound="z" /> as in{" "}
                         <i>
                           <B>z</B>oo
                         </i>
                       </td>
                       <td>
-                        [sʱ] something like Korean{" "}
+                        <IpaLink sound={IpaSymbols.sBreathy} /> something like
+                        Korean{" "}
                         <i>
                           <B>S</B>eoul
                         </i>
@@ -1134,13 +1137,13 @@ export default function MiddleChinese() {
                         <G g="g" bold />
                       </td>
                       <td>
-                        [g] as in{" "}
+                        <IpaLink sound={IpaSymbols.scriptG} /> as in{" "}
                         <i>
                           <B>g</B>o
                         </i>
                       </td>
                       <td>
-                        [kʱ] like Korean{" "}
+                        <IpaLink sound={IpaSymbols.kBreathy} /> like Korean{" "}
                         <i>
                           <B>g</B>im
                         </i>
@@ -1156,13 +1159,18 @@ export default function MiddleChinese() {
                         <G g="dz" bold />
                       </td>
                       <td>
-                        [dz] as in{" "}
+                        <IpaLink sound="dz" /> as in{" "}
                         <i>
                           a<B>dz</B>e
                         </i>
                       </td>
                       <td>
-                        [tsʱ] like <G g="ts" />, but with a breathy quality
+                        <IpaLink sound={IpaSymbols.tsBreathy} /> like{" "}
+                        <G g="ts" />, but with a{" "}
+                        <A href="https://en.wikipedia.org/wiki/Breathy_consonant">
+                          breathy
+                        </A>{" "}
+                        quality
                       </td>
                     </tr>
                     <tr>
@@ -1172,14 +1180,16 @@ export default function MiddleChinese() {
                         <G g="dź" bold />
                       </td>
                       <td>
-                        [d͡ȥ] [d͡ʑ] as in{" "}
+                        <IpaLink sound={IpaSymbols.dZWithLoop} />{" "}
+                        <IpaLink sound={IpaSymbols.dZWithCurl} /> as in{" "}
                         <i>
                           <B>j</B>udge
                         </i>{" "}
                         (see above)
                       </td>
                       <td rowSpan={2}>
-                        [t͡ɕʱ] like Korean{" "}
+                        <IpaLink sound={IpaSymbols.tCWithCurlBreathy} /> like
+                        Korean{" "}
                         <i>
                           <B>j</B>apchae
                         </i>
@@ -1196,7 +1206,8 @@ export default function MiddleChinese() {
                         <G g="ź" bold />
                       </td>
                       <td>
-                        [ȥ] [ʑ] as in{" "}
+                        <IpaLink sound={IpaSymbols.zWithLoop} />{" "}
+                        <IpaLink sound={IpaSymbols.zWithCurl} /> as in{" "}
                         <i>
                           <B>J</B>acques
                         </i>{" "}
@@ -1247,7 +1258,7 @@ export default function MiddleChinese() {
                       </td>
                       <td>幫 pang</td>
                       <td colSpan={2}>
-                        [p] as in{" "}
+                        <IpaLink sound="p" /> as in{" "}
                         <i>
                           s<B>p</B>oon
                         </i>
@@ -1266,7 +1277,7 @@ export default function MiddleChinese() {
                       </td>
                       <td>滂 pʻang</td>
                       <td colSpan={2}>
-                        [p] as in{" "}
+                        <IpaLink sound={IpaSymbols.pAspirated} /> as in{" "}
                         <i>
                           <B>p</B>ool
                         </i>
@@ -1285,7 +1296,7 @@ export default function MiddleChinese() {
                       </td>
                       <td>並 bèngˬ</td>
                       <td colSpan={2}>
-                        [b] as in{" "}
+                        <IpaLink sound="b" /> as in{" "}
                         <i>
                           <B>b</B>ig
                         </i>
@@ -1335,7 +1346,7 @@ export default function MiddleChinese() {
                       </td>
                       <td>明 mẹng</td>
                       <td colSpan={2}>
-                        [m] as in{" "}
+                        <IpaLink sound="m" /> as in{" "}
                         <i>
                           <B>m</B>uch
                         </i>
@@ -1556,20 +1567,26 @@ export default function MiddleChinese() {
                     together in a group
                   </MiddleChineseTranscriptionLink>{" "}
                   separate from bare <G g="ka" />. This group is generally
-                  reconstructed with more <i>front vowels</i>, like [a] [æ] [ɛ]
-                  (closer to the A in <i>cat</i> or the E in <i>bed</i>), as
-                  opposed to the more <i>back vowel</i> in <G g="ka" /> [ɑ]
-                  (closer to the A in <i>father</i>). In addition, scholars
-                  sometimes reconstruct these syllables with a <i>velar</i> or{" "}
-                  <i>palatal</i> element before the vowel like [ɣ] or [j].
+                  reconstructed with more <i>front vowels</i>, like{" "}
+                  <IpaLink sound="a" /> <IpaLink sound={IpaSymbols.ash} />{" "}
+                  <IpaLink sound={IpaSymbols.epsilon} /> (closer to the A in{" "}
+                  <i>cat</i> or the E in <i>bed</i>), as opposed to the more{" "}
+                  <i>back vowel</i> in <G g="ka" />{" "}
+                  <IpaLink sound={IpaSymbols.alpha} /> (closer to the A in{" "}
+                  <i>father</i>). In addition, scholars sometimes reconstruct
+                  these syllables with a <i>velar</i> or <i>palatal</i> element
+                  before the vowel like <IpaLink sound={IpaSymbols.gamma} /> or{" "}
+                  <IpaLink sound="j" />.
                 </li>
                 <li>
                   Between <G g="kạ" /> and <G g="kạ̈" />, the double-dot is a way
                   of signalling another difference&mdash;namely, it's likely
                   that the <G g="kạ̈" /> had a <i>higher</i> or more <i>front</i>{" "}
-                  vowel. So scholars posit for 家 <G g="kạ" /> sounds like
-                  /kɣæ/, /kjaː/, etc., whereas 佳 <G g="kạ̈" /> gets something
-                  like /kɣɛ/, /kjaːj/ etc.
+                  vowel. So scholars posit for 家 <G g="kạ" /> sounds like{" "}
+                  <IpaLink broad sound="kɣæ" />, <IpaLink broad sound="kjaː" />,
+                  etc., whereas 佳 <G g="kạ̈" /> gets something like{" "}
+                  <IpaLink broad sound="kɣɛ" />, <IpaLink broad sound="kjaːj" />{" "}
+                  etc.
                 </li>
               </ul>
 
@@ -1621,25 +1638,28 @@ export default function MiddleChinese() {
                 <li>
                   /u/ Much like the U in <i>rule</i>. This sound may have been
                   more rounded than the corresponding sound in modern Japanese,
-                  which is often transcribed as /ɯ/.
+                  which is often transcribed as{" "}
+                  <IpaLink broad sound={IpaSymbols.turnedM} />.
                 </li>
                 <li>
-                  /e/ Narrowly transcribed [ʲe], much like the <G g="ye"></G> in{" "}
-                  <i>yes</i>. So the same as in modern Japanese, except with an
-                  initial glide like a Y sound.
+                  /e/ Narrowly transcribed <IpaLink sound="ʲe" />, much like the{" "}
+                  <G g="ye"></G> in <i>yes</i>. So the same as in modern
+                  Japanese, except with an initial glide like a Y sound.
                 </li>
                 <li>
-                  /o/ Narrowly transcribed [ʷo], much like the <G g="wo"></G> in{" "}
-                  <i>worn</i>. So the same as in modern Japanese, except with an
-                  initial glide like a W sound.
+                  /o/ Narrowly transcribed <IpaLink sound="ʷo" />, much like the{" "}
+                  <G g="wo"></G> in <i>worn</i>. So the same as in modern
+                  Japanese, except with an initial glide like a W sound.
                 </li>
               </ul>
               <p>
                 (At the beginning of the Early Middle Japanese period, there was
-                actually an addition vowel /ə/. But this merged with the /o/
-                sound some time after 1000 C.E. So it still makes sense to say
-                that the fivefold vowel system above remained intact throughout
-                the shared history of Early Middle Japanese and Middle Chinese.)
+                actually an addition vowel{" "}
+                <IpaLink broad sound={IpaSymbols.schwa} />. But this merged with
+                the <IpaLink broad sound="o" /> sound some time after 1000 C.E.
+                So it still makes sense to say that the fivefold vowel system
+                above remained intact throughout the shared history of Early
+                Middle Japanese and Middle Chinese.)
               </p>
               <p>
                 Five-vowel systems like this just so happen to be a great match
@@ -1825,7 +1845,10 @@ export default function MiddleChinese() {
                     <th>spelling</th>
                   </thead>
                   <tr>
-                    <td>an optional "semivowel" /w/ /j/ or /wij/</td>
+                    <td>
+                      an optional "semivowel" /w/ <IpaLink broad sound="j" /> or
+                      /wij/
+                    </td>
                     <td>
                       <G g="w" />
                       <G g="y" />
@@ -1891,9 +1914,9 @@ export default function MiddleChinese() {
                     <MedialHints.W />
                   </li>
                   <li>
-                    The sound written here <G g="y" /> corresponds to /j/ in{" "}
-                    <i>Kan'on</i>, which probably depicted a sound{" "}
-                    <MedialHints.Y />
+                    The sound written here <G g="y" /> corresponds to{" "}
+                    <IpaLink broad sound="j" /> in <i>Kan'on</i>, which probably
+                    depicted a sound <MedialHints.Y />
                   </li>
                   <li>
                     The sound written here <G g="ŷ" /> corresponds to /wij/ in{" "}
@@ -1935,14 +1958,16 @@ export default function MiddleChinese() {
                     Final /i/ in <i>Kan-on</i> usually corresponds to a final
                     [i] in reconstructions, in which case we write it{" "}
                     <G g="i" />. After main vowel /e/, it sometimes corresponds
-                    to a velar nasal consonant [ŋ], in which case we write it{" "}
-                    <G g="ng" />.
+                    to a velar nasal consonant{" "}
+                    <IpaLink sound={IpaSymbols.eng} />, in which case we write
+                    it <G g="ng" />.
                   </li>
                   <li>
                     Final /u/ in <i>Kan-on</i> often corresponds to a final [u]
                     in reconstructions, in which case we write it <G g="u" />.
-                    Elsewhere, it corresponds to a velar nasal consonant [ŋ], in
-                    which case we write it <G g="ng" />, as in English.
+                    Elsewhere, it corresponds to a velar nasal consonant{" "}
+                    <IpaLink sound={IpaSymbols.eng} />, in which case we write
+                    it <G g="ng" />, as in English.
                   </li>
                   <li>
                     Final /n/ in <i>Kan-on</i> corresponds to a final [n] or [m]
@@ -2929,10 +2954,10 @@ export default function MiddleChinese() {
               <p>
                 As you can see, there are some features of the Four Divisions
                 that are clearly manifest in the <i>Kan-on</i> vowel. For
-                instance, syllables containing /j/ a Y- sound in <i>Kan-on</i>,
-                or one of the vowels /i/ /u/, are invariably in Division III.
-                Therefore, these syllables don't need a diacritic mark to
-                distinguish them as such.
+                instance, syllables containing <IpaLink broad sound="j" /> a Y-
+                sound in <i>Kan-on</i>, or one of the vowels /i/ /u/, are
+                invariably in Division III. Therefore, these syllables don't
+                need a diacritic mark to distinguish them as such.
               </p>
             </section>
             <section

@@ -20,6 +20,7 @@ import {
   links as kvgLinks,
   SingleFigureDictionaryEntry,
 } from "~/features/dictionary/SingleFigureDictionaryEntry";
+import css from "~/features/dictionary/styles.css";
 
 interface LoaderData {
   searchedFigure: DictionaryPageSearchedFigure;
@@ -27,7 +28,13 @@ interface LoaderData {
 
 export const meta: MetaFunction = () => [{ title: "Figure entry" }];
 
-export const links: LinksFunction = () => [...kvgLinks()];
+export const links: LinksFunction = () => [
+  {
+    rel: "stylesheet",
+    href: css,
+  },
+  ...kvgLinks(),
+];
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { figureId } = params;

@@ -2,6 +2,7 @@
 import { PropsWithChildren } from "react";
 
 import { MiddleChineseTranscriptionLink } from "~/components/AppLink";
+import { IpaLink, IpaSymbols } from "~/features/dictionary/IpaLink";
 import { Kaihe, QysSyllableProfile } from "~/lib/qys/inferOnyomi";
 import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
 import { initialGroups } from "~/lib/qys/QysInitial";
@@ -73,7 +74,8 @@ export const ConsonantHint = ({
         </>
       ) : (
         <>
-          <ConsonantHints.B /> The result was a sound closer to [p] or [pʰ].
+          <ConsonantHints.B /> The result was a sound closer to{" "}
+          <IpaLink sound="p" /> or <IpaLink sound="pʰ" />.
         </>
       );
     case "明":
@@ -235,7 +237,7 @@ export const ConsonantHint = ({
 export const ConsonantHints = {
   Px: () => (
     <>
-      [pʰ] as in{" "}
+      <IpaLink sound={IpaSymbols.pAspirated} /> as in{" "}
       <i>
         <B>p</B>ool
       </i>
@@ -248,7 +250,7 @@ export const ConsonantHints = {
   ),
   B: () => (
     <>
-      [b] as in{" "}
+      <IpaLink sound="b" /> as in{" "}
       <i>
         <B>b</B>ig
       </i>
@@ -261,20 +263,20 @@ export const ConsonantHints = {
   ),
   M: () => (
     <>
-      [m] as in{" "}
+      <IpaLink sound="m" /> as in{" "}
       <i>
         <B>m</B>uch
       </i>
       . Around the Tang dynasty, this sound shifted{" "}
       <MiddleChineseTranscriptionLink hash="denasalization">
-        closer to a [b] sound{" "}
+        closer to a <IpaLink sound="b" /> sound{" "}
       </MiddleChineseTranscriptionLink>
       .
     </>
   ),
   Tx: () => (
     <>
-      [tʰ] as in{" "}
+      <IpaLink sound={IpaSymbols.tAspirated} /> as in{" "}
       <i>
         <B>t</B>alk
       </i>
@@ -295,7 +297,7 @@ export const ConsonantHints = {
   ),
   D: () => (
     <>
-      [d] as in{" "}
+      <IpaLink sound="d" /> as in{" "}
       <i>
         <B>d</B>og
       </i>
@@ -307,12 +309,13 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [t] or [tʰ].
+      , thus shifting towards <IpaLink sound="t" /> or{" "}
+      <IpaLink sound={IpaSymbols.tAspirated} />.
     </>
   ),
   N: () => (
     <>
-      [n] as in{" "}
+      <IpaLink sound="n" /> as in{" "}
       <i>
         <B>n</B>oodle
       </i>
@@ -326,14 +329,14 @@ export const ConsonantHints = {
       </i>
       . Around the Tang dynasty, this sound shifted{" "}
       <MiddleChineseTranscriptionLink hash="denasalization">
-        closer to a [d] sound
+        closer to a <IpaLink sound="d" /> sound
       </MiddleChineseTranscriptionLink>{" "}
       in some contexts.
     </>
   ),
   S: () => (
     <>
-      [s] as in{" "}
+      <IpaLink sound="s" /> as in{" "}
       <i>
         <B>s</B>ong
       </i>
@@ -342,7 +345,7 @@ export const ConsonantHints = {
   ),
   Z: () => (
     <>
-      [z] as in{" "}
+      <IpaLink sound="z" /> as in{" "}
       <i>
         <B>z</B>oo
       </i>
@@ -350,12 +353,12 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [s] or [sʰ].
+      , thus shifting towards <IpaLink sound="s" /> or <IpaLink sound="sʰ" />.
     </>
   ),
   Kx: () => (
     <>
-      [kʰ] as in{" "}
+      <IpaLink sound="kʰ" /> as in{" "}
       <i>
         <B>k</B>ite
       </i>
@@ -368,7 +371,7 @@ export const ConsonantHints = {
   ),
   G: () => (
     <>
-      [g] as in{" "}
+      <IpaLink sound={IpaSymbols.scriptG} /> as in{" "}
       <i>
         <B>g</B>o
       </i>
@@ -376,12 +379,12 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [k] or [kʰ].
+      , thus shifting towards <IpaLink sound="k" /> or <IpaLink sound="kʰ" />.
     </>
   ),
   L: () => (
     <>
-      [l] as in{" "}
+      <IpaLink sound="l" /> as in{" "}
       <i>
         <B>l</B>ion
       </i>
@@ -390,7 +393,7 @@ export const ConsonantHints = {
   ),
   Y: () => (
     <>
-      [j] as in{" "}
+      <IpaLink sound="j" /> as in{" "}
       <i>
         <B>y</B>es
       </i>
@@ -400,7 +403,7 @@ export const ConsonantHints = {
   ),
   W: () => (
     <>
-      [w] as in{" "}
+      <IpaLink sound="w" /> as in{" "}
       <i>
         <B>w</B>in
       </i>
@@ -415,7 +418,7 @@ export const ConsonantHints = {
         pharyngeal
       </a>{" "}
       or <a href="https://en.wikipedia.org/wiki/Glottal_consonant">glottal</a>{" "}
-      quality, something like [ɦ], a sort of breathy H-sound.
+      quality, something like <IpaLink sound="ɦ" />, a sort of breathy H-sound.
     </>
   ),
   H: () => (
@@ -428,12 +431,13 @@ export const ConsonantHints = {
         pharyngeal
       </a>{" "}
       or <a href="https://en.wikipedia.org/wiki/Glottal_consonant">glottal</a>{" "}
-      consonant, something like [ɦ], a sort of breathy H-sound.
+      consonant, something like <IpaLink sound="ɦ" />, a sort of breathy
+      H-sound.
     </>
   ),
   P: () => (
     <>
-      [p] as in{" "}
+      <IpaLink sound="p" /> as in{" "}
       <i>
         s<B>p</B>oon
       </i>
@@ -442,7 +446,7 @@ export const ConsonantHints = {
   ),
   T: () => (
     <>
-      [t] as in{" "}
+      <IpaLink sound="t" /> as in{" "}
       <i>
         s<B>t</B>op
       </i>
@@ -463,7 +467,7 @@ export const ConsonantHints = {
   ),
   K: () => (
     <>
-      [k] as in{" "}
+      <IpaLink sound="k" /> as in{" "}
       <i>
         s<B>k</B>unk
       </i>
@@ -472,7 +476,7 @@ export const ConsonantHints = {
   ),
   Ts: () => (
     <>
-      [ts] as in{" "}
+      <IpaLink sound="ts" /> as in{" "}
       <i>
         ca<B>ts</B>
       </i>
@@ -481,7 +485,7 @@ export const ConsonantHints = {
   ),
   Dz: () => (
     <>
-      [dz]
+      <IpaLink sound="dz" />
       <i>
         {" "}
         as in a<B>dz</B>e
@@ -490,12 +494,13 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [ts] or [tsʰ].
+      , thus shifting towards <IpaLink sound="ts" /> or <IpaLink sound="tsʰ" />.
     </>
   ),
   Tsx: () => (
     <>
-      [tsʰ] as in the consecutive <G g="ts h" bold /> in the phrase{" "}
+      <IpaLink sound="tsʰ" /> as in the consecutive <G g="ts h" bold /> in the
+      phrase{" "}
       <i>
         hi<B>ts h</B>ard
       </i>
@@ -518,18 +523,18 @@ export const ConsonantHints = {
   ),
   Sr: () => (
     <>
-      [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />.
+      <IpaLink sound="ʂ" /> like Polish <G g="sz" /> or Mandarin <G g="sh" />.
     </>
   ),
   Sj: {
     Early: () => (
       <>
-        [ɕ] like Polish <G g="ś" /> or Mandarin <G g="x" />.
+        <IpaLink sound="ɕ" /> like Polish <G g="ś" /> or Mandarin <G g="x" />.
       </>
     ),
     Late: () => (
       <>
-        [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />.
+        <IpaLink sound="ʂ" /> like Polish <G g="sz" /> or Mandarin <G g="sh" />.
       </>
     ),
   },
@@ -561,36 +566,37 @@ export const ConsonantHints = {
   ),
   Tsr: () => (
     <>
-      [tʂ] like Mandarin <G g="zh" />.
+      <IpaLink sound="tʂ" /> like Mandarin <G g="zh" />.
     </>
   ),
   Tsj: {
     Early: () => (
       <>
-        [tɕ] like Mandarin <G g="j" />.
+        <IpaLink sound="tɕ" /> like Mandarin <G g="j" />.
       </>
     ),
     Late: () => (
       <>
-        [tʂ] like Mandarin <G g="zh" />.
+        <IpaLink sound="tʂ" /> like Mandarin <G g="zh" />.
       </>
     ),
   },
   Tsrx: () => (
     <>
-      [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+      <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or Mandarin <G g="ch" />.
     </>
   ),
   Tsjx: {
     Early: () => (
       <>
-        [tɕʰ] like Polish <G g="ć" /> or Mandarin <G g="q" />.
+        <IpaLink sound="tɕʰ" /> like Polish <G g="ć" /> or Mandarin <G g="q" />.
       </>
     ),
     Late: () => (
       <>
         <>
-          [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
+          <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or Mandarin{" "}
+          <G g="ch" />.
         </>
       </>
     ),
@@ -611,15 +617,15 @@ export const ConsonantHints = {
   Zr: {
     Early: () => (
       <>
-        [ȥ] like Polish <G g="ż" /> or <G g="rz" />, Russian <G g="ж" />, or
-        Mandarin <G g="r" />.
+        <IpaLink sound="ȥ" /> like Polish <G g="ż" /> or <G g="rz" />, Russian{" "}
+        <G g="ж" />, or Mandarin <G g="r" />.
       </>
     ),
     Late: () => (
       <>
-        [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />
-        , and sometimes [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
-        At some point, this sound likely had a{" "}
+        <IpaLink sound="ʂ" /> like Polish <G g="sz" /> or Mandarin <G g="sh" />
+        , and sometimes <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or
+        Mandarin <G g="ch" />. At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
         </MiddleChineseTranscriptionLink>{" "}
@@ -630,14 +636,14 @@ export const ConsonantHints = {
   Zj: {
     Early: () => (
       <>
-        [ʑ] like Polish <G g="ź" />.
+        <IpaLink sound="ʑ" /> like Polish <G g="ź" />.
       </>
     ),
     Late: () => (
       <>
-        [ʂ] like Polish <G g="sz" /> or Mandarin <G g="sh" />
-        , and sometimes [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />.
-        At some point, this sound likely had a{" "}
+        <IpaLink sound="ʂ" /> like Polish <G g="sz" /> or Mandarin <G g="sh" />
+        , and sometimes <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or
+        Mandarin <G g="ch" />. At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
         </MiddleChineseTranscriptionLink>{" "}
@@ -661,13 +667,14 @@ export const ConsonantHints = {
   Dzr: {
     Early: () => (
       <>
-        [dȥ] like Polish <G g="dż" /> or <G g="drz" />, or Russian <G g="дж" />.
+        <IpaLink sound="dȥ" /> like Polish <G g="dż" /> or <G g="drz" />, or
+        Russian <G g="дж" />.
       </>
     ),
     Late: () => (
       <>
-        [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
-        this sound likely had a{" "}
+        <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or Mandarin{" "}
+        <G g="ch" />. At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
         </MiddleChineseTranscriptionLink>{" "}
@@ -678,13 +685,13 @@ export const ConsonantHints = {
   Dzj: {
     Early: () => (
       <>
-        [dʑ] like Polish <G g="dź" />.
+        <IpaLink sound="dʑ" /> like Polish <G g="dź" />.
       </>
     ),
     Late: () => (
       <>
-        [tʂʰ] like Polish <G g="cz" /> or Mandarin <G g="ch" />. At some point,
-        this sound likely had a{" "}
+        <IpaLink sound="tʂʰ" /> like Polish <G g="cz" /> or Mandarin{" "}
+        <G g="ch" />. At some point, this sound likely had a{" "}
         <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
           breathy
         </MiddleChineseTranscriptionLink>{" "}
@@ -694,29 +701,28 @@ export const ConsonantHints = {
   },
   Ng: () => (
     <>
-      [ŋ] as in{" "}
+      <IpaLink sound="ŋ" /> as in{" "}
       <i>
         si<B>ng</B>er
       </i>
       . Around the Tang dynasty, this sound shifted{" "}
       <MiddleChineseTranscriptionLink hash="denasalization">
-        closer to a [g] sound,{" "}
-      </MiddleChineseTranscriptionLink>{" "}
-      in some contexts.
+        closer to a <IpaLink sound="g" /> sound
+      </MiddleChineseTranscriptionLink>
+      , in some contexts.
     </>
   ),
   Q: () => (
     <>
-      [ʔ] like the{" "}
-      <A href="https://en.wikipedia.org/wiki/Glottal_stop">glottal stop</A> in
-      the middle of "uh-oh". This sound is not usually recognized as a distinct
-      consonant in English, but is written as a distinct consonant in other
-      languages, like Arabic (<i>alef</i>) or Hawaiian (the <i>ʻokina</i>).
+      <IpaLink sound="ʔ" /> like the glottal stop in the middle of "uh-oh". This
+      sound is not usually recognized as a distinct consonant in English, but is
+      written as a distinct consonant in other languages, like Arabic (
+      <i>alef</i>) or Hawaiian (the <i>ʻokina</i>).
     </>
   ),
   Kh: () => (
     <>
-      [x] as in the final sound of{" "}
+      <IpaLink sound="x" /> as in the final sound of{" "}
       <i>
         lo<B>ch</B>
       </i>
@@ -724,7 +730,7 @@ export const ConsonantHints = {
       <i>
         <B>j</B>amón
       </i>
-      , or [χ] further back in the throat as in{" "}
+      , or <IpaLink sound="χ" /> further back in the throat as in{" "}
       <i>
         Ba<B>ch</B>
       </i>
@@ -733,17 +739,14 @@ export const ConsonantHints = {
   ),
   Gh: () => (
     <>
-      [ɣ] something like Arabic letter ghayn or Flemish G, or perhaps [ʁ] even
-      further back in the throat, as the R-sound of French or German, or [ɦ]
-      like a sort of{" "}
-      <a href="https://en.wikipedia.org/wiki/Voiced_glottal_fricative">
-        breathy H-sound
-      </a>
-      . Around the Tang dynasty, this sound{" "}
+      <IpaLink sound="ɣ" /> something like Arabic letter ghayn or Flemish G, or
+      perhaps <IpaLink sound="ʁ" /> even further back in the throat, as the
+      R-sound of French or German, or <IpaLink sound="ɦ" /> like a sort of{" "}
+      breathy H-sound. Around the Tang dynasty, this sound{" "}
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [x], something like{" "}
+      , thus shifting towards <IpaLink sound="x" />, something like{" "}
       <i>
         lo<B>ch</B>
       </i>{" "}
@@ -756,40 +759,42 @@ export const ConsonantHints = {
   ),
   Nj: () => (
     <>
-      [ɲ] like the Spanish Ñ sound, or the <G g="gn" /> of French and Italian.
-      Around the Tang dynasty, this sound eventually moved closer towards [ɻ] a
-      sound vaguely like a J- or R-sound, as in Mandarin 日 rì, the source of
-      the first syllable of the English word "Japan". This spelling is meant to
-      reflect how the sound might have been pronounced at an intermediary stage,
-      something like [ɲʑ], i.e. vaguely like an N sound followed by a soft J
-      sound (as in <B>J</B>
+      <IpaLink sound="ɲ" /> like the Spanish Ñ sound, or the <G g="gn" /> of
+      French and Italian. Around the Tang dynasty, this sound eventually moved
+      closer towards <IpaLink sound="ɻ" /> a sound vaguely like a J- or R-sound,
+      as in Mandarin 日 rì, the source of the first syllable of the English word
+      "Japan". This spelling is meant to reflect how the sound might have been
+      pronounced at an intermediary stage, something like <IpaLink sound="ɲʑ" />
+      , i.e. vaguely like an N sound followed by a soft J sound (as in <B>J</B>
       acques).
     </>
   ),
   Yw: () => (
     <>
-      [jw] or [ju] like a Y-sound followed immediately by a W-sound. This
-      W-sound technically constituted part of the vowel, but this sequence of
-      sounds may have eventually combined into something close to [y] like the
-      French U or German Ü, or the Mandarin <G g="yu" /> in <G g="yuán" />. This
-      initial consonant usually shows up as a plain /j/ sound in <i>on'yomi</i>,
-      in which case it is written <G g="y" />. But where it shows up as a W-
-      sound in <i>on'yomi</i>, we write it like this, with the grave accent{" "}
-      <G g="`" /> there to distinguish it from <G g="w" />, which didn't involve
-      an initial [j] Y-like glide.
+      <IpaLink sound="jw" /> or <IpaLink sound="ju" /> like a Y-sound followed
+      immediately by a W-sound. This W-sound technically constituted part of the
+      vowel, but this sequence of sounds may have eventually combined into
+      something close to <IpaLink sound="y" /> like the French U or German Ü, or
+      the Mandarin <G g="yu" /> in <G g="yuán" />. This initial consonant
+      usually shows up as a plain /j/ sound in <i>on'yomi</i>, in which case it
+      is written <G g="y" />. But where it shows up as a W- sound in{" "}
+      <i>on'yomi</i>, we write it like this, with the grave accent <G g="`" />{" "}
+      there to distinguish it from <G g="w" />, which didn't involve an initial{" "}
+      <IpaLink sound="j" /> Y-like glide.
     </>
   ),
   Vy: () => (
     <>
-      [jw] or [ju] like a Y-sound followed immediately by a W-sound. This
-      W-sound technically constituted part of the vowel, but this sequence of
-      sounds may have eventually combined into something close to [y] like the
-      French U or German Ü, or the Mandarin <G g="yu" /> in <G g="yuán" />.
+      <IpaLink sound="jw" /> or <IpaLink sound="ju" /> like a Y-sound followed
+      immediately by a W-sound. This W-sound technically constituted part of the
+      vowel, but this sequence of sounds may have eventually combined into
+      something close to <IpaLink sound="y" /> like the French U or German Ü, or
+      the Mandarin <G g="yu" /> in <G g="yuán" />.
     </>
   ),
   Tr: () => (
     <>
-      [ʈ] like Hindi{" "}
+      <IpaLink sound="ʈ" /> like Hindi{" "}
       <i>
         <B>t</B>ikka
       </i>
@@ -798,7 +803,7 @@ export const ConsonantHints = {
   ),
   Trx: () => (
     <>
-      [ʈʰ] like Hindi{" "}
+      <IpaLink sound="ʈʰ" /> like Hindi{" "}
       <i>
         <B>th</B>eek
       </i>
@@ -811,7 +816,7 @@ export const ConsonantHints = {
   ),
   Dr: () => (
     <>
-      [ɗ] like Hindi{" "}
+      <IpaLink sound="ɗ" /> like Hindi{" "}
       <i>
         <B>d</B>amru
       </i>{" "}
@@ -823,29 +828,29 @@ export const ConsonantHints = {
       <MiddleChineseTranscriptionLink hash="a-note-on-voiced-sounds">
         lost its voiced quality
       </MiddleChineseTranscriptionLink>
-      , thus shifting towards [ʈ] or [ʈʰ].
+      , thus shifting towards <IpaLink sound="ʈ" /> or <IpaLink sound="ʈʰ" />.
     </>
   ),
   Nr: () => (
     <>
-      [ɳ] like Swedish{" "}
+      <IpaLink sound="ɳ" /> like Swedish{" "}
       <i>
         ba<B>rn</B>
       </i>
       . Around the Tang dynasty, this sound shifted{" "}
       <MiddleChineseTranscriptionLink hash="denasalization">
-        closer to a [ɗ] sound{" "}
+        closer to a <IpaLink sound="ɗ" /> sound{" "}
       </MiddleChineseTranscriptionLink>{" "}
       in some contexts.
     </>
   ),
   Pv: () => (
     <>
-      [f] as in{" "}
+      <IpaLink sound="f" /> as in{" "}
       <i>
         <B>f</B>ood
       </i>
-      , perhaps at one point [pf] like German{" "}
+      , perhaps at one point <IpaLink sound="pf" /> like German{" "}
       <i>
         <B>Pf</B>effer
       </i>
@@ -854,11 +859,11 @@ export const ConsonantHints = {
   ),
   Pxv: () => (
     <>
-      [f] as in{" "}
+      <IpaLink sound="f" /> as in{" "}
       <i>
         <B>f</B>ood
       </i>
-      , perhaps at one point [pfʰ] like German{" "}
+      , perhaps at one point <IpaLink sound="pfʰ" /> like German{" "}
       <i>
         <B>Pf</B>effer
       </i>
@@ -867,25 +872,26 @@ export const ConsonantHints = {
   ),
   Bv: () => (
     <>
-      [f] as in{" "}
+      <IpaLink sound="f" /> as in{" "}
       <i>
         <B>f</B>ood
       </i>
-      , perhaps at one point [pfʱ] like German{" "}
+      , perhaps at one point <IpaLink sound="pfʱ" /> like German{" "}
       <i>
         <B>Pf</B>effer
       </i>
-      , (possibly) with breathy voice, or something like [bv] a B-sound followed
-      by a V-sound.
+      , (possibly) with breathy voice, or something like <IpaLink sound="bv" />{" "}
+      a B-sound followed by a V-sound.
     </>
   ),
   Mv: () => (
     <>
-      [ʋ] like Dutch{" "}
+      <IpaLink sound="ʋ" /> like Dutch{" "}
       <i>
         <B>w</B>el
       </i>
-      , perhaps at some point like [mv] an M-sound followed by a V-sound.
+      , perhaps at some point like <IpaLink sound="mv" /> an M-sound followed by
+      a V-sound.
     </>
   ),
 };
@@ -941,29 +947,32 @@ export const MedialHint = ({
 export const MedialHints = {
   W: () => (
     <>
-      like [w] or [u]. It may have been fronted to something like [y] or [ʉ] in
-      certain contexts, especially before <i>front vowels</i> (written here{" "}
+      like <IpaLink sound="w" /> or <IpaLink sound="u" />. It may have been
+      fronted to something like <IpaLink sound="y" /> or <IpaLink sound="ʉ" />{" "}
+      in certain contexts, especially before <i>front vowels</i> (written here{" "}
       <G g="e" /> and <G g="i" />) and when written with the acute accent as{" "}
       <G g="ẃ" />.
     </>
   ),
   Y: () => (
     <>
-      like [j] or [i]. In some finals, it may have been closer to a more central
-      [ɨ].
+      like <IpaLink sound="j" /> or <IpaLink sound="i" />. In some finals, it
+      may have been closer to a more central <IpaLink sound="ɨ" />.
     </>
   ),
   Vy: () => (
     <>
       a sequence of a <G g="w" /> sound followed by a <G g="y" /> sound, so
-      something like [wj]. Alternatively, it may have been something in between
-      those two sounds, so something like [ʉ] or [y].
+      something like <IpaLink sound="wj" />. Alternatively, it may have been
+      something in between those two sounds, so something like{" "}
+      <IpaLink sound="ʉ" /> or <IpaLink sound="y" />.
     </>
   ),
   Yw: ({ chongniuLinkHash }: { chongniuLinkHash: string }) => (
     <>
-      like [w] or [u]. It may have been fronted to something like [y] or [ʉ] in
-      certain contexts, especially before <i>front vowels</i> (written here{" "}
+      like <IpaLink sound="w" /> or <IpaLink sound="u" />. It may have been
+      fronted to something like <IpaLink sound="y" /> or <IpaLink sound="ʉ" />{" "}
+      in certain contexts, especially before <i>front vowels</i> (written here{" "}
       <G g="e" /> and <G g="i" />. The grave accent <G g="`" /> marks that this
       final belongs to the category{" "}
       <i>
@@ -1231,11 +1240,11 @@ export const VowelHints = {
     <>
       Bare <G g="a" /> in this notation marks finals in the category{" "}
       <b>Division I</b>. Scholars tend to reconstruct the vowel of these finals
-      as a back vowel [ɑ], versus the more front vowels of Division II. These
-      finals are overwhelmingly rendered as /a/ in <i>on'yomi</i>. The final{" "}
-      <G g="au" /> is sometimes interpreted as /ou/ in <i>on'yomi</i>, but here
-      it is consistently represented as <G g="au" /> to maintain a visual
-      distinction with <G g="ou" />.
+      as a back vowel <IpaLink sound="ɑ" />, versus the more front vowels of
+      Division II. These finals are overwhelmingly rendered as /a/ in{" "}
+      <i>on'yomi</i>. The final <G g="au" /> is sometimes interpreted as /ou/ in{" "}
+      <i>on'yomi</i>, but here it is consistently represented as <G g="au" /> to
+      maintain a visual distinction with <G g="ou" />.
     </>
   ),
   // for those with macron OR distinguished from macron
@@ -1245,7 +1254,8 @@ export const VowelHints = {
       <G g="āi" /> <G g="ām" /> <G g="āp" /> from bare <G g="ai" /> <G g="am" />{" "}
       <G g="ap" />. These groups eventually merged, but at the start, the group
       with bare <G g="a" /> may have had vowels that were relatively more
-      central or shorter (variously [ʌ], [ə], [ă] in reconstructions). In some{" "}
+      central or shorter (variously <IpaLink sound="ʌ" />, <IpaLink sound="ə" />
+      , <IpaLink sound="ă" /> in reconstructions). In some{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         early Japanese borrowings
       </MiddleChineseTranscriptionLink>
@@ -1274,11 +1284,15 @@ export const VowelHints = {
     <>
       The <strong>underdot</strong> <G g=" ̣" /> in this notation marks finals in
       the category <b>Division II</b>. Scholars tend to reconstruct these finals
-      with a more front vowel than Division I, so something like [a], [æ], or
-      even [aɨ]. It's widely agreed that these finals had an R-like or L-like
-      sound before the vowel in Old Chinese, which may have survived into the
-      Middle Chinese period as something like a velar glide (something like [ɣ]
-      or [ɯ]), or a palatal glide (like [j]). In some{" "}
+      with a more front vowel than Division I, so something like{" "}
+      <IpaLink sound="a" />, <IpaLink sound="æ" />, or even{" "}
+      <IpaLink sound="aɨ" linkSound="ɨ" />. It's widely agreed that these finals
+      had an R-like or L-like sound before the vowel in Old Chinese, which may
+      have survived into the Middle Chinese period as something like a velar
+      glide (something like <IpaLink sound={IpaSymbols.turnedMWithLongLeg} /> or{" "}
+      <IpaLink sound="ɯ" />
+      ), or a palatal glide (like <IpaLink sound="j" />
+      ). In some{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>
@@ -1291,19 +1305,19 @@ export const VowelHints = {
   ),
   A2DoubleDot: () => (
     <>
-      The <strong>double-dot</strong> <G g="¨" /> in this notations marks finals
+      The <strong>double-dot</strong> <G g="ä" /> in this notations marks finals
       that were likely pronounced with a more front or higher vowel compared to
-      finals with only the underdot, something like [ɛ] or [ai], though some
-      scholars have posited a distinction of vowel length between these finals.
-      (In an admittedly biased move, I chose the double-dots for their
-      historical association with frontness, cf. German Umlaut). Finals ending
-      in <G g="ạ̈" /> were usually interpreted with Japanese /ai/, but sometimes
-      with /a/; the spelling <G g="ạ̈" /> was chosen to keep a visual distinction
-      with <G g="ạ̈i" /> finals, which are more consistently interpreted with
-      /ai/. With the exception of those finals ending in <G g="ạ̈" />, members of
-      this group were not usually distinguished in <i>on'yomi</i> from their
-      counterparts without double-dots. Both groups were often interpreted with
-      Japanese <R>-e</R> in{" "}
+      finals with only the underdot, something like <IpaLink sound="ɛ" /> or{" "}
+      <IpaLink sound="ai" />, though some scholars have posited a distinction of
+      vowel length between these finals. (In an admittedly biased move, I chose
+      the double-dots for their historical association with frontness, cf.
+      German Umlaut). Finals ending in <G g="ạ̈" /> were usually interpreted with
+      Japanese /ai/, but sometimes with /a/; the spelling <G g="ạ̈" /> was chosen
+      to keep a visual distinction with <G g="ạ̈i" /> finals, which are more
+      consistently interpreted with /ai/. With the exception of those finals
+      ending in <G g="ạ̈" />, members of this group were not usually
+      distinguished in <i>on'yomi</i> from their counterparts without
+      double-dots. Both groups were often interpreted with Japanese <R>-e</R> in{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>
@@ -1315,10 +1329,10 @@ export const VowelHints = {
     <>
       The <strong>ring</strong> <G g="°" /> in this notation is used in finals
       ending in <G g="ạ̊ng" /> and <G g="ạ̊k" />, which scholars tend to
-      reconstruct with an element of roundedness or height, like [ɔ] or [aɨw].
-      As with all the other vowels with the underdot, these may have had a
-      preceding velar or palatal element at some earlier stages of Middle
-      Chinese. In some{" "}
+      reconstruct with an element of roundedness or height, like{" "}
+      <IpaLink sound="ɔ" /> or <IpaLink sound="aɨw" linkSound="ɨ" />. As with
+      all the other vowels with the underdot, these may have had a preceding
+      velar or palatal element at some earlier stages of Middle Chinese. In some{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>
@@ -1333,11 +1347,12 @@ export const VowelHints = {
     <>
       In finals with main vowel A in this notation, the category{" "}
       <b>Division III</b> is usually marked by leading <G g="y" />. These are
-      usually reconstructed with an onset something like [i] or [j]. The finals{" "}
-      <G g="yang" /> <G g="yak" /> are the form taken by the finals elsewhere
-      written <G g="âng" /> <G g="âk" />,{" "}
+      usually reconstructed with an onset something like <IpaLink sound="i" />{" "}
+      or <IpaLink sound="j" />. The finals <G g="yang" /> <G g="yak" /> are the
+      form taken by the finals elsewhere written <G g="âng" /> <G g="âk" />,{" "}
       <MiddleChineseTranscriptionLink hash="kan-on">
-        when a /j/ sound is present in the corresponding <i>Kan-on</i> reading
+        when a <IpaLink broad sound="j" /> sound is present in the corresponding{" "}
+        <i>Kan-on</i> reading
       </MiddleChineseTranscriptionLink>
       . Finals in <G g="ya" /> and <G g="yạ" /> are known to have rhymed with
       finals in <G g="a" /> and <G g="ạ" /> respectively. Division III also
@@ -1345,7 +1360,9 @@ export const VowelHints = {
       <G g="wa" /> is that this Division III final had some kind of front
       element, which may have been pronounced before, after, or in combination
       with the element rendered /w/ in <i>on'yomi</i>. Scholars reconstruct this
-      final variously as /ɨuɑ/ /ʷiɑ/ /ya/, etc.
+      final variously as <IpaLink broad sound="ɨuɑ" linkSound="ɨ" />{" "}
+      <IpaLink broad sound="ʷiɑ" linkSound="ɑ" />{" "}
+      <IpaLink broad sound="ya" linkSound="y" />, etc.
     </>
   ),
   A3Circumflex: () => (
@@ -1355,9 +1372,9 @@ export const VowelHints = {
       <G g="ân" /> <G g="ât" /> <G g="âm" /> <G g="âp" />. These finals may have
       had a Y-like sound before the vowel, and where this is reflected in{" "}
       <i>on'yomi</i>, a Y is included in this notation. Scholars tend to
-      reconstruct these finals with a central vowel, like [ɐ]. (The circumflex
-      accent was chosen for its historical association with central vowels, cf.
-      Romanian, Vietnamese.) In{" "}
+      reconstruct these finals with a central vowel, like <IpaLink sound="ɐ" />.
+      (The circumflex accent was chosen for its historical association with
+      central vowels, cf. Romanian, Vietnamese.) In{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>{" "}
@@ -1374,7 +1391,8 @@ export const VowelHints = {
     <>
       Bare <G g="e" /> marks finals in the category <b>Division III</b> in this
       notation. Scholars tend to reconstruct the vowel of these finals with an
-      onset something like /i/ or /j/, and a main vowel like [ɛ] or [e].
+      onset something like /i/ or /j/, and a main vowel like{" "}
+      <IpaLink sound="ɛ" /> or <IpaLink sound="e" />.
     </>
   ),
   E3Circumflex: () => (
@@ -1384,7 +1402,7 @@ export const VowelHints = {
       <G g="(w)êp" />
       , which modern scholars generally agree had the same respective vowels as
       in <G g="ân" /> <G g="ât" /> <G g="âm" /> <G g="âp" />, i.e. probably a
-      central vowel like [ɐ], which triggered{" "}
+      central vowel like <IpaLink sound="ɐ" />, which triggered{" "}
       <MiddleChineseTranscriptionLink hash="dentilabialization">
         dentilabialization
       </MiddleChineseTranscriptionLink>{" "}
@@ -1400,7 +1418,7 @@ export const VowelHints = {
       of Middle Chinese, were probably identical to the{" "}
       <a href="#division-ii">Division II</a> finals <G g="ạng" /> <G g="ạk" />,
       except with an added /i/-like glide before the vowel, which was a front
-      vowel along the lines of [æ].
+      vowel along the lines of <IpaLink sound="æ" />.
     </>
   ),
   E4: () => (
@@ -1408,8 +1426,9 @@ export const VowelHints = {
       The <strong>grave accent</strong> <G g="`" /> over E in this notation
       marks finals in the category <b>Division IV</b>. At earlier stages of
       Middle Chinese, these finals were probably pronounced with a vowel
-      something like [ɛ] or [e]. That is, they were identical to the
-      corresponding finals of Division III (with bare <G g="e" />
+      something like <IpaLink sound="ɛ" /> or <IpaLink sound="e" />. That is,
+      they were identical to the corresponding finals of Division III (with bare{" "}
+      <G g="e" />
       ), but without the /i/-like glide before the vowel. Eventually, this
       Division IV series also was pronounced with a glide, and most (if not all)
       of these pairs merged.
@@ -1419,8 +1438,9 @@ export const VowelHints = {
     <>
       The bare <G g="i" /> is used in this notation mostly to mark finals which
       scholars tend to reconstruct with relatively lower or more central vowels
-      (like [ɨ]) relative to their counterparts with the macron <G g="ī" />{" "}
-      (often reconstructed with [i]). In{" "}
+      (like <IpaLink sound="ɨ" />) relative to their counterparts with the
+      macron <G g="ī" /> (often reconstructed with <IpaLink sound="i" />
+      ). In{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>{" "}
@@ -1447,9 +1467,12 @@ export const VowelHints = {
     <>
       The <strong>macron</strong> <G g="ī" /> is used in this notation to mark
       finals which scholars sometimes reconstruct with relatively higher or more
-      front vowels like [i] (compared to their counterparts with bare I, often
-      reconstructed with [ɨ]). These finals were more consistently interpreted
-      with Japanese <R>-i</R> (rather than <R>-o</R>) in{" "}
+      front vowels like <IpaLink sound="i" /> (compared to their counterparts
+      with bare I, often reconstructed with <IpaLink sound="ɨ" />
+      ). These finals were more consistently interpreted with Japanese <R>
+        -i
+      </R>{" "}
+      (rather than <R>-o</R>) in{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>
@@ -1469,29 +1492,32 @@ export const VowelHints = {
       </MiddleChineseTranscriptionLink>{" "}
       it was depicted as /wi/ or /i/ in <i>on'yomi</i>, and we write it like so,
       though scholars consistently reconstruct these finals consistently as
-      something along the lines of [ɨuk], [iuk], or [iwk]. Likewise, the finals{" "}
-      <G g="wīn" /> <G g="wīt" /> are identified with finals <G g="yūn" />{" "}
-      <G g="yūt" />, and these were all pronounced with vowels something like
-      [iuɪn] or [win], and in later stages may have moved towards something like
-      [yn].
+      something along the lines of <IpaLink sound="ɨuk" linkSound="ɨ" />, [iuk]
+      or [iwk]. Likewise, the finals <G g="wīn" /> <G g="wīt" /> are identified
+      with finals <G g="yūn" /> <G g="yūt" />, and these were all pronounced
+      with vowels something like <IpaLink sound="iuɪn" linkSound="ɪ" /> or
+      [win], and in later stages may have moved towards something like{" "}
+      <IpaLink sound="yn" linkSound="y" />.
     </>
   ),
   IDoubleDot: () => (
     <>
       The <strong>double-dot</strong> <G g="ï" /> in this notation marks some
-      vowels which scholars generally agree to have started out as an [e]-like
-      sound in the early stages of Middle Chinese, which changed to something
-      closer to [i]. In{" "}
+      vowels which scholars generally agree to have started out as an{" "}
+      <IpaLink sound="e" />
+      -like sound in the early stages of Middle Chinese, which changed to
+      something closer to <IpaLink sound="i" />. In{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>{" "}
       into Japanese, <G g="ï" /> was sometimes interpreted with Japanese{" "}
       <R>-e</R> rather than <R>-i</R>. (The double-dots were chosen for their
       historical association with the letter E, cf. German Umlaut.) This vowel
-      eventually gained a [i]-like onset, and then the [e]-like element
-      disappeared. The finals <G g="wï" /> and <G g="uï" /> were considered one
-      and the same to the Chinese, but the recorders of <i>Kan-on</i> tended to
-      write them differently{" "}
+      eventually gained a <IpaLink sound="i" />
+      -like onset, and then the <IpaLink sound="e" />
+      -like element disappeared. The finals <G g="wï" /> and <G g="uï" /> were
+      considered one and the same to the Chinese, but the recorders of{" "}
+      <i>Kan-on</i> tended to write them differently{" "}
       <MiddleChineseTranscriptionLink hash="vowel-alternation">
         depending on the initial consonant
       </MiddleChineseTranscriptionLink>
@@ -1502,7 +1528,8 @@ export const VowelHints = {
     <>
       The <strong>circumflex accent</strong> <G g="î" /> in this notation marks
       finals which scholars tend to reconstruct as a diphthong, with a more
-      central or back onset, something like [ɨi]. In{" "}
+      central or back onset, something like <IpaLink sound="ɨi" linkSound="ɨ" />
+      . In{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>{" "}
@@ -1519,9 +1546,13 @@ export const VowelHints = {
     <>
       The <strong>breve</strong> <G g="ĭ" /> in this notation is used only in
       the final <G g="wĭk" /> (usually reconstructed something like [wɨk], with
-      a rounded element before a central vowel), which was considered to rhyme
-      with <G g="yŏk" /> (usually reconstructed something like [ɨk], the same as{" "}
-      <G g="wĭk" /> without the rounded element).
+      a rounded element before a{" "}
+      <A href="https://en.wikipedia.org/wiki/Close_central_unrounded_vowel">
+        central vowel
+      </A>
+      ), which was considered to rhyme with <G g="yŏk" /> (usually reconstructed
+      something like [ɨk], the same as <G g="wĭk" /> without the rounded
+      element).
     </>
   ),
   IUnderdot: () => (
@@ -1529,22 +1560,23 @@ export const VowelHints = {
       The <strong>underdot</strong> <G g=" ̣" /> in this notation is used for
       finals <G g="ịn" /> and <G g="ịt" />, which scholars suspect were
       originally identical to those written here <G g="īn" /> and <G g="īt" />,
-      i.e. with a high, front vowel like [i]. But at an early stage of Middle
-      Chinese, preceding <i>retroflex consonants</i> (also written with the
-      underdot in this notation) slightly changed the vowel to something lower,
-      more like [ɪ]. These finals were still usually considered good rhymes, and
-      they would merge back together again in later stages of Chinese.
+      i.e. with a high, front vowel like <IpaLink sound="i" />. But at an early
+      stage of Middle Chinese, preceding <i>retroflex consonants</i> (also
+      written with the underdot in this notation) slightly changed the vowel to
+      something lower, more like <IpaLink sound="ɪ" />. These finals were still
+      usually considered good rhymes, and they would merge back together again
+      in later stages of Chinese.
     </>
   ),
   O1: () => (
     <>
       Bare <G g="o" /> in this notation marks finals in the category{" "}
       <b>Division I</b>. Scholars tend to reconstruct the vowel of these finals
-      as a back, rounded vowel like [o]. It's likely that the finals{" "}
-      <G g="on" /> <G g="ot" /> <G g="ou" /> were pronounced with a less
-      rounded, more central vowel, something like [ə]. The final <G g="o" />{" "}
-      with zero coda was likely rounded, and in Japanese sometimes was written
-      as /wo/.
+      as a back, rounded vowel like <IpaLink sound="o" />. It's likely that the
+      finals <G g="on" /> <G g="ot" /> <G g="ou" /> were pronounced with a less
+      rounded, more central vowel, something like <IpaLink sound="ə" />. The
+      final <G g="o" /> with zero coda was likely rounded, and in Japanese
+      sometimes was written as /wo/.
     </>
   ),
   OMacron: () => (
@@ -1553,8 +1585,11 @@ export const VowelHints = {
       <G g="ōng" /> <G g="ōk" /> to reflect a distinction between their
       counterparts without macron in the earlier stages of Middle Chinese.
       Scholars generally agree that this set with macron were pronounced with a
-      greater degree of height, so for <G g="ōng" />, something more like [uŋ]
-      or [əwŋ], versus <G g="ong" /> [oŋ] or [awŋ]. In{" "}
+      greater degree of height, so for <G g="ōng" />, something more like{" "}
+      <IpaLink sound="uŋ" linkSound="u" /> or{" "}
+      <IpaLink sound="əwŋ" linkSound="ə" />, versus <G g="ong" />{" "}
+      <IpaLink sound="oŋ" linkSound="o" /> or{" "}
+      <IpaLink sound="awŋ" linkSound="a" />. In{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>{" "}
@@ -1567,9 +1602,10 @@ export const VowelHints = {
     <>
       The <strong>breve</strong> <G g="ŏ" /> in this notation is used to mark
       finals <G g="ŏng" /> <G g="ŏk" /> which were pronounced with a more
-      central vowel than their counterparts without breve, something like [ə].
-      These finals with O-breve remained a distinct group after the merger of{" "}
-      <G g="ōng" /> <G g="ōk" /> with <G g="ong" /> <G g="ok" />.
+      central vowel than their counterparts without breve, something like{" "}
+      <IpaLink sound="ə" />. These finals with O-breve remained a distinct group
+      after the merger of <G g="ōng" /> <G g="ōk" /> with <G g="ong" />{" "}
+      <G g="ok" />.
     </>
   ),
   O3: () => (
@@ -1577,7 +1613,9 @@ export const VowelHints = {
       In finals with main vowel O in this notation, a leading <G g="y" /> is the
       usual mark of the category <b>Division III</b>, which scholars usually
       reconstruct with an initial glide leading into a back or rounded vowel. In{" "}
-      <G g="yo" />, this meant a diphthong something like [ɨʌ] [iɔ] or [ɨu̯o̝].
+      <G g="yo" />, this meant a diphthong something like{" "}
+      <IpaLink sound="ɨʌ" linkSound="ʌ" /> <IpaLink sound="iɔ" linkSound="ɔ" />{" "}
+      <IpaLink sound="ɨu̯o̝" />.
     </>
   ),
   O3Breve: () => (
@@ -1586,9 +1624,10 @@ export const VowelHints = {
       finals <G g="yŏng/ŷŏng" /> <G g="yŏk/ŷŏk" /> which rhymed with their
       counterparts without Y in Division I <G g="ŏng" /> <G g="ŏk" />. As in
       those finals, the element rendered as O here was probably a central,
-      unrounded vowel, something like [ə]. At an earlier stage of Middle
-      Chinese, these probably were more like a sequence composed of an /i/-like
-      sound followed by /k/ or /ŋ/, and this is reflected in{" "}
+      unrounded vowel, something like <IpaLink sound="ə" />. At an earlier stage
+      of Middle Chinese, these probably were more like a sequence composed of an
+      /i/-like sound followed by /k/ or <IpaLink broad sound="ŋ" />, and this is
+      reflected in{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>
@@ -1610,8 +1649,8 @@ export const VowelHints = {
       rather than <R>-io</R>. Here we are consistently writing them with O to
       reflect the fact that they rhymed with finals in <G g="ong" />{" "}
       <G g="ok" /> with bare <G g="o" />. As in those finals, the element
-      rendered as O here probably had a back, rounded element, something like
-      [o] or [aw]. These finals triggered{" "}
+      rendered as O here probably had a back, rounded element, something like{" "}
+      <IpaLink sound="o" /> or <IpaLink sound="aw" />. These finals triggered{" "}
       <MiddleChineseTranscriptionLink hash="dentilabialization">
         dentilabialization
       </MiddleChineseTranscriptionLink>{" "}
@@ -1622,9 +1661,10 @@ export const VowelHints = {
   UYu: () => (
     <>
       The finals written <G g="u" /> and <G g="yu" /> in this notation are
-      usually reconstructed by scholars with a back, rounded vowel like [u].
-      These two finals were considered one and the same in Middle Chinese, but
-      they are written differently here depending on the initial consonant to{" "}
+      usually reconstructed by scholars with a back, rounded vowel like{" "}
+      <IpaLink sound="u" />. These two finals were considered one and the same
+      in Middle Chinese, but they are written differently here depending on the
+      initial consonant to{" "}
       <MiddleChineseTranscriptionLink hash="vowel-alternation">
         reflect their rendering in <i>Kan-on</i>
       </MiddleChineseTranscriptionLink>
@@ -1645,7 +1685,8 @@ export const VowelHints = {
       {" "}
       The finals written <G g="un" /> and <G g="ut" /> in this notation are are
       usually reconstructed by scholars with a back and/or rounded vowel like
-      [u]. They are usually rendered with <R>-o</R> instead of <R>-u</R> in{" "}
+      <IpaLink sound="u" />. They are usually rendered with <R>-o</R> instead of{" "}
+      <R>-u</R> in{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>
@@ -1676,26 +1717,28 @@ export const VowelHints = {
   UIuu: () => (
     <>
       The final <G g="(i)ū" /> is usually reconstructed by scholars as a
-      diphthong with some element of backness and roundedness, like [ɨu], [iu],
-      or [iw]. The leading /i/ in <i>on'yomi</i> consistently disappears after{" "}
-      <i>labial consonants</i> <G g="p" /> <G g="pʻ" /> <G g="b" /> <G g="m" />,{" "}
-      so they are accordingly not written in these places. Like the{" "}
-      <G g="(y)u" /> finals, the vowel in these finals can be rendered
-      unpredictably in <i>Kan-on</i>. In the syllable <G g="mū" />, the vowel
-      becomes /o/ in <i>on'yomi</i>, but it is written with U here to keep it
-      visually distinct from <G g="mou" />.
+      diphthong with some element of backness and roundedness, like{" "}
+      <IpaLink sound="ɨu" linkSound="ɨ" />, [iu], or [iw]. The leading /i/ in{" "}
+      <i>on'yomi</i> consistently disappears after <i>labial consonants</i>{" "}
+      <G g="p" /> <G g="pʻ" /> <G g="b" /> <G g="m" />, so they are accordingly
+      not written in these places. Like the <G g="(y)u" /> finals, the vowel in
+      these finals can be rendered unpredictably in <i>Kan-on</i>. In the
+      syllable <G g="mū" />, the vowel becomes /o/ in <i>on'yomi</i>, but it is
+      written with U here to keep it visually distinct from <G g="mou" />.
     </>
   ),
   UIuung: () => (
     <>
       The finals <G g="(i)ūng" /> <G g="(y)ūk" /> are usually reconstructed by
       scholars with some element of frontness combined with some element of
-      roundedness, such as [ɨuŋ], [iuŋ], or [iwŋ]. The leading /i/ and /j/ in{" "}
-      <i>on'yomi</i> consistently disappear after <i>labial consonants</i>{" "}
-      <G g="p" /> <G g="pʻ" /> <G g="b" /> <G g="m" />, so they are accordingly
-      not written in these places. In the syllables <G g="mūng" /> <G g="mūk" />
-      , the vowel becomes /o/ i <i>on'yomi</i>, but it is written with U here to
-      keep it visually distinct from <G g="mōng" /> and <G g="mōk" />.
+      roundedness, such as <IpaLink sound="ɨuŋ" />, <IpaLink sound="iuŋ" />, or{" "}
+      <IpaLink sound="iwŋ" />. The leading <IpaLink broad sound="i" /> and{" "}
+      <IpaLink broad sound="j" /> in <i>on'yomi</i> consistently disappear after{" "}
+      <i>labial consonants</i> <G g="p" /> <G g="pʻ" /> <G g="b" /> <G g="m" />,
+      so they are accordingly not written in these places. In the syllables{" "}
+      <G g="mūng" /> <G g="mūk" />, the vowel becomes /o/ i <i>on'yomi</i>, but
+      it is written with U here to keep it visually distinct from <G g="mōng" />{" "}
+      and <G g="mōk" />.
     </>
   ),
   UYuunYuut: () => (
@@ -1703,9 +1746,10 @@ export const VowelHints = {
       The finals <G g="yūn" /> and <G g="yūt" /> are in alternation with{" "}
       <G g="wīn" /> and <G g="wīt" /> respectively. These two finals are usually
       reconstructed by scholars with some element of frontness combined with
-      some element of roundedness, as in [iuɪn] or [win], and in later stages of
-      Middle Chinese, they involved a simple vowel that was simultaneously
-      fronted and rounded, as in [yn].
+      some element of roundedness, as in <IpaLink sound="iuɪn" /> or{" "}
+      <IpaLink sound="win" />, and in later stages of Middle Chinese, they
+      involved a simple vowel that was simultaneously fronted and rounded, as in{" "}
+      <IpaLink sound="yn" />.
     </>
   ),
 };

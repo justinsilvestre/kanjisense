@@ -1,5 +1,6 @@
 import type { SbgyXiaoyun } from "@prisma/client";
 import { PropsWithChildren, useState } from "react";
+import * as MdIcons from "react-icons/md";
 
 import {
   MiddleChineseLink,
@@ -30,11 +31,13 @@ export const QysDialogContent = ({
   sbgyXiaoyunsToExemplars,
   inferredOnReadingCandidates,
   attestedOnReadings,
+  onClickClose,
 }: {
   syllables: SbgyXiaoyun[];
   sbgyXiaoyunsToExemplars: Record<string, string[]>;
   inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns;
   attestedOnReadings: string[];
+  onClickClose: () => void;
 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const getSetActiveTab = (index: number) => () => {
@@ -69,19 +72,13 @@ export const QysDialogContent = ({
 
   return (
     <>
-      <p className="mb-3 mt-0">
-        This is a <strong>rough sketch</strong> of how this character may have
-        been pronounced in the{" "}
-        <MiddleChineseLink>historical variety of Chinese</MiddleChineseLink>{" "}
-        which forms the primary basis of the <i>on&apos;yomi</i>. The letters in
-        this notation are based on{" "}
-        <MiddleChineseTranscriptionLink hash="kan-on">
-          <i>on&apos;yomi</i> readings borrowed into Japanese sometime around
-          the Tang dynasty
-        </MiddleChineseTranscriptionLink>
-        , with diacritics and other symbols added to represent distinctions not
-        recorded in those <i>on&apos;yomi</i>.
-      </p>
+      <div className="float-right">
+        <button onClick={onClickClose}>
+          <MdIcons.MdClose />
+        </button>
+      </div>
+      <h1 className="text-center text-lg">Middle Chinese pronunciation</h1>
+
       <div className="mb-4 flex flex-col p-0">
         <div className="mt-0 flex items-stretch justify-items-stretch gap-1 rounded-t-lg bg-slate-800 p-1">
           {syllables.map((xiaoyun, i) => {
@@ -117,6 +114,7 @@ export const QysDialogContent = ({
             );
           })}
         </div>
+
         <div className="rounded-b-lg border-2 border-solid border-slate-500 bg-white p-2">
           {syllables.map((syllable, i) => {
             const syllableProfile = sbgyXiaoyunToQysSyllableProfile(syllable);
@@ -178,6 +176,22 @@ export const QysDialogContent = ({
                     attestedOnReadingsMatchingGuangyun?.[0] || null
                   }
                 />
+                <p className="mx-4 mb-3 mt-0 ">
+                  This is a <strong>rough sketch</strong> of how this character
+                  may have been pronounced in the{" "}
+                  <MiddleChineseLink>
+                    historical variety of Chinese
+                  </MiddleChineseLink>{" "}
+                  which forms the primary basis of the <i>on&apos;yomi</i>. The
+                  letters in this notation are based on{" "}
+                  <MiddleChineseTranscriptionLink hash="kan-on">
+                    <i>on&apos;yomi</i> readings borrowed into Japanese sometime
+                    around the Tang dynasty
+                  </MiddleChineseTranscriptionLink>
+                  , with diacritics and other symbols added to represent
+                  distinctions not recorded in those <i>on&apos;yomi</i>.
+                </p>
+                <hr className="my-2"></hr>
                 <p className={`mb-3 mt-0 text-center`}>
                   <b>syllable initial</b>: {syllable.initial} ⟨{initial}⟩
                 </p>

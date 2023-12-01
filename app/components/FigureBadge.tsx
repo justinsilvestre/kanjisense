@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import clsx from "clsx";
 
 import {
   BadgeHue,
@@ -58,13 +59,16 @@ export function FigureBadge({
       }}
     >
       <div
-        className={`bg-white text-lg outline outline-2 ${
-          badgeProps.isPriorityComponent ? "rounded-full" : ""
-        } ${
+        className={clsx(
+          "bg-white text-lg outline outline-2",
+          {
+            "rounded-full": badgeProps.isPriorityComponent,
+            "outline-2": outerWidth > 2.5,
+          },
           getColorClasses(badgeProps.hue, badgeProps.aozoraAppearances).split(
             " ",
-          )[1]
-        }`}
+          )[1],
+        )}
         style={{
           width: `${innerWidth - buffer}rem`,
           height: `${innerWidth - buffer}rem`,

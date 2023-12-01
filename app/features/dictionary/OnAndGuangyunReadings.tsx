@@ -11,7 +11,7 @@ export function OnAndGuangyunReadings({
 
   if (hasSoundMarkHighlight) {
     return (
-      <span className="rounded border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 p-1 text-sm">
+      <span className="whitespace-nowrap rounded border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 p-1 text-sm">
         {katakanaOn}
         {guangyun ? <> {guangyun}</> : null}
       </span>
