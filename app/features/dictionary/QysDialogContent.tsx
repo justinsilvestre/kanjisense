@@ -240,7 +240,7 @@ export const QysDialogContent = ({
                 </p>
                 <p className="mb-3 mt-0">
                   <ToneHint syllable={syllableProfile} />{" "}
-                  <MiddleChineseTranscriptionLink hash="finals">
+                  <MiddleChineseTranscriptionLink hash="tones">
                     More on the tones of Middle Chinese
                   </MiddleChineseTranscriptionLink>
                 </p>

@@ -1612,10 +1612,10 @@ export const VowelHints = {
     <>
       In finals with main vowel O in this notation, a leading <G g="y" /> is the
       usual mark of the category <b>Division III</b>, which scholars usually
-      reconstruct with an initial glide leading into a back or rounded vowel. In{" "}
-      <G g="yo" />, this meant a diphthong something like{" "}
-      <IpaLink sound="ɨʌ" linkSound="ʌ" /> <IpaLink sound="iɔ" linkSound="ɔ" />{" "}
-      <IpaLink sound="ɨu̯o̝" />.
+      reconstruct with an initial glide (e.g. <IpaLink sound="ɨ" />{" "}
+      <IpaLink sound="i" />) leading into a back or rounded vowel ( e.g.{" "}
+      <IpaLink sound="ʌ" /> <IpaLink sound="ɔ" />
+      ). In <G g="yo" />, this meant a diphthong something like [ɨʌ] [iɔ] [ɨu̯o̝].
     </>
   ),
   O3Breve: () => (
@@ -1684,7 +1684,7 @@ export const VowelHints = {
     <>
       {" "}
       The finals written <G g="un" /> and <G g="ut" /> in this notation are are
-      usually reconstructed by scholars with a back and/or rounded vowel like
+      usually reconstructed by scholars with a back and/or rounded vowel like{" "}
       <IpaLink sound="u" />. They are usually rendered with <R>-o</R> instead of{" "}
       <R>-u</R> in{" "}
       <MiddleChineseTranscriptionLink hash="go-on">

@@ -1631,10 +1631,7 @@ export default function MiddleChinese() {
                 <i>
                   all scholarly reconstructions of Middle Chinese ever published
                 </i>
-                . Down the line, someone may publish a new reconstruction of
-                Middle Chinese, supplanting all the others. But even if that
-                happens, this notation will stand a chance of remaining
-                relevant, because it was built on this steady foundation.
+                .
               </p>
             </section>
             <section
@@ -1643,13 +1640,13 @@ export default function MiddleChinese() {
             >
               <h4>From Japanese to Chinese vowels {showContentsButton}</h4>
               <p>
-                Since we will be talking about Chinese vowels from here on out
-                with reference to the vowels of Japanese, let's talk about those
-                briefly. At the time of <i>Kan-on</i>, the Japanese vowel system
-                was not very different than it is today. The so-called "Early
-                Middle Japanese" of this period had a five-vowel system much
-                like those of many other world languages, such as Spanish,
-                Swahili, Hawaiian, and so on.
+                From here on out, we will be talking about Chinese vowels with
+                reference to the vowels of Japanese, so let's talk briefly about
+                Japanese vowels. At the time of <i>Kan-on</i>, the Japanese
+                vowel system was not very different than it is today. The
+                so-called "Early Middle Japanese" of this period had a
+                five-vowel system much like those of many other world languages,
+                such as Spanish, Swahili, Hawaiian, and so on.
               </p>
               <ul>
                 <li>
@@ -1863,7 +1860,8 @@ export default function MiddleChinese() {
                       sound in{" "}
                       <ScrollLink hash="kan-on">
                         <i>Kan-on</i>
-                      </ScrollLink>
+                      </ScrollLink>{" "}
+                      (~Heian period)
                     </th>
                     <th>spelling</th>
                   </thead>
@@ -1894,7 +1892,7 @@ export default function MiddleChinese() {
                     <td>
                       an optional "coda", one of: <br />
                       vowel /i/ /u/ <br />
-                      nasal /i/ /u/ /n/
+                      nasal consonant or vowel /i/ /u/ /n/
                       <br />
                       stop /ku/ /ki/ /tu/ /ti/ /pu/
                       <br />
@@ -1925,10 +1923,10 @@ export default function MiddleChinese() {
                   These "semivowel" sounds in <i>on'yomi</i> readings correspond
                   to sounds which scholars of Chinese often call{" "}
                   <b>"medials"</b>. They were recorded in <i>on'yomi</i> only
-                  after certain initials, but we will consistently write them
-                  wherever Chinese sources indicate they were present.
-                  Reconstructions generally agree on the following with regard
-                  to these medial sounds:
+                  after certain initials, but we will write them out
+                  consistently, in all syllables where Chinese sources indicate
+                  they were present. Reconstructions generally agree on the
+                  following with regard to these medial sounds:
                 </p>
                 <ul>
                   <li>
@@ -1995,7 +1993,9 @@ export default function MiddleChinese() {
                   <li>
                     Final /n/ in <i>Kan-on</i> corresponds to a final [n] or [m]
                     in reconstructions, here written <G g="n" /> and <G g="m" />{" "}
-                    respectively.
+                    respectively. (There is reason to believe that Japanese
+                    during this time had final /m/ in some places, but these
+                    sounds were not consistently distinguished in writing.)
                   </li>
                   <li>
                     Final /ku/ and /ki/ in <i>Kan-on</i> corresponds to a final
@@ -2830,7 +2830,7 @@ export default function MiddleChinese() {
               <h4>The four rows of the rime tables {showContentsButton}</h4>
               <p>
                 I briefly mentioned above that one of the foundational sources
-                for Middle Chinese phonology included something called the "rime
+                for Middle Chinese phonology was something called the "rime
                 tables". These tables were basically a tool used for looking up
                 words' pronunciations, much like you might use a dictionary for
                 today. But instead of writing out pronunciations somehow in
@@ -3405,17 +3405,16 @@ export default function MiddleChinese() {
             <p>
               There is a problem with all reconstructions that Baxter's notation
               shares: the selection of symbols is largely arbitrary. In the case
-              of phonetic reconstructions, this is inescapable, since we will
-              never have any audio recordings of Middle Chinese, and you've got
-              to choose <em>some</em> particular symbols if you're going to put
+              of phonetic reconstructions, this is inescapable, since there are
+              so many grey areas in these reconstructions, yet you've got to
+              choose <em>some</em> particular symbols if you're going to put
               your ideas to paper. But at least in an actual reconstruction,
               that arbitrariness in symbol choice is mitigated by a{" "}
               <strong>strong guiding principle</strong>: the reconstructor's
               motivation to put forth a clear, internally consistent argument
-              about the concrete sounds of the language. Since Baxter had no
-              such argument to make, he thought it right to dispense with any
-              strong guiding principle. But a good design just can't do without
-              one.
+              about the sounds of the language. Since Baxter had no such
+              argument to make, he thought it right to dispense with any strong
+              guiding principle. But a good design just can't do without one.
             </p>
             <p>
               I hope to have improved on Baxter's notation by reintroducing a{" "}
@@ -3476,8 +3475,8 @@ export default function MiddleChinese() {
                 a different level on which to understand the notation
               </strong>
               . It's a lower level of abstraction to work with before learning
-              the <em>Qieyun</em> system--should they ever choose to put in the
-              time necessary to do so.
+              the <em>Qieyun</em> system&mdash;should they ever choose to put in
+              the requisite time to do so.
             </p>
           </section>
           <section id="references">

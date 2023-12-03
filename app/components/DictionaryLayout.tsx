@@ -3,10 +3,12 @@ import type { PropsWithChildren } from "react";
 
 import {
   AboutLink,
+  BrowseAtomicComponentsLink,
   BrowseCharactersLink,
-  BrowseComponentsLink,
   BrowseSoundComponentsLink,
 } from "./AppLink";
+
+const ATOMIC_COMPONENTS = 269;
 
 export default function DictionaryLayout({
   children,
@@ -32,13 +34,13 @@ export default function DictionaryLayout({
         </h1>
         <ul className="">
           <li>
-            <BrowseComponentsLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
-              the kanji components
-            </BrowseComponentsLink>
+            <BrowseAtomicComponentsLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
+              the {ATOMIC_COMPONENTS} &quot;atomic&quot; components
+            </BrowseAtomicComponentsLink>
           </li>
           <li>
             <BrowseCharactersLink className="text-gray-500 no-underline hover:text-orange-700 hover:underline">
-              the 3500 most important characters
+              the 3500 most important kanji
             </BrowseCharactersLink>
           </li>
           <li>

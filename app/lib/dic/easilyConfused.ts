@@ -13,5 +13,6 @@ export const easilyConfusedFigures = [
   ["GWS-CDP-8C66-VAR-001", "乑", "𧘇"],
   ["氷", "永"],
   ["部", "陪"],
-  ["𠂇", "GWS-U20087-11"]
+  ["𠂇", "GWS-U20087-11"],
+  ["CDP-8BBF", "丂"],
 ];

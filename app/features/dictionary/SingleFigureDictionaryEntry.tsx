@@ -216,10 +216,11 @@ export function SingleFigureDictionaryEntry({
       </div>
 
       {isUnicodeCharacter || variants?.length ? (
-        <div className="mb-4 flex flex-shrink flex-grow flex-row flex-wrap gap-4 self-stretch lg:flex-col lg:items-center lg:[max-height:85vh] ">
+        // <div className="mb-4 flex flex-shrink flex-grow flex-row gap-4 self-stretch max-lg:flex-wrap lg:max-h-[80vh] lg:flex-col lg:items-center  ">
+        <div className="mb-4 flex flex-shrink flex-grow flex-row gap-4 max-lg:flex-wrap lg:max-h-[calc(100vh_-_12rem)] lg:flex-col lg:items-center lg:self-stretch  ">
           {variants?.length ? (
-            <section className="flex flex-grow-[9999] items-center justify-center [min-width:14rem] lg:[min-width:none] ">
-              <div className="justify-center bg-black/10 p-4 shadow-inner  shadow-black/25 lg:overflow-auto lg:[max-height:57vh]">
+            <section className="  flex flex-grow-[9999] items-center justify-center [min-width:14rem]  lg:[min-width:none] ">
+              <div className=" items-center justify-center  bg-black/10 p-4 shadow-inner shadow-black/25 lg:max-h-[50vh] lg:overflow-auto">
                 <h3 className="mb-4 text-center text-gray-600">
                   <strong>
                     {variants.findIndex((v) => v.id === figure.id) + 1}
@@ -255,7 +256,9 @@ export function SingleFigureDictionaryEntry({
               </div>
             </section>
           ) : (
-            <div className=""> </div>
+            <div className="flex flex-grow-[9999] justify-center [min-width:14rem] [align-items:normal]  lg:[min-width:none] ">
+              {" "}
+            </div>
           )}
           {isUnicodeCharacter ? (
             <div className="flex flex-grow flex-wrap gap-4 [min-width:19rem] max-lg:justify-between lg:flex-col lg:flex-nowrap lg:justify-end">

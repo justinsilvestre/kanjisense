@@ -56,6 +56,15 @@ export const BrowseCharactersLink = ({ children, className }: LinkProps) => (
   </AppLink>
 );
 
+export const BrowseAtomicComponentsLink = ({
+  children,
+  className,
+}: LinkProps) => (
+  <AppLink to="/browse/atomic-components" className={className}>
+    {children}
+  </AppLink>
+);
+
 export const BrowseComponentsLink = ({ children, className }: LinkProps) => (
   <AppLink to="/browse/components" className={className}>
     {children}
