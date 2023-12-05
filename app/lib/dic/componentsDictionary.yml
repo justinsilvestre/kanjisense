@@ -81,7 +81,7 @@
   historical: eye
   tag: body
 又:
-  historical: right hand
+  historical: also
   mnemonic: grabbing hand
   tag: hands
 月:
@@ -286,6 +286,11 @@
 母:
   historical: mother
   tag: personal
+毋:
+  historical: not
+  mnemonic: pierce
+  reference: 貫
+  tag: action
 龴:
   historical: (various)
   mnemonic: spearhead
@@ -339,7 +344,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   historical: gap
   tag: geo
 文:
-  historical: pattern, design; text
+  historical: pattern
   tag: geo
 业:
   historical: (various)
@@ -366,6 +371,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
 癶:
   historical: legs
   mnemonic: climbing legs
+  reference: 登
   tag: actions
 衣:
   historical: robe
@@ -591,6 +597,7 @@ CDP-8CBD: # 卬,兜,仰,迎,抑,昂,CDP-8C79,叚,暇,瑕,蝦,霞,假
 乃:
   historical: accordingly
   mnemonic: chipped blade
+  reference: 刀
   tag: weapons
 央:
   historical: center
@@ -1506,6 +1513,7 @@ CDP-8C6A: # 款,隷
 CDP-8DBF: # 廌,焉,薦
   historical: (various)
   mnemonic: bird legs
+  reference: 鳥
   tag: animals
 圼:
   historical: black soil

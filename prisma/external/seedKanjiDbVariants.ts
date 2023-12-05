@@ -177,6 +177,8 @@ async function getkanjiDbOldStyleDbInput(
   // if its only usage as a component is in a variant of itself
   // and that variant isn't even a base character (from our lists of important kanji).
   deregisterOldAndNewVariants(dbInput, "欲");
+  // "擔" as old variant for "栃" is probably a mistake
+  deregisterOldAndNewVariants(dbInput, "栃");
 
   // perhaps same as above (reading not in modern usage/simplified form borrowed from existing character)
   // except existing character has same meaning + diff pronunciation

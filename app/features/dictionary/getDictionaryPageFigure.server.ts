@@ -57,6 +57,11 @@ export const dictionaryPageFigureInclude = {
                   isEmpty: false,
                 },
               },
+              {
+                listsAsComponent: {
+                  isEmpty: false,
+                },
+              },
               { shinjitaiInBaseKanji: { not: null } },
             ],
           },

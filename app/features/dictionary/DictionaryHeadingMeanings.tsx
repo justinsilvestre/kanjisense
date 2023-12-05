@@ -8,7 +8,7 @@ export function DictionaryHeadingMeanings({
   className?: string;
 }) {
   return (
-    <div className={`${className} flex gap-4 `}>
+    <div className={`${className} `}>
       {headingsMeanings.currentCharacter ? (
         <h1>{headingsMeanings.currentCharacter.join("; ")}</h1>
       ) : null}

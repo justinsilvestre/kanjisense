@@ -107,7 +107,7 @@ export function SingleFigureDictionaryEntry({
             </div>
 
             <DictionaryHeadingMeanings
-              className="flex-1 flex-col text-xl"
+              className="flex flex-1 flex-col  gap-4 text-xl"
               headingsMeanings={getHeadingsMeanings(figure)}
             />
 

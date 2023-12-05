@@ -1,4 +1,5 @@
 import { useFetcher } from "@remix-run/react";
+import clsx from "clsx";
 import { PropsWithChildren, useEffect, createElement } from "react";
 import { createPortal } from "react-dom";
 
@@ -76,6 +77,7 @@ export function FigurePopover({
     }
   }, [figure?.id, update]);
 
+  const headingsMeanings = figure ? getHeadingsMeanings(figure) : null;
   return createElement(
     element,
     {
@@ -110,13 +112,13 @@ export function FigurePopover({
       createPortal(
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
-          className={`[border:2px inset #afafaf33] pointer-events-auto p-3 shadow-xl shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box] [max-height:88v] [max-width:95v]  [min-height:12rem] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl`}
+          className={`[border:2px inset #afafaf33] pointer-events-auto max-w-xl p-3 shadow-xl shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]`}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
           onClick={handleClickPopper}
         >
-          <div className="">
+          <div className="flex flex-row flex-wrap items-center  gap-4">
             <DictLink figureId={figure?.id || figureId} focusOnLoad>
               <FigureBadge
                 id={figure?.id || figureId}
@@ -124,42 +126,56 @@ export function FigurePopover({
                 width={6}
               />
             </DictLink>
-            {figure?.firstClassComponents.map((c) => (
-              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div
-                key={c.component.id}
-                className="m-1 inline-block cursor-pointer"
-                onClick={() => loadFigure(c.component.id)}
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    loadFigure(c.component.id);
-                  }
-                }}
-              >
-                <FigureBadge
-                  id={c.component.id}
-                  badgeProps={getBadgeProps(c.component)}
-                  width={2.5}
-                  className="mr-1"
-                />
-                <FigureKeywordDisplay figure={c.component} />
+            {figure?.firstClassComponents.length ? (
+              <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-200 p-4">
+                {figure.firstClassComponents.map((c) => (
+                  <div
+                    key={c.component.id}
+                    className="inline-flex cursor-pointer items-center"
+                    onClick={() => loadFigure(c.component.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        loadFigure(c.component.id);
+                      }
+                    }}
+                  >
+                    <FigureBadge
+                      id={c.component.id}
+                      badgeProps={getBadgeProps(c.component)}
+                      width={3}
+                      className="mr-4 align-middle"
+                    />
+                    <span className="i align-middle">
+                      <FigureKeywordDisplay figure={c.component} />
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div>
-            {figure ? (
-              <DictionaryHeadingMeanings
-                headingsMeanings={getHeadingsMeanings(figure)}
-                className="flex-row"
-              />
             ) : null}
 
-            <br />
+            {figure && headingsMeanings ? (
+              <DictionaryHeadingMeanings
+                headingsMeanings={headingsMeanings}
+                className={clsx(
+                  "grid grid-flow-col gap-4 text-lg [grid-template-columns:1fr_auto]",
+                  {
+                    "basis-full": figure.firstClassComponents?.length != 0,
+                    "flex-grow items-center self-stretch rounded-md border-2 border-gray-200 p-4 ":
+                      figure.firstClassComponents?.length === 0,
+                    "text-center":
+                      (figure.firstClassComponents?.length === 0 &&
+                        !headingsMeanings.componentMnemonic) ||
+                      (headingsMeanings.componentMnemonic &&
+                        !headingsMeanings.currentCharacter),
+                  },
+                )}
+              />
+            ) : null}
             <FigureTags
+              className="basis-full"
               badgeProps={badgeProps}
               isSoundMark={figure ? isPrioritySoundMark(figure) : false}
               isAtomic={

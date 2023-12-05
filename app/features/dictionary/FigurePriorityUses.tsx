@@ -98,7 +98,7 @@ export function FigurePriorityUses({
 
         {!fetcherData?.firstClassUses && count > PRELOADED_USES_COUNT ? (
           <li
-            className="flex-grow pb-10 [flex-basis:6rem] [height:5rem]"
+            className="flex flex-grow flex-row items-center [flex-basis:6rem] [height:5rem] hover:text-orange-600 hover:underline"
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
             role="button"
             onClick={() => getFigurePriorityUses()}
@@ -109,7 +109,9 @@ export function FigurePriorityUses({
               }
             }}
           >
-            + <strong>{count - PRELOADED_USES_COUNT}</strong> more
+            <div>
+              + <strong>{count - PRELOADED_USES_COUNT}</strong> more
+            </div>
           </li>
         ) : (
           <li className="flex-grow [flex-basis:6rem]"> </li>

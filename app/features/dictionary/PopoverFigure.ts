@@ -27,6 +27,8 @@ export async function getPopoverFigure(figureId: string) {
         },
       },
       meaning: true,
+
+      image: true,
     },
   });
 }

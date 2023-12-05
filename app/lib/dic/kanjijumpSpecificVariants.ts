@@ -52,7 +52,7 @@ export const kanjijumpSpecificVariants = [
   ["生", "龶"],
   ["立", "CDP-8BAE"],
   ["𠂤", "㠯"],
-  ["母", "毋", "毌"],
+  ["毋", "毌"],
   ["豕", "𧰨"],
   ["臼", "𦥑", "CDP-8CAC"],
   ["邑", "⻏"],
@@ -213,4 +213,5 @@ export const kanjijumpSpecificVariants = [
   ["勺", "勺"],
   ["雨", "⻗"],
   ["从", "CDP-8C66"],
+  ["盾", "𠂆"]
 ]

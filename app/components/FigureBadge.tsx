@@ -40,7 +40,7 @@ export function FigureBadge({
 
   return (
     <div
-      className={`inline-block text-center align-bottom ${className} ${getColorClasses(
+      className={`inline-block text-center ${className} ${getColorClasses(
         badgeProps.hue,
         badgeProps.aozoraAppearances,
       )} ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} $`}
@@ -63,7 +63,7 @@ export function FigureBadge({
           "bg-white text-lg outline outline-2",
           {
             "rounded-full": badgeProps.isPriorityComponent,
-            "outline-2": outerWidth > 2.5,
+            "outline-2": outerWidth > 3.5,
           },
           getColorClasses(badgeProps.hue, badgeProps.aozoraAppearances).split(
             " ",
