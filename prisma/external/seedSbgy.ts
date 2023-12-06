@@ -93,7 +93,7 @@ async function getDbInput() {
     ][]
   >(files.sbgyJson);
 
-  const yuntuJson = await getYuntuJson();
+  const yuntuJson = await getYuntuJson(overrides);
   for (const [xiaoyunNumber, replaceExemplars] of Object.entries(
     replacementExemplars,
   )) {

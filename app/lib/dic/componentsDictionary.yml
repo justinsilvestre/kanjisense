@@ -497,7 +497,7 @@ CDP-8BF5: # 介,齐,粛,弗,界,芥,堺,斎,繍,費,沸,佛,拂
   historical: horn
   tag: body
 㔾:
-  historical: seal, kneeling person
+  historical: kneeling person
   mnemonic: fetal position
   tag: body
 面:
@@ -1818,7 +1818,7 @@ CDP-8DBF: # 廌,焉,薦
   historical: I
   tag: personal
 与:
-  historical: with, impart
+  historical: impart
   mnemonic: raising hands
   reference: 挙
   tag: hands
@@ -1844,7 +1844,7 @@ CDP-8DBF: # 廌,焉,薦
   historical: proper
   tag: feelings
 或:
-  historical: perhaps, some
+  historical: some
   mnemonic: territory
   standin: 域
   tag: place
@@ -1945,8 +1945,7 @@ CDP-8DBF: # 廌,焉,薦
   historical: both
   tag: geo
 代:
-  historical: generation, substitute
-  mnemonic: substitute
+  historical: generation
   tag: actions
 化:
   historical: change
@@ -2471,7 +2470,7 @@ GWS-U20B36-VAR-002:
   historical: wide
   tag: geo
 尭:
-  historical: high, Yao
+  historical: Yao
   mnemonic: dawn
   standin: 暁
   tag: nature
@@ -2488,7 +2487,7 @@ GWS-U20B36-VAR-002:
   historical: winter
   tag: nature
 万:
-  historical: thousand, scorpion
+  historical: ten thousand
   mnemonic: scorpion
   tag: animals
 念:
@@ -2638,7 +2637,7 @@ GWS-U20B36-VAR-002:
   historical: answer
   tag: verbal
 卉:
-  historical: grass, plants
+  historical: plants
   mnemonic: overgrown grass
   tag: plants
 奄:
@@ -3310,7 +3309,7 @@ GWS-U914B-G:
   historical: imperial decree
   tag: social
 奈:
-  historical: how, what
+  historical: how
   tag: null
 孔:
   historical: slit
@@ -3520,6 +3519,9 @@ GWS-U5BFD-G:
 𠅃:
   mnemonic: graduation cap
   reference: 卒
+虽:
+  mnemonic: although
+  standin: 雖
 #######
 丱:
   historical: tufts of hair

@@ -231,38 +231,6 @@ export async function seedKanjisenseFigures(
         ),
     );
 
-    await executeAndLogTime(
-      "updating variant group hasStandaloneCharacter field",
-      async () => {
-        const variantGroups = await prisma.kanjisenseVariantGroup.findMany();
-        const variantGroupHeadsIds = new Set(variantGroups.map((g) => g.id));
-        const standaloneVariantGroupHeads =
-          await prisma.kanjisenseFigure.findMany({
-            where: {
-              id: { in: [...variantGroupHeadsIds] },
-              OR: [
-                { listsAsCharacter: { isEmpty: false } },
-                {
-                  firstClassUses: {
-                    none: {
-                      parent: {
-                        isPriority: true,
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          });
-        for (const variantGroupHead of standaloneVariantGroupHeads) {
-          await prisma.kanjisenseVariantGroup.update({
-            where: { id: variantGroupHead.id },
-            data: { hasStandaloneCharacter: true },
-          });
-        }
-      },
-    );
-
     await registerSeeded(prisma, "KanjisenseFigure");
     console.log(`figures seeded. 🌱`);
   }

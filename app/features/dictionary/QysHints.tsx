@@ -1290,7 +1290,7 @@ export const VowelHints = {
       had an R-like or L-like sound before the vowel in Old Chinese, which may
       have survived into the Middle Chinese period as something like a velar
       glide (something like <IpaLink sound={IpaSymbols.turnedMWithLongLeg} /> or{" "}
-      <IpaLink sound="ɯ" />
+      <IpaLink sound="ɯ/ɣ" linkSound="ɯ" />
       ), or a palatal glide (like <IpaLink sound="j" />
       ). In some{" "}
       <MiddleChineseTranscriptionLink hash="go-on">

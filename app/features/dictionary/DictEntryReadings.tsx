@@ -84,7 +84,7 @@ export function DictEntryReadings({
     <section
       className={`flex flex-col rounded-lg bg-gray-50 shadow-md shadow-black/20 md:flex-row ${className}`}
     >
-      <div className="flex basis-full  flex-row flex-wrap justify-evenly gap-4 p-3 md:basis-7/12">
+      <div className="flex basis-full  flex-row flex-wrap justify-evenly gap-4 px-3 py-8 md:basis-7/12">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>on&apos;yomi</i>{" "}
@@ -133,7 +133,7 @@ export function DictEntryReadings({
         ) : null}
         {animationState !== "exited" ? (
           <div
-            className={`slideDown ${animationState}  flex flex-row flex-wrap justify-evenly gap-4 px-4 py-4`}
+            className={`slideDown ${animationState}  flex flex-row flex-wrap justify-evenly gap-4 `}
           >
             <div className="text-left [max-width:10em]">
               <dt className="mb-1 text-sm text-gray-500">Mandarin Chinese</dt>
@@ -199,7 +199,7 @@ export function DictEntryReadings({
         </div>
       </div>
       <div className="border-l-solid fadeIn flex flex-row flex-wrap justify-evenly gap-4 border-t border-t-gray-600/40 p-4 text-center transition-all md:basis-5/12 md:border-l md:border-t-0 md:border-l-gray-600/40">
-        <div>
+        <div className="py-4">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>kun&apos;yomi</i>
           </dt>
@@ -265,7 +265,7 @@ function QysDialog({
   const { setOpen } = useDialogContext();
   return (
     <>
-      <DialogTrigger>
+      <DialogTrigger className="flex">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">Middle Chinese</dt>
           <dd className="text-xl leading-9 text-gray-700 drop-shadow-[0_2px_2px_rgb(0_0_0_/_.4)]">

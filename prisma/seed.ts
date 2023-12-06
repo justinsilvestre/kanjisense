@@ -19,6 +19,7 @@ import { seedFigureImages } from "./kanjisense/seedKanjisenseFigureImages";
 import { seedKanjisenseFigureReadings } from "./kanjisense/seedKanjisenseFigureReadings";
 import { seedKanjisenseFigureRelation } from "./kanjisense/seedKanjisenseFigureRelation";
 import { seedKanjisenseFigures } from "./kanjisense/seedKanjisenseFigures";
+import { seedKanjisenseFigureBadgeProps } from "./kanjisense/seedKanjisenseFiguresBadgeProps";
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 import { seedShuowenImages } from "./kanjisense/seedShuowenImages";
 import { seedJMDict } from "./seedJMDict";
@@ -46,7 +47,7 @@ async function seed() {
       seedScriptinAozoraFrequencies(prisma),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
-      seedKanjisenseVariantGroups(prisma),
+      seedKanjisenseVariantGroups(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
       seedKanjisenseFigureRelation(prisma, false),
@@ -56,6 +57,9 @@ async function seed() {
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
       seedKanjisenseFigures(prisma, false),
+    );
+    await executeAndLogTime("seeding kanjisense figure badge props", () =>
+      seedKanjisenseFigureBadgeProps(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
       seedKanjisenseActiveSoundMarks(prisma, false),

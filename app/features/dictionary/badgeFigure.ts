@@ -17,7 +17,8 @@ export interface BadgeProps {
   aozoraAppearances: number;
   hue: BadgeHue;
   isStandaloneCharacter: boolean;
-  lists: KanjiListCode[];
+  listsAsCharacter: KanjiListCode[] | null;
+  listsAsComponent: KanjiListCode[] | null;
   isPriorityComponent: boolean;
   variantGroupId: string | null;
 }
@@ -29,6 +30,9 @@ export const badgeFigureSelect = {
   variantGroupId: true,
   aozoraAppearances: true,
   shinjitaiInBaseKanji: true,
+  isStandaloneCharacter: true,
+  isPriorityComponent: true,
+  isPrioritySoundMark: true,
 
   _count: {
     select: {
@@ -64,16 +68,12 @@ export enum BadgeHue {
 }
 
 export type StandaloneCharacterQueryFigure = Pick<
-  DictionaryPageFigureWithPriorityUses,
-  "_count" | "listsAsCharacter" | "shinjitaiInBaseKanji"
+  KanjisenseFigure,
+  "isStandaloneCharacter"
 >;
 // different for characters in lists vs. variants of characters in lists.
 export function isStandaloneCharacter(figure: StandaloneCharacterQueryFigure) {
-  return Boolean(
-    figure.listsAsCharacter.length ||
-      !figure._count.firstClassUses ||
-      figure.shinjitaiInBaseKanji,
-  );
+  return figure.isStandaloneCharacter;
 }
 
 export type StandaloneCharacterVariantQueryFigure =
@@ -123,28 +123,21 @@ export function isSecondaryVariant(
 }
 
 export type IsPriorityComponentQueryFigure = Pick<
-  DictionaryPageFigureWithPriorityUses,
-  "_count"
+  KanjisenseFigure,
+  "isPriorityComponent"
 >;
-export function isPriorityComponent(
-  figureWithPriorityUses: IsPriorityComponentQueryFigure,
-) {
-  return Boolean(figureWithPriorityUses._count.firstClassUses);
+export function isPriorityComponent(figure: IsPriorityComponentQueryFigure) {
+  return figure.isPriorityComponent;
 }
 
-type IsPrioritySoundMarkFigure = Pick<
-  DictionaryPageFigureWithPriorityUses,
-  "asComponent"
->;
+type IsPrioritySoundMarkFigure = Pick<KanjisenseFigure, "isPrioritySoundMark">;
 
-export function isPrioritySoundMark(
-  figureWithPriorityUses: IsPrioritySoundMarkFigure,
-) {
-  return Boolean(figureWithPriorityUses.asComponent?._count.soundMarkUses);
+export function isPrioritySoundMark(figure: IsPrioritySoundMarkFigure) {
+  return figure.isPrioritySoundMark;
 }
 
-export const getBadgeProps = memoizeById(_getBadgeProps);
-function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
+export const getBadgeProps = _getBadgeProps;
+export function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
   const cache = new Map<string, U>();
   return (arg: T) => {
     const cached = cache.get(arg.id);
@@ -177,7 +170,8 @@ function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
     id: figure.id,
     image: figure.image,
     aozoraAppearances: figure.aozoraAppearances,
-    lists,
+    listsAsCharacter: figure.listsAsCharacter as KanjiListCode[] | null,
+    listsAsComponent: figure.listsAsComponent as KanjiListCode[] | null,
     hue: getBadgeHue(lists),
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),

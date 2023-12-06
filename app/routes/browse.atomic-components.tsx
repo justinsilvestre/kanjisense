@@ -12,7 +12,7 @@ import clsx from "clsx";
 import {
   AboutLink,
   BrowseCharactersLink,
-  BrowseComponentsLink,
+  BrowseCompoundComponentsLink,
   DictLink,
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
@@ -165,10 +165,12 @@ export default function FigureDetailsPage() {
   return (
     <DictionaryLayout>
       <main className="flex flex-col items-center gap-2">
-        <section className=" max-w-xl font-serif leading-7">
-          <h1>The {totalAtomicComponents} "atomic" kanji components</h1>
+        <section className="mb-4 max-w-xl  leading-7">
+          <h1 className="my-2 text-center font-sans text-2xl font-bold">
+            The {totalAtomicComponents} "atomic" kanji components
+          </h1>
           <CollapsibleInfoSection heading={"What is a kanji component?"}>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               Most kanji can be broken up into two or more separate shapes, or{" "}
               <strong>components</strong>, which appear on their own as
               characters in their own right. For example, the characters 日{" "}
@@ -179,7 +181,7 @@ export default function FigureDetailsPage() {
               which represents a house, and is used in kanji like 家{" "}
               <i>household</i>, 室 <i>room</i>, and 宿 <i>lodging</i>.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               This means that, even though there are tens of thousands of kanji
               in existence, they can all be considered combinations of{" "}
               <strong>just a few hundred repeating components</strong>.
@@ -188,7 +190,7 @@ export default function FigureDetailsPage() {
           <CollapsibleInfoSection
             heading={"How many kanji components do I need to know?"}
           >
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               With the help of{" "}
               <A
                 className=" underline hover:text-orange-700"
@@ -204,14 +206,14 @@ export default function FigureDetailsPage() {
               </BrowseCharactersLink>{" "}
               in everyday modern Japanese.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               For each component, I've selected an English{" "}
               <strong>keyword</strong> based on either its historical meaning,
               its shape, or the context in which it's used in modern Japanese.
               Hopefully, these keywords will help you imbue the component shapes
               with meaning so you can learn to recognize them.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               In some cases, a set of components will share a single
               keyword--you can think of these as <strong>variant forms</strong>{" "}
               of a single component. If you count a set of variants as a single
@@ -226,7 +228,7 @@ export default function FigureDetailsPage() {
           <CollapsibleInfoSection
             heading={"Why do some components have variants?"}
           >
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               For the most part, these variant forms only differ slightly in
               shape, and there is a logic to which variant is used when. For
               example, the component 羊 <i>sheep</i> has the common variant form
@@ -238,7 +240,7 @@ export default function FigureDetailsPage() {
               think of the components this way, as helpful alternative forms
               that make the characters easier to write.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               Just a few variant forms exhibit more dramatic variations in
               shape, like 水 <i>water</i> and its variant 氵. In such cases,
               these variants are grouped together because they descend from a
@@ -249,24 +251,28 @@ export default function FigureDetailsPage() {
               doing!), you'll have most of them mastered in no time.
             </p>
           </CollapsibleInfoSection>
-          <CollapsibleInfoSection heading="Atomic components vs. composite components">
-            <p className="my-2 text-justify text-sm leading-7">
+          <CollapsibleInfoSection heading="Atomic components vs. compound components">
+            <p className="my-3 text-justify text-sm leading-7">
               This list includes only those components which can't be broken up
               easily into distinct, meaningful sub-components. Since they're
               indivisible, kind of like atoms, I've dubbed them the "atomic"
               components. I've also made available{" "}
-              <BrowseComponentsLink>
-                an exhaustive list of all the atomic <em>and</em> composite
+              <BrowseCompoundComponentsLink>
+                an exhaustive list of all the atomic <em>and</em> compound
                 components
-              </BrowseComponentsLink>
+              </BrowseCompoundComponentsLink>
               , which number over 1,200.
             </p>
           </CollapsibleInfoSection>
           <CollapsibleInfoSection
-            heading={<>Disclaimer: personal judgments ahead!</>}
+            heading={
+              <>
+                Disclaimer: <strong>personal judgments ahead!</strong>
+              </>
+            }
             defaultOpen
           >
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               My ultimate goal here was to come up with a system that makes the
               kanji and their components easy to remember. With that goal in
               mind, I've tried to compile a list of{" "}
@@ -277,7 +283,7 @@ export default function FigureDetailsPage() {
               . But "broken up easily" and "meaningful" are ultimately
               subjective criteria.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               I think this is fine. There are no perfectly objective criteria
               for judging whether something is "easy to remember", since
               everyone's brain works differently. In the end, I've done the same
@@ -286,7 +292,7 @@ export default function FigureDetailsPage() {
               <strong>I've used a good measure of personal judgment</strong> in
               making this list.
             </p>
-            <p className="my-2 text-justify text-sm leading-7">
+            <p className="my-3 text-justify text-sm leading-7">
               So, some of these "atomic" components are ultimately "atomic" only
               because I've decided they're not worth analyzing any further. You
               could very well break several of them down into smaller
@@ -300,7 +306,7 @@ export default function FigureDetailsPage() {
 
           <hr />
         </section>
-        <h1>{totalAtomicComponents} atomic components total</h1>
+        <h1>The {totalAtomicComponents} atomic components</h1>
         <h2>
           (not counting variants: {atomicComponentsAndVariants.length} total)
         </h2>

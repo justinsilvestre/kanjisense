@@ -73,14 +73,31 @@ export default function FigureDetailsPage() {
             There are tens of thousands of kanji in existence, but you don't
             need to know all of them in order to be considered fully literate.
             Below are the 3530 most important characters according to a few
-            lists compiled by the Japanese government. The{" "}
+            lists compiled by the Japanese government.
+          </p>
+
+          <h2 className="mb-4 mt-6 text-xl font-bold">
+            ~3500 kanji made from{" "}
             <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
-              ~300 atomic components
+              ~300 components
+            </BrowseAtomicComponentsLink>
+          </h2>
+          <p className="mb-2">
+            What sets Kanjisense apart from other kanji-learning resources is
+            the systematic way that it treats the graphical{" "}
+            <strong>components</strong> that make up each kanji. Though literacy
+            in Japanese requires knowledge of thousands of characters, it's
+            possible to break them down into just around 300 distinct
+            components. The idea is that, by learning to recognize these
+            components, it becomes much easier to learn new kanji. Here you can
+            see{" "}
+            <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
+              a list of all the components
             </BrowseAtomicComponentsLink>{" "}
-            were extracted from these characters.
+            which appear in the 3530 kanji below.
           </p>
           <h2 className="mb-4 mt-6 text-xl font-bold">
-            Do I need to learn <em>all</em> of these?
+            Do I need to learn <em>all</em> of these kanji?
           </h2>
           <p className="mb-2">
             The exact number of kanji you need to know really depends on{" "}
@@ -248,7 +265,7 @@ export default function FigureDetailsPage() {
               is, they are the original forms that were used before the
               characters were simplified to their present-day 新字体{" "}
               <i>shinjitai</i> forms. Traditional variants of <i>jōyō</i> kanji
-              are distinguished below via a double border.
+              are distinguished below via a white border.
             </p>
           </div>
           <CollapsiblePreviewList

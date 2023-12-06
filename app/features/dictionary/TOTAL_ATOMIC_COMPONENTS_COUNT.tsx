@@ -1,0 +1,1 @@
+export const TOTAL_ATOMIC_COMPONENTS_COUNT = 272;

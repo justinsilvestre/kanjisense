@@ -6,8 +6,8 @@ export default function CollapsibleInfoSection({
   defaultOpen,
 }: PropsWithChildren<{ heading: ReactNode; defaultOpen?: boolean }>) {
   return (
-    <details open={defaultOpen || false}>
-      <summary className=" cursor-pointer">{heading}</summary>
+    <details className="pb-2" open={defaultOpen || false}>
+      <summary className="mb-2 cursor-pointer">{heading}</summary>
 
       {children}
     </details>

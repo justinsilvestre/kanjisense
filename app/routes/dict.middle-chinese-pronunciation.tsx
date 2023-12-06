@@ -1,7 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { ReactNode, useState, SetStateAction, PropsWithChildren } from "react";
+import {
+  ReactNode,
+  useState,
+  SetStateAction,
+  PropsWithChildren,
+  Fragment,
+} from "react";
 
 import A from "app/components/ExternalLink";
 import css from "app/features/dictionary/middle-chinese.css";
@@ -1468,7 +1474,7 @@ export default function MiddleChinese() {
               historical Chinese pronunciation, and yet they they offer little
               in the way of <b>direct evidence</b> for reconstructing Chinese
               sounds. What they <em>do</em> offer us is a wealth of information
-              about historical Chinese pronunciation that's unfortunately
+              about historical Chinese pronunciation that is, unfortunately,
               impossible to sum up briefly. Or at least, it's impossible to sum
               up in a way that's easy for the non-specialist to understand, so I
               won't bother trying here.
@@ -1477,16 +1483,17 @@ export default function MiddleChinese() {
               Suffice it to say, these sources are not like the kind of
               dictionaries you or I are used to today, which aim to represent,
               for the most part, the words of a language in one particular time
-              and place. Because the very concept of "Middle Chinese" is so
-              intimately tied to these sources, this leads many scholars to
+              and place. So, seeing as the very concept of "Middle Chinese" is
+              so intimately tied to these sources, this leads many scholars to
               flat-out deny the existence of "Middle Chinese" as a single
-              coherent spoken language. So it makes sense that they would also
-              question the validity of any phonological reconstruction of
-              "Middle Chinese" that treats it as such.
+              coherent spoken language. In light of this, it only makes sense
+              that they would also question the validity of any reconstruction
+              of "Middle Chinese" that treats it as such.
             </p>
             <p>
-              For that reason, let's leave reconstructions aside for a moment,
-              and instead, let's work through a little thought experiment.
+              It's an altogether complicated, messy situation. So let's leave
+              reconstructions aside for a moment, and instead, let's work
+              through a little thought experiment.
             </p>
             <div id="a-thought-experiment">
               <h5>A thought experiment</h5>
@@ -1674,7 +1681,7 @@ export default function MiddleChinese() {
               </ul>
               <p>
                 (At the beginning of the Early Middle Japanese period, there was
-                actually an addition vowel{" "}
+                actually an additional vowel{" "}
                 <IpaLink broad sound={IpaSymbols.schwa} />. But this merged with
                 the <IpaLink broad sound="o" /> sound some time after 1000 C.E.
                 So it still makes sense to say that the fivefold vowel system
@@ -1940,8 +1947,9 @@ export default function MiddleChinese() {
                     depicted a sound <MedialHints.Y />
                   </li>
                   <li>
-                    The sound written here <G g="ŷ" /> corresponds to /wij/ in{" "}
-                    <i>Kan'on</i>, which probably depicted <MedialHints.Vy />
+                    The sound written here <G g="ŷ" /> corresponds to a sound
+                    written like /wij/ in <i>Kan'on</i>, which probably depicted{" "}
+                    <MedialHints.Vy />
                   </li>
                 </ul>
                 <p>
@@ -3354,8 +3362,9 @@ export default function MiddleChinese() {
               Chinese. I clearly think there's huge value in a system like his
               that lets us refer to Middle Chinese syllables without assigning
               exact sounds. But I'm highly dissatisfied with Baxter's choice of
-              symbols. His design works actively against his stated intention,
-              which was to convey these abstract categories to non-specialists.
+              symbols. His design works actively against one of his stated
+              intentions, which was to convey these abstract categories to
+              non-specialists.
             </p>
             <p>
               The problem is that, while Baxter's transcription technically does
@@ -3400,21 +3409,22 @@ export default function MiddleChinese() {
               <em>even the most capable users</em> misunderstand its purpose,
               you're faced with a choice. You can either blame the user for not{" "}
               <em>just reading the manual</em>, or you can admit that there is,
-              after all, a design problem.
+              after all, a design problem here.
             </p>
             <p>
-              There is a problem with all reconstructions that Baxter's notation
-              shares: the selection of symbols is largely arbitrary. In the case
-              of phonetic reconstructions, this is inescapable, since there are
-              so many grey areas in these reconstructions, yet you've got to
-              choose <em>some</em> particular symbols if you're going to put
-              your ideas to paper. But at least in an actual reconstruction,
-              that arbitrariness in symbol choice is mitigated by a{" "}
-              <strong>strong guiding principle</strong>: the reconstructor's
-              motivation to put forth a clear, internally consistent argument
-              about the sounds of the language. Since Baxter had no such
-              argument to make, he thought it right to dispense with any strong
-              guiding principle. But a good design just can't do without one.
+              This problem is essentially one that Baxter shares with all actual
+              reconstructions of Middle Chinese: the selection of symbols is
+              largely arbitrary. In the case of actual phonetic reconstructions,
+              this is inescapable, since there are so many grey areas in these
+              reconstructions, yet you've got to choose <em>some</em> particular
+              symbols if you're going to put your ideas to paper. But at least
+              in an actual reconstruction, that arbitrariness in symbol choice
+              is mitigated by a <strong>strong guiding principle</strong>: the
+              reconstructor's motivation to put forth a clear, internally
+              consistent argument about the sounds of the language. Since Baxter
+              had no such argument to make, he thought it right to dispense with
+              any strong guiding principle. But a good design just can't do
+              without one, as the examples above have made clear.
             </p>
             <p>
               I hope to have improved on Baxter's notation by reintroducing a{" "}
@@ -3445,21 +3455,23 @@ export default function MiddleChinese() {
               what could you possibly say to them?
             </p>
             <p>
-              The simplest, most concise explanation you could offer would be
-              along the lines of, "Actually, these symbols don't correspond
-              consistently to any sounds in particular." But would that satisfy
-              someone who, up till now, imagined these symbols were providing
-              them with a concrete depiction of Middle Chinese pronunciation? If
-              the letters in <em>kaewk</em> and <em>mjie</em> and{" "}
-              <em>pjuwng</em> don't represent particular sounds, they'll wonder,
-              then <em>what exactly</em> do they represent? Unfortunately,{" "}
+              The simplest, most concise non-technical explanation you could
+              offer would be along the lines of, "Actually, these symbols don't
+              correspond consistently to any sounds in particular." But would
+              that satisfy someone who, up till now, imagined these symbols were
+              providing them with a concrete depiction of Middle Chinese
+              pronunciation? If the letters in <em>kaewk</em> and <em>mjie</em>{" "}
+              and <em>pjuwng</em> don't represent particular sounds, they'll
+              wonder, then what exactly <strong>do</strong> they represent?
+              Unfortunately,{" "}
               <A href="#the-problem-with-reconstructions">
                 there is no concise, simple answer to <em>that</em> question
               </A>
               . Therefore the time they've invested in Baxter's system won't
               provide any payoff until they've wrapped their head around the
-              basics of the <em>Qieyun</em> system. And remember&mdash;this
-              notation is meant to be accessible to non-specialists.
+              basics of the <i>Qieyun</i> system. And remember&mdash;this
+              notation is meant to be accessible to{" "}
+              <strong>non-specialists</strong>.
             </p>
             <p>
               On the other hand, if a user of my system mistakes the symbols for
@@ -3621,52 +3633,48 @@ function Nav({
       </h5>
       <ul>
         {sections.map(({ level, id, navText, children }) => (
-          <>
-            <NavLi key={id} level={level} hash={id} text={navText}>
-              {children.length > 0 ? (
-                <ul>
-                  {children.map(({ level, id, navText, children }) => (
-                    <>
-                      <NavLi key={id} level={level} hash={id} text={navText} />
-                      {children.length > 0 ? (
-                        <ul>
-                          {children.map(({ level, id, navText, children }) => (
-                            <>
-                              <NavLi
-                                key={id}
-                                level={level}
-                                hash={id}
-                                text={navText}
-                              >
-                                {children.length > 0 ? (
-                                  <ul>
-                                    {children.map(
-                                      ({ level, id, navText, children }) => {
-                                        if (children.length)
-                                          throw new Error(`Too deep`);
-                                        return (
-                                          <NavLi
-                                            key={id}
-                                            level={level}
-                                            hash={id}
-                                            text={navText}
-                                          />
-                                        );
-                                      },
-                                    )}
-                                  </ul>
-                                ) : null}
-                              </NavLi>
-                            </>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </>
-                  ))}
-                </ul>
-              ) : null}
-            </NavLi>
-          </>
+          <NavLi key={id} level={level} hash={id} text={navText}>
+            {children.length > 0 ? (
+              <ul>
+                {children.map(({ level, id, navText, children }) => (
+                  <Fragment key={id}>
+                    <NavLi key={id} level={level} hash={id} text={navText} />
+                    {children.length > 0 ? (
+                      <ul>
+                        {children.map(({ level, id, navText, children }) => (
+                          <NavLi
+                            key={id}
+                            level={level}
+                            hash={id}
+                            text={navText}
+                          >
+                            {children.length > 0 ? (
+                              <ul>
+                                {children.map(
+                                  ({ level, id, navText, children }) => {
+                                    if (children.length)
+                                      throw new Error(`Too deep`);
+                                    return (
+                                      <NavLi
+                                        key={id}
+                                        level={level}
+                                        hash={id}
+                                        text={navText}
+                                      />
+                                    );
+                                  },
+                                )}
+                              </ul>
+                            ) : null}
+                          </NavLi>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </Fragment>
+                ))}
+              </ul>
+            ) : null}
+          </NavLi>
         ))}
       </ul>
 

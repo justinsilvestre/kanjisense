@@ -30,7 +30,13 @@ export function DictLink({
   figureId,
   focusOnLoad,
   className,
-}: LinkProps<{ figureId: string; focusOnLoad?: boolean }>) {
+}: { children?: ReactNode } & Omit<
+  LinkProps<{
+    figureId: string;
+    focusOnLoad?: boolean;
+  }>,
+  "children"
+>) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
     if (focusOnLoad) {
@@ -45,10 +51,16 @@ export function DictLink({
       linkRef={linkRef}
       className={className}
     >
-      {children}
+      {children || figureId}
     </AppLink>
   );
 }
+
+export const IndexLink = ({ children, className }: LinkProps) => (
+  <AppLink to="/" className={className}>
+    {children}
+  </AppLink>
+);
 
 export const BrowseCharactersLink = ({ children, className }: LinkProps) => (
   <AppLink to="/browse/characters" className={className}>
@@ -65,8 +77,11 @@ export const BrowseAtomicComponentsLink = ({
   </AppLink>
 );
 
-export const BrowseComponentsLink = ({ children, className }: LinkProps) => (
-  <AppLink to="/browse/components" className={className}>
+export const BrowseCompoundComponentsLink = ({
+  children,
+  className,
+}: LinkProps) => (
+  <AppLink to="/browse/compound-components" className={className}>
     {children}
   </AppLink>
 );

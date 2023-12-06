@@ -2,8 +2,9 @@ import { PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 
 import {
+  BrowseAtomicComponentsLink,
   BrowseCharactersLink,
-  BrowseComponentsLink,
+  BrowseCompoundComponentsLink,
 } from "~/components/AppLink";
 import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
@@ -31,8 +32,10 @@ export function FigureTags({
     isStandaloneCharacter,
     id,
     variantGroupId,
-    lists,
+    listsAsCharacter,
+    listsAsComponent,
   } = badgeProps;
+  const lists = isStandaloneCharacter ? listsAsCharacter : listsAsComponent;
   return (
     <ul className={`${className} flex flex-row flex-wrap gap-1`}>
       <ListTags
@@ -54,9 +57,9 @@ export function FigureTags({
                 character, at least not in everyday modern Japanese.
               </p>
               <PopoverBottom>
-                <BrowseComponentsLink>
+                <BrowseCharactersLink>
                   More on characters and components
-                </BrowseComponentsLink>
+                </BrowseCharactersLink>
               </PopoverBottom>
             </>
           }
@@ -87,9 +90,9 @@ export function FigureTags({
                 second-language learner.
               </p>
               <PopoverBottom>
-                <BrowseComponentsLink>
+                <BrowseCharactersLink>
                   More on characters and components
-                </BrowseComponentsLink>
+                </BrowseCharactersLink>
               </PopoverBottom>
             </>
           }
@@ -113,9 +116,9 @@ export function FigureTags({
                 as well as inside other kanji.
               </p>
               <PopoverBottom>
-                <BrowseComponentsLink>
+                <BrowseCharactersLink>
                   More on characters and components
-                </BrowseComponentsLink>
+                </BrowseCharactersLink>
               </PopoverBottom>
             </>
           }
@@ -142,9 +145,9 @@ export function FigureTags({
           popoverContent={
             <>
               The{" "}
-              <BrowseComponentsLink>
+              <BrowseCompoundComponentsLink>
                 {ATOMIC_COMPONENTS_COUNT} atomic components
-              </BrowseComponentsLink>{" "}
+              </BrowseCompoundComponentsLink>{" "}
               are the &quot;atoms&quot; that come together in various
               combinations to form the{" "}
               <BrowseCharactersLink>
@@ -152,9 +155,9 @@ export function FigureTags({
               </BrowseCharactersLink>{" "}
               in Japanese.
               <PopoverBottom>
-                <BrowseComponentsLink>
+                <BrowseAtomicComponentsLink>
                   More on the kanji components
-                </BrowseComponentsLink>
+                </BrowseAtomicComponentsLink>
               </PopoverBottom>
             </>
           }
@@ -176,9 +179,9 @@ export function FigureTags({
                 Note that this only works with <i>on&apos;yomi</i>.
               </p>
               <PopoverBottom>
-                <BrowseComponentsLink>
+                <BrowseCompoundComponentsLink>
                   More on sound components and on&apos;yomi
-                </BrowseComponentsLink>
+                </BrowseCompoundComponentsLink>
               </PopoverBottom>
             </>
           }
@@ -240,7 +243,7 @@ function FigureTag({
           ? createPortal(
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <div
-                className={`[border:2px inset #afafaf33] pointer-events-auto p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [overflow-y:auto]  [width:18rem] [background-color:rgba(255,255,247,0.95)] md:max-w-xl`}
+                className={`[border:2px inset #afafaf33] pointer-events-auto p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [overflow-y:auto] [background-color:rgba(255,255,247,0.95)]  [max-height:88v] [width:18rem] md:max-w-xl`}
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}
@@ -255,14 +258,15 @@ function FigureTag({
   );
 }
 function ListTags({
-  lists,
+  lists: listsArg,
   isStandaloneCharacter,
   className,
 }: {
-  lists: KanjiListCode[];
+  lists: KanjiListCode[] | null;
   isStandaloneCharacter: boolean;
   className?: string;
 }) {
+  const lists = listsArg || [];
   const kyoiku = lists.find(
     (c) =>
       c === "1" ||
@@ -482,7 +486,7 @@ function JoyoTag({
       <p className="mb-3 mt-0">
         {!isStandaloneCharacter ? "Components like these" : "The Jōyō Kanji"}{" "}
         are marked in the color{" "}
-        <span className="font-bold text-green-600">green</span> throughout
+        <span className="font-bold text-joyo-600">green</span> throughout
         Kanjisense.
       </p>
       <PopoverBottom>
@@ -568,8 +572,8 @@ const VariantPopoverContent = ({
             primaryVariantId
           ) : (
             <>another component or character</>
-          )}
-          .
+          )}{" "}
+          in Kanjisense.
         </p>
         <p className="mb-3 mt-0">
           Some variants are historically descended from a single character.
@@ -581,9 +585,9 @@ const VariantPopoverContent = ({
           abbreviations that make characters easier to write.
         </p>
         <PopoverBottom>
-          <BrowseComponentsLink>
+          <BrowseCompoundComponentsLink>
             More on the kanji components
-          </BrowseComponentsLink>
+          </BrowseCompoundComponentsLink>
         </PopoverBottom>
       </>
     ) : (
