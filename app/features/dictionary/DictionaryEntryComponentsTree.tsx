@@ -85,6 +85,7 @@ function DictionaryEntryComponentsTreeMember({
       </div>
       {parentActiveSoundMark ? (
         <OnAndGuangyunReadings
+          className="block text-center"
           katakanaOn={parentActiveSoundMark.katakana}
           guangyun={
             parentActiveSoundMark.xiaoyunsByMatchingType

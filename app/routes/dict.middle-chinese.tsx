@@ -212,6 +212,9 @@ export default function MiddleChinese() {
                 the gradual shifts in Japanese pronunciation over the centuries.
               </li>
             </ul>
+            <h2 className="text-base">
+              Modern Chinese vs. Japanese <i>on'yomi</i>
+            </h2>
             <p>
               Knowing that <i>on'yomi</i> readings come from Chinese, you might
               think that the logic behind the <i>on'yomi</i> would become clear,
@@ -267,8 +270,8 @@ export default function MiddleChinese() {
               happen to unfold according to a{" "}
               <strong>highly consistent set of rules</strong>. This means that,
               with a little bit of knowledge of the original Chinese sources of
-              the on'yomi, you can largely predict how any given kanji's on'yomi
-              will sound.{" "}
+              the on'yomi, you can largely predict how any given kanji's{" "}
+              <i>on'yomi</i> will sound.{" "}
               <strong>
                 Even for those tricky kanji with varying <i>on'yomi</i>
               </strong>

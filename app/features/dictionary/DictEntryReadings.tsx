@@ -84,7 +84,7 @@ export function DictEntryReadings({
     <section
       className={`flex flex-col rounded-lg bg-gray-50 shadow-md shadow-black/20 md:flex-row ${className}`}
     >
-      <div className="flex basis-full  flex-row flex-wrap justify-evenly gap-4 px-3 py-8 md:basis-7/12">
+      <div className="flex basis-full  flex-row flex-wrap content-between justify-evenly gap-4 px-3 py-8 md:basis-7/12">
         <div className="text-left">
           <dt className="mb-1 text-sm text-gray-500">
             Japanese <i>on&apos;yomi</i>{" "}

@@ -178,7 +178,7 @@ function ComboBox({
                             "flex flex-row gap-2 px-3 py-2 shadow-sm",
                           )}
                         >
-                          <span className="align-middle text-4xl">
+                          <span className="mr-2 align-middle text-4xl">
                             <FigureBadge
                               className=""
                               id={figure.id}
@@ -229,7 +229,17 @@ function SearchPropertiesDisplay({
       reading.type === FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA;
     const romaji = isRomaji
       ? reading.text
-      : kanjidicKanaToRomaji(reading.text, true);
+      : kanjidicKanaToRomaji(
+          reading.display
+            ? reading.text.replace(
+                new RegExp(`${reading.display}$`),
+                `.${reading.display}`,
+              )
+            : reading.text,
+          false,
+        );
+
+    console.log(reading.text, reading.display, romaji);
 
     if (registry[romaji]) {
       registry[romaji][isRomaji ? "latin" : "kana"] = {
@@ -317,7 +327,7 @@ function SearchPropertiesDisplay({
 
   return (
     <div className="">
-      <div className="text-base">
+      <div className="mb-1 text-base">
         {meaningsAndMnemonic.map(({ text, type, display }, i) => {
           return (
             <span

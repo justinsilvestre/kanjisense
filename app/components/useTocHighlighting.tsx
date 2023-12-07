@@ -12,7 +12,7 @@ export function useTocHighlighting() {
     const observer = new IntersectionObserver((sections) => {
       sections.forEach((section) => {
         const id = section.target.getAttribute("id")!;
-        const li = document.querySelector(`.nav li a[href="#${id}"]`)
+        const li = document.querySelector(`.nav li a[href$="#${id}"]`)
           ?.parentElement;
         if (!li) return;
 

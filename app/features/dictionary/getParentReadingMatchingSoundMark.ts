@@ -19,7 +19,7 @@ export function getParentReadingMatchingSoundMark(
 ) {
   if (!parentReadings)
     return {
-      katakanaOn: "BOOP",
+      katakanaOn: "[unavailable]",
       guangyun: null,
     };
   const parentGuangyunReadings = parentReadings.sbgyXiaoyuns.map(

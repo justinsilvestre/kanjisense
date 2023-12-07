@@ -27,7 +27,7 @@ export default function DictionaryLayout({
           <span className=" text-gray-700">kanji</span>
           <span className=" text-blue-900">sense</span>
         </h1>
-        <FigureSearchForm className="w-full self-center sm:w-auto" />
+        <FigureSearchForm className="w-full flex-grow self-center sm:w-auto" />
       </header>
       {children}
       <footer className="  bg-gray-50 p-8 sm:gap-4">
