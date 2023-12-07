@@ -11,6 +11,7 @@ import { seedUnihan12 } from "./external/seedUnihan12";
 import { seedUnihan14 } from "./external/seedUnihan14";
 import { seedUnihan15 } from "./external/seedUnihan15";
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
+import { seedFigureSearchProperties } from "./kanjisense/seedFigureSearchProperties";
 import { seedGlyphImages } from "./kanjisense/seedGlyphImages";
 import { seedKanjiDbCharacterDerivations } from "./kanjisense/seedKanjiDbCharacterDerivations";
 import { seedKanjisenseActiveSoundMarks } from "./kanjisense/seedKanjisenseActiveSoundMarks";
@@ -83,6 +84,10 @@ async function seed() {
     );
     await executeAndLogTime("seeding glyph images", () =>
       seedGlyphImages(prisma, false),
+    );
+
+    await executeAndLogTime("seeding kanjisense figure search properties", () =>
+      seedFigureSearchProperties(prisma, 1000, false),
     );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);

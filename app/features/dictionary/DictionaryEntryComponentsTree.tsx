@@ -25,6 +25,7 @@ export function DictionaryEntryComponentsTree({
   figure: DictionaryPageFigureWithPriorityUses;
   className?: string;
 }) {
+  const size = figure.firstClassComponents.length <= 4 ? "large" : "small";
   return (
     <section
       className={`${className} flex flex-row flex-wrap justify-evenly gap-4`}
@@ -37,6 +38,7 @@ export function DictionaryEntryComponentsTree({
               key={componentId}
               parentFigure={figure}
               componentFigure={component}
+              size={size}
             />
           );
         })}
@@ -44,14 +46,18 @@ export function DictionaryEntryComponentsTree({
   );
 }
 
+type Size = "small" | "large";
+
 function DictionaryEntryComponentsTreeMember({
   parentFigure,
   componentFigure,
   expandable = false,
+  size,
 }: {
   parentFigure: ComponentsTreeMemberFigure;
   componentFigure: ComponentsTreeMemberFigure;
   expandable?: boolean;
+  size: Size;
 }) {
   const { analyzeFigure, fetcher } = useAnalyzeFigureFetcher(
     componentFigure.id,
@@ -69,7 +75,7 @@ function DictionaryEntryComponentsTreeMember({
       <FigurePopoverBadge
         id={componentFigure.id}
         badgeProps={getBadgeProps(componentFigure)}
-        width={6}
+        width={size === "large" ? 6 : 5}
         className="mx-auto "
       />
       <div className="mb-1 mt-2 inline-flex flex-col items-center [max-width:10rem]">
@@ -119,6 +125,7 @@ function DictionaryEntryComponentsTreeMember({
               key={c.component.id}
               parentFigure={parentFigure}
               componentFigure={c.component}
+              size={size}
             />
           ))}
         </div>

@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { KanjisenseFigure, KanjisenseFigureImageType } from "@prisma/client";
+import { clsx } from "clsx";
 import { useState } from "react";
 
 import { DictLink } from "~/components/AppLink";
@@ -65,12 +66,14 @@ export function SingleFigureDictionaryEntry({
       key={figure.id}
     >
       <div className="SingleFigureDictionaryEntry_left flex flex-grow flex-col gap-4 [min-width:calc(100%-20rem)] max-lg:basis-full ">
-        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap justify-center gap-4 ">
+        <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap  justify-center gap-4 md:flex-nowrap ">
           <div className="SingleFigureDictionaryEntry_topLeft flex flex-grow basis-1/3 flex-col  items-center gap-4 [min-width:15.05rem]">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
-              className="group relative cursor-pointer [height:15.05em] [width:15.05em]"
+              className={clsx(
+                "group relative cursor-pointer [height:15.05em] [width:15.05em]",
+              )}
               onClick={() => setAnimationIsShowing((b) => !b)}
               role="img"
               onKeyDown={(e) => {

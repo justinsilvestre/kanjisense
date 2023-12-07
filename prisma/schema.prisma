@@ -156,6 +156,8 @@ model KanjisenseFigure {
   // identical to id, but needed to allow figures to be deleted without deleting readings during updates
   readingId             String?                  @unique
   allComponents         KanjisenseComponent[]    @relation("allComponents")
+
+  searchProperties SearchPropertiesOnFigure[]
 }
 
 model KanjisenseComponent {
@@ -282,4 +284,45 @@ model JmDictEntry {
   readingText String
 
   @@index([head, readingText])
+}
+
+model FigureSearchProperty {
+  type    FigureSearchPropertyType
+  // text for calculating match
+  text    String
+  // extra text parsed according to type
+  display String
+
+  figures SearchPropertiesOnFigure[]
+
+  key String @id
+
+  @@unique([type, text, display])
+}
+
+model SearchPropertiesOnFigure {
+  figure            KanjisenseFigure     @relation(fields: [figureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  figureId          String
+  searchProperty    FigureSearchProperty @relation(fields: [searchPropertyKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
+  searchPropertyKey String
+
+  // index for sorting
+  index Int
+
+  @@id([figureId, searchPropertyKey])
+}
+
+enum FigureSearchPropertyType {
+  KEY
+  VARIANT
+  ONYOMI_KANA
+  ONYOMI_LATIN
+  KUNYOMI_KANA
+  KUNYOMI_LATIN
+  KUNYOMI_KANA_WITH_OKURIGANA
+  KUNYOMI_LATIN_WITH_OKURIGANA
+  KUNYOMI_KANA_MINUS_OKURIGANA
+  KUNYOMI_LATIN_MINUS_OKURIGANA
+  TRANSLATION_ENGLISH
+  MNEMONIC_ENGLISH
 }
