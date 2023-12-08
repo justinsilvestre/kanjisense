@@ -222,7 +222,7 @@ function FigureBadgeLink({
 }) {
   return (
     <DictLink figureId={figureId}>
-      <FigureBadge id={figureId} badgeProps={badgeProps} />
+      <FigureBadge badgeProps={badgeProps} />
     </DictLink>
   );
 }

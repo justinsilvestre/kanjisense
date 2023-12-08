@@ -1,6 +1,7 @@
 import { appendFileSync, writeFileSync } from "fs";
 
 import { getYuntuJson } from "prisma/external/getYuntuJson";
+import { overrides } from "prisma/external/yuntuOverrides";
 import { files, readJsonSync } from "~/lib/files.server";
 
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
@@ -9,7 +10,7 @@ const logOutputPath = __dirname + "/transcribeSbgyXiaoyun.test.log";
 
 describe("transcribeSbgyXiaoyun", () => {
   it("works with each xiaoyun of Guangyun", async () => {
-    const yuntuJsons = await getYuntuJson();
+    const yuntuJsons = await getYuntuJson(overrides);
     const sbgyJson = readJsonSync<
       [
         syllableNumber: number,

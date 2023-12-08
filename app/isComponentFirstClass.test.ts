@@ -2,7 +2,38 @@ import { isComponentFirstClass } from "prisma/kanjisense/isComponentFirstClass";
 import { getFiguresToVariantGroups } from "prisma/kanjisense/seedKanjisenseFigures";
 import { prisma } from "~/db.server";
 
+import { ComponentUse } from "./features/dictionary/ComponentUse";
+
 describe("isComponentFirstClass", () => {
+  const figuresToComponentTrees = new Map<string, ComponentUse[]>(
+    (
+      [
+        [
+          "歸",
+          [
+            ["歸", "CDP-8CAB"],
+            ["CDP-8CAB", "𠂤"],
+            ["𠂤", "丿"],
+            ["𠂤", "㠯"],
+            ["CDP-8CAB", "止"],
+            ["歸", "帚"],
+            ["帚", "⺕"],
+            ["帚", "冖"],
+            ["帚", "巾"],
+          ],
+        ],
+        [
+          "𠚍",
+          [
+            ["𠚍", "𠂭"],
+            ["𠚍", "凵"],
+          ],
+        ],
+        ["旡", []],
+      ] as [string, [string, string][]][]
+    ).map(([id, ct]) => [id, ct.map((c) => new ComponentUse(c[0], c[1]))]),
+  );
+
   it("works with CDP-8CAB (left of 歸)", async () => {
     const priorityFiguresIds = await prisma.kanjisenseFigure
       .findMany({
@@ -23,6 +54,7 @@ describe("isComponentFirstClass", () => {
       component,
       componentsToDirectUsesPrimaryVariants,
       figuresToVariantGroups,
+      figuresToComponentTrees,
     );
     expect(result).toEqual(false);
   });
@@ -48,6 +80,7 @@ describe("isComponentFirstClass", () => {
       component,
       componentsToDirectUsesPrimaryVariants,
       figuresToVariantGroups,
+      figuresToComponentTrees,
     );
     expect(result).toEqual(false);
   });
@@ -73,6 +106,7 @@ describe("isComponentFirstClass", () => {
       component,
       componentsToDirectUsesPrimaryVariants,
       figuresToVariantGroups,
+      figuresToComponentTrees,
     );
     expect(result).toEqual(true);
   });

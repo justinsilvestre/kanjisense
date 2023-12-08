@@ -73,7 +73,6 @@ function DictionaryEntryComponentsTreeMember({
   return (
     <div className="relative flex flex-col">
       <FigurePopoverBadge
-        id={componentFigure.id}
         badgeProps={getBadgeProps(componentFigure)}
         width={size === "large" ? 6 : 5}
         className="mx-auto "
