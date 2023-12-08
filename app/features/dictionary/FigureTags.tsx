@@ -231,8 +231,13 @@ function FigureTag({
       <li
         className={`${className} cursor-default`}
         ref={setReferenceElement}
-        onClick={isOpen ? closePopper : openPopper}
-        onMouseMove={openPopper}
+        // onClick={isClosing || !isOpen ? openPopper : closePopper}
+        onMouseEnter={!isOpen ? openPopper : undefined}
+        onClick={(e) => {
+          e.preventDefault();
+          if (isOpen) closePopper();
+          else openPopper();
+        }}
         onMouseLeave={closePopper}
         onFocus={openPopper}
         onBlur={closePopper}

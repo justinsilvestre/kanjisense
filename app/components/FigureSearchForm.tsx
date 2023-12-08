@@ -206,7 +206,6 @@ function ComboBox({
                           <span className="mr-2 align-middle text-4xl">
                             <FigureBadge
                               className=""
-                              id={figure.id}
                               badgeProps={getBadgeProps(figure)}
                             />
                           </span>
