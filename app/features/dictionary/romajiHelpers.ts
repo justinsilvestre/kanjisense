@@ -1,7 +1,7 @@
 const ROMAJI_REGEX =
   /^(([kstnmhgzdbpzjf]{1,2}y?|[rywj]|sh|ch|tch|cch)?[aeiouāēīōū][hnm]?[-.']?)+$/i;
 
-const AMBIGUOUS_N = /(?<=aeiou)n(?=[aeiouy])/g;
+const AMBIGUOUS_N = /(?<=[aeiou])n(?=[aeiouy])/g;
 
 export function couldBeRomaji(str: string) {
   return ROMAJI_REGEX.test(str);
