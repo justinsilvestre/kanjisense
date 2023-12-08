@@ -9,7 +9,7 @@ import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { BadgeHue, BadgeProps } from "~/features/dictionary/badgeFigure";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
+export const meta: MetaFunction = () => [{ title: "Kanjisense" }];
 
 export default function Index() {
   return (
