@@ -43,7 +43,6 @@ export function SingleFigureDictionaryEntry({
 }) {
   const badgeProps = getBadgeProps(figure);
   const figureIsStandaloneCharacter = badgeProps.isStandaloneCharacter;
-  const figureIsPrioritySoundMark = isPrioritySoundMark(figure);
 
   const [animationIsShowing, setAnimationIsShowing] = useState(false);
 
@@ -83,7 +82,7 @@ export function SingleFigureDictionaryEntry({
                 }
               }}
             >
-              <FigureBadge id={figure.id} badgeProps={badgeProps} width={15} />
+              <FigureBadge badgeProps={badgeProps} width={15} />
               {animationIsShowing && kvgImage ? (
                 <>
                   <FigureStrokesAnimation
@@ -114,11 +113,7 @@ export function SingleFigureDictionaryEntry({
               headingsMeanings={getHeadingsMeanings(figure)}
             />
 
-            <FigureTags
-              badgeProps={badgeProps}
-              isSoundMark={figureIsPrioritySoundMark}
-              isAtomic={figureIsAtomic}
-            />
+            <FigureTags badgeProps={badgeProps} isAtomic={figureIsAtomic} />
           </div>
 
           <div className="flex flex-grow-[9999] flex-col gap-4">
@@ -240,7 +235,6 @@ export function SingleFigureDictionaryEntry({
                         <FigureBadge
                           width={6}
                           key={v.id}
-                          id={v.id}
                           badgeProps={v}
                           className={`m-2 inline-block hover:opacity-100 `}
                         />
@@ -249,7 +243,6 @@ export function SingleFigureDictionaryEntry({
                       <FigurePopoverBadge
                         width={6}
                         key={v.id}
-                        id={v.id}
                         badgeProps={v}
                         className={`m-2 inline-block opacity-80 hover:opacity-100`}
                       />

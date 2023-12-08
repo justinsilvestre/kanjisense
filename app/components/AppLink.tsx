@@ -10,16 +10,13 @@ function AppLink({
   to,
   children,
   className = "underline hover:text-orange-600",
-  as,
   linkRef,
 }: LinkProps<{
   to: string;
-  as?: string;
-
   linkRef?: React.Ref<HTMLAnchorElement>;
 }>) {
   return (
-    <Link {...{ to, as }} className={className} ref={linkRef}>
+    <Link to={to} className={className} ref={linkRef}>
       {children}
     </Link>
   );
@@ -30,7 +27,11 @@ export function DictLink({
   figureId,
   focusOnLoad,
   className,
-}: { children?: ReactNode } & Omit<
+}: {
+  children?: ReactNode;
+
+  className?: string;
+} & Omit<
   LinkProps<{
     figureId: string;
     focusOnLoad?: boolean;
@@ -43,7 +44,6 @@ export function DictLink({
       linkRef.current?.focus();
     }
   }, [figureId, focusOnLoad]);
-
   return (
     <AppLink
       key={figureId}

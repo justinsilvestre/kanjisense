@@ -622,6 +622,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "牜",
         replacementIdsSegment: "⿰牜",
       })
+      .replaceIds("州", "⿰丶⿻川⿰丶丶")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

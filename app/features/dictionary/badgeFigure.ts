@@ -21,6 +21,7 @@ export interface BadgeProps {
   listsAsComponent: KanjiListCode[] | null;
   isPriorityComponent: boolean;
   variantGroupId: string | null;
+  isPrioritySoundMark: boolean;
 }
 
 export const badgeFigureSelect = {
@@ -176,5 +177,6 @@ function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
     isStandaloneCharacter: figureIsStandaloneCharacter,
     isPriorityComponent: isPriorityComponent(figure),
     variantGroupId: figure.variantGroupId,
+    isPrioritySoundMark: figure.isPrioritySoundMark,
   };
 }

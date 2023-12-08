@@ -17,7 +17,7 @@ export function Vowels({
       id={SectionIds["vowels"]}
     >
       <h3>Vowels {showContentsButton()}</h3>
-      <h5 id="the-problem-with-reconstructions">
+      <h5 className="mt-6" id="the-problem-with-reconstructions">
         The problem with Middle Chinese reconstructions
       </h5>
       <p>
@@ -59,9 +59,9 @@ export function Vowels({
         but the <i>Qieyun</i> and the rime dictionaries do not. Seeing as the
         very concept of "Middle Chinese" is so intimately tied to these sources,
         this leads many scholars to flat-out deny the existence of "Middle
-        Chinese" as a single coherent spoken language. In light of this, it only
-        makes sense that they would also question the validity of any
-        reconstruction of "Middle Chinese" that treats it as such.
+        Chinese" as a single coherent spoken language. In light of this, it's no
+        wonder they would also question the validity of any reconstruction of
+        "Middle Chinese" that treats it as such.
       </p>
       <p>
         It's an altogether complicated, messy situation. So let's leave
@@ -69,7 +69,7 @@ export function Vowels({
         little thought experiment.
       </p>
       <div id="a-thought-experiment">
-        <h5>A thought experiment</h5>
+        <h5 className="mt-6">A thought experiment</h5>
         <p>
           Say we were to travel back in time to around the Heian period in
           Japan, circa 800 C.E., give or take a century or two—in other words,
@@ -294,10 +294,10 @@ export function Vowels({
           </ScrollLink>{" "}
           are a good starting point for understanding the sounds of Middle
           Chinese, because, <i>in the vast majority of cases</i>, the compilers
-          of <i>Kan-on</i> wrote down Middle Chinese sounds in a manner that was
-          nice and consistent. But there are exceptions to this general rule.
-          After all, the <i>Kan-on</i> aren't the work of one specific person
-          like our imaginary friend from Heian Japan. They're simply a
+          of these <i>on'yomi</i> wrote down Middle Chinese sounds in a manner
+          that was nice and consistent. But there are exceptions to this general
+          rule. After all, the <i>Kan-on</i> aren't the work of one specific
+          person like our imaginary friend from Heian Japan. They're simply a
           collection of character readings that happened to get recorded during
           this particular period of time. We can't expect them to depict the
           sounds of Middle Chinese in a totally systematic way.
@@ -312,7 +312,7 @@ export function Vowels({
           . But here's the general idea of how this writing system handles these
           inconsistencies.
         </p>
-        <h5>
+        <h5 className="mt-6">
           Plain old inconsistencies in <i>Kan-on</i>
         </h5>
         <p>
@@ -328,7 +328,7 @@ export function Vowels({
           generally taken to keep different vowels visually distinct, and
           sometimes take general trends in reconstructions into account.)
         </p>
-        <h5 id="vowel-alternation">
+        <h5 className="mt-6" id="vowel-alternation">
           Predictable vowel alternation in <i>Kan-on</i>
         </h5>
         <p>

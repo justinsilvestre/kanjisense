@@ -9,12 +9,18 @@ import {
 } from "@remix-run/react";
 import clsx from "clsx";
 import { PropsWithChildren, useState } from "react";
+import { createPortal } from "react-dom";
 
-import { BrowseAtomicComponentsLink, DictLink } from "~/components/AppLink";
+import { BrowseAtomicComponentsLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
 import { FigureBadge } from "~/components/FigureBadge";
+import {
+  FigurePopoverWindow,
+  useFigurePopover,
+} from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
+import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
 import {
   BadgeProps,
   badgeFigureSelect,
@@ -59,13 +65,35 @@ export const loader: LoaderFunction = async () => {
   return json<LoaderData>(allBadgeFigures);
 };
 
-export default function FigureDetailsPage() {
+export default function BrowseCharactersPage() {
   const loaderData = useLoaderData<LoaderData>();
   const { characters } = loaderData;
+
+  const figurePopover = useFigurePopover();
+
+  const handleClickBadge = (
+    badgeProps: BadgeProps,
+    target: React.BaseSyntheticEvent<
+      MouseEvent,
+      EventTarget & HTMLAnchorElement,
+      EventTarget
+    >["nativeEvent"],
+  ) => {
+    figurePopover.popper.setReferenceElement(target.target as HTMLElement);
+    figurePopover.popper.forceUpdate?.();
+  };
+
   return (
     <DictionaryLayout>
-      <main className="flex flex-col gap-2">
-        <section className="mb-4">
+      {figurePopover.popper.isOpen
+        ? createPortal(
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <FigurePopoverWindow {...figurePopover} />,
+            document.getElementById("overlay") || document.body,
+          )
+        : null}
+      <main className="flex flex-col items-center gap-2">
+        <section className="mb-4 max-w-xl text-justify text-sm leading-7">
           <h1 className="mb-4 text-center text-2xl font-semibold">
             The ~3500 "most important" kanji
           </h1>
@@ -75,66 +103,87 @@ export default function FigureDetailsPage() {
             Below are the 3530 most important characters according to a few
             lists compiled by the Japanese government.
           </p>
+          <br />
+          <CollapsibleInfoSection
+            defaultOpen
+            heading={
+              <span className="mb-4 mt-6 text-xl font-bold">
+                ~3500 kanji made from{" "}
+                <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
+                  ~300 components
+                </BrowseAtomicComponentsLink>
+              </span>
+            }
+          >
+            <p className="mb-2">
+              What sets Kanjisense apart from other kanji-learning resources is
+              the systematic way that it treats the graphical{" "}
+              <strong>components</strong> of the kanji. Though literacy in
+              Japanese requires knowledge of thousands of characters, it's
+              possible to break them down into just around 300 distinct
+              components. The idea is that, by learning to recognize these
+              components, it becomes much easier to learn new kanji. Here you
+              can see{" "}
+              <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
+                a list of all the components
+              </BrowseAtomicComponentsLink>{" "}
+              which appear in the 3530 kanji below.
+            </p>
+          </CollapsibleInfoSection>
+          <br />
+          <CollapsibleInfoSection
+            heading={
+              <span className="mb-4 mt-6 text-xl font-bold">
+                Do I need to learn <em>all</em> of these kanji?
+              </span>
+            }
+          >
+            <p className="mb-2">
+              The exact number of kanji you need to know really depends on{" "}
+              <A
+                href="https://kanjibunka.com/kanji-faq/history/q0006/"
+                className="underline hover:text-orange-600"
+              >
+                how much you tend to read
+              </A>
+              . If you're the kind of person who likes to read novels, you will
+              apparently get by with about 3,500 characters; otherwise, you will
+              probably get by with closer to 3,000 or fewer.
+            </p>
+            <p className="mb-2">
+              The kanji below happen to match 3,500 almost exactly. Combined,
+              these four kanji lists offer the closest thing we have to an
+              official collection of all the kanji you are likely to encounter
+              in modern Japanese media aimed at the general public.
+            </p>
+            <p className="mb-2 text-center italic">However...</p>
+          </CollapsibleInfoSection>
+          <br />
 
-          <h2 className="mb-4 mt-6 text-xl font-bold">
-            ~3500 kanji made from{" "}
-            <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
-              ~300 components
-            </BrowseAtomicComponentsLink>
-          </h2>
-          <p className="mb-2">
-            What sets Kanjisense apart from other kanji-learning resources is
-            the systematic way that it treats the graphical{" "}
-            <strong>components</strong> that make up each kanji. Though literacy
-            in Japanese requires knowledge of thousands of characters, it's
-            possible to break them down into just around 300 distinct
-            components. The idea is that, by learning to recognize these
-            components, it becomes much easier to learn new kanji. Here you can
-            see{" "}
-            <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
-              a list of all the components
-            </BrowseAtomicComponentsLink>{" "}
-            which appear in the 3530 kanji below.
-          </p>
-          <h2 className="mb-4 mt-6 text-xl font-bold">
-            Do I need to learn <em>all</em> of these kanji?
-          </h2>
-          <p className="mb-2">
-            The exact number of kanji you need to know really depends on{" "}
-            <A
-              href="https://kanjibunka.com/kanji-faq/history/q0006/"
-              className="underline hover:text-orange-600"
-            >
-              how much you tend to read
-            </A>
-            . If you're the kind of person who likes to read novels, you will
-            apparently get by with about 3,500 characters; otherwise, you will
-            probably get by with closer to 3,000 or fewer.
-          </p>
-          <p className="mb-2">
-            The kanji below happen to match 3,500 almost exactly. Combined,
-            these four kanji lists offer the closest thing we have to an
-            official collection of all the kanji you are likely to encounter in
-            modern Japanese media aimed at the general public.
-          </p>
-          <p className="mb-2 text-center italic">However...</p>
-          <h2 className="mb-4 mt-6 text-xl font-bold">A disclaimer</h2>
-          <p className="mb-2">
-            Lists like these should not be taken too seriously. I call them "the
-            most important kanji" throughout Kanjisense only because it's too
-            cumbersome to always say "the closest approximation we learners have
-            to an official collection of all the kanji you are likely to
-            encounter in modern Japanese media aimed at the general public." In
-            the end, <strong>what's "most important" is subjective</strong>.
-          </p>
-          <p className="mb-2">
-            These lists were compiled at various times for various reasons, and
-            none of those reasons was "to help the second-language learner of
-            Japanese". That is to say, these lists may not be the best way to
-            figure out which characters you personally should focus on learning
-            next. That said, I reckon these lists serve as a good benchmark for
-            your <strong>long-term goals</strong> as a student of Japanese.
-          </p>
+          <CollapsibleInfoSection
+            heading={
+              <span className="mb-4 mt-6 text-xl font-bold">A disclaimer</span>
+            }
+          >
+            <p className="mb-2">
+              Lists like these should not be taken too seriously. I call them
+              "the most important kanji" throughout Kanjisense only because it's
+              too cumbersome to always say "the closest approximation we
+              learners have to an official collection of all the kanji you are
+              likely to encounter in modern Japanese media aimed at the general
+              public." In the end,{" "}
+              <strong>what's "most important" is subjective</strong>.
+            </p>
+            <p className="mb-2">
+              These lists were compiled at various times for various reasons,
+              and none of those reasons was "to help the second-language learner
+              of Japanese". That is to say, these lists may not be the best way
+              to figure out which characters you personally should focus on
+              learning next. That said, I reckon these lists serve as a good
+              benchmark for your <strong>long-term goals</strong> as a student
+              of Japanese.
+            </p>
+          </CollapsibleInfoSection>
         </section>
         <section className="mb-4">
           <div className=" m-auto max-w-md">
@@ -151,6 +200,7 @@ export default function FigureDetailsPage() {
               <A href="https://www.mext.go.jp/a_menu/shotou/new-cs/youryou/syo/koku/001.htm">
                 Japanese Ministry of Education
               </A>
+              .
             </p>
           </div>
           <KyoikuCollapsibleSection>
@@ -159,6 +209,7 @@ export default function FigureDetailsPage() {
                 <section key={gradeIndex}>
                   <h3 className="m-2 text-center">Grade {gradeIndex + 1}</h3>
                   <KyoikuCollapsiblePreviewList
+                    popover={figurePopover}
                     grade={gradeIndex + 1}
                     characters={[...gradeCharactersJoined]
                       .sort(
@@ -169,6 +220,7 @@ export default function FigureDetailsPage() {
                       .map((gradeCharacter) => {
                         return characters[gradeCharacter];
                       })}
+                    handleClickBadge={handleClickBadge}
                   />
                 </section>
               );
@@ -201,6 +253,8 @@ export default function FigureDetailsPage() {
             </p>
           </div>
           <CollapsiblePreviewList
+            handleClickBadge={handleClickBadge}
+            popover={figurePopover}
             characters={joyoNotInKyoiku
               .sort(
                 (a, b) =>
@@ -235,6 +289,8 @@ export default function FigureDetailsPage() {
             </p>
           </div>
           <CollapsiblePreviewList
+            handleClickBadge={handleClickBadge}
+            popover={figurePopover}
             characters={[...hyogaiKanji]
               .sort(
                 (a, b) =>
@@ -269,6 +325,8 @@ export default function FigureDetailsPage() {
             </p>
           </div>
           <CollapsiblePreviewList
+            handleClickBadge={handleClickBadge}
+            popover={figurePopover}
             characters={jinmeiyoNotInHyogai
               .sort(
                 (a, b) =>
@@ -311,7 +369,15 @@ function KyoikuCollapsibleSection({ children }: PropsWithChildren) {
   );
 }
 
-function CollapsiblePreviewList({ characters }: { characters: BadgeProps[] }) {
+function CollapsiblePreviewList({
+  characters,
+  popover,
+  handleClickBadge,
+}: {
+  characters: BadgeProps[];
+  popover: ReturnType<typeof useFigurePopover>;
+  handleClickBadge: HandleClickBadge;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -325,7 +391,21 @@ function CollapsiblePreviewList({ characters }: { characters: BadgeProps[] }) {
         )}
       >
         {characters.slice(0, isOpen ? undefined : 100).map((c) => {
-          return <FigureBadgeLink key={c.id} id={c.id} badgeProps={c} />;
+          const anchorAttributes = popover.getAnchorAttributes(c);
+          return (
+            <a
+              key={c.id}
+              href={`/dict/${c.id}`}
+              {...anchorAttributes}
+              onClick={(e) => {
+                handleClickBadge(c, e.nativeEvent);
+                e.preventDefault();
+                anchorAttributes.onClick();
+              }}
+            >
+              <FigureBadge key={c.id} badgeProps={c} />
+            </a>
+          );
         })}
         <button
           className={clsx(
@@ -341,11 +421,24 @@ function CollapsiblePreviewList({ characters }: { characters: BadgeProps[] }) {
   );
 }
 
+type HandleClickBadge = (
+  badgeProps: BadgeProps,
+  target: React.BaseSyntheticEvent<
+    MouseEvent,
+    EventTarget & HTMLAnchorElement,
+    EventTarget
+  >["nativeEvent"],
+) => void;
+
 function KyoikuCollapsiblePreviewList({
   characters,
+  popover,
+  handleClickBadge,
 }: {
+  popover: ReturnType<typeof useFigurePopover>;
   grade: number;
   characters: BadgeProps[];
+  handleClickBadge: HandleClickBadge;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -360,7 +453,21 @@ function KyoikuCollapsiblePreviewList({
         )}
       >
         {characters.slice(0, isOpen ? undefined : 50).map((c) => {
-          return <FigureBadgeLink key={c.id} id={c.id} badgeProps={c} />;
+          const anchorAttributes = popover.getAnchorAttributes(c);
+          return (
+            <a
+              key={c.id}
+              href={`/dict/${c.id}`}
+              {...anchorAttributes}
+              onClick={(e) => {
+                handleClickBadge(c, e.nativeEvent);
+                e.preventDefault();
+                anchorAttributes.onClick();
+              }}
+            >
+              <FigureBadge key={c.id} badgeProps={c} />
+            </a>
+          );
         })}
         <button
           className={clsx(
@@ -373,20 +480,6 @@ function KyoikuCollapsiblePreviewList({
         </button>
       </div>
     </div>
-  );
-}
-
-function FigureBadgeLink({
-  id: figureId,
-  badgeProps,
-}: {
-  id: string;
-  badgeProps: BadgeProps;
-}) {
-  return (
-    <DictLink figureId={figureId}>
-      <FigureBadge id={figureId} badgeProps={badgeProps} />
-    </DictLink>
   );
 }
 

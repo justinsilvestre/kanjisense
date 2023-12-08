@@ -9,10 +9,11 @@ export type FigureSearchResults = Awaited<
   ReturnType<typeof getDictionarySearchResults>
 >;
 
-type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-
-export type FigureSearchResult = ArrayElement<FigureSearchResults>;
+export type FigureSearchResult = FigureSearchResults["figures"][number];
+export type FigureSearchResultWithImage =
+  FigureSearchResults["figures"][number] & {
+    image?: FigureSearchResults["images"][number] | null;
+  };
 
 // first try exact match
 // then try fuzzier match
@@ -20,12 +21,36 @@ export type FigureSearchResult = ArrayElement<FigureSearchResults>;
 
 const RESULTS_BATCH_SIZE = 20;
 
+const WANTED_SEARCH_PROPERTY_TYPES = [
+  FigureSearchPropertyType.ONYOMI_KANA,
+  FigureSearchPropertyType.ONYOMI_LATIN,
+  FigureSearchPropertyType.KUNYOMI_KANA,
+  FigureSearchPropertyType.KUNYOMI_LATIN,
+  FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA,
+  FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA,
+  FigureSearchPropertyType.TRANSLATION_ENGLISH,
+  FigureSearchPropertyType.MNEMONIC_ENGLISH,
+];
+
 export async function getDictionarySearchResults(searchQueries: string[]) {
+  const figures = await getDictionarySearchResultsFigures(searchQueries);
+  const images = await prisma.kanjisenseFigureImage.findMany({
+    where: {
+      id: {
+        in: figures.flatMap((f) => (!f.isStandaloneCharacter ? f.id : [])),
+      },
+    },
+  });
+  return { figures, images };
+}
+
+export async function getDictionarySearchResultsFigures(
+  searchQueries: string[],
+) {
   const selectFigures = {
     ...badgeFigureSelect,
     id: true,
     keyword: true,
-    image: true,
     searchProperties: {
       orderBy: {
         index: "asc" as const,
@@ -42,37 +67,24 @@ export async function getDictionarySearchResults(searchQueries: string[]) {
       where: {
         searchProperty: {
           type: {
-            in: [
-              FigureSearchPropertyType.ONYOMI_KANA,
-              FigureSearchPropertyType.ONYOMI_LATIN,
-              FigureSearchPropertyType.KUNYOMI_KANA,
-              FigureSearchPropertyType.KUNYOMI_LATIN,
-              FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA,
-              FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA,
-              FigureSearchPropertyType.TRANSLATION_ENGLISH,
-              FigureSearchPropertyType.MNEMONIC_ENGLISH,
-            ],
+            in: WANTED_SEARCH_PROPERTY_TYPES,
           },
         },
       },
     },
   };
-  console.log(await prisma.figureSearchProperty.count());
   const figures1 = await prisma.kanjisenseFigure.findMany({
     where: {
       searchProperties: {
         some: formSearchPropertiesWhereQuery1(searchQueries),
       },
     },
-    select: {
-      ...selectFigures,
-    },
+    select: selectFigures,
     orderBy: {
       aozoraAppearances: "desc",
     },
     take: RESULTS_BATCH_SIZE,
   });
-  console.log({ figures1 });
   if (figures1.length >= RESULTS_BATCH_SIZE) return figures1;
   const figures2 = await prisma.kanjisenseFigure.findMany({
     where: {
@@ -89,7 +101,6 @@ export async function getDictionarySearchResults(searchQueries: string[]) {
     },
     take: RESULTS_BATCH_SIZE - figures1.length,
   });
-  console.log({ figures2 });
 
   if (figures2.length + figures1.length >= RESULTS_BATCH_SIZE)
     return figures1.concat(figures2);
@@ -111,7 +122,6 @@ export async function getDictionarySearchResults(searchQueries: string[]) {
     },
     take: RESULTS_BATCH_SIZE - figures1.length - figures2.length,
   });
-  console.log({ figures3 });
 
   if (figures1.length + figures2.length + figures3.length)
     return figures1.concat(figures2).concat(figures3);
@@ -125,6 +135,10 @@ function formSearchPropertiesWhereQuery1(
     OR: [
       {
         searchProperty: {
+          type: {
+            in: WANTED_SEARCH_PROPERTY_TYPES,
+          },
+
           text: {
             in: searchQueries,
             mode: "insensitive",

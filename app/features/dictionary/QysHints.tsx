@@ -1321,8 +1321,11 @@ export const VowelHints = {
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier borrowings
       </MiddleChineseTranscriptionLink>
-      . (As with all the other vowels with the underdot, these likely had a
-      preceding velar or palatal element.)
+      . As with all the other vowels with the underdot, these likely had a
+      preceding velar or palatal element like (something like{" "}
+      <IpaLink sound={IpaSymbols.turnedMWithLongLeg} />{" "}
+      <IpaLink sound="ɣ" linkSound="ɯ" /> <IpaLink sound="j" />
+      ).
     </>
   ),
   A2Ring: () => (
@@ -1332,7 +1335,10 @@ export const VowelHints = {
       reconstruct with an element of roundedness or height, like{" "}
       <IpaLink sound="ɔ" /> or <IpaLink sound="aɨw" linkSound="ɨ" />. As with
       all the other vowels with the underdot, these may have had a preceding
-      velar or palatal element at some earlier stages of Middle Chinese. In some{" "}
+      velar or palatal element at some earlier stages of Middle Chinese
+      (something like <IpaLink sound={IpaSymbols.turnedMWithLongLeg} />{" "}
+      <IpaLink sound="ɣ" linkSound="ɯ" /> <IpaLink sound="j" />
+      ). In some{" "}
       <MiddleChineseTranscriptionLink hash="go-on">
         earlier Japanese borrowings
       </MiddleChineseTranscriptionLink>

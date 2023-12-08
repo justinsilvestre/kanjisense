@@ -36,20 +36,20 @@ export function AncientCharacterFormSection({
       {popper.isOpen
         ? createPortal(
             <div
-              className={`[border:2px inset #afafaf33] -m-2 p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-xl`}
+              className={`[border:2px inset #afafaf33] -m-2 p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [overflow-y:auto]  [background-color:rgba(247,247,247,0.95)] [width:18rem] md:max-w-xl`}
               ref={popper.setPopperElement}
               style={popper.styles.popper}
               {...popper.attributes.popper}
             >
               <p className="mb-4">
-                These ancient character forms are provided here to help you
-                understand the evolution of the kanji. They are mostly obsolete,
-                but can still be found on <i>hanko</i> seals (stamps) used in
-                Japan as a way of signing documents.
+                These ancient &quot;seal script&quot; character forms are
+                provided here to help you understand the evolution of the kanji.
+                They are mostly obsolete, but can still be found on <i>hanko</i>{" "}
+                seals (stamps) used in Japan as a way of signing documents.
               </p>
               <p className="mb-4">
-                These &quot;seal script&quot; characters are based on the
-                writing of the Qin dynasty (ca. 200{" "}
+                The seal script characters shown here are based on the writing
+                of the Qin dynasty (ca. 200{" "}
                 <span className="[font-variant:small-caps]">BCE</span>), when
                 Chinese writing was first standardized. They are taken from the
                 ancient character dictionary 說文解字 <i>Shuowen Jiezi</i>{" "}

@@ -23,7 +23,7 @@ const defaultOptions: PopperOptions = {
       name: "offset",
       options: {
         offset: ({ reference }) => {
-          return [0, -reference.height];
+          return [-12, -reference.height - 12];
         },
       },
     },
@@ -64,6 +64,7 @@ export function usePaddedPopper({
     popperElement,
     options,
   );
+
   const handleClickPopper = useCallback(
     (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
       e.stopPropagation();

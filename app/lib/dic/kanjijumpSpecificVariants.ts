@@ -213,5 +213,6 @@ export const kanjijumpSpecificVariants = [
   ["勺", "勺"],
   ["雨", "⻗"],
   ["从", "CDP-8C66"],
-  ["盾", "𠂆"]
+  ["盾", "𠂆"],
+  ["子", "𠫓"]
 ]

@@ -11,16 +11,16 @@ import type { KvgJsonData } from "~/features/dictionary/KvgJsonData";
 const GETA_BLOCK_CHARACTER = "〓";
 
 export function FigureBadge({
-  id: figureId,
   badgeProps,
   width: outerWidth = 3.5,
   className,
 }: {
-  id: string;
   badgeProps: BadgeProps;
   width?: number;
   className?: string;
 }) {
+  const figureId = badgeProps.id;
+
   const innerWidth = outerWidth - outerWidth / 7;
 
   const buffer =
@@ -73,7 +73,7 @@ export function FigureBadge({
           width: `${innerWidth - buffer}rem`,
           height: `${innerWidth - buffer}rem`,
           fontSize: `${innerWidth - 1}rem`,
-          lineHeight: "inherit",
+          lineHeight: `${innerWidth * 1.1}rem`,
         }}
       >
         {badgeProps.image?.type === "Kvg" ? (
@@ -201,20 +201,12 @@ export const kvgAttributes = {
   },
 } as const;
 
-function FigureKvg({ id, content }: { id: string; content: Prisma.JsonValue }) {
+function FigureKvg({ content }: { id: string; content: Prisma.JsonValue }) {
   return (
     <svg {...kvgAttributes} style={{ ...kvgAttributes.style }}>
       {(content as unknown as KvgJsonData).p.map((d, i) => (
         <path d={d} key={i} />
       ))}
-      <text
-        x="-10"
-        y="100"
-        className="fill-transparent stroke-transparent text-transparent "
-        width=""
-      >
-        {id}
-      </text>
     </svg>
   );
 }

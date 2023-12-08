@@ -6,7 +6,7 @@ export function useHoverPopper(options: PopperOptions) {
   const popper = usePaddedPopper({ options });
 
   const closeTimer = useRef<number | null>(null);
-  const [, setClosing] = useState(false);
+  const [isClosing, setClosing] = useState(false);
 
   const open = () => {
     if (closeTimer.current) {
@@ -18,6 +18,7 @@ export function useHoverPopper(options: PopperOptions) {
     setClosing(false);
   };
   const close = () => {
+    setClosing(true);
     if (closeTimer.current) {
       window.clearTimeout(closeTimer.current);
       closeTimer.current = null;
@@ -26,11 +27,12 @@ export function useHoverPopper(options: PopperOptions) {
     closeTimer.current = window.setTimeout(() => {
       popper.close();
       setClosing(false);
-    }, 100);
+    }, 300);
   };
 
   return {
     ...popper,
+    isClosing,
     open: open,
     close: close,
     handleMouseEnter: open,

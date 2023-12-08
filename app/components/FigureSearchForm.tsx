@@ -1,12 +1,20 @@
-import { FigureSearchProperty, FigureSearchPropertyType } from "@prisma/client";
+import {
+  FigureSearchProperty,
+  FigureSearchPropertyType,
+  KanjisenseFigureImage,
+} from "@prisma/client";
 import { Link, useFetcher, useNavigate } from "@remix-run/react";
 import cx from "clsx";
 import { useCombobox } from "downshift";
 import type { PropsWithChildren } from "react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
-import { FigureSearchResult } from "~/features/dictionary/dictionarySearchResults";
+import {
+  FigureSearchResult,
+  FigureSearchResultWithImage,
+  FigureSearchResults,
+} from "~/features/dictionary/dictionarySearchResults";
 import { kanjidicKanaToRomaji } from "~/features/dictionary/kanjidicKanaToRomaji";
 import {
   toModifiedHepburn,
@@ -22,13 +30,27 @@ export function FigureSearchForm({
   className?: string;
   defaultSearchText?: string;
 }) {
-  const searchFetcher = useFetcher<{ results: FigureSearchResult[] }>();
+  const searchFetcher = useFetcher<{ results: FigureSearchResults }>();
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).searchFetcher = searchFetcher;
   }, [searchFetcher]);
 
-  const searchResults: FigureSearchResult[] = searchFetcher.data?.results || [];
+  const imagesMap = useMemo(
+    () =>
+      new Map<string, KanjisenseFigureImage>(
+        searchFetcher.data?.results?.images.map((i) => [i.id, i]) || [],
+      ),
+    [searchFetcher.data?.results?.images],
+  );
+  const searchResults: FigureSearchResultWithImage[] = useMemo(
+    () =>
+      searchFetcher.data?.results?.figures.map((f) => ({
+        ...f,
+        image: imagesMap.get(f.id) || null,
+      })) || [],
+    [searchFetcher.data?.results?.figures, imagesMap],
+  );
 
   const [queries, setQueries] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -40,7 +62,7 @@ export function FigureSearchForm({
         .join("&")}`,
     );
     setQueries(queries);
-  }, 300);
+  }, 400);
 
   const comboBox = useCombobox({
     id: useId(),
@@ -65,7 +87,7 @@ export function FigureSearchForm({
         loadQueries(queries);
       }
     },
-    items: searchResults,
+    items: searchResults || [],
     itemToString(item) {
       if (!item) return "";
 
@@ -114,8 +136,11 @@ function ComboBox({
   queries: string[];
   searchState: ReturnType<typeof useFetcher>["state"];
 }>) {
-  const isQueryMatch = (text: string) => {
-    return queries.some((q) => text.toLowerCase().includes(q));
+  const findMatchingQuery = (text: string) => {
+    return queries.find((q) => text.toLowerCase().includes(q));
+  };
+  const findExactMatchingQuery = (text: string) => {
+    return queries.find((q) => text.toLowerCase() === q.toLowerCase());
   };
   const {
     isOpen,
@@ -186,11 +211,12 @@ function ComboBox({
                             />
                           </span>
                           <span className="text-sm text-gray-700">
-                            {SearchPropertiesDisplay({
-                              figure,
-                              isQueryMatch,
-                              comboBox,
-                            })}
+                            <SearchPropertiesDisplay
+                              figure={figure}
+                              findMatchingQuery={findMatchingQuery}
+                              findExactMatchingQuery={findExactMatchingQuery}
+                              comboBox={comboBox}
+                            />
                           </span>
                         </Link>
                       </li>
@@ -210,10 +236,12 @@ function getKey(type: string, text: string, display: string) {
 
 function SearchPropertiesDisplay({
   figure,
-  isQueryMatch,
+  findMatchingQuery,
+  findExactMatchingQuery,
 }: {
   figure: FigureSearchResult;
-  isQueryMatch: (text: string) => boolean;
+  findMatchingQuery: (text: string) => string | undefined;
+  findExactMatchingQuery: (text: string) => string | undefined;
   comboBox: ReturnType<typeof useCombobox<FigureSearchResult>>;
 }) {
   function addJapaneseReading(
@@ -332,16 +360,28 @@ function SearchPropertiesDisplay({
           return (
             <span
               key={text + type}
-              className={
-                isQueryMatch(text) || isQueryMatch(display)
-                  ? ` font-bold text-blue-600`
-                  : ""
-              }
+              className={cx(
+                findExactMatchingQuery(text) ? "font-bold text-blue-600" : "",
+                !findExactMatchingQuery(text) &&
+                  (findMatchingQuery(text) || findMatchingQuery(display))
+                  ? ` text-blue-900`
+                  : "",
+              )}
             >
               {type === FigureSearchPropertyType.MNEMONIC_ENGLISH ? '"' : ""}
-              {display
-                ? `${text.slice(0, text.length - display.length)}.${display}`
-                : text}
+              <TextWithMatchHighlighted
+                text={
+                  display
+                    ? `${text.slice(
+                        0,
+                        text.length - display.length,
+                      )}.${display}`
+                    : text
+                }
+                fullMatch={Boolean(findExactMatchingQuery(text))}
+                match={findMatchingQuery(text) || findMatchingQuery(display)}
+              />
+
               {type === FigureSearchPropertyType.MNEMONIC_ENGLISH ? '"' : ""}
               {i === meaningsAndMnemonic.length - 1 ? "" : "; "}
             </span>
@@ -353,7 +393,8 @@ function SearchPropertiesDisplay({
           return (
             <KanaSearchProperty
               key={String(i) + `${kana}/${latin}`}
-              isQueryMatch={isQueryMatch}
+              findMatchingQuery={findMatchingQuery}
+              findExactMatchingQuery={findExactMatchingQuery}
               kana={kana}
               latin={latin}
               isOnyomi={true}
@@ -364,7 +405,8 @@ function SearchPropertiesDisplay({
           return (
             <KanaSearchProperty
               key={String(i) + `${kana}/${latin}`}
-              isQueryMatch={isQueryMatch}
+              findMatchingQuery={findMatchingQuery}
+              findExactMatchingQuery={findExactMatchingQuery}
               kana={kana}
               latin={latin}
             />
@@ -376,39 +418,53 @@ function SearchPropertiesDisplay({
 }
 
 function KanaSearchProperty({
-  isQueryMatch,
+  findMatchingQuery,
+  findExactMatchingQuery,
   kana,
   latin,
   isOnyomi,
 }: {
-  isQueryMatch: (text: string) => boolean;
+  findMatchingQuery: (text: string) => string | undefined;
+  findExactMatchingQuery: (text: string) => string | undefined;
   kana: FigureSearchProperty;
   latin: FigureSearchProperty;
   isOnyomi?: boolean;
 }) {
-  if (!latin || !kana)
-    return (
-      <span>
-        {latin?.text}? {kana?.text}?
-      </span>
-    );
   const romaji = latin?.text;
+  const romajiWithoutOkurigana = romaji?.slice(
+    0,
+    romaji.length - latin.display.length,
+  );
+  const withoutOkurigana = kana.text.slice(
+    0,
+    kana.text.length - kana.display.length,
+  );
+  const romajiExactMatch =
+    findExactMatchingQuery(romaji) ||
+    findExactMatchingQuery(romajiWithoutOkurigana);
+  const romajiMatch =
+    romajiExactMatch ||
+    findMatchingQuery(romaji) ||
+    findMatchingQuery(romajiWithoutOkurigana);
+  const kanaExactMatch =
+    findExactMatchingQuery(kana.text) ||
+    findExactMatchingQuery(withoutOkurigana);
+  const kanaMatch =
+    kanaExactMatch ||
+    findMatchingQuery(kana.text) ||
+    findMatchingQuery(withoutOkurigana);
 
   const kanaText = kana.display
-    ? `${kana.text.slice(0, kana.text.length - kana.display.length)}.${
-        kana.display
-      }`
+    ? `${withoutOkurigana}.${kana.display}`
     : kana.text;
   return (
-    <span
-      className={`inline-block ${
-        isQueryMatch(romaji) || isQueryMatch(kana.text)
-          ? ` font-bold text-blue-600`
-          : ""
-      }`}
-    >
+    <span className={cx("inline-block")}>
       <span className="block">
-        {isOnyomi ? hiraganaToKatakana(kanaText) : kanaText}{" "}
+        <TextWithMatchHighlighted
+          text={isOnyomi ? hiraganaToKatakana(kanaText) : kanaText}
+          fullMatch={Boolean(kanaExactMatch)}
+          match={kanaMatch}
+        />{" "}
       </span>
       {latin ? (
         <span
@@ -416,14 +472,54 @@ function KanaSearchProperty({
             isOnyomi ? "uppercase" : ""
           }`}
         >
-          {latin.display
-            ? `${latin.text.slice(
-                0,
-                latin.text.length - latin.display.length,
-              )}.${latin.display}`
-            : latin.text}
+          <TextWithMatchHighlighted
+            text={
+              latin.display
+                ? `${latin.text.slice(
+                    0,
+                    latin.text.length - latin.display.length,
+                  )}.${latin.display}`
+                : latin.text
+            }
+            fullMatch={
+              Boolean(romajiExactMatch) ||
+              Boolean(
+                romajiMatch &&
+                  romajiMatch.length > latin.text.length - latin.display.length,
+              )
+            }
+            match={romajiMatch}
+          />
         </span>
       ) : null}
+    </span>
+  );
+}
+
+function TextWithMatchHighlighted({
+  text,
+  match,
+  fullMatch,
+}: {
+  text: string;
+  match: string | undefined;
+  fullMatch: boolean;
+}) {
+  if (fullMatch) return <span className="font-bold text-blue-600">{text}</span>;
+
+  if (!match) {
+    return <span className="">{text}</span>;
+  }
+
+  const matchIndex = text.toLowerCase().indexOf(match.toLowerCase());
+  const matchEndIndex = matchIndex + match.length;
+  return (
+    <span className="">
+      {text.slice(0, matchIndex)}
+      <span className="font-bold text-blue-600">
+        {text.slice(matchIndex, matchEndIndex)}
+      </span>
+      {text.slice(matchEndIndex)}
     </span>
   );
 }

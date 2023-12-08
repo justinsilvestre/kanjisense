@@ -2,6 +2,7 @@ export function kanjidicKanaToRomaji(input: string, preserveDots = false) {
   if (input === "みずうみ") return "mizuumi";
   if (input === "からすうり") return "karasuuri";
   if (input === "あるいは") return "aruiwa";
+  if (input === "もしくは") return "aruiwa";
   try {
     let result = "";
     for (let i = 0; i < input.length; i++) {

@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 export default function A({
   href,
   children,
-  className,
+  className = "hover:text-orange-600 underline",
 }: PropsWithChildren<{ href: string; className?: string }>) {
   return (
     <a

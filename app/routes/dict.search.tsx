@@ -2,12 +2,12 @@ import type { LoaderFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 
 import {
-  FigureSearchResult,
+  FigureSearchResults,
   getDictionarySearchResults,
 } from "~/features/dictionary/dictionarySearchResults";
 
 interface LoaderData {
-  results: FigureSearchResult[];
+  results: FigureSearchResults;
   error?: string;
 }
 
@@ -24,7 +24,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json<LoaderData>({ results });
   } catch (error) {
     return json<LoaderData>({
-      results: [],
+      results: {
+        figures: [],
+        images: [],
+      },
       error: (error as unknown as Error)?.message,
     });
   }

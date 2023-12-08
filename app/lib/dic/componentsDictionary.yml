@@ -783,9 +783,6 @@ CDP-8BD6: # 奥,向,CDP-8D7C,襖,奧
   historical: divide
   mnemonic: chopping hand
   tag: hands
-𠫓:
-  historical: upside-down child
-  tag: personal
 夭:
   historical: calamity
   tag: null
@@ -1038,11 +1035,11 @@ CDP-8CC9: # 監,覧,CDP-8D50,艦,鑑,濫,藍,檻,覽
   mnemonic: palisade
   tag: place
 GWS-U8931-ITAIJI-004: # 壊,懐,懷,壞
-  historical: pocket
+  mnemonic: pocket
   reference: 懷
   tag: fabric
 录:
-  historical: engraving
+  mnemonic: engraving
   reference: 録
   tag: tools
 㐮:
@@ -1088,9 +1085,9 @@ CDP-8D60:
   historical: wild boar
   tag: animals
 辟:
-  mnemonic: wicked lawmaker
+  mnemonic: wall
   standin: 壁
-  tag: personal
+  tag: null
 𢆉:
   historical: (various)
   mnemonic: little lamb
@@ -1277,7 +1274,7 @@ GWS-U66F7-VAR-005: # 謁,喝,渇,褐,掲,靄,偈,𦝲,揭,渴,謁,喝,褐,﨟
   full: 顕
   tag: geo
 卂:
-  historical: fly rapidly
+  mnemonic: fly rapidly
   reference: 飛
   tag: actions
 奞:
@@ -2205,7 +2202,7 @@ GWS-U20B36-VAR-002:
   historical: summon
   tag: verbal
 皆:
-  historical: step
+  mnemonic: step
   reference: 階
   tag: place
 東:
@@ -3034,8 +3031,7 @@ GWS-U914B-G:
   historical: boot
   tag: fabric
 曼:
-  historical: phonetic "man"
-  reference: 慢
+  historical: far-reaching
   tag: phonetic
 著:
   historical: come out with

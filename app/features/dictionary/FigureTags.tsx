@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import clsx from "clsx";
 import { PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 
@@ -6,24 +9,22 @@ import {
   BrowseCharactersLink,
   BrowseCompoundComponentsLink,
 } from "~/components/AppLink";
+import fadeInOutStyles from "~/components/fadeInOut.module.css";
 import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
 import { KanjiListCode, isKyoikuCode } from "~/lib/dic/KanjiListCode";
 
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "./TOTAL_ATOMIC_COMPONENTS_COUNT";
 import { useHoverPopper } from "./useHoverPopper";
 
 const JOYO_COUNT = 2316;
 
-const ATOMIC_COMPONENTS_COUNT = "TBD";
-
 export function FigureTags({
   badgeProps,
-  isSoundMark,
   isAtomic,
   className,
 }: {
   badgeProps: BadgeProps;
-  isSoundMark: boolean;
   isAtomic: boolean;
   className?: string;
 }) {
@@ -34,6 +35,7 @@ export function FigureTags({
     variantGroupId,
     listsAsCharacter,
     listsAsComponent,
+    isPrioritySoundMark,
   } = badgeProps;
   const lists = isStandaloneCharacter ? listsAsCharacter : listsAsComponent;
   return (
@@ -144,12 +146,9 @@ export function FigureTags({
           className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.2rem]`}
           popoverContent={
             <>
-              The{" "}
-              <BrowseCompoundComponentsLink>
-                {ATOMIC_COMPONENTS_COUNT} atomic components
-              </BrowseCompoundComponentsLink>{" "}
-              are the &quot;atoms&quot; that come together in various
-              combinations to form the{" "}
+              The {TOTAL_ATOMIC_COMPONENTS_COUNT} atomic components are the
+              &quot;atoms&quot; that come together in various combinations to
+              form the{" "}
               <BrowseCharactersLink>
                 3,500 most important kanji
               </BrowseCharactersLink>{" "}
@@ -165,7 +164,7 @@ export function FigureTags({
           ☆ atomic
         </FigureTag>
       ) : null}
-      {isSoundMark ? (
+      {isPrioritySoundMark ? (
         <FigureTag
           className={`rounded-sm border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.2rem]`}
           popoverContent={
@@ -224,6 +223,7 @@ function FigureTag({
     isOpen,
     open: openPopper,
     close: closePopper,
+    isClosing,
   } = useHoverPopper(popperOptions);
 
   return (
@@ -231,6 +231,7 @@ function FigureTag({
       <li
         className={`${className} cursor-default`}
         ref={setReferenceElement}
+        onClick={isOpen ? closePopper : openPopper}
         onMouseMove={openPopper}
         onMouseLeave={closePopper}
         onFocus={openPopper}
@@ -243,7 +244,11 @@ function FigureTag({
           ? createPortal(
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <div
-                className={`[border:2px inset #afafaf33] pointer-events-auto p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [overflow-y:auto] [background-color:rgba(255,255,247,0.95)]  [max-height:88v] [width:18rem] md:max-w-xl`}
+                className={clsx(
+                  `[border:2px inset #afafaf33] pointer-events-auto bg-white p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-xl`,
+                  !isClosing && fadeInOutStyles.fadeIn,
+                  isClosing && "opacity-0 transition-opacity duration-300",
+                )}
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}

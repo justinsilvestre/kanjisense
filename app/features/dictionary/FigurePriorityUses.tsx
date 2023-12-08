@@ -50,20 +50,19 @@ export function FigurePriorityUses({
           return (
             <li
               key={u.parentId}
-              className={`group align-top [flex-basis:6rem] ${
+              className={`group mb-2 [flex-basis:6rem] ${
                 !u.parent.isPriority ? "bg-slate-200" : ""
               }`}
             >
               <FigurePopoverBadge
                 className="block"
-                id={u.parent.id}
                 badgeProps={getBadgeProps(u.parent)}
                 width={5}
               />
 
               <div className="relative [height:1.5em] [width:5.5rem] ">
-                <div className='overflow-hidden whitespace-nowrap [text-overflow:"…"]  [width:6.25rem]  group-hover:absolute group-hover:z-50  group-hover:overflow-visible  group-hover:whitespace-normal group-hover:[width:8rem] '>
-                  <span className="group-hover:bg-white group-hover:outline group-hover:outline-neutral-100">
+                <div className="overflow-hidden whitespace-nowrap  [width:6.25rem]  group-hover:absolute  group-hover:overflow-visible  group-hover:whitespace-normal group-hover:[width:8rem] ">
+                  <span className="overflow-ellipsis group-hover:bg-white group-hover:outline group-hover:outline-neutral-100 ">
                     <FigureKeywordDisplay figure={u.parent} />
                     &nbsp;
                   </span>
