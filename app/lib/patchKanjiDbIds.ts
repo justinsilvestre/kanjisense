@@ -157,7 +157,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("殻", "⿹&GWS-U23A8A-VAR-001;几")
       .replaceIds("穀", "⿹𣪊禾")
 
-      .addAtomicIdsLine("GWS-U20087-11") // reverse stroke order	𠂇
       .replaceIds("有", "⿸&GWS-U20087-11;月")
       .replaceIds("右", "⿸&GWS-U20087-11;口")
       .replaceIds("㡀", "⿻丷⿻巾八[GT]	⿱小⿵冂小[JK]	⿱⺌⿵冂小[X]")
