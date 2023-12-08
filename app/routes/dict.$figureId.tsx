@@ -26,7 +26,14 @@ interface LoaderData {
   searchedFigure: DictionaryPageSearchedFigure;
 }
 
-export const meta: MetaFunction = () => [{ title: "Figure entry" }];
+export const meta: MetaFunction<typeof loader> = (a) => [
+  {
+    title:
+      [...(a.params.figureId || "")].length === 1
+        ? `${a.params.figureId} | Kanjisense`
+        : "Kanjisense",
+  },
+];
 
 export const links: LinksFunction = () => [
   {
