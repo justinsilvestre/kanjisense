@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -36,10 +37,7 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
 
     await prisma.unihan14.deleteMany({});
 
-    const dbInput: Record<
-      string,
-      { id: string; fields: Record<string, string[]> }
-    > = {};
+    const dbInput = new Map<string, Record<string, string[]>>();
 
     await forEachLine(files.unihanVariants14, async (line) => {
       if (!line || line.startsWith("#")) return;
@@ -74,15 +72,17 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
     registerVariant(dbInput, "倶", "kZVariant", "俱");
     registerVariant(dbInput, "俱", "kZVariant", "倶");
 
-    await prisma.unihan14.createMany({
-      data: Object.values(dbInput).map(({ id, fields }) => ({
-        id,
-        kSemanticVariant: fields.kSemanticVariant || [],
-        kSimplifiedVariant: fields.kSimplifiedVariant || [],
-        kSpecializedSemanticVariant: fields.kSpecializedSemanticVariant || [],
-        kTraditionalVariant: fields.kTraditionalVariant || [],
-        kZVariant: fields.kZVariant || [],
-      })),
+    await inBatchesOf(1000, dbInput, async (batch) => {
+      await prisma.unihan14.createMany({
+        data: Array.from(batch, ([id, fields]) => ({
+          id,
+          kSemanticVariant: fields.kSemanticVariant || [],
+          kSimplifiedVariant: fields.kSimplifiedVariant || [],
+          kSpecializedSemanticVariant: fields.kSpecializedSemanticVariant || [],
+          kTraditionalVariant: fields.kTraditionalVariant || [],
+          kZVariant: fields.kZVariant || [],
+        })),
+      });
     });
 
     await registerSeeded(prisma, "Unihan14");
@@ -92,7 +92,7 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
 }
 
 function registerVariant(
-  json: Record<string, { id: string; fields: Record<string, string[]> }>,
+  json: Map<string, Record<string, string[]>>,
   id: string,
   fieldName:
     | "kSemanticVariant"
@@ -103,12 +103,10 @@ function registerVariant(
 
   body: string,
 ) {
-  json[id] = json[id] || {
-    id,
-    fields: {},
-  };
-  json[id].fields[fieldName] = json[id].fields[fieldName] || [];
-  json[id].fields[fieldName].push(body);
+  const entry = json.get(id) || {};
+  entry[fieldName] = entry[fieldName] || [];
+  entry[fieldName].push(body);
+  json.set(id, entry);
 }
 
 function charFromUCode(uCode: string) {

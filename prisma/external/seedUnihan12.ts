@@ -23,10 +23,7 @@ export async function seedUnihan12(prisma: PrismaClient, force = false) {
     console.log(`seeding Unihan12...`);
     await prisma.unihan12.deleteMany({});
 
-    const dbInput: Record<
-      string,
-      { id: string; fields: Record<string, string[]> }
-    > = {};
+    const dbInput = new Map<string, Record<string, string[]>>();
     await forEachLine(files.unihanVariants12, async (line) => {
       if (!line || line.startsWith("#")) return;
 
@@ -41,10 +38,8 @@ export async function seedUnihan12(prisma: PrismaClient, force = false) {
           ({ id, kZVariant }) => id === head && kZVariant.includes(body),
         )
       ) {
-        dbInput[head] ||= {
-          id: head,
-          fields: {},
-        };
+        const entry = dbInput.get(head) || {};
+        dbInput.set(head, entry);
 
         const variants = body.split(" ").flatMap((entry) => {
           const match = entry.match(/U\+([A-Z0-9]{4,9})<?/u)!;
@@ -53,14 +48,14 @@ export async function seedUnihan12(prisma: PrismaClient, force = false) {
           return charFromUCode(code);
         });
         for (const variant of variants) {
-          dbInput[head].fields[fieldName] ||= [];
-          dbInput[head].fields[fieldName].push(variant);
+          entry[fieldName] ||= [];
+          entry[fieldName].push(variant);
         }
       }
     });
 
     await prisma.unihan12.createMany({
-      data: Object.values(dbInput).map(({ id, fields }) => ({
+      data: Array.from(dbInput, ([id, fields]) => ({
         id,
         kZVariant: fields.kZVariant || [],
       })),
