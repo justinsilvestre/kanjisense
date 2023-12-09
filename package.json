@@ -122,7 +122,7 @@
     "node": ">=18.0.0"
   },
   "prisma": {
-    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node --transpile-only -r tsconfig-paths/register prisma/seed.ts"
   },
   "lint-staged": {
     "**/*.{ts,js,tsx,jsx}": [
