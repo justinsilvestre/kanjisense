@@ -28,8 +28,6 @@ export async function seedKanjisenseFigureRelation(
   if (seeded && !force)
     console.log(`KanjisenseFigureRelation already seeded. 🌱`);
   else {
-    console.log(`seeding KanjisenseFigureRelation...`);
-
     const patchedIds = patchIds(
       new PatchedIds(
         async (key) => {
@@ -83,17 +81,26 @@ export async function seedKanjisenseFigureRelation(
 
     const dbInput = new Map<string, CreateFigureRelationInput>();
 
-    await executeAndLogTime(`Analyzing ${baseKanji.length} base kanji`, () =>
-      analyzeFiguresRelations(
-        prisma,
-        allVariantGroups,
-        [...baseKanji],
-        dbInput,
-        patchedIds,
-        {
-          isPriority: true,
-        },
-      ),
+    await executeAndLogTime(
+      `Analyzing ${baseKanji.length} base kanji`,
+      async () => {
+        await inBatchesOf({
+          count: 250,
+          collection: [...baseKanji],
+          action: async (batch) => {
+            analyzeFiguresRelations(
+              prisma,
+              allVariantGroups,
+              batch,
+              dbInput,
+              patchedIds,
+              {
+                isPriority: true,
+              },
+            );
+          },
+        });
+      },
     );
 
     const priorityVariants = allVariantGroups.flatMap((g) =>
@@ -138,7 +145,7 @@ export async function seedKanjisenseFigureRelation(
       `Analyzing ${allKanjidicCharacters.length} kanjidic characters`,
       async () => {
         await inBatchesOf({
-          count: 500,
+          count: 250,
           collection: allKanjidicCharacters,
           action: async (batch) => {
             await analyzeFiguresRelations(
