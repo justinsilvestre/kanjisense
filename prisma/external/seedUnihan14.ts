@@ -72,17 +72,22 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
     registerVariant(dbInput, "倶", "kZVariant", "俱");
     registerVariant(dbInput, "俱", "kZVariant", "倶");
 
-    await inBatchesOf(10000, dbInput, async (batch) => {
-      await prisma.unihan14.createMany({
-        data: Array.from(batch, ([id, fields]) => ({
-          id,
-          kSemanticVariant: fields.kSemanticVariant || [],
-          kSimplifiedVariant: fields.kSimplifiedVariant || [],
-          kSpecializedSemanticVariant: fields.kSpecializedSemanticVariant || [],
-          kTraditionalVariant: fields.kTraditionalVariant || [],
-          kZVariant: fields.kZVariant || [],
-        })),
-      });
+    await inBatchesOf({
+      count: 10000,
+      collection: dbInput,
+      getBatchItem: ([id, fields]) => ({
+        id,
+        kSemanticVariant: fields.kSemanticVariant || [],
+        kSimplifiedVariant: fields.kSimplifiedVariant || [],
+        kSpecializedSemanticVariant: fields.kSpecializedSemanticVariant || [],
+        kTraditionalVariant: fields.kTraditionalVariant || [],
+        kZVariant: fields.kZVariant || [],
+      }),
+      action: async (batch) => {
+        await prisma.unihan14.createMany({
+          data: batch,
+        });
+      },
     });
 
     await registerSeeded(prisma, "Unihan14");

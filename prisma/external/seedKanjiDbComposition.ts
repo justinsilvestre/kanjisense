@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -19,15 +20,15 @@ export async function seedKanjiDbComposition(
     const dbInput = await getDbInput();
 
     await prisma.kanjiDbComposition.deleteMany({});
-    await prisma.kanjiDbComposition.createMany({
-      data: Object.values(dbInput).map(
-        ({ id, ids, etymology, sbgySyllables }) => ({
-          id,
-          ids: ids || null,
-          etymology: etymology || null,
-          sbgySyllables: sbgySyllables || [],
-        }),
-      ),
+    await inBatchesOf({
+      count: 500,
+      collection: dbInput,
+      getBatchItem: (entry) => entry[1],
+      action: async (batch) => {
+        await prisma.kanjiDbComposition.createMany({
+          data: batch,
+        });
+      },
     });
 
     await registerSeeded(prisma, "KanjiDbComposition");
@@ -36,21 +37,25 @@ export async function seedKanjiDbComposition(
   console.log(`KanjiDbComposition seeded. 🌱`);
 }
 
+class KanjiDbComposition {
+  constructor(
+    public id: string,
+    public ids: string | null,
+    public etymology: string | null = null,
+    public sbgySyllables: number[] = [],
+  ) {}
+}
+
 async function getDbInput() {
-  const dbInput: Record<
-    string,
-    { id: string; ids?: string; etymology?: string; sbgySyllables?: number[] }
-  > = {};
+  const dbInput = new Map<string, KanjiDbComposition>();
 
   await forEachLine(files.kanjiDbIdsCdpTxt, async (line) => {
     if (!line || /^#|^;;/.test(line)) return;
 
     const [, figureId, ids] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
     if (!figureId || !ids) throw new Error(line);
-    dbInput[figureId] = {
-      id: figureId,
-      ids,
-    };
+
+    dbInput.set(figureId, new KanjiDbComposition(figureId, ids, null, []));
   });
 
   await forEachLine(files.kanjiDbAnalysisTxt, async (line) => {
@@ -58,12 +63,13 @@ async function getDbInput() {
 
     const [, figureId, etymology] = line.match(/\S+\t&?([^&;\s]+);?\t(.+)/u)!;
     if (!figureId || !etymology) throw new Error(line);
-    if (!dbInput[figureId]) console.warn(`no id for ${figureId} in ${line}`);
-    if (dbInput[figureId]?.etymology) {
+    const entry = dbInput.get(figureId);
+    if (!entry) console.warn(`no id for ${figureId} in ${line}`);
+    if (entry?.etymology) {
       console.warn(
-        `duplicate etymology for ${figureId} prioritizing first:  ${dbInput[figureId].etymology}`,
+        `duplicate etymology for ${figureId} prioritizing first:  ${entry.etymology}`,
       );
-    } else if (dbInput[figureId]) dbInput[figureId].etymology = etymology;
+    } else if (entry) entry.etymology = etymology;
   });
 
   const sbgyJson = readJsonSync<
@@ -80,12 +86,11 @@ async function getDbInput() {
     for (const character of characters.split(",")) {
       if (!character)
         console.warn(`no character for ${syllableNumber} ${fanqie}`);
-      dbInput[character] ||= {
-        id: character,
-      };
+      const entry =
+        dbInput.get(character) || new KanjiDbComposition(character, null);
+      dbInput.set(character, entry);
 
-      dbInput[character].sbgySyllables ||= [];
-      dbInput[character].sbgySyllables!.push(syllableNumber);
+      entry.sbgySyllables.push(syllableNumber);
     }
   }
   return dbInput;

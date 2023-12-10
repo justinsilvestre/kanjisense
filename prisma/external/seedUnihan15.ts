@@ -63,8 +63,10 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
       });
     });
 
-    await inBatchesOf(500, dbInput, async (batch) => {
-      const data = Array.from(batch, ([id, fields]) => ({
+    await inBatchesOf({
+      count: 500,
+      collection: dbInput,
+      getBatchItem: ([id, fields]) => ({
         id,
         kDefinition: fields.kDefinition || null,
         kCantonese: fields.kCantonese?.split(" ") || [],
@@ -81,12 +83,14 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
         kXHC1983: fields.kXHC1983?.split(" ") || [],
         kRSAdobe_Japan1_6: fields.kRSAdobe_Japan1_6?.split(" ") || [],
         kRSUnicode: fields.kRSUnicode?.split(" ") || [],
-      }));
+      }),
+      action: async (batch) => {
+        const created = await prisma.unihan15.createMany({
+          data: batch,
+        });
 
-      const x = await prisma.unihan15.createMany({
-        data,
-      });
-      console.log(`${x.count} created.`);
+        console.log(`          ${created.count} created.`);
+      },
     });
 
     await executeAndLogTime("connecting readings", async () => {

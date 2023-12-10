@@ -143,18 +143,23 @@ export async function seedKanjisenseFigureRelation(
     );
 
     await prisma.kanjisenseFigureRelation.deleteMany({});
-    await inBatchesOf(1000, [...dbInput.values()], async (batch) => {
-      await prisma.kanjisenseFigureRelation.createMany({
-        data: batch.map((r) => ({
-          id: r.id,
-          idsText: r.idsText,
-          selectedIdsComponents: r.selectedIdsComponents,
-          directUses: [...r.directUses],
-          listsAsComponent: [...r.listsAsComponent],
-          isPriorityCandidate: r.isPriorityCandidate,
-          variantGroupId: r.variantGroupId,
-        })),
-      });
+    await inBatchesOf({
+      count: 1000,
+      collection: dbInput,
+      getBatchItem: ([, r]) => ({
+        id: r.id,
+        idsText: r.idsText,
+        selectedIdsComponents: r.selectedIdsComponents,
+        directUses: [...r.directUses],
+        listsAsComponent: [...r.listsAsComponent],
+        isPriorityCandidate: r.isPriorityCandidate,
+        variantGroupId: r.variantGroupId,
+      }),
+      action: async (batch) => {
+        await prisma.kanjisenseFigureRelation.createMany({
+          data: batch,
+        });
+      },
     });
 
     await registerSeeded(prisma, "KanjisenseFigureRelation");

@@ -1,8 +1,22 @@
-export async function inBatchesOf<T, U>(
-  count: number,
-  collection: (Iterable<T> & { size: number }) | T[],
-  action: (batch: T[]) => Promise<U>,
-) {
+export type BatchCollection<T> =
+  | (Iterable<T> & {
+      size: number;
+    })
+  | T[];
+
+interface BatchOptions<T, V, U> {
+  count: number;
+  collection: BatchCollection<T>;
+  getBatchItem?: (item: T) => U;
+  action: (batch: U[]) => Promise<V>;
+}
+
+export async function inBatchesOf<T, V, U = T>({
+  count,
+  collection,
+  getBatchItem = (x: T): U => x as unknown as U,
+  action,
+}: BatchOptions<T, V, U>) {
   const collectionSize =
     "length" in collection ? collection.length : collection.size;
   const totalStartTime = Date.now() / 1000;
@@ -10,9 +24,9 @@ export async function inBatchesOf<T, U>(
 
   let itemIndex = 0;
   let batchIndex = 0;
-  let batch: T[] = [];
+  let batch: U[] = [];
   for (const item of collection) {
-    batch.push(item);
+    batch.push(getBatchItem(item));
     itemIndex++;
 
     if (batch.length === count || itemIndex === collectionSize) {
