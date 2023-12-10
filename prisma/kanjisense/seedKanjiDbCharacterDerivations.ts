@@ -7,6 +7,7 @@ import {
   CharacterOriginReference,
   parseEtymologyText,
 } from "./getCharacterDerivationsChain";
+import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedKanjiDbCharacterDerivations(
   prisma: PrismaClient,
@@ -58,14 +59,22 @@ export async function seedKanjiDbCharacterDerivations(
     }
 
     await prisma.kanjiDbCharacterDerivation.deleteMany({});
-    await prisma.kanjiDbCharacterDerivation.createMany({
-      data: [...dbInput.values()].map(({ character, chain }) => ({
+
+    await inBatchesOf({
+      count: 500,
+      collection: dbInput,
+      getBatchItem: ([, { character, chain }]) => ({
         character,
         chain: chain.map((o) => o.toJSON()),
         phoneticOrigins: chain.flatMap((o) =>
           o.isPhonetic() ? [o.source] : [],
         ),
-      })),
+      }),
+      action: async (batch) => {
+        await prisma.kanjiDbCharacterDerivation.createMany({
+          data: batch,
+        });
+      },
     });
 
     await registerSeeded(prisma, "KanjiDbCharacterDerivation");

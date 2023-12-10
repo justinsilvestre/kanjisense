@@ -22,6 +22,7 @@ import {
   ComponentMeaning,
   getFigureMeaningsText,
 } from "./getFigureMeaningsText";
+import { inBatchesOf } from "./inBatchesOf";
 import { isComponentFirstClass } from "./isComponentFirstClass";
 import { getListsMembership } from "./seedKanjisenseFigureRelation";
 
@@ -174,8 +175,10 @@ export async function seedKanjisenseFigures(
     await prisma.kanjisenseFigure.deleteMany({});
 
     console.log("seeding figures");
-    await prisma.kanjisenseFigure.createMany({
-      data: Array.from(dbInput.values(), (r) => ({
+    await inBatchesOf({
+      count: 500,
+      collection: dbInput,
+      getBatchItem: ([, r]) => ({
         id: r.id,
         keyword: r.keyword,
         mnemonicKeyword: r.mnemonicKeyword,
@@ -186,7 +189,12 @@ export async function seedKanjisenseFigures(
         variantGroupId: r.variantGroupId,
         readingId: readingIds.has(r.id) ? r.id : undefined,
         shinjitaiInBaseKanji: r.shinjitaiInBaseKanji,
-      })),
+      }),
+      action: async (batch) => {
+        await prisma.kanjisenseFigure.createMany({
+          data: batch,
+        });
+      },
     });
 
     console.log("seeding meanings");
@@ -349,6 +357,7 @@ async function connectFirstClassComponents(
         );
       },
     ).flat();
+
     await prisma.kanjisenseFigure.update({
       where: { id },
       data: {
