@@ -63,7 +63,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
       });
     });
 
-    await inBatchesOf(10000, dbInput, async (batch) => {
+    await inBatchesOf(500, dbInput, async (batch) => {
       const data = Array.from(batch, ([id, fields]) => ({
         id,
         kDefinition: fields.kDefinition || null,
