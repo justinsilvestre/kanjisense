@@ -136,19 +136,24 @@ export async function seedKanjisenseFigureRelation(
 
     await executeAndLogTime(
       `Analyzing ${allKanjidicCharacters.length} kanjidic characters`,
-      () =>
-        analyzeFiguresRelations(
-          prisma,
-          allVariantGroups,
-          allKanjidicCharacters
-            .flatMap((c) => c.id)
-            .filter((v) => !dbInput.has(v)),
-          dbInput,
-          patchedIds,
-          {
-            isPriority: false,
+      async () => {
+        await inBatchesOf({
+          count: 500,
+          collection: allKanjidicCharacters,
+          action: async (batch) => {
+            await analyzeFiguresRelations(
+              prisma,
+              allVariantGroups,
+              batch.flatMap((c) => c.id).filter((v) => !dbInput.has(v)),
+              dbInput,
+              patchedIds,
+              {
+                isPriority: false,
+              },
+            );
           },
-        ),
+        });
+      },
     );
 
     await prisma.kanjisenseFigureRelation.deleteMany({});
