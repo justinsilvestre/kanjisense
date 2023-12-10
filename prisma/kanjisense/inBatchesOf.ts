@@ -19,13 +19,16 @@ export async function inBatchesOf<T, U>(
       const batchStartTime = Date.now() / 1000;
       await action(batch);
       console.log(
-        `batch ${batchIndex + 1} of ${totalBatches} done in ${
-          Date.now() / 1000 - batchStartTime
-        }s`,
+        `    | batch ${batchIndex + 1} of ${totalBatches} done in ${(
+          Date.now() / 1000 -
+          batchStartTime
+        ).toFixed(2)}s`,
       );
       batch = [];
       batchIndex++;
     }
   }
-  console.log(`all batches done in ${Date.now() / 1000 - totalStartTime}s`);
+  console.log(
+    `all batches done in ${(Date.now() / 1000 - totalStartTime).toFixed(2)}s`,
+  );
 }

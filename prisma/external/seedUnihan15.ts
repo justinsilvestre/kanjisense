@@ -13,8 +13,6 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
   });
   if (seeded && !force) console.log(`unihan15 already seeded. 🌱`);
   else {
-    console.log(`seeding unihan15...`);
-
     await prisma.unihan15.deleteMany({});
 
     const dbInput = new Map<string, Record<string, string>>();
@@ -65,7 +63,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
       });
     });
 
-    await inBatchesOf(1000, dbInput, async (batch) => {
+    await inBatchesOf(10000, dbInput, async (batch) => {
       const data = Array.from(batch, ([id, fields]) => ({
         id,
         kDefinition: fields.kDefinition || null,
@@ -96,12 +94,11 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
         .findMany({ select: { id: true } })
         .then((x) => x.map((x) => x.id));
       for (const readingId of allReadings) {
-        if (dbInput.get(readingId)) {
-          if (dbInput.get(readingId)!.kRSUnicode.includes(" "))
+        const reading = dbInput.get(readingId);
+        if (reading) {
+          if (reading.kRSUnicode.includes(" "))
             console.log(
-              `Found more than one radical for ${readingId}: ${
-                dbInput.get(readingId)!.kRSUnicode
-              }`,
+              `Found more than one radical for ${readingId}: ${reading.kRSUnicode}`,
             );
           await prisma.kanjisenseFigureReading.update({
             where: {

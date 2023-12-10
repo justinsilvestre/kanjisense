@@ -13,6 +13,7 @@ path = "/metrics"
 
 [deploy]
 release_command = "bash ./scripts/migrate.sh"
+release_command_timeout = "30m"
 
 [experimental]
 allowed_public_ports = [ ]

@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
-import { seedKanjiDbSbgyNotes } from "./external/seedKanjiDbSbgyNotes";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
 import { seedKanjidic } from "./external/seedKanjidic";
 import { seedSbgy } from "./external/seedSbgy";
@@ -28,22 +27,32 @@ import { seedJMDict } from "./seedJMDict";
 export async function seed(prisma: PrismaClient) {
   const startTime = Date.now();
   try {
-    await executeAndLogTime("seeding kanjidic", () => seedKanjidic(prisma));
-    await executeAndLogTime("seeding unihan15", () => seedUnihan15(prisma));
-    await executeAndLogTime("seeding unihan14", () => seedUnihan14(prisma));
-    await executeAndLogTime("seeding unihan12", () => seedUnihan12(prisma));
+    console.log(
+      "disk usage before:",
+      await prisma.$queryRaw`SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database`,
+    );
+
+    await executeAndLogTime("seeding kanjidic", () =>
+      seedKanjidic(prisma, false),
+    );
+    await executeAndLogTime("seeding unihan15", () =>
+      seedUnihan15(prisma, false),
+    );
+    await executeAndLogTime("seeding unihan14", () =>
+      seedUnihan14(prisma, false),
+    );
+    await executeAndLogTime("seeding unihan12", () =>
+      seedUnihan12(prisma, false),
+    );
     await executeAndLogTime("seeding kanjiDB composition data", () =>
-      seedKanjiDbComposition(prisma),
+      seedKanjiDbComposition(prisma, false),
     );
     await executeAndLogTime("seeding kanjiDB variants", () =>
-      seedKanjiDbVariants(prisma),
+      seedKanjiDbVariants(prisma, false),
     );
-    await executeAndLogTime("seeding sbgynotes", () =>
-      seedKanjiDbSbgyNotes(prisma),
-    );
-    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma));
+    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma, false));
     await executeAndLogTime("seeding aozora frequencies", () =>
-      seedScriptinAozoraFrequencies(prisma),
+      seedScriptinAozoraFrequencies(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
       seedKanjisenseVariantGroups(prisma, false),
@@ -85,7 +94,12 @@ export async function seed(prisma: PrismaClient) {
     );
 
     await executeAndLogTime("seeding kanjisense figure search properties", () =>
-      seedFigureSearchProperties(prisma, 1000, true),
+      seedFigureSearchProperties(prisma, 1000, false),
+    );
+
+    console.log(
+      "disk usage after:",
+      await prisma.$queryRaw`SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database`,
     );
   } catch (error) {
     console.log(`❌ ${(Date.now() - startTime) / 1000}s.`);

@@ -267,20 +267,6 @@ export async function seedKanjisenseFigureReadings(
         }
       }
 
-      const charactersTojmdictOnyomi = new Map<string, Set<JmDictOnyomi>>();
-      class JmDictOnyomi {
-        constructor(public onyomi: string) {
-          const existing = charactersTojmdictOnyomi.get(onyomi);
-          if (existing) {
-            existing.add(this);
-          } else {
-            charactersTojmdictOnyomi.set(onyomi, new Set([this]));
-          }
-        }
-
-        static cache = new Map<string, JmDictOnyomi>();
-      }
-
       const selectedOnReadings: string[] = [];
       if (
         isSingleCharacter(readingFigureId) &&

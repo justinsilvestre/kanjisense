@@ -42,25 +42,25 @@ function getKanjiDbVariantTmpId(
   return `${variant}@${base}@${variantType}`;
 }
 function registerVariant(
-  dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput>,
+  dbInput: Map<string, Prisma.KanjiDbVariantCreateManyInput>,
   variant: string,
   base: string,
   variantType: KanjiDbVariantType,
 ) {
-  dbInput[getKanjiDbVariantTmpId(variantType, variant, base)] = {
+  dbInput.set(getKanjiDbVariantTmpId(variantType, variant, base), {
     variant,
     base,
     variantType,
-  };
+  });
 }
 
 async function getOldStyleDbVariants(prisma: PrismaClient) {
-  const dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput> = {};
+  const dbInput = new Map<string, Prisma.KanjiDbVariantCreateManyInput>();
   await getkanjiDbOldStyleDbInput(dbInput);
   await getHyogaiDbInput();
   await getJinmeiDbInput(dbInput);
   await prisma.kanjiDbVariant.createMany({
-    data: Object.values(dbInput).map(({ variant, base, variantType }) => ({
+    data: Array.from(dbInput, ([, { variant, base, variantType }]) => ({
       variant,
       base,
       variantType,
@@ -69,7 +69,7 @@ async function getOldStyleDbVariants(prisma: PrismaClient) {
 }
 
 async function getKanjiDbBorrowedVariant(prisma: PrismaClient) {
-  const dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput> = {};
+  const dbInput = new Map<string, Prisma.KanjiDbVariantCreateManyInput>();
   await forEachLine(files.kanjiDbBorrowedInput, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("jp")) return;
 
@@ -80,7 +80,7 @@ async function getKanjiDbBorrowedVariant(prisma: PrismaClient) {
   });
 
   await prisma.kanjiDbVariant.createMany({
-    data: Object.values(dbInput).map(({ variant, base, variantType }) => ({
+    data: Array.from(dbInput, ([, { variant, base, variantType }]) => ({
       variant,
       base,
       variantType,
@@ -89,7 +89,7 @@ async function getKanjiDbBorrowedVariant(prisma: PrismaClient) {
 }
 
 async function getKanjiDbTwEduVariants(prisma: PrismaClient) {
-  const dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput> = {};
+  const dbInput = new Map<string, Prisma.KanjiDbVariantCreateManyInput>();
   await forEachLine(files.kanjiDbTwEduVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("tw")) return;
 
@@ -100,7 +100,7 @@ async function getKanjiDbTwEduVariants(prisma: PrismaClient) {
   });
 
   await prisma.kanjiDbVariant.createMany({
-    data: Object.values(dbInput).map(({ variant, base, variantType }) => ({
+    data: Array.from(dbInput, ([, { variant, base, variantType }]) => ({
       variant,
       base,
       variantType,
@@ -109,7 +109,7 @@ async function getKanjiDbTwEduVariants(prisma: PrismaClient) {
 }
 
 async function getKanjiDbHanyuDaCidianVariants(prisma: PrismaClient) {
-  const dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput> = {};
+  const dbInput = new Map<string, Prisma.KanjiDbVariantCreateManyInput>();
   await forEachLine(files.kanjiDbHanyuDaCidianVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("hy")) return;
 
@@ -135,7 +135,7 @@ async function getKanjiDbHanyuDaCidianVariants(prisma: PrismaClient) {
   });
 
   await prisma.kanjiDbVariant.createMany({
-    data: Object.values(dbInput).map(({ variant, base, variantType }) => ({
+    data: Array.from(dbInput, ([, { variant, base, variantType }]) => ({
       variant,
       base,
       variantType,
@@ -144,7 +144,7 @@ async function getKanjiDbHanyuDaCidianVariants(prisma: PrismaClient) {
 }
 
 async function getkanjiDbOldStyleDbInput(
-  dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput>,
+  dbInput: Map<string, Prisma.KanjiDbVariantCreateManyInput>,
 ) {
   await forEachLine(files.kanjiDbOldStyle, async (lineWithComments) => {
     if (
@@ -201,7 +201,7 @@ async function getkanjiDbOldStyleDbInput(
 }
 
 async function getHyogaiDbInput() {
-  const dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput> = {};
+  const dbInput = new Map<string, Prisma.KanjiDbVariantCreateManyInput>();
   await forEachLine(files.kanjiDbHyogaiVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("hyo")) return;
 
@@ -214,7 +214,7 @@ async function getHyogaiDbInput() {
 }
 
 async function getJinmeiDbInput(
-  dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput>,
+  dbInput: Map<string, Prisma.KanjiDbVariantCreateManyInput>,
 ) {
   await forEachLine(files.kanjiDbJinmeiVariants, (line) => {
     if (!line || line.startsWith("#") || line.startsWith("jin")) return;
@@ -227,7 +227,7 @@ async function getJinmeiDbInput(
 }
 
 function registerOldAndNewVariants(
-  dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput>,
+  dbInput: Map<string, Prisma.KanjiDbVariantCreateManyInput>,
   oldForm: string,
   newForm: string,
 ) {
@@ -244,7 +244,7 @@ function registerOldAndNewVariants(
   }
 }
 function deregisterOldAndNewVariants(
-  dbInput: Record<string, Prisma.KanjiDbVariantCreateManyInput>,
+  dbInput: Map<string, Prisma.KanjiDbVariantCreateManyInput>,
   newForm: string,
 ) {
   const oldForms = Object.entries(dbInput).filter(
@@ -252,11 +252,11 @@ function deregisterOldAndNewVariants(
       base === newForm && variantType === KanjiDbVariantType.OldStyle,
   );
   for (const [, { variant: oldForm }] of oldForms) {
-    delete dbInput[
-      getKanjiDbVariantTmpId(KanjiDbVariantType.OldStyle, oldForm, newForm)
-    ];
-    delete dbInput[
-      getKanjiDbVariantTmpId(KanjiDbVariantType.NewStyle, newForm, oldForm)
-    ];
+    dbInput.delete(
+      getKanjiDbVariantTmpId(KanjiDbVariantType.OldStyle, oldForm, newForm),
+    );
+    dbInput.delete(
+      getKanjiDbVariantTmpId(KanjiDbVariantType.NewStyle, newForm, oldForm),
+    );
   }
 }

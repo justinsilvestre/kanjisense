@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
 import { seed } from "./seedScript";
+
 const prisma = new PrismaClient();
+
 seed(prisma)
   .catch((e) => {
     console.error(e);
