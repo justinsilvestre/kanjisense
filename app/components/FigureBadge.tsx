@@ -40,7 +40,7 @@ export function FigureBadge({
 
   return (
     <div
-      className={`inline-block text-center ${className} ${getColorClasses(
+      className={`inline-block text-center font-light ${className} ${getColorClasses(
         badgeProps.hue,
         badgeProps.aozoraAppearances,
       )} ${!badgeProps.isStandaloneCharacter ? "rounded-full" : ""} $`}
@@ -73,7 +73,7 @@ export function FigureBadge({
           width: `${innerWidth - buffer}rem`,
           height: `${innerWidth - buffer}rem`,
           fontSize: `${innerWidth - 1}rem`,
-          lineHeight: `${innerWidth * 1.1}rem`,
+          lineHeight: `${innerWidth * 1}rem`,
         }}
       >
         {badgeProps.image?.type === "Kvg" ? (

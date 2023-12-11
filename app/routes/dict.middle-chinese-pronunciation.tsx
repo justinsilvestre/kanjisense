@@ -16,6 +16,7 @@ import { NavLi } from "~/components/NavLi";
 import { useTocHighlighting } from "~/components/useTocHighlighting";
 import { InitialConsonants } from "~/features/qysInfo/InitialConsonants";
 
+import { Finals } from "../features/dictionary/Finals";
 import { Baxter } from "../features/qysInfo/Baxter";
 import { Diacritics } from "../features/qysInfo/Diacritics";
 import { FinalConsonants } from "../features/qysInfo/FinalConsonants";
@@ -24,8 +25,6 @@ import { References } from "../features/qysInfo/References";
 import { ScrollLink } from "../features/qysInfo/ScrollLink";
 import { SectionIds } from "../features/qysInfo/SectionIds";
 import { Vowels } from "../features/qysInfo/Vowels";
-
-import { Finals } from "./Finals";
 
 export const links = () => [{ rel: "stylesheet", href: css }];
 

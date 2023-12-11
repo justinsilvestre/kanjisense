@@ -277,13 +277,13 @@ function QysDialog({
           </dd>
         </div>
       </DialogTrigger>
-      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:95vh] [max-width:95vw] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
+      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [overflow-y:auto] [background-color:rgba(247,247,247,0.95)] [max-height:95vh] [max-width:95vw] [min-width:17rem]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
         <QysDialogContent
           onClickClose={() => setOpen(false)}
           attestedOnReadings={
-            readings.selectedOnReadings.length
-              ? readings.selectedOnReadings
-              : readings.kanjidicEntry?.onReadings || []
+            readings.kanjidicEntry?.onReadings.length
+              ? readings.kanjidicEntry?.onReadings
+              : readings.selectedOnReadings || []
           }
           syllables={guangyunReadings}
           inferredOnReadingCandidates={
@@ -311,12 +311,16 @@ function OnReading({
     <span key={onReading} className="inline-block">
       <span className={`block ${rare ? "text-yellow-950/60" : ""}`}>
         {i !== 0 ? "・" : ""}
+        {rare ? <span className="text-yellow-950/30">(</span> : null}
         {onReading.replace(/-/g, "")}
+        {rare ? <span className="text-yellow-950/30">)</span> : null}{" "}
       </span>
       <span className=" block text-center text-sm uppercase">
-        {rare ? <span className="text-yellow-950/60">(</span> : null}
-        <span>{kanjidicKanaToRomaji(onReading.replace(/-/g, ""))}</span>
-        {rare ? <span className="text-yellow-950/60">)</span> : null}{" "}
+        {rare ? <span className="text-yellow-950/50">(</span> : null}
+        <span className={rare ? "text-yellow-950/70" : ""}>
+          {kanjidicKanaToRomaji(onReading.replace(/-/g, ""))}
+        </span>
+        {rare ? <span className="text-yellow-950/50">)</span> : null}{" "}
       </span>
     </span>
   );

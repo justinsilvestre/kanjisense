@@ -4,9 +4,12 @@ import { json } from "@remix-run/server-runtime";
 import { prisma } from "~/db.server";
 import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";
 
-export interface FigureComponentsAnalysisLoaderData {
-  figure: FigureComponentsAnalysis;
-}
+export type FigureComponentsAnalysisLoaderData =
+  | {
+      figure: FigureComponentsAnalysis;
+      error?: null;
+    }
+  | { error: string; figure?: null };
 
 export type FigureComponentsAnalysis = NonNullable<
   Awaited<ReturnType<typeof analyzeFigureComponents>>
@@ -70,8 +73,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await analyzeFigureComponents(figureId);
 
   if (!figure) {
-    throw new Response(
-      `No figure ${JSON.stringify(figureId)} could be found in the database.`,
+    return json<FigureComponentsAnalysisLoaderData>(
+      {
+        error: `No figure ${JSON.stringify(
+          figureId,
+        )} could be found in the database. `,
+      },
       { status: 404 },
     );
   }

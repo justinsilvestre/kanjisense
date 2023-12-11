@@ -22,9 +22,12 @@ import {
 } from "~/features/dictionary/SingleFigureDictionaryEntry";
 import css from "~/features/dictionary/styles.css";
 
-interface LoaderData {
-  searchedFigure: DictionaryPageSearchedFigure;
-}
+type LoaderData =
+  | {
+      searchedFigure: DictionaryPageSearchedFigure;
+      errorMessage?: null;
+    }
+  | { errorMessage: string; searchedFigure?: null };
 
 export const meta: MetaFunction<typeof loader> = (a) => [
   {
@@ -49,8 +52,12 @@ export const loader: LoaderFunction = async ({ params }) => {
     ? await getDictionaryPageFigure(figureId)
     : null;
   if (!searchedFigure) {
-    throw new Response(
-      `No figure ${JSON.stringify(figureId)} could be found in the database.`,
+    return json<LoaderData>(
+      {
+        errorMessage: `No figure ${JSON.stringify(
+          figureId,
+        )} could be found in the database. `,
+      },
       { status: 404 },
     );
   }
@@ -62,6 +69,15 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
+  if (loaderData.errorMessage != null) {
+    return (
+      <DictionaryLayout>
+        <main className="flex flex-col gap-2">
+          <div className="text-2xl text-red-500">{loaderData.errorMessage}</div>
+        </main>
+      </DictionaryLayout>
+    );
+  }
   const { searchedFigure: figure } = loaderData;
   const variants = figure.variantGroup?.variants
     .flatMap((vid) => {

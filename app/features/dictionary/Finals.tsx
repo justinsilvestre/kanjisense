@@ -7,10 +7,11 @@ import {
   VowelHints,
 } from "~/features/dictionary/QysHints";
 
-import { IpaLink, IpaSymbols } from "../features/dictionary/IpaLink";
-import { G } from "../features/qysInfo/G";
-import { ScrollLink } from "../features/qysInfo/ScrollLink";
-import { SectionIds } from "../features/qysInfo/SectionIds";
+import { G } from "../qysInfo/G";
+import { ScrollLink } from "../qysInfo/ScrollLink";
+import { SectionIds } from "../qysInfo/SectionIds";
+
+import { IpaLink, IpaSymbols } from "./IpaLink";
 
 export function Finals({
   showContentsButton,

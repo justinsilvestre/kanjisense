@@ -6,9 +6,12 @@ import {
   getPopoverFigure,
 } from "~/features/dictionary/PopoverFigure";
 
-interface DictPreviewLoaderData {
-  figure: PopoverFigure;
-}
+export type DictPreviewLoaderData =
+  | {
+      figure: PopoverFigure;
+      error?: null;
+    }
+  | { error: string; figure?: null };
 
 export const loader: LoaderFunction = async ({ params }) => {
   const figureId = params.figureId!;
@@ -16,8 +19,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getPopoverFigure(figureId);
 
   if (!figure) {
-    throw new Response(
-      `No figure ${JSON.stringify(figureId)} could be found in the database.`,
+    return json<DictPreviewLoaderData>(
+      {
+        error: `No figure ${JSON.stringify(
+          figureId,
+        )} could be found in the database. `,
+      },
       { status: 404 },
     );
   }

@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { ReactNode } from "react";
 
 import {
   BrowseAtomicComponentsLink,
@@ -11,42 +12,53 @@ import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMI
 
 export const meta: MetaFunction = () => [{ title: "Kanjisense" }];
 
-export default function Index() {
+export default function Index({ error }: { error?: ReactNode }) {
   return (
     <DictionaryLayout>
-      <section className="mx-auto my-4 max-w-2xl">
-        <h1 className="mb-4 text-xl">
-          Learn the kanji through{" "}
-          <strong className="text-blue-800">components</strong> and{" "}
-          <strong className="text-blue-800">connections</strong>.
-        </h1>
-        <p className="mb-4">
-          Did you know it only takes{" "}
-          <strong>{TOTAL_ATOMIC_COMPONENTS_COUNT} kanji components</strong> to
-          form all the 3,500 most important kanji? Once you become familiar with{" "}
-          <BrowseAtomicComponentsLink>
-            these basic component shapes
-          </BrowseAtomicComponentsLink>
-          , each new kanji you encounter will change from a bunch of random
-          squiggles into a combination of <strong>meaningful elements</strong>.
-        </p>
-        <div className="mx-auto mb-4 flex max-w-xl flex-row flex-wrap justify-evenly gap-4">
-          <FigurePopoverBadge width={5} badgeProps={nichi} />
-          <FigurePopoverBadge width={5} badgeProps={getsu} />
-          <FigurePopoverBadge width={5} badgeProps={akarui} />
-          <FigurePopoverBadge width={5} badgeProps={mei} />
-        </div>
-        <p className="mb-4">
-          Enter a kanji in the form at the top to see its constituent
-          components, including the helpful but frequently overlooked{" "}
-          <BrowseSoundComponentsLink>
-            sound components
-          </BrowseSoundComponentsLink>
-          . Each component is assigned a unique{" "}
-          <strong>mnemonic keyword</strong> based on its historical meaning or
-          its shape to help you keep it firmly in your memory.
-        </p>
-      </section>
+      <>
+        {error ? (
+          <div className="border-1 mb-4 rounded-sm border border-red-700/20 p-8 text-center text-red-700">
+            {error}
+          </div>
+        ) : null}
+        <section className="mx-auto my-4 flex max-w-2xl flex-grow flex-col justify-center">
+          <div className=" rounded-md bg-gray-300/10 p-2 shadow-lg shadow-black/20 md:m-2 md:p-4">
+            <h1 className="mb-4 text-xl">
+              Learn the kanji through{" "}
+              <strong className="text-blue-800">components</strong> and{" "}
+              <strong className="text-blue-800">connections</strong>.
+            </h1>
+            <p className="mb-4">
+              Did you know it only takes{" "}
+              <strong>{TOTAL_ATOMIC_COMPONENTS_COUNT} kanji components</strong>{" "}
+              to form all the 3,500 most important kanji? Once you become
+              familiar with{" "}
+              <BrowseAtomicComponentsLink>
+                these basic component shapes
+              </BrowseAtomicComponentsLink>
+              , each new kanji you encounter will change from a bunch of random
+              squiggles into a combination of{" "}
+              <strong>meaningful elements</strong>.
+            </p>
+            <div className="mx-auto mb-4 flex max-w-xl flex-row flex-wrap justify-evenly gap-4">
+              <FigurePopoverBadge width={5} badgeProps={nichi} />
+              <FigurePopoverBadge width={5} badgeProps={getsu} />
+              <FigurePopoverBadge width={5} badgeProps={akarui} />
+              <FigurePopoverBadge width={5} badgeProps={mei} />
+            </div>
+            <p className="mb-4">
+              Enter a kanji in the form at the top to see its constituent
+              components, including the helpful but frequently overlooked{" "}
+              <BrowseSoundComponentsLink>
+                sound components
+              </BrowseSoundComponentsLink>
+              . Each component is assigned a unique{" "}
+              <strong>mnemonic keyword</strong> based on its historical meaning
+              or its shape to help you keep it firmly in your memory.
+            </p>
+          </div>
+        </section>
+      </>
     </DictionaryLayout>
   );
 }

@@ -142,15 +142,8 @@ export async function seedKanjisenseFigureReadings(
         }),
     );
 
-    const dbInput: {
-      id: string;
-      kanjidicEntryId: string | null;
-      unihan15Id: string | null;
-      inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns;
-      sbgyXiaoyunsMatchingExemplars: Record<string, string[]>;
-      selectedOnReadings: string[];
-    }[] = await executeAndLogTime("creating readings", () =>
-      createReadings(
+    const dbInput = await executeAndLogTime("preparing readings", () =>
+      prepareReadings(
         figuresNeedingReadingsIds,
         figuresToXiaoyunsWithMatchingExemplars,
         kanjidicEntries,
@@ -158,9 +151,11 @@ export async function seedKanjisenseFigureReadings(
       ),
     );
 
-    await prisma.kanjisenseFigureReading.createMany({
-      data: dbInput,
-    });
+    await executeAndLogTime("creating readings", () =>
+      prisma.kanjisenseFigureReading.createMany({
+        data: dbInput,
+      }),
+    );
 
     await executeAndLogTime("hooking up figures", async () => {
       const readingsIds = await prisma.kanjisenseFigureReading
@@ -202,7 +197,7 @@ export async function seedKanjisenseFigureReadings(
 
   console.log(`KanjisenseFigureReading seeded. 🌱`);
 
-  async function createReadings(
+  async function prepareReadings(
     figuresNeedingReadingsIds: string[],
     figuresToXiaoyunsWithMatchingExemplars: Map<
       string,

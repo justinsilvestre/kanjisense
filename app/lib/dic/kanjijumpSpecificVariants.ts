@@ -24,7 +24,6 @@ export const kanjijumpSpecificVariants = [
   ["牛", "牜", "𠂒"],
   ["木", "GWS-U6728-01", "朩"],
   ["匕", "𠤎", "CDP-8BC5"],
-  ["月"],
   ["肉", "CDP-8B5E", "⺼"],
   ["勹", "𠂊", "CDP-8B6C"],
   ["GWS-U4E29-VAR-001", "丩", "𠂈"],

@@ -43,11 +43,11 @@ export function FigureTags({
       <ListTags
         lists={lists}
         isStandaloneCharacter={isStandaloneCharacter}
-        className={` rounded-sm border border-solid px-1 text-sm font-bold uppercase [padding-top:0.2rem]`}
+        className={` rounded-sm border border-solid px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
       />
       {isPriorityComponent && !isStandaloneCharacter ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.2rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
           popoverContent={
             <>
               <p className="mb-3 mt-0">
@@ -71,7 +71,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && !isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.2rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
           popoverContent={
             <>
               <p className="mb-3 mt-0">
@@ -104,7 +104,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.2rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
           popoverContent={
             <>
               <p className="mb-3 mt-0">
@@ -130,7 +130,7 @@ export function FigureTags({
       ) : null}
       {variantGroupId && variantGroupId !== id ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline  outline-1 -outline-offset-2 [padding-top:0.2rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline  outline-1 -outline-offset-2 [padding-top:0.1rem]`}
           popoverContent={
             <VariantPopoverContent
               isStandaloneCharacter={isStandaloneCharacter}
@@ -143,7 +143,7 @@ export function FigureTags({
       ) : null}
       {isAtomic ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.2rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
           popoverContent={
             <>
               The {TOTAL_ATOMIC_COMPONENTS_COUNT} atomic components are the
@@ -166,7 +166,7 @@ export function FigureTags({
       ) : null}
       {isPrioritySoundMark ? (
         <FigureTag
-          className={`rounded-sm border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.2rem]`}
+          className={`rounded-sm border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
           popoverContent={
             <>
               <p className="mb-3 mt-0">

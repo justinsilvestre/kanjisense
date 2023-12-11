@@ -77,7 +77,7 @@ function DictionaryEntryComponentsTreeMember({
         width={size === "large" ? 6 : 5}
         className="mx-auto "
       />
-      <div className="mb-1 mt-2 inline-flex flex-col items-center [max-width:10rem]">
+      <div className="mb-1 mt-2 inline-flex flex-col items-center text-center [max-width:10rem]">
         <div>
           <FigureKeywordDisplay figure={componentFigure} />
         </div>

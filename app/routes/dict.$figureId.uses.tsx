@@ -7,10 +7,13 @@ import {
   dictionaryPageFigureInclude,
 } from "~/features/dictionary/getDictionaryPageFigure.server";
 
-export interface FigurePriorityUsesLoaderData {
-  id: string;
-  firstClassUses: FigurePriorityUses | null;
-}
+export type FigurePriorityUsesLoaderData =
+  | {
+      id: string;
+      firstClassUses: FigurePriorityUses | null;
+      error?: null;
+    }
+  | { error: string; id?: null; firstClassUses?: null };
 
 export type FigurePriorityUses =
   NonNullable<DictionaryPageFigureWithPriorityUses>["firstClassUses"];
@@ -34,8 +37,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getComponentPriorityUses(figureId);
 
   if (!figure) {
-    throw new Response(
-      `No figure ${JSON.stringify(figureId)} could be found in the database.`,
+    return json<FigurePriorityUsesLoaderData>(
+      {
+        error: `No figure ${JSON.stringify(
+          figureId,
+        )} could be found in the database. `,
+      },
       { status: 404 },
     );
   }

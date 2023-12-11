@@ -4,10 +4,10 @@ import {
   KanjisenseFigureImage,
 } from "@prisma/client";
 import { Link, useFetcher, useNavigate } from "@remix-run/react";
-import cx from "clsx";
+import cx, { clsx } from "clsx";
 import { useCombobox } from "downshift";
 import type { PropsWithChildren } from "react";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import {
@@ -31,10 +31,6 @@ export function FigureSearchForm({
   defaultSearchText?: string;
 }) {
   const searchFetcher = useFetcher<{ results: FigureSearchResults }>();
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).searchFetcher = searchFetcher;
-  }, [searchFetcher]);
 
   const imagesMap = useMemo(
     () =>
@@ -73,8 +69,14 @@ export function FigureSearchForm({
         navigate(`/dict/${key}`);
       }
     },
-    onInputValueChange({ inputValue }) {
-      if (inputValue) {
+    onInputValueChange({ inputValue, selectedItem, type, ...rest }) {
+      console.log({
+        inputValue,
+        selectedItem,
+        type,
+        ...rest,
+      });
+      if (inputValue && type === useCombobox.stateChangeTypes.InputChange) {
         const queries: string[] = [inputValue.toLowerCase()];
         const hepburns = toModifiedHepburn(inputValue).filter(
           (h) => h !== inputValue,
@@ -114,10 +116,17 @@ export function FigureSearchForm({
       >
         <button
           type="submit"
-          className="block h-full w-16 cursor-pointer border-2 border-zinc-400 bg-slate-500 text-white disabled:cursor-auto disabled:opacity-60"
-          disabled={!comboBox.selectedItem}
+          className={clsx(
+            "block h-full w-16 cursor-pointer border-2 border-zinc-400 bg-slate-500 text-white disabled:cursor-auto",
+            {
+              "animate-pulse": searchFetcher.state === "loading",
+              "opacity-20":
+                searchFetcher.state !== "loading" && !comboBox.selectedItem,
+            },
+          )}
+          disabled={!comboBox.selectedItem || searchFetcher.state === "loading"}
         >
-          Go
+          {searchFetcher.state === "loading" ? "..." : "Go"}
         </button>
       </ComboBox>
     </form>
@@ -149,14 +158,13 @@ function ComboBox({
     getInputProps,
     highlightedIndex,
     getItemProps,
-    selectedItem,
   } = comboBox;
 
   return (
     <div className="">
       <div className="flex flex-row items-end gap-1">
         <div className="flex flex-grow flex-col">
-          <label className="w-fit" htmlFor="search" {...getLabelProps()}>
+          <label className="w-fit pb-1" htmlFor="search" {...getLabelProps()}>
             search characters + character components
           </label>
           <div className="relative flex h-9 flex-row gap-0.5  bg-white shadow-sm">
@@ -199,7 +207,7 @@ function ComboBox({
                           to={`/dict/${figure.id}`}
                           className={cx(
                             highlightedIndex === index && "bg-blue-100",
-                            selectedItem === figure && "font-bold",
+
                             "flex flex-row gap-2 px-3 py-2 shadow-sm",
                           )}
                         >
@@ -209,7 +217,14 @@ function ComboBox({
                               badgeProps={getBadgeProps(figure)}
                             />
                           </span>
-                          <span className="text-sm text-gray-700">
+                          <span
+                            className={cx(
+                              "text-sm ",
+                              highlightedIndex === index
+                                ? "text-black"
+                                : "text-gray-700",
+                            )}
+                          >
                             <SearchPropertiesDisplay
                               figure={figure}
                               findMatchingQuery={findMatchingQuery}
@@ -265,8 +280,6 @@ function SearchPropertiesDisplay({
             : reading.text,
           false,
         );
-
-    console.log(reading.text, reading.display, romaji);
 
     if (registry[romaji]) {
       registry[romaji][isRomaji ? "latin" : "kana"] = {

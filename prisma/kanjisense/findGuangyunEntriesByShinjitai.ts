@@ -20,6 +20,7 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
   罙: ["深"], // was treating 罙 as a variant of 冞,
   様: ["样"], // was taking 橡
   樣: ["样"], // was taking 橡
+  体: ["體"], // was taking 体 in addition to 體
 };
 
 export async function findGuangyunEntriesByShinjitai(

@@ -9,7 +9,7 @@ import { FigureKeywordDisplay } from "~/features/dictionary/FigureKeywordDisplay
 import { FigureTags } from "~/features/dictionary/FigureTags";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { PopoverFigure } from "~/features/dictionary/PopoverFigure";
-
+import { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
 
 import { DictLink } from "./AppLink";
 import { FigureBadge } from "./FigureBadge";
@@ -172,7 +172,13 @@ export function FigurePopoverWindow({
           <FigureBadge badgeProps={badgeProps} width={6} />
         </DictLink>
         {loading ? (
-          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4"></div>
+          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
+            <div className="text-center">
+              <p className="animate-pulse italic text-gray-900/75">
+                loading...
+              </p>
+            </div>
+          </div>
         ) : null}
         {!loading && firstClassComponents?.length ? (
           <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
@@ -200,6 +206,15 @@ export function FigurePopoverWindow({
                 </span>
               </div>
             ))}
+          </div>
+        ) : null}
+        {!loading && fetcher.data?.error ? (
+          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
+            <div className="text-center">
+              <p className=" italic text-red-900/75">
+                problem loading components data
+              </p>
+            </div>
           </div>
         ) : null}
 
@@ -236,7 +251,7 @@ export function FigurePopoverWindow({
 }
 
 export function usePopoverFigureFetcher() {
-  const fetcher = useFetcher<{ figure: PopoverFigure }>();
+  const fetcher = useFetcher<DictPreviewLoaderData>();
 
   return {
     fetcher,
@@ -245,8 +260,9 @@ export function usePopoverFigureFetcher() {
       if (
         (!fetcher.data || fetcher.data.figure?.id !== figureToFetchId) &&
         fetcher.state === "idle"
-      )
+      ) {
         fetcher.load(`/dict/${figureToFetchId}/preview`);
+      }
     },
   };
 }

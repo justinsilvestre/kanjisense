@@ -14,7 +14,6 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({ request }) => {
   const queryStringParams = new URL(request.url).searchParams;
   const searchQueries = queryStringParams.getAll("q");
-  console.log({ searchQueries });
   if (!searchQueries.length) {
     throw new Response(`No search query provided.`, { status: 400 });
   }

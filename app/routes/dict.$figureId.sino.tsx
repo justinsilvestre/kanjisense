@@ -3,9 +3,12 @@ import { json } from "@remix-run/server-runtime";
 
 import { prisma } from "~/db.server";
 
-export interface FigureSinoReadingsLoaderData {
-  readings: FigureSinoReadings | null;
-}
+export type FigureSinoReadingsLoaderData =
+  | {
+      readings: FigureSinoReadings;
+      error?: null;
+    }
+  | { error: string; readings?: null };
 
 export type FigureSinoReadings = NonNullable<
   Awaited<ReturnType<typeof getSinoCharacterReadings>>
@@ -38,8 +41,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getSinoCharacterReadings(figureId);
 
   if (!figure) {
-    throw new Response(
-      `No figure ${JSON.stringify(figureId)} could be found in the database.`,
+    return json<FigureSinoReadingsLoaderData>(
+      {
+        error: `No figure ${JSON.stringify(
+          figureId,
+        )} could be found in the database. `,
+      },
       { status: 404 },
     );
   }
