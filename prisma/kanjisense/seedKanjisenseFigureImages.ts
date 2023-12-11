@@ -10,6 +10,7 @@ import { KvgJsonData } from "../../app/features/dictionary/KvgJsonData";
 import { executeAndLogTime } from "./executeAndLogTime";
 import { getFileTextIfPresent } from "./getFileTextIfPresent";
 import { getGlyphWikiSvgPath } from "./getGlyphWikiSvgPath";
+import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedFigureImages(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
@@ -56,12 +57,18 @@ export async function seedFigureImages(prisma: PrismaClient, force = false) {
     await prisma.kanjisenseFigureImage.deleteMany({});
 
     await executeAndLogTime("seeding images data", () =>
-      prisma.kanjisenseFigureImage.createMany({
-        data: Array.from(dbInput.entries()).map(([id, { type, content }]) => ({
+      inBatchesOf({
+        batchSize: 500,
+        collection: dbInput,
+        getBatchItem: ([id, { type, content }]) => ({
           id,
           type,
           content: content as unknown as Record<string, string[]>,
-        })),
+        }),
+        action: (data) =>
+          prisma.kanjisenseFigureImage.createMany({
+            data,
+          }),
       }),
     );
 

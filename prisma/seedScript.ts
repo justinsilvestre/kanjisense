@@ -94,7 +94,7 @@ export async function seed(prisma: PrismaClient) {
     );
 
     await executeAndLogTime("seeding kanjisense figure search properties", () =>
-      seedFigureSearchProperties(prisma, 1000, false),
+      seedFigureSearchProperties(prisma, 100, false),
     );
 
     console.log(

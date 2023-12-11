@@ -73,7 +73,7 @@ export async function seedUnihan14(prisma: PrismaClient, force = false) {
     registerVariant(dbInput, "俱", "kZVariant", "倶");
 
     await inBatchesOf({
-      count: 10000,
+      batchSize: 10000,
       collection: dbInput,
       getBatchItem: ([id, fields]) => ({
         id,

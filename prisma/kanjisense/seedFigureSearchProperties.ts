@@ -13,7 +13,7 @@ import { SearchPropertySpecs } from "./SearchPropertySpecs";
 
 export async function seedFigureSearchProperties(
   prisma: PrismaClient,
-  batchSize = 100,
+  processBatchSize = 500,
   force = false,
 ) {
   const seeded = await prisma.setup.findUnique({
@@ -25,21 +25,20 @@ export async function seedFigureSearchProperties(
   }
 
   console.log("Deleting search properties on figures...");
-  await prisma.searchPropertiesOnFigure.deleteMany({});
+  await executeAndLogTime("deleting search properties on figures", async () => {
+    await prisma.searchPropertiesOnFigure.deleteMany({});
 
-  await prisma.figureSearchProperty.deleteMany({});
-
-  console.log("Deleted all search properties on figures");
+    await prisma.figureSearchProperty.deleteMany({});
+  });
 
   const figureIds = await prisma.kanjisenseFigure
     .findMany({
       select: { id: true },
     })
     .then((fs) => fs.map((f) => f.id));
-  // const figureIds = ["日"];
 
   await inBatchesOf({
-    count: batchSize,
+    batchSize: processBatchSize,
     collection: figureIds,
     action: async (batchIds) => {
       const figures = await prisma.kanjisenseFigure.findMany({
@@ -108,7 +107,7 @@ export async function seedFigureSearchProperties(
                 ?.length || 0);
         if (notEnoughSearchProperties) {
           console.warn(
-            `Figure ${id} has only KEY and VARIANTS search properties`,
+            `             Figure ${id} has only KEY and VARIANTS search properties`,
           );
         }
 
@@ -149,7 +148,7 @@ export async function seedFigureSearchProperties(
         new Set(searchPropertiesToCreate.map(([spKey]) => spKey)).size,
       );
 
-      const x = await prisma.figureSearchProperty.createMany({
+      const created = await prisma.figureSearchProperty.createMany({
         data: searchPropertiesToCreate.map(([, sp]) => ({
           text: sp.text,
           type: sp.type,
@@ -159,74 +158,21 @@ export async function seedFigureSearchProperties(
       });
 
       console.log(
-        `Created ${x.count} of ${searchPropertiesToCreate.length} search props`,
+        `Created ${created.count} of ${searchPropertiesToCreate.length} search props`,
       );
-      await executeAndLogTime(
-        "connecting figures and search properties",
-        async () => {
-          // await prisma.searchPropertiesOnFigure.createMany({
-          //   data: Array.from(
-          //     searchPropertiesOnFiguresDbInput,
-          //     ([figureId, specs]) =>
-          //       specs.map((specs) => ({
-          //         figureId,
-          //         searchPropertyKey: specs.searchPropertyKey,
-          //         index: specs.index,
-          //       })),
-          //   ).flat(),
-          // });
-
-          await inBatchesOf({
-            count: batchSize,
-            collection: searchPropertiesOnFiguresDbInput,
-            action: async (batch) => {
-              await prisma.searchPropertiesOnFigure.createMany({
-                data: batch
-                  .map(([figureId, specsKeysToSpecs]) =>
-                    Array.from(specsKeysToSpecs, ([, specs]) => ({
-                      figureId,
-                      searchPropertyKey: specs.searchPropertyKey,
-                      index: specs.index,
-                    })),
-                  )
-                  .flat(),
-              });
-            },
-          });
-        },
+      await executeAndLogTime("connecting figures and search properties", () =>
+        prisma.searchPropertiesOnFigure.createMany({
+          data: mapFlatmap(
+            searchPropertiesOnFiguresDbInput,
+            (figureId, specsKeysToSpecs) =>
+              Array.from(specsKeysToSpecs, ([, specs]) => ({
+                figureId,
+                searchPropertyKey: specs.searchPropertyKey,
+                index: specs.index,
+              })),
+          ),
+        }),
       );
-
-      // for (const [figureId, searchProperties] of connections) {
-      //   try {
-      //     await prisma.kanjisenseFigure.update({
-      //       where: {
-      //         id: figureId,
-      //       },
-      //       data: {
-      //         searchProperties: {
-      //           connectOrCreate: Array.from(
-      //             searchProperties,
-      //             ([searchPropertyKey]) => ({
-      //               where: {
-      //                 figureId_searchPropertyKey: {
-      //                   figureId,
-      //                   searchPropertyKey,
-      //                 },
-      //               },
-      //               create: {
-      //                 searchPropertyKey,
-      //               },
-      //             }),
-      //           ),
-      //         },
-      //       },
-      //     });
-      //   } catch (err) {
-      //     console.error(`Problem updating ${figureId}`, searchProperties);
-      //     throw err;
-      //   }
-      // }
-      console.log("connected!");
 
       function addSearchPropertyOnFigureSpecs(
         id: string,
@@ -260,3 +206,11 @@ class SearchPropertiesOnFigureSpecs {
 }
 
 type SearchPropertyKey = string;
+
+function mapFlatmap<K, V, R>(map: Map<K, V>, fn: (k: K, v: V) => R[]): R[] {
+  const result: R[] = [];
+  for (const [k, v] of map) {
+    result.push(...fn(k, v));
+  }
+  return result;
+}

@@ -8,6 +8,7 @@ import { getGlyphsFilePath } from "~/lib/files.server";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import { getGlyphWikiSvgPath } from "./getGlyphWikiSvgPath";
+import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedGlyphImages(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
@@ -49,8 +50,10 @@ export async function seedGlyphImages(prisma: PrismaClient, force = false) {
     }
 
     await executeAndLogTime("seeding glyph images data", async () =>
-      prisma.glyphImage.createMany({
-        data: dbInput,
+      inBatchesOf({
+        collection: dbInput,
+        batchSize: 500,
+        action: (data) => prisma.glyphImage.createMany({ data }),
       }),
     );
 

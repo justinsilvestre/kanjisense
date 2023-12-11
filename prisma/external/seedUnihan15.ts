@@ -7,7 +7,11 @@ import { forEachLine } from "~/lib/forEachLine.server";
 
 import { registerSeeded } from "../seedUtils";
 
-export async function seedUnihan15(prisma: PrismaClient, force = false) {
+export async function seedUnihan15(
+  prisma: PrismaClient,
+  force = false,
+  verbose = false,
+) {
   const seeded = await prisma.setup.findUnique({
     where: { step: "Unihan15" },
   });
@@ -64,7 +68,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
     });
 
     await inBatchesOf({
-      count: 500,
+      batchSize: 500,
       collection: dbInput,
       getBatchItem: ([id, fields]) => ({
         id,
@@ -84,13 +88,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
         kRSAdobe_Japan1_6: fields.kRSAdobe_Japan1_6?.split(" ") || [],
         kRSUnicode: fields.kRSUnicode?.split(" ") || [],
       }),
-      action: async (batch) => {
-        const created = await prisma.unihan15.createMany({
-          data: batch,
-        });
-
-        console.log(`          ${created.count} created.`);
-      },
+      action: (data) => prisma.unihan15.createMany({ data }),
     });
 
     await executeAndLogTime("connecting readings", async () => {
@@ -100,7 +98,7 @@ export async function seedUnihan15(prisma: PrismaClient, force = false) {
       for (const readingId of allReadings) {
         const reading = dbInput.get(readingId);
         if (reading) {
-          if (reading.kRSUnicode.includes(" "))
+          if (verbose && reading.kRSUnicode.includes(" "))
             console.log(
               `Found more than one radical for ${readingId}: ${reading.kRSUnicode}`,
             );

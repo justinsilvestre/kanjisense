@@ -21,7 +21,7 @@ export async function seedKanjiDbComposition(
 
     await prisma.kanjiDbComposition.deleteMany({});
     await inBatchesOf({
-      count: 500,
+      batchSize: 500,
       collection: dbInput,
       getBatchItem: (entry) => entry[1],
       action: async (batch) => {

@@ -5,14 +5,14 @@ export type BatchCollection<T> =
   | T[];
 
 interface BatchOptions<T, V, U> {
-  count: number;
+  batchSize: number;
   collection: BatchCollection<T>;
   getBatchItem?: (item: T) => U;
   action: (batch: U[]) => Promise<V>;
 }
 
 export async function inBatchesOf<T, V, U = T>({
-  count,
+  batchSize,
   collection,
   getBatchItem = (x: T): U => x as unknown as U,
   action,
@@ -20,7 +20,7 @@ export async function inBatchesOf<T, V, U = T>({
   const collectionSize =
     "length" in collection ? collection.length : collection.size;
   const totalStartTime = Date.now() / 1000;
-  const totalBatches = Math.ceil(collectionSize / count);
+  const totalBatches = Math.ceil(collectionSize / batchSize);
 
   let itemIndex = 0;
   let batchIndex = 0;
@@ -29,7 +29,7 @@ export async function inBatchesOf<T, V, U = T>({
     batch.push(getBatchItem(item));
     itemIndex++;
 
-    if (batch.length === count || itemIndex === collectionSize) {
+    if (batch.length === batchSize || itemIndex === collectionSize) {
       const batchStartTime = Date.now() / 1000;
       await action(batch);
       console.log(

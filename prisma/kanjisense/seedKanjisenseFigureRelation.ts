@@ -85,7 +85,7 @@ export async function seedKanjisenseFigureRelation(
       `Analyzing ${baseKanji.length} base kanji`,
       async () => {
         await inBatchesOf({
-          count: 250,
+          batchSize: 250,
           collection: [...baseKanji],
           action: async (batch) => {
             analyzeFiguresRelations(
@@ -145,7 +145,7 @@ export async function seedKanjisenseFigureRelation(
       `Analyzing ${allKanjidicCharacters.length} kanjidic characters`,
       async () => {
         await inBatchesOf({
-          count: 250,
+          batchSize: 250,
           collection: allKanjidicCharacters,
           action: async (batch) => {
             await analyzeFiguresRelations(
@@ -165,7 +165,7 @@ export async function seedKanjisenseFigureRelation(
 
     await prisma.kanjisenseFigureRelation.deleteMany({});
     await inBatchesOf({
-      count: 1000,
+      batchSize: 1000,
       collection: dbInput,
       getBatchItem: ([, r]) => ({
         id: r.id,

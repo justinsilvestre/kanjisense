@@ -61,7 +61,7 @@ export async function seedKanjiDbCharacterDerivations(
     await prisma.kanjiDbCharacterDerivation.deleteMany({});
 
     await inBatchesOf({
-      count: 500,
+      batchSize: 500,
       collection: dbInput,
       getBatchItem: ([, { character, chain }]) => ({
         character,
