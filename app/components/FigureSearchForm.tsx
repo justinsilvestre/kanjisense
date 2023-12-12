@@ -110,7 +110,7 @@ export function FigureSearchForm({
   return (
     <form className={`${className}`} onSubmit={handleSubmit}>
       <ComboBox
-        searchState={searchFetcher}
+        fetcher={searchFetcher}
         comboBox={comboBox}
         items={searchResults}
         queries={lastSearchText}
@@ -139,14 +139,14 @@ function ComboBox({
   items,
   queries,
   children,
-  searchState: searchLoader,
+  fetcher,
   searchIsPending,
   lastSearchText,
 }: PropsWithChildren<{
   comboBox: ReturnType<typeof useCombobox<FigureSearchResult>>;
   items: FigureSearchResult[];
   queries: string[];
-  searchState: ReturnType<typeof useFetcher<DictSearchLoaderData>>;
+  fetcher: ReturnType<typeof useFetcher<DictSearchLoaderData>>;
   searchIsPending?: boolean;
   lastSearchText?: string;
 }>) {
@@ -180,7 +180,6 @@ function ComboBox({
               {...getInputProps()}
             />
             <FigureSearchResultsList
-              // className={!isOpen ? "hidden" : ""}
               className={clsx(!isOpen && "hidden")}
               isOpen={isOpen}
               inputValue={lastSearchText || ""}
@@ -189,7 +188,7 @@ function ComboBox({
               getMenuProps={getMenuProps}
               findMatchingQuery={findMatchingQuery}
               findExactMatchingQuery={findExactMatchingQuery}
-              searchLoader={searchLoader}
+              fetcher={fetcher}
               searchIsPending={searchIsPending}
               items={items}
             />

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { PrismaClient } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,
@@ -25,6 +25,10 @@ import {
   badgeFigureSelect,
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
+
+export const meta: MetaFunction = () => [
+  { title: "The ~300 atomic kanji components | Kanjisense" },
+];
 
 type LoaderData = Awaited<ReturnType<typeof getAtomicFigureBadgeFigures>>;
 

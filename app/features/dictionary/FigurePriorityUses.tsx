@@ -1,4 +1,5 @@
 import { useFetcher } from "@remix-run/react";
+import clsx from "clsx";
 
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
@@ -23,7 +24,7 @@ export function FigurePriorityUses({
   className?: string;
 }) {
   const {
-    fetcher: { data: fetcherData },
+    fetcher: { data: fetcherData, state: fetcherState },
     getFigurePriorityUses,
   } = useComponentUsesFetcher(componentFigure.id);
 
@@ -97,19 +98,38 @@ export function FigurePriorityUses({
 
         {!fetcherData?.firstClassUses && count > PRELOADED_USES_COUNT ? (
           <li
-            className="flex flex-grow flex-row items-center justify-center self-center [flex-basis:6rem] [height:5rem] hover:text-orange-600 hover:underline"
+            className={clsx(
+              "flex flex-grow flex-row items-center justify-center self-center [flex-basis:6rem] [height:5rem]",
+              fetcherState === "idle"
+                ? "hover:text-orange-600 hover:underline"
+                : null,
+            )}
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
             role="button"
-            onClick={() => getFigurePriorityUses()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                getFigurePriorityUses();
-              }
-            }}
+            onClick={
+              fetcherState === "idle"
+                ? () => getFigurePriorityUses()
+                : undefined
+            }
+            onKeyDown={
+              fetcherState === "idle"
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      getFigurePriorityUses();
+                    }
+                  }
+                : undefined
+            }
           >
             <div>
-              + <strong>{count - PRELOADED_USES_COUNT}</strong> more
+              {fetcherState === "idle" ? (
+                <>
+                  + <strong>{count - PRELOADED_USES_COUNT}</strong> more
+                </>
+              ) : (
+                <span className=" animate-pulse text-black/80">loading...</span>
+              )}
             </div>
           </li>
         ) : (

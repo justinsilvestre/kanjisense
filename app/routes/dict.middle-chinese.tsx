@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import { MetaFunction } from "@remix-run/node";
 import { PropsWithChildren, ReactNode, SetStateAction, useState } from "react";
 
 import {
@@ -11,6 +12,9 @@ import { useTocHighlighting } from "~/components/useTocHighlighting";
 import css from "~/features/dictionary/middle-chinese.css";
 import { G } from "~/features/dictionary/QysHints";
 
+export const meta: MetaFunction = () => [
+  { title: "What do I care about Middle Chinese? | Kanjisense" },
+];
 export const links = () => [{ rel: "stylesheet", href: css }];
 
 const SectionId = {
@@ -496,8 +500,9 @@ export default function MiddleChinese() {
             </div>
           </section>
           <p>
+            More on the Middle Chinese notation used in Kanjisense in{" "}
             <MiddleChineseTranscriptionLink>
-              More on the Middle Chinese notation used in Kanjijump
+              A Rough Guide to Middle Chinese Pronunciation
             </MiddleChineseTranscriptionLink>
           </p>
         </main>

@@ -1,6 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import {
+  MetaFunction,
+  isRouteErrorResponse,
+  useRouteError,
+} from "@remix-run/react";
 import {
   ReactNode,
   useState,
@@ -25,6 +29,10 @@ import { References } from "../features/qysInfo/References";
 import { ScrollLink } from "../features/qysInfo/ScrollLink";
 import { SectionIds } from "../features/qysInfo/SectionIds";
 import { Vowels } from "../features/qysInfo/Vowels";
+
+export const meta: MetaFunction = () => [
+  { title: "Middle Chinese pronunciation | Kanjisense" },
+];
 
 export const links = () => [{ rel: "stylesheet", href: css }];
 

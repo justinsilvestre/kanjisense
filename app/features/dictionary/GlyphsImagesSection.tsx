@@ -79,7 +79,7 @@ export function GlyphsImagesSection({
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
           className={clsx(
-            `[border:2px inset #afafaf33]  z-30 -m-2 bg-neutral-50/95 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]  `,
+            `[border:2px inset #afafaf33] z-30 -m-2 max-w-[95vw] bg-neutral-50/95 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]  `,
             popper.animationClassName,
             " backdrop-blur-md",
           )}
@@ -98,7 +98,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [width:5rem] [height:5rem]"
+                  className="mb-3 inline-block [height:5rem] [width:5rem]"
                 >
                   <path d={glyphsJson.ns} />
                 </svg>
@@ -110,7 +110,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 0 200 200"
-                  className="mb-3 inline-block [width:5rem] [height:5rem]"
+                  className="mb-3 inline-block [height:5rem] [width:5rem]"
                 >
                   <path d={glyphsJson.gw} />
                 </svg>
@@ -122,7 +122,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [width:5rem] [height:5rem]"
+                  className="mb-3 inline-block [height:5rem] [width:5rem]"
                 >
                   <path d={glyphsJson.twk} />
                 </svg>
@@ -134,7 +134,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [width:5rem] [height:5rem]"
+                  className="mb-3 inline-block [height:5rem] [width:5rem]"
                 >
                   <path d={glyphsJson.kk} />
                 </svg>

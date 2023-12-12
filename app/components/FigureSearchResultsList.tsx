@@ -16,7 +16,7 @@ export function FigureSearchResultsList({
   highlightedIndex,
   findMatchingQuery,
   findExactMatchingQuery,
-  searchLoader,
+  fetcher,
   searchIsPending,
   getItemProps,
   getMenuProps,
@@ -34,20 +34,30 @@ export function FigureSearchResultsList({
   >["getMenuProps"];
   findMatchingQuery: (text: string) => string | undefined;
   findExactMatchingQuery: (text: string) => string | undefined;
-  searchLoader: FetcherWithComponents<DictSearchLoaderData>;
+  fetcher: FetcherWithComponents<DictSearchLoaderData>;
   searchIsPending?: boolean;
   items: FigureSearchResult[];
   className?: string;
 }) {
   return (
     <ul
-      key={searchLoader.state}
+      key={fetcher.state}
       className={clsx(
         `absolute top-9 z-30 mt-1 max-h-[70vh] w-full overflow-auto bg-white p-0 shadow-md `,
         className,
       )}
       {...getMenuProps?.()}
     >
+      {fetcher.data?.error ? (
+        <li className="px-3 py-2 shadow-sm">
+          <div className="flex flex-row gap-2 p-4">
+            <span className="text-sm text-gray-700">
+              There was a problem. Please try again later. Error:{" "}
+              <span className="text-red-800">{fetcher.data.error}</span>
+            </span>
+          </div>
+        </li>
+      ) : null}
       {isOpen
         ? items
             .sort((a, b) => {
@@ -100,10 +110,7 @@ export function FigureSearchResultsList({
             })
         : null}
 
-      {isOpen &&
-      !items.length &&
-      searchLoader.data &&
-      !searchLoader.data?.error ? (
+      {isOpen && !items.length && fetcher.data && !fetcher.data?.error ? (
         <li className="px-3 py-2 shadow-sm">
           <div className="flex flex-row gap-2 p-4">
             <span className="text-sm text-gray-700">

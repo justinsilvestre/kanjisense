@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { PrismaClient } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,
@@ -32,6 +32,10 @@ import {
   joyoNotInKyoiku,
   kyoikuKanji,
 } from "~/lib/baseKanji";
+
+export const meta: MetaFunction = () => [
+  { title: "The ~3500 most important kanji | Kanjisense" },
+];
 
 interface LoaderData {
   characters: Record<string, BadgeProps>;
