@@ -1,3 +1,4 @@
+import { DictLink } from "~/components/AppLink";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 
 export function DictionaryHeadingMeanings({
@@ -23,7 +24,10 @@ export function DictionaryHeadingMeanings({
             <>
               {" "}
               ({headingsMeanings.componentMnemonic.referenceTypeText}{" "}
-              {headingsMeanings.componentMnemonic.reference})
+              <DictLink
+                figureId={headingsMeanings.componentMnemonic.reference}
+              />
+              )
             </>
           ) : null}
         </h1>

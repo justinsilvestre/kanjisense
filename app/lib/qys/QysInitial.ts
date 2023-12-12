@@ -27,7 +27,7 @@ export const QYS_INITIALS = {
   章: "tś",
   昌: "tśʻ",
   常: "dź",
-  日: "nj",
+  日: "nź",
   書: "ś",
   船: "ź",
   以: "y",

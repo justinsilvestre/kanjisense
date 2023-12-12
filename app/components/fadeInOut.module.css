@@ -16,3 +16,8 @@
 .fadeIn {
   animation: fadeIn 0.3s;
 }
+
+.fadeOut {
+  opacity: 0;
+  transition: opacity 0.3s;
+}

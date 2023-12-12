@@ -79,21 +79,19 @@ export function useFigurePopover({
   const popper = usePaddedPopper();
   const { setReferenceElement, isOpen, open, close, update } = popper;
 
-  const { fetcher, loadFigure } = usePopoverFigureFetcher();
+  const { fetcher, loadFigure, badgeProps } =
+    usePopoverFigureFetcher(initialBadgeProps);
 
-  const figure = fetcher.data?.figure;
-  const badgeProps = figure ? getBadgeProps(figure) : initialBadgeProps;
-
-  const [loadingBadgeProps, setLoadingBadgeProps] = useState(badgeProps);
+  const fetchedFigure = fetcher.data?.figure;
 
   useEffect(() => {
-    if (figure?.id) {
-      console.log(`New figure loaded: ${figure.id}`, { update });
+    if (fetchedFigure?.id) {
       update?.();
     }
-  }, [figure?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchedFigure?.id]);
 
-  const popperFigureId = figure?.id || badgeProps?.id;
+  const popperFigureId = fetchedFigure?.id || badgeProps?.id;
   const getAnchorAttributes = (badgeProps?: BadgeProps | null) => ({
     className: `${className}`,
     ref: setReferenceElement,
@@ -102,27 +100,22 @@ export function useFigurePopover({
         console.warn(`No badge props for figure ${popperFigureId}`);
         return;
       }
+      console.log(`Loading badge props ${badgeProps.id}`);
       if (isOpen) {
         close();
-        setLoadingBadgeProps(badgeProps);
         loadFigure(badgeProps.id);
       } else {
-        setLoadingBadgeProps(badgeProps);
         loadFigure(badgeProps.id);
-
         open();
       }
     },
   });
 
   return {
-    figure,
+    figure: fetchedFigure,
     loadFigure,
     fetcher,
-    badgeProps:
-      fetcher.state === "loading" && loadingBadgeProps
-        ? loadingBadgeProps
-        : badgeProps,
+    badgeProps,
     popperFigureId,
     getAnchorAttributes,
     popper,
@@ -137,7 +130,7 @@ export function FigurePopoverWindow({
   fetcher,
 }: {
   badgeProps?: BadgeProps | null;
-  loadFigure: (figureToFetchId: string) => void;
+  loadFigure: ReturnType<typeof usePopoverFigureFetcher>["loadFigure"];
   figure: PopoverFigure | undefined;
   popper: ReturnType<typeof usePaddedPopper>;
   fetcher: ReturnType<typeof usePopoverFigureFetcher>["fetcher"];
@@ -155,7 +148,7 @@ export function FigurePopoverWindow({
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className={clsx(
-        `[border:2px inset #afafaf33] pointer-events-auto max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30 backdrop-blur-sm  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]`,
+        `[border:2px inset #afafaf33] pointer-events-auto z-20 max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
       )}
       ref={setPopperElement}
       style={styles.popper}
@@ -183,18 +176,15 @@ export function FigurePopoverWindow({
         {!loading && firstClassComponents?.length ? (
           <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
             {firstClassComponents.map((c, i) => (
-              <div
+              <a
                 key={c.component.id + String(i)}
                 className="inline-flex cursor-pointer items-center"
-                onClick={() => loadFigure(c.component.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    loadFigure(c.component.id);
-                  }
+                onClick={(e) => {
+                  e.preventDefault();
+                  loadFigure(c.component.id, getBadgeProps(c.component));
                 }}
+                role="button"
+                href={`/dict/${c.component.id}`}
               >
                 <FigureBadge
                   badgeProps={getBadgeProps(c.component)}
@@ -204,7 +194,7 @@ export function FigurePopoverWindow({
                 <span className="i align-middle">
                   <FigureKeywordDisplay figure={c.component} />
                 </span>
-              </div>
+              </a>
             ))}
           </div>
         ) : null}
@@ -250,17 +240,29 @@ export function FigurePopoverWindow({
   );
 }
 
-export function usePopoverFigureFetcher() {
+export function usePopoverFigureFetcher(initialBadgeProps?: BadgeProps | null) {
   const fetcher = useFetcher<DictPreviewLoaderData>();
+  const [loadingBadgeProps, setLoadingBadgeProps] = useState(initialBadgeProps);
+
+  const fetchedFigure = fetcher.data?.figure;
+  const fetchedBadgeProps = fetchedFigure && getBadgeProps(fetchedFigure);
+  useEffect(() => {
+    if (fetchedFigure?.id) {
+      setLoadingBadgeProps(null);
+    }
+  }, [fetchedFigure?.id]);
 
   return {
     fetcher,
-
-    loadFigure(figureToFetchId: string) {
+    badgeProps: loadingBadgeProps || fetchedBadgeProps || initialBadgeProps,
+    loadFigure(figureToFetchId: string, badgeProps?: BadgeProps | null) {
       if (
         (!fetcher.data || fetcher.data.figure?.id !== figureToFetchId) &&
         fetcher.state === "idle"
       ) {
+        if (badgeProps) {
+          setLoadingBadgeProps(badgeProps);
+        }
         fetcher.load(`/dict/${figureToFetchId}/preview`);
       }
     },

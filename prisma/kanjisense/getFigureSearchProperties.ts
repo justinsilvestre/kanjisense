@@ -128,15 +128,15 @@ export function getFigureSearchProperties(
           ),
         );
       }
-      if (mnemonic) {
-        addSearchProperty(
-          SearchPropertySpecs.create(
-            FigureSearchPropertyType.MNEMONIC_ENGLISH,
-            mnemonic,
-            enIndex,
-          ),
-        );
-      }
+    }
+    if (mnemonic) {
+      addSearchProperty(
+        SearchPropertySpecs.create(
+          FigureSearchPropertyType.MNEMONIC_ENGLISH,
+          mnemonic,
+          enIndex,
+        ),
+      );
     }
 
     if (variants?.length) {

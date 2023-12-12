@@ -177,10 +177,10 @@ export default function MiddleChinese() {
               . In fact, the same goes for <b>Korean and Vietnamese</b>, as both
               of those languages take around half of their entire vocabularies
               from Chinese, just as Japanese does. In other words, by answering
-              these questions, you can actually gain the ability to take any
-              Japanese word written in kanji and{" "}
-              <strong>guess how it might be pronounced</strong> in Chinese,
-              Korean, or Vietnamese! (This can work vice-versa, as well.)
+              these questions, you can gain the ability to take any Japanese
+              word written in kanji and <b>guess how it's pronounced</b> in
+              Chinese, Korean, or Vietnamese! (This can work vice-versa, as
+              well.)
             </p>
           </section>
           <section id="onyomi" className="mb-10">
@@ -396,22 +396,22 @@ export default function MiddleChinese() {
             <p>
               The last piece of the puzzle lies in the sound changes that
               happened within the Japanese language. These "historical{" "}
-              <i>on'yomi</i>"" here give you an approximation of the Japanese
+              <i>on'yomi</i>" here give you an approximation of the Japanese
               pronunciation around the Heian period, when a huge portion of the
               Middle Chinese readings were first introduced to Japan. It's the
-              Japanese of this period that served as the basis of Japanese
-              spelling all the way up until 1945, when the Japanese writing
-              system was reformed. So if you were to take a kanji and write out
-              its <i>on'yomi</i> in kana this way, then you'd end up with
-              something that looks a lot like pre-war Japanese.
+              language of this period that served as the basis of Japanese
+              spelling all the way up until 1945, when the writing system
+              underwent its last major reform. So if you were to take a kanji
+              and write out its <i>on'yomi</i> in kana this way, then you'd end
+              up with something that looks a lot like pre-war Japanese.
             </p>
             <p>
               This spelling isn't used in everyday life anymore, but it's still
-              something that Japanese people are taught it in school, when they
-              study classical literature. So an awareness of sound changes like
-              this, where the /au/ became pronounced like /ou/, is actually
-              something that could eventually come in handy, if you have any
-              interest in reading some very old texts.
+              something that Japanese people learn in school, when they study
+              classical literature. So an awareness of sound changes like this,
+              where the /au/ became pronounced like /ou/, is actually something
+              that could eventually come in handy, if you have any interest in
+              reading some very old texts.
             </p>
             <p>
               Of course, I can't pretend like the real reason you should be

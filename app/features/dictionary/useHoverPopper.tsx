@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 
+import fadeInOutStyles from "~/components/fadeInOut.module.css";
 import { PopperOptions, usePaddedPopper } from "~/components/usePaddedPopper";
 
 export function useHoverPopper(options: PopperOptions) {
@@ -30,14 +31,39 @@ export function useHoverPopper(options: PopperOptions) {
     }, 300);
   };
 
+  const onBlur: React.FocusEventHandler = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      console.log("blur");
+      close();
+    }
+  };
+
   return {
     ...popper,
     isClosing,
     open: open,
     close: close,
-    handleMouseEnter: open,
-    handleMouseLeave: close,
-    handleFocus: open,
-    handleBlur: close,
+    animationClassName: isClosing
+      ? fadeInOutStyles.fadeOut
+      : fadeInOutStyles.fadeIn,
+
+    openEventHandlers: {
+      onMouseMove: () => {
+        !popper.isOpen ? open() : undefined;
+      },
+      onMouseDown: (e: React.MouseEvent) => {
+        if (popper.isOpen) {
+          close();
+          e.preventDefault();
+        } else open();
+      },
+      onFocus: () => {
+        open();
+      },
+      onMouseLeave: () => {
+        close();
+      },
+      onBlur,
+    },
   };
 }

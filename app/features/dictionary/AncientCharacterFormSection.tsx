@@ -1,7 +1,32 @@
-import { createPortal } from "react-dom";
+import clsx from "clsx";
+import { Fragment } from "react";
+
+import { PopperOptions } from "~/components/usePaddedPopper";
 
 import { useHoverPopper } from "./useHoverPopper";
 
+const popperOptions: PopperOptions = {
+  placement: "auto",
+  modifiers: [
+    {
+      name: "preventOverflow",
+      options: {
+        mainAxis: true,
+        altAxis: true,
+        tether: false,
+        padding: 4,
+      },
+    },
+    {
+      name: "offset",
+      options: {
+        offset: ({ popper, reference }) => {
+          return [-popper.width / reference.width, -popper.height / 2];
+        },
+      },
+    },
+  ],
+};
 export function AncientCharacterFormSection({
   svgPaths: paths,
   className,
@@ -9,59 +34,73 @@ export function AncientCharacterFormSection({
   svgPaths: string[];
   className?: string;
 }) {
-  const popper = useHoverPopper({});
+  const popper = useHoverPopper(popperOptions);
 
   return (
     <div
-      className={`align-center relative flex flex-col justify-center gap-4 text-center ${className}`}
+      className={clsx(
+        `align-center relative flex flex-col justify-center gap-4 text-center`,
+
+        className,
+      )}
       ref={popper.setReferenceElement}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}
-      role="tooltip"
-      onMouseEnter={popper.handleMouseEnter}
-      onMouseLeave={popper.handleMouseLeave}
-      onFocus={popper.handleFocus}
-      onBlur={popper.handleBlur}
+      {...popper.openEventHandlers}
     >
       <div>
         {paths.map((path) => (
           <div
             key={path}
-            className="inline-block rounded-md border-2 border-solid border-red-900/80 [height:3rem] [width:3rem]"
+            className="m-1 inline-block rounded-md border-2 border-solid border-red-900/80 [height:3rem] [width:3rem]"
           >
             <ShuowenSvg path={path} />
           </div>
         ))}
       </div>
-      {popper.isOpen
-        ? createPortal(
-            <div
-              className={`[border:2px inset #afafaf33] -m-2 p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [overflow-y:auto]  [background-color:rgba(247,247,247,0.95)] [width:18rem] md:max-w-xl`}
-              ref={popper.setPopperElement}
-              style={popper.styles.popper}
-              {...popper.attributes.popper}
-            >
-              <p className="mb-4">
-                These ancient &quot;seal script&quot; character forms are
-                provided here to help you understand the evolution of the kanji.
-                They are mostly obsolete, but can still be found on <i>hanko</i>{" "}
-                seals (stamps) used in Japan as a way of signing documents.
-              </p>
-              <p className="mb-4">
-                The seal script characters shown here are based on the writing
-                of the Qin dynasty (ca. 200{" "}
-                <span className="[font-variant:small-caps]">BCE</span>), when
-                Chinese writing was first standardized. They are taken from the
-                ancient character dictionary 說文解字 <i>Shuowen Jiezi</i>{" "}
-                (Japanese: <i>Setsumon Kaiji</i>
-                ), which was compiled a couple centuries later, during the
-                Eastern Han dynasty (25-206{" "}
-                <span className="[font-variant:small-caps]">CE</span>).
-              </p>
-            </div>,
-            document.getElementById("overlay") || document.body,
-          )
-        : null}
+      {popper.isOpen ? (
+        <div
+          className={clsx(
+            `[border:2px inset #afafaf33]  z-30 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [background-color:rgba(247,247,247,0.95)]  [overflow-y:auto] [width:18rem] md:max-w-7xl`,
+            popper.animationClassName,
+          )}
+          ref={popper.setPopperElement}
+          style={popper.styles.popper}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+          tabIndex={0}
+          {...popper.attributes.popper}
+        >
+          <p className="mb-4 text-sm">
+            These ancient <strong>&quot;seal script&quot;</strong> character
+            forms are provided here to help you understand the{" "}
+            <strong>historical evolution of the kanji</strong>. They are mostly
+            obsolete, but can still be found on <i>hanko</i> seals (stamps) used
+            in Japan as a way of signing documents.
+          </p>
+          <div className="mx-auto mb-4 text-center">
+            {paths.map((path) => (
+              <Fragment key={path}>
+                <div className="inline-block rounded-md border-2 border-solid border-red-900/80 bg-white [height:7rem] [width:7rem]">
+                  <ShuowenSvg path={path} />
+                </div>
+                {paths.length > 1 ? " " : null}
+              </Fragment>
+            ))}
+          </div>
+
+          <p className="mb-4 text-sm">
+            The seal script forms in Kanjisense are based on the writing of the
+            Qin dynasty (ca. 200{" "}
+            <span className="[font-variant:small-caps]">BCE</span>), when
+            Chinese writing was first standardized. They are taken from the
+            ancient character dictionary 說文解字 <i>Shuowen Jiezi</i>{" "}
+            (Japanese: <i>Setsumon Kaiji</i>
+            ), which was compiled a couple centuries later, during the Eastern
+            Han dynasty (25-206{" "}
+            <span className="[font-variant:small-caps]">CE</span>).
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

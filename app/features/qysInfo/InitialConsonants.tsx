@@ -563,9 +563,9 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td>日 njīt</td>
+                <td>日 nźīt</td>
                 <td>
-                  <G g="nj" bold />
+                  <G g="nź" bold />
                 </td>
                 <td>
                   <ConsonantHints.Nj />
@@ -969,8 +969,8 @@ export function InitialConsonants({
             vowel, causing some{" "}
             <ScrollLink hash="tones">tonal splits and mergers</ScrollLink>. The
             comparison to Korean consonants may be especially apt, as these
-            Korean "voiced" or "breathy" also have the effect of lowering the
-            pitch of following vowels, and have merged recently with their
+            Korean "voiced" or "breathy" sounds also have the effect of lowering
+            the pitch of following vowels, and have merged recently with their
             unvoiced aspirated counterparts.
           </p>
         </section>

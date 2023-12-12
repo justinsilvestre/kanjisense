@@ -31,10 +31,7 @@ type LoaderData =
 
 export const meta: MetaFunction<typeof loader> = (a) => [
   {
-    title:
-      [...(a.params.figureId || "")].length === 1
-        ? `${a.params.figureId} | Kanjisense`
-        : "Kanjisense",
+    title: getPageTitle(a.params.figureId, a.data.searchedFigure),
   },
 ];
 
@@ -66,6 +63,21 @@ export const loader: LoaderFunction = async ({ params }) => {
     searchedFigure,
   });
 };
+
+function getPageTitle(
+  figureId: string | null | undefined,
+  figure: DictionaryPageSearchedFigure,
+): unknown | string {
+  if ([...(figureId || "")].length === 1)
+    return `${figureId} - definition, components, readings, and more | Kanjisense`;
+  if (!figure)
+    return `Character definitions, components, readings, and more | Kanjisense`;
+  const keyword =
+    figure.mnemonicKeyword && figure.mnemonicKeyword !== figure.keyword
+      ? JSON.stringify(figure.mnemonicKeyword)
+      : figure.keyword;
+  return `${keyword} - definition, components, readings, and more | Kanjisense`;
+}
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();

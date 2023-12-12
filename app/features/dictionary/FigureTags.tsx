@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import clsx from "clsx";
 import { PropsWithChildren } from "react";
-import { createPortal } from "react-dom";
 
 import {
   BrowseAtomicComponentsLink,
@@ -47,8 +46,8 @@ export function FigureTags({
       />
       {isPriorityComponent && !isStandaloneCharacter ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
-          popoverContent={
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
                 Figures shown inside ○ <strong>circles</strong> throughout
@@ -64,15 +63,15 @@ export function FigureTags({
                 </BrowseCharactersLink>
               </PopoverBottom>
             </>
-          }
+          )}
         >
           ○ component only
         </FigureTag>
       ) : null}
       {isStandaloneCharacter && !isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
-          popoverContent={
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
                 Kanji shown inside □ <strong>squares</strong> throughout
@@ -97,15 +96,15 @@ export function FigureTags({
                 </BrowseCharactersLink>
               </PopoverBottom>
             </>
-          }
+          )}
         >
           □ character only
         </FigureTag>
       ) : null}
       {isStandaloneCharacter && isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
-          popoverContent={
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
                 Figures shown inside a combined ○ <strong>circle</strong> and □{" "}
@@ -123,7 +122,7 @@ export function FigureTags({
                 </BrowseCharactersLink>
               </PopoverBottom>
             </>
-          }
+          )}
         >
           □ character + ○ component
         </FigureTag>
@@ -131,20 +130,20 @@ export function FigureTags({
       {variantGroupId && variantGroupId !== id ? (
         <FigureTag
           className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline  outline-1 -outline-offset-2 [padding-top:0.1rem]`}
-          popoverContent={
+          popoverContent={() => (
             <VariantPopoverContent
               isStandaloneCharacter={isStandaloneCharacter}
               primaryVariantId={variantGroupId}
             />
-          }
+          )}
         >
           variant
         </FigureTag>
       ) : null}
       {isAtomic ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold  uppercase text-white [padding-top:0.1rem]`}
-          popoverContent={
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          popoverContent={() => (
             <>
               The {TOTAL_ATOMIC_COMPONENTS_COUNT} atomic components are the
               &quot;atoms&quot; that come together in various combinations to
@@ -159,7 +158,7 @@ export function FigureTags({
                 </BrowseAtomicComponentsLink>
               </PopoverBottom>
             </>
-          }
+          )}
         >
           ☆ atomic
         </FigureTag>
@@ -167,7 +166,7 @@ export function FigureTags({
       {isPrioritySoundMark ? (
         <FigureTag
           className={`rounded-sm border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
-          popoverContent={
+          popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
                 This component is a <strong>sound indicator</strong>. Kanji
@@ -183,7 +182,7 @@ export function FigureTags({
                 </BrowseCompoundComponentsLink>
               </PopoverBottom>
             </>
-          }
+          )}
         >
           sound mark
         </FigureTag>
@@ -193,7 +192,7 @@ export function FigureTags({
 }
 
 const popperOptions: PopperOptions = {
-  placement: "bottom-start",
+  placement: "bottom",
   modifiers: [
     {
       name: "preventOverflow",
@@ -213,7 +212,7 @@ function FigureTag({
 }: {
   children: React.ReactNode;
   className?: string;
-  popoverContent: React.ReactNode;
+  popoverContent: () => React.ReactNode;
 }) {
   const {
     setReferenceElement,
@@ -221,47 +220,42 @@ function FigureTag({
     attributes,
     styles,
     isOpen,
-    open: openPopper,
-    close: closePopper,
+    openEventHandlers,
     isClosing,
   } = useHoverPopper(popperOptions);
 
   return (
     <>
       <li
-        className={`${className} cursor-default`}
+        className={clsx(" cursor-default", className)}
+        {...openEventHandlers}
         ref={setReferenceElement}
-        onMouseEnter={!isOpen ? openPopper : undefined}
-        onClick={(e) => {
-          e.preventDefault();
-          if (isOpen) closePopper();
-          else openPopper();
-        }}
-        onMouseLeave={closePopper}
-        onFocus={openPopper}
-        onBlur={closePopper}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}
       >
-        {children}
-        {isOpen
-          ? createPortal(
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-              <div
-                className={clsx(
-                  `[border:2px inset #afafaf33] pointer-events-auto bg-white p-3 text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-xl`,
-                  !isClosing && fadeInOutStyles.fadeIn,
-                  isClosing && "opacity-0 transition-opacity duration-300",
-                )}
-                ref={setPopperElement}
-                style={styles.popper}
-                {...attributes.popper}
-              >
-                {popoverContent}
-              </div>,
-              document.getElementById("overlay") || document.body,
-            )
-          : null}
+        <span
+          className={clsx(
+            "[transition-duration:100ms]  [transition-property:transform] hover:[transform:scale(1.03)] ",
+          )}
+        >
+          {children}
+        </span>
+        {isOpen ? (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+          <div
+            className={clsx(
+              " [color:initial] ",
+              `  pointer-events-auto fixed z-30  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] [width:18rem]  [border:2px_inset_#afafaf33] [text-transform:none] md:max-w-xl`,
+              !isClosing && fadeInOutStyles.fadeIn,
+              isClosing && "opacity-0 transition-opacity duration-300",
+            )}
+            ref={setPopperElement}
+            style={styles.popper}
+            {...attributes.popper}
+          >
+            {popoverContent()}
+          </div>
+        ) : null}
       </li>
     </>
   );
@@ -290,11 +284,11 @@ function ListTags({
       key={kyoiku}
       code={kyoiku}
       className={className}
-      popoverContent={
+      popoverContent={() => (
         <KyoikuTagPopoverContent
           isStandaloneCharacter={isStandaloneCharacter}
         />
-      }
+      )}
     />
   );
   if (isStandaloneCharacter) {
@@ -307,12 +301,12 @@ function ListTags({
             key={listCode}
             code={listCode}
             className={className}
-            popoverContent={
+            popoverContent={() => (
               <KanjiListTagPopoverContent
                 listCode={listCode}
                 isStandaloneCharacter={isStandaloneCharacter}
               />
-            }
+            )}
           />
         ),
       ),
@@ -324,9 +318,9 @@ function ListTags({
       <KanjiListTag
         code="j"
         className={className}
-        popoverContent={
+        popoverContent={() => (
           <JoyoTag isStandaloneCharacter={isStandaloneCharacter} />
-        }
+        )}
       />
     );
   if (lists.includes("h") && lists.includes("m"))
@@ -334,9 +328,11 @@ function ListTags({
       <KanjiListTag
         code="h"
         className={className}
-        popoverContent={HyogaiJinmeiyoTagPopoverContent({
-          isStandaloneCharacter,
-        })}
+        popoverContent={() =>
+          HyogaiJinmeiyoTagPopoverContent({
+            isStandaloneCharacter,
+          })
+        }
       />
     );
   else if (lists.includes("h"))
@@ -344,11 +340,11 @@ function ListTags({
       <KanjiListTag
         code="h"
         className={className}
-        popoverContent={
+        popoverContent={() => (
           <HyogaiTagPopoverContent
             isStandaloneCharacter={isStandaloneCharacter}
           />
-        }
+        )}
       />
     );
 
@@ -357,11 +353,11 @@ function ListTags({
       <KanjiListTag
         code="m"
         className={className}
-        popoverContent={
+        popoverContent={() => (
           <JinmeiyoTagPopoverContent
             isStandaloneCharacter={isStandaloneCharacter}
           />
-        }
+        )}
       />
     );
   return null;
@@ -489,8 +485,9 @@ function JoyoTag({
       <p className="mb-3 mt-0">
         This {!isStandaloneCharacter ? "component is used within" : "is one of"}{" "}
         the <i>Jōyō Kanji</i> or &quot;General Use Kanji&quot;. These are the{" "}
-        {JOYO_COUNT} characters which form part of the Japanese high school
-        curriculum and are approved for use in official government documents.
+        {JOYO_COUNT.toLocaleString()} characters which form part of the Japanese
+        high school curriculum and are approved for use in official government
+        documents.
       </p>
       <p className="mb-3 mt-0">
         {!isStandaloneCharacter ? "Components like these" : "The Jōyō Kanji"}{" "}
@@ -514,7 +511,7 @@ function KanjiListTag({
 }: {
   code: KanjiListCode;
   className?: string;
-  popoverContent: React.ReactNode;
+  popoverContent: () => React.ReactNode;
 }) {
   switch (code) {
     case "1":

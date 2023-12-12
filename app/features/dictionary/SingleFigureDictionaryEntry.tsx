@@ -25,6 +25,7 @@ import { ExternalDictionaryLinks } from "./ExternalDictionaryLinks";
 import { FigurePriorityUses } from "./FigurePriorityUses";
 import { FigureStrokesAnimation } from "./FigureStrokesAnimation";
 import { FigureTags } from "./FigureTags";
+import { GlyphsImagesSection } from "./GlyphsImagesSection";
 import { GlyphsJson } from "./GlyphsJson";
 import { kangxiRadicals } from "./kangxiRadicals";
 import kvgStyles from "./kvg.css";
@@ -69,9 +70,10 @@ export function SingleFigureDictionaryEntry({
           <div className="SingleFigureDictionaryEntry_topLeft flex flex-grow basis-1/3 flex-col  items-center gap-4 [min-width:15.05rem]">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-              tabIndex={0}
+              tabIndex={kvgImage ? 0 : -1}
               className={clsx(
-                "group relative cursor-pointer [height:15.05em] [width:15.05em]",
+                "group relative  [height:15.05em] [width:15.05em]",
+                kvgImage ? "cursor-pointer" : null,
               )}
               onClick={() => setAnimationIsShowing((b) => !b)}
               role="img"
@@ -136,44 +138,7 @@ export function SingleFigureDictionaryEntry({
             }
             {isUnicodeCharacter && (glyphsJson || figure.shuowenImage) ? (
               <div className="flex flex-grow flex-row flex-wrap justify-evenly  p-4">
-                {glyphsJson ? (
-                  <div className="">
-                    <div className="flex flex-1 flex-row flex-wrap justify-center gap-4">
-                      {glyphsJson.ns ? (
-                        <svg
-                          viewBox="0 -870 1000 1000"
-                          className="inline-block [height:2.5rem] [width:2.5rem]"
-                        >
-                          <path d={glyphsJson.ns} />
-                        </svg>
-                      ) : null}
-                      {glyphsJson.gw ? (
-                        <svg
-                          viewBox="0 0 200 200"
-                          className="inline-block [height:2.5rem] [width:2.5rem]"
-                        >
-                          <path d={glyphsJson.gw} />
-                        </svg>
-                      ) : null}
-                      {glyphsJson.twk ? (
-                        <svg
-                          viewBox="0 -870 1000 1000"
-                          className="inline-block [height:2.5rem] [width:2.5rem]"
-                        >
-                          <path d={glyphsJson.twk} />
-                        </svg>
-                      ) : null}
-                      {glyphsJson.kk ? (
-                        <svg
-                          viewBox="0 -870 1000 1000"
-                          className="inline-block [height:2.5rem] [width:2.5rem]"
-                        >
-                          <path d={glyphsJson.kk} />
-                        </svg>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : null}
+                {glyphsJson ? GlyphsImagesSection({ glyphsJson }) : null}
                 {figure.shuowenImage ? (
                   <AncientCharacterFormSection
                     className=""

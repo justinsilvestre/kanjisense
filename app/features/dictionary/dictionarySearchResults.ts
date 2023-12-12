@@ -44,6 +44,30 @@ export async function getDictionarySearchResults(searchQueries: string[]) {
   return { figures, images };
 }
 
+async function collectSearchResults<T extends { id: string }>(
+  batchSize: number,
+  steps: {
+    findMany: (returnedIds: string[], take: number) => Promise<T[]>;
+  }[],
+) {
+  const results: T[] = [];
+  const returnedIds: string[] = [];
+  for (const step of steps) {
+    const stepResults = await step.findMany(
+      returnedIds,
+      batchSize - results.length,
+    );
+
+    results.push(...stepResults);
+    if (results.length >= batchSize) return results;
+
+    for (const figure of stepResults) {
+      returnedIds.push(figure.id);
+    }
+  }
+  return results;
+}
+
 export async function getDictionarySearchResultsFigures(
   searchQueries: string[],
 ) {
@@ -73,59 +97,96 @@ export async function getDictionarySearchResultsFigures(
       },
     },
   };
-  const figures1 = await prisma.kanjisenseFigure.findMany({
-    where: {
-      searchProperties: {
-        some: formSearchPropertiesWhereQuery1(searchQueries),
-      },
+  const figures = await collectSearchResults(RESULTS_BATCH_SIZE, [
+    {
+      findMany: () =>
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            searchProperties: {
+              some: formSearchPropertiesWhereQuery1(searchQueries),
+            },
+          },
+          select: selectFigures,
+          orderBy: {
+            aozoraAppearances: "desc",
+          },
+          take: RESULTS_BATCH_SIZE,
+        }),
     },
-    select: selectFigures,
-    orderBy: {
-      aozoraAppearances: "desc",
+    {
+      findMany: (returnedFigureIds, take) =>
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            searchProperties: {
+              some: formSearchPropertiesWhereQuery2(searchQueries),
+            },
+            id: {
+              notIn: returnedFigureIds,
+            },
+          },
+          select: selectFigures,
+          orderBy: {
+            aozoraAppearances: "desc",
+          },
+          take,
+        }),
     },
-    take: RESULTS_BATCH_SIZE,
-  });
-  if (figures1.length >= RESULTS_BATCH_SIZE) return figures1;
-  const figures2 = await prisma.kanjisenseFigure.findMany({
-    where: {
-      searchProperties: {
-        some: formSearchPropertiesWhereQuery2(searchQueries),
-      },
-      id: {
-        notIn: figures1.map((figure) => figure.id),
-      },
+    {
+      findMany: (returnedFigureIds, take) =>
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            searchProperties: {
+              some: formSearchPropertiesWhereQuery3(searchQueries),
+            },
+            id: {
+              notIn: returnedFigureIds,
+            },
+          },
+          select: selectFigures,
+          orderBy: {
+            aozoraAppearances: "desc",
+          },
+          take,
+        }),
     },
-    select: selectFigures,
-    orderBy: {
-      aozoraAppearances: "desc",
+    {
+      findMany: (returnedFigureIds, take) =>
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            searchProperties: {
+              some: formSearchPropertiesWhereQuery2(searchQueries, false),
+            },
+            id: {
+              notIn: returnedFigureIds,
+            },
+          },
+          select: selectFigures,
+          orderBy: {
+            aozoraAppearances: "desc",
+          },
+          take,
+        }),
     },
-    take: RESULTS_BATCH_SIZE - figures1.length,
-  });
-
-  if (figures2.length + figures1.length >= RESULTS_BATCH_SIZE)
-    return figures1.concat(figures2);
-
-  const figures3 = await prisma.kanjisenseFigure.findMany({
-    where: {
-      searchProperties: {
-        some: formSearchPropertiesWhereQuery3(searchQueries),
-      },
-      id: {
-        notIn: figures1
-          .map((figure) => figure.id)
-          .concat(figures2.map((figure) => figure.id)),
-      },
+    {
+      findMany: (returnedFigureIds, take) =>
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            searchProperties: {
+              some: formSearchPropertiesWhereQuery3(searchQueries, false),
+            },
+            id: {
+              notIn: returnedFigureIds,
+            },
+          },
+          select: selectFigures,
+          orderBy: {
+            aozoraAppearances: "desc",
+          },
+          take,
+        }),
     },
-    select: selectFigures,
-    orderBy: {
-      aozoraAppearances: "desc",
-    },
-    take: RESULTS_BATCH_SIZE - figures1.length - figures2.length,
-  });
-
-  if (figures1.length + figures2.length + figures3.length)
-    return figures1.concat(figures2).concat(figures3);
-  return [];
+  ]);
+  return figures || [];
 }
 
 function formSearchPropertiesWhereQuery1(
@@ -134,6 +195,7 @@ function formSearchPropertiesWhereQuery1(
   return {
     OR: [
       {
+        figure: { isPriority: true },
         searchProperty: {
           type: {
             in: WANTED_SEARCH_PROPERTY_TYPES,
@@ -156,26 +218,32 @@ function formSearchPropertiesWhereQuery1(
 
 function formSearchPropertiesWhereQuery2(
   searchQueries: string[],
+  isPriority = true,
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     OR: searchQueries.flatMap((query) =>
-      formSearchPropertiesWhereQuery2Component(query),
+      formSearchPropertiesWhereQuery2Component(query, isPriority),
     ),
   };
 }
 function formSearchPropertiesWhereQuery3(
   searchQueries: string[],
+  isPriority = true,
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     OR: searchQueries.flatMap((query) =>
-      formSearchPropertiesWhereQuery3Component(query),
+      formSearchPropertiesWhereQuery3Component(query, isPriority),
     ),
   };
 }
 
-function formSearchPropertiesWhereQuery2Component(searchQuery: string) {
+function formSearchPropertiesWhereQuery2Component(
+  searchQuery: string,
+  isPriority = true,
+) {
   const or: Prisma.SearchPropertiesOnFigureWhereInput[] = [
     {
+      figure: { isPriority: true },
       searchProperty: {
         text: {
           startsWith: searchQuery,
@@ -197,6 +265,7 @@ function formSearchPropertiesWhereQuery2Component(searchQuery: string) {
     ...(searchQuery.length > 3
       ? [
           {
+            figure: { isPriority: isPriority },
             searchProperty: {
               text: {
                 contains: searchQuery,
@@ -217,10 +286,12 @@ function formSearchPropertiesWhereQuery2Component(searchQuery: string) {
 }
 function formSearchPropertiesWhereQuery3Component(
   searchQuery: string,
+  isPriority = true,
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     OR: [
       {
+        figure: { isPriority: isPriority },
         searchProperty: {
           text: {
             contains: searchQuery,
@@ -241,6 +312,7 @@ function formSearchPropertiesWhereQuery3Component(
       ...(searchQuery.length > 3
         ? [
             {
+              figure: { isPriority: true },
               searchProperty: {
                 text: {
                   contains: searchQuery,

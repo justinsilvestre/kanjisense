@@ -18,6 +18,7 @@ import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
 import { QysDialogContent } from "./QysDialogContent";
 import scallopBorder from "./scallopBorder.css";
+import slideDownStyles from "./slideDown.module.css";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 
 export const links: LinksFunction = () => [
@@ -60,7 +61,7 @@ export function DictEntryReadings({
   }
 
   const {
-    fetcher: { data: fetcherData },
+    fetcher: { data: fetcherData, state: fetcherState },
     getSinoReadings,
   } = useSinoReadingsFetcher(figureId);
 
@@ -100,7 +101,7 @@ export function DictEntryReadings({
               readings?.selectedOnReadings.length ||
               readings?.kanjidicEntry?.onReadings.length
             ) ? (
-              <UnavailableNote />
+              <UnavailableNote loading={fetcherState !== "idle"} />
             ) : null}
             {readings?.selectedOnReadings?.map((onReading, i) => {
               return (
@@ -131,21 +132,24 @@ export function DictEntryReadings({
             />
           </Dialog>
         ) : null}
-        {animationState !== "exited" ? (
-          <div
-            className={`slideDown ${animationState}  flex flex-row flex-wrap justify-evenly gap-4 `}
-          >
+
+        <div className={`${slideDownStyles.slideDown} ${animationState}`}>
+          <div className={` flex flex-row flex-wrap justify-evenly gap-4 `}>
             <div className="text-left [max-width:10em]">
               <dt className="mb-1 text-sm text-gray-500">Mandarin Chinese</dt>
               <dd className="text-xl font-light leading-9">
                 {mandarinReadings?.join(" ")}
-                {!mandarinReadings?.length ? <UnavailableNote /> : null}
+                {!mandarinReadings?.length ? (
+                  <UnavailableNote loading={fetcherState !== "idle"} />
+                ) : null}
               </dd>
             </div>
             <div className="text-left [max-width:10em]">
               <dt className="mb-1 text-sm text-gray-500">Cantonese</dt>
               <dd className="text-xl font-light leading-9">
-                {!cantoneseReadings?.length ? <UnavailableNote /> : null}
+                {!cantoneseReadings?.length ? (
+                  <UnavailableNote loading={fetcherState !== "idle"} />
+                ) : null}
                 {cantoneseReadings
                   ? convertNumbersToSuperscript(cantoneseReadings?.join(", "))
                   : null}
@@ -154,7 +158,9 @@ export function DictEntryReadings({
             <div className="text-left [max-width:10em]">
               <dt className="mb-1 text-sm text-gray-500">Korean</dt>
               <dd className="text-xl font-light leading-9">
-                {!hangulReadings?.length ? <UnavailableNote /> : null}
+                {!hangulReadings?.length ? (
+                  <UnavailableNote loading={fetcherState !== "idle"} />
+                ) : null}
                 {hangulReadings?.map((k) => (
                   <span key={k} className="">
                     {k}{" "}
@@ -169,11 +175,13 @@ export function DictEntryReadings({
               <dt className="mb-1 text-sm text-gray-500">Vietnamese</dt>
               <dd className="text-xl font-light leading-9">
                 {vietnameseReadings?.join(", ")}
-                {!vietnameseReadings?.length ? <UnavailableNote /> : null}
+                {!vietnameseReadings?.length ? (
+                  <UnavailableNote loading={fetcherState !== "idle"} />
+                ) : null}
               </dd>
             </div>
           </div>
-        ) : null}
+        </div>
 
         <div
           tabIndex={0}
@@ -277,7 +285,7 @@ function QysDialog({
           </dd>
         </div>
       </DialogTrigger>
-      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [overflow-y:auto] [background-color:rgba(247,247,247,0.95)] [max-height:95vh] [max-width:95vw] [min-width:17rem]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
+      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [background-color:rgba(247,247,247,0.95)] [overflow-y:auto] [max-height:95vh] [max-width:95vw] [min-width:17rem]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
         <QysDialogContent
           onClickClose={() => setOpen(false)}
           attestedOnReadings={
@@ -326,10 +334,16 @@ function OnReading({
   );
 }
 
-function UnavailableNote() {
+function UnavailableNote({ loading = false }: { loading?: boolean }) {
   return (
-    <div className=" text-sm text-gray-400 [line-height:inherit]">
-      <span className="block text-center">not available</span>
+    <div className=" text-sm [line-height:inherit] [width:5rem]">
+      {loading ? (
+        <span className="block animate-pulse text-center italic text-gray-600">
+          loading...
+        </span>
+      ) : (
+        <span className=" block text-center text-gray-400">not available</span>
+      )}
     </div>
   );
 }

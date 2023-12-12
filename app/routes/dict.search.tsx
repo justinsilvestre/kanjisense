@@ -6,7 +6,7 @@ import {
   getDictionarySearchResults,
 } from "~/features/dictionary/dictionarySearchResults";
 
-interface LoaderData {
+export interface DictSearchLoaderData {
   results: FigureSearchResults;
   error?: string;
 }
@@ -20,9 +20,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const results = await getDictionarySearchResults(searchQueries);
 
-    return json<LoaderData>({ results });
+    return json<DictSearchLoaderData>({ results });
   } catch (error) {
-    return json<LoaderData>({
+    return json<DictSearchLoaderData>({
       results: {
         figures: [],
         images: [],
