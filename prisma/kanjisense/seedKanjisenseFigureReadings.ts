@@ -21,7 +21,6 @@ import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import { findGuangyunEntriesByShinjitai } from "./findGuangyunEntriesByShinjitai";
-import { getAllCharactersAndVariantFigures } from "./getAllCharacters";
 
 export async function seedKanjisenseFigureReadings(
   prisma: PrismaClient,

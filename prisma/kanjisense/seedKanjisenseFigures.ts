@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import {
   KanjiDbVariantType,
   KanjisenseFigureRelation,
-  Prisma,
   PrismaClient,
 } from "@prisma/client";
 import yaml from "yaml";
@@ -704,16 +703,4 @@ function setReduce<T, U>(
     acc = reducer(acc, next);
   }
   return acc;
-}
-
-function createFirstClassComponentsInput<
-  T extends
-    | Prisma.XOR<
-        Prisma.KanjisenseComponentUseCreateWithoutParentInput,
-        Prisma.KanjisenseComponentUseUncheckedCreateWithoutParentInput
-      >
-    | Prisma.KanjisenseComponentUseCreateWithoutParentInput[]
-    | Prisma.KanjisenseComponentUseUncheckedCreateWithoutParentInput[],
->(input: T): T {
-  return input;
 }
