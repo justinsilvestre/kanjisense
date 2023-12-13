@@ -133,7 +133,9 @@ export function DictEntryReadings({
           </Dialog>
         ) : null}
 
-        <div className={`${slideDownStyles.slideDown} ${animationState}`}>
+        <div
+          className={`${slideDownStyles.slideDown} ${animationState} w-full`}
+        >
           <div className={` flex flex-row flex-wrap justify-evenly gap-4 `}>
             <div className="text-left [max-width:10em]">
               <dt className="mb-1 text-sm text-gray-500">Mandarin Chinese</dt>
@@ -285,7 +287,7 @@ function QysDialog({
           </dd>
         </div>
       </DialogTrigger>
-      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [background-color:rgba(247,247,247,0.95)] [overflow-y:auto] [max-height:95vh] [max-width:95vw] [min-width:17rem]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
+      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:95vh] [max-width:95vw] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
         <QysDialogContent
           onClickClose={() => setOpen(false)}
           attestedOnReadings={

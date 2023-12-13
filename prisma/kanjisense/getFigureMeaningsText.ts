@@ -4,7 +4,7 @@ const RADICAL_ENTRY_REGEX = /radical \(no\.|radical number/;
 export async function getFigureMeaningsText(
   prisma: PrismaClient,
   figure: KanjisenseFigureRelation,
-  mnemonicKeywords: ComponentMeaning | null,
+  componentMeaning: ComponentMeaning | null,
 ) {
   const figureId = figure.id;
   const unihanDefinitionLookup = prisma.unihan15.findUnique({
@@ -17,25 +17,29 @@ export async function getFigureMeaningsText(
   });
 
   const historicalKeyword =
-    mnemonicKeywords?.historical && mnemonicKeywords.historical !== "(various)"
-      ? mnemonicKeywords.historical
+    componentMeaning?.historical && componentMeaning.historical !== "(various)"
+      ? componentMeaning.historical
       : null;
   let mnemonicSource = "";
-  if (mnemonicKeywords?.reference)
-    mnemonicSource = ` {{cf. ${mnemonicKeywords.reference}}}`;
-  else if (mnemonicKeywords?.standin)
-    mnemonicSource = ` {{via ${mnemonicKeywords.standin}}}`;
-  else if (mnemonicKeywords?.full)
-    mnemonicSource = ` {{cf. ${mnemonicKeywords.full}}}`;
+  if (componentMeaning?.reference)
+    mnemonicSource = ` {{cf. ${componentMeaning.reference}}}`;
+  else if (componentMeaning?.standin)
+    mnemonicSource = ` {{via ${componentMeaning.standin}}}`;
+  else if (componentMeaning?.full)
+    mnemonicSource = ` {{cf. ${componentMeaning.full}}}`;
   const unihanDefinitionText =
     (await unihanDefinitionLookup)?.kDefinition || null;
   const kanjidicEnglish =
     (await kanjidicEnglishLookup)?.definitions?.filter(
       (e) => !RADICAL_ENTRY_REGEX.test(e),
     ) || [];
-  const mnemonicKeyword = mnemonicKeywords?.mnemonic
-    ? [mnemonicKeywords.mnemonic, mnemonicSource].join("")
-    : null;
+  const mnemonicKeyword =
+    componentMeaning?.mnemonic || (componentMeaning && mnemonicSource)
+      ? [
+          componentMeaning.mnemonic || componentMeaning.historical,
+          mnemonicSource,
+        ].join("")
+      : null;
   const historicalKeywordOrDefinition =
     (historicalKeyword ||
       kanjidicEnglish?.[0] ||

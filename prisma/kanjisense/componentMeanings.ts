@@ -5,11 +5,13 @@ export const forcedMeaninglessFiguresSet = new Set<string>([
   "吅",
   "帀",
   "𠓜",
+  "厸",
   "𠔼",
   "CDP-8D52",
   "CDP-8CE6",
   "CDP-89A6",
   "𠫔",
+  "CDP-8CED", // properly should have detected only appears in 1 variant group
 ]);
 
 const MINIMUM_USES_IN_PRIORITY_CANDIDATES = 2;

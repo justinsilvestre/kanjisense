@@ -681,7 +681,7 @@ CDP-8D46: # 鼠,巤,臘,蠟,獵
   tag: tools
 CDP-8BF1: # 用,半,奉,𠂡,甬,備,𬎾,通,痛,踊,誦,桶,涌,樋,庸,傭,伴,判,畔,叛,袢,絆,俸,棒,捧,鼡,猟,蝋
   historical: (various)
-  mnemonic: axles
+  mnemonic: offering hands
   tag: tools
 CDP-8B62: # 𭥴,CDP-88D4,會,曾,檜,繪,僧,層,憎,增,贈,黑,墨,熏,默,點,黨,勳,薰
   historical: (various)
@@ -1171,7 +1171,7 @@ GWS-U2FF1-U2D544-U51F6: # 悩,脳,惱,腦
 柬:
   historical: letter
   tag: tools
-溥:
+GWS-U6EA5-VAR-003:
   historical: pervasive
   mnemonic: seafarer
   tag: personal

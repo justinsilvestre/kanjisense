@@ -21,6 +21,8 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
   様: ["样"], // was taking 橡
   樣: ["样"], // was taking 橡
   体: ["體"], // was taking 体 in addition to 體
+  "GWS-U6EA5-VAR-003": ["溥"],
+  "GWS-U5C03-VAR-001": ["尃"],
 };
 
 export async function findGuangyunEntriesByShinjitai(

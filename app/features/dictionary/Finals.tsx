@@ -603,6 +603,8 @@ export function Finals({
             <tbody>
               <tr>
                 <th rowSpan={5}>Div. III</th>
+              </tr>
+              <tr>
                 <td>i</td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
@@ -756,15 +758,16 @@ export function Finals({
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
-                <td>
-                  yīt/
-                  <br />
-                  ẁīt
-                </td>
+
                 <td>
                   yīn/
                   <br />
                   ẁīn
+                </td>
+                <td>
+                  yīt/
+                  <br />
+                  ẁīt
                 </td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>

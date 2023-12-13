@@ -33,64 +33,64 @@ export async function seed(prisma: PrismaClient) {
     );
 
     await executeAndLogTime("seeding kanjidic", () =>
-      seedKanjidic(prisma, false),
+      seedKanjidic(prisma, true),
     );
     await executeAndLogTime("seeding unihan15", () =>
-      seedUnihan15(prisma, false),
+      seedUnihan15(prisma, true),
     );
     await executeAndLogTime("seeding unihan14", () =>
-      seedUnihan14(prisma, false),
+      seedUnihan14(prisma, true),
     );
     await executeAndLogTime("seeding unihan12", () =>
-      seedUnihan12(prisma, false),
+      seedUnihan12(prisma, true),
     );
     await executeAndLogTime("seeding kanjiDB composition data", () =>
-      seedKanjiDbComposition(prisma, false),
+      seedKanjiDbComposition(prisma, true),
     );
     await executeAndLogTime("seeding kanjiDB variants", () =>
-      seedKanjiDbVariants(prisma, false),
+      seedKanjiDbVariants(prisma, true),
     );
-    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma, false));
+    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma, true));
     await executeAndLogTime("seeding aozora frequencies", () =>
-      seedScriptinAozoraFrequencies(prisma, false),
+      seedScriptinAozoraFrequencies(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
-      seedKanjisenseVariantGroups(prisma, false),
+      seedKanjisenseVariantGroups(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
-      seedKanjisenseFigureRelation(prisma, false),
+      seedKanjisenseFigureRelation(prisma, true),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
-      seedKanjiDbCharacterDerivations(prisma, false),
+      seedKanjiDbCharacterDerivations(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
-      seedKanjisenseFigures(prisma, false),
+      seedKanjisenseFigures(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figure badge props", () =>
-      seedKanjisenseFigureBadgeProps(prisma, false),
+      seedKanjisenseFigureBadgeProps(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
-      seedKanjisenseActiveSoundMarks(prisma, false),
+      seedKanjisenseActiveSoundMarks(prisma, true),
     );
     await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
 
     await executeAndLogTime("seeding kanjisense figure readings", () =>
-      seedKanjisenseFigureReadings(prisma, false),
+      seedKanjisenseFigureReadings(prisma, true),
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValues(prisma, false),
+      seedKanjisenseActiveSoundMarkValues(prisma, true),
     );
 
     await executeAndLogTime("seed figure images", () =>
-      seedFigureImages(prisma, false),
+      seedFigureImages(prisma, true),
     );
 
     await executeAndLogTime("seeding shuowen images", () =>
-      seedShuowenImages(prisma, false),
+      seedShuowenImages(prisma, true),
     );
     await executeAndLogTime("seeding glyph images", () =>
-      seedGlyphImages(prisma, false),
+      seedGlyphImages(prisma, true),
     );
 
     await executeAndLogTime("seeding kanjisense figure search properties", () =>

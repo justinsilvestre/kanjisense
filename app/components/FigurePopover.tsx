@@ -148,7 +148,7 @@ export function FigurePopoverWindow({
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className={clsx(
-        `[border:2px inset #afafaf33] pointer-events-auto z-20 max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
+        `[border:2px inset #afafaf33] pointer-events-auto z-30 max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
       )}
       ref={setPopperElement}
       style={styles.popper}

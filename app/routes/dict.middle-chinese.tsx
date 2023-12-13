@@ -7,10 +7,10 @@ import {
   MiddleChineseTranscriptionLink,
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
-import { NavLi } from "~/components/NavLi";
 import { useTocHighlighting } from "~/components/useTocHighlighting";
 import css from "~/features/dictionary/middle-chinese.css";
 import { G } from "~/features/dictionary/QysHints";
+import { NavLi } from "~/features/qysInfo/NavLi";
 
 export const meta: MetaFunction = () => [
   { title: "What do I care about Middle Chinese? | Kanjisense" },

@@ -232,25 +232,29 @@ export async function seedKanjisenseFigures(
 
     await prisma.kanjisenseComponentUse.deleteMany({});
 
+    const priorityIds = await prisma.kanjisenseFigure
+      .findMany({
+        where: {
+          isPriority: true,
+        },
+        select: { id: true },
+      })
+      .then((fs) => fs.map((f) => f.id));
+    const firstClassComponentsDbInput = await prepareFirstClassComponents(
+      prisma,
+      componentsTreesInput,
+      new Set(priorityIds),
+      componentsToDirectUsesPrimaryVariants,
+      figuresToVariantGroups,
+    );
+
     await executeAndLogTime("connecting first-class components", async () =>
       inBatchesOf({
         batchSize: 250,
-        collection: await prisma.kanjisenseFigure
-          .findMany({
-            where: {
-              isPriority: true,
-            },
-            select: { id: true },
-          })
-          .then((fs) => fs.map((f) => f.id)),
-        action: (ids) =>
-          connectFirstClassComponents(
-            prisma,
-            componentsTreesInput,
-            new Set(ids),
-            componentsToDirectUsesPrimaryVariants,
-            figuresToVariantGroups,
-          ),
+        collection: firstClassComponentsDbInput,
+        action: async (data) => {
+          await prisma.kanjisenseComponentUse.createMany({ data });
+        },
       }),
     );
 
@@ -285,13 +289,31 @@ export async function getFiguresToVariantGroups(prisma: PrismaClient) {
   return figuresToVariantGroups;
 }
 
-async function connectFirstClassComponents(
+class ComponentUseDbInput {
+  constructor(
+    public parentId: string,
+    public indexInTree: number,
+    public appearanceInParent: number,
+    public componentId: string,
+  ) {}
+  toJSON() {
+    return {
+      parentId: this.parentId,
+      indexInTree: this.indexInTree,
+      appearanceInParent: this.appearanceInParent,
+      componentId: this.componentId,
+    };
+  }
+}
+
+async function prepareFirstClassComponents(
   prisma: PrismaClient,
   componentsTreesInput: Map<string, ComponentUse[]>,
   priorityFiguresIds: Set<string>,
   componentsToDirectUsesPrimaryVariants: Map<string, Set<string>>,
   figuresToVariantGroups: Map<string, string[]>,
 ) {
+  const componentUsesDbInput: ComponentUseDbInput[] = [];
   const standaloneCharactersIds = await prisma.kanjisenseFigureRelation
     .findMany({
       select: { id: true },
@@ -358,30 +380,22 @@ async function connectFirstClassComponents(
       return acc;
     }, new Map<string, number[]>());
 
-    const firstClassComponentsInput = Array.from(
-      firstClassComponents,
-      ([componentId, indexesInTree]) => {
-        return indexesInTree.map((indexInTree, i) =>
-          createFirstClassComponentsInput({
+    for (const [componentId, indexesInTree] of firstClassComponents) {
+      let appearances = 0;
+      for (const indexInTree of indexesInTree) {
+        componentUsesDbInput.push(
+          new ComponentUseDbInput(
+            id,
             indexInTree,
-            appearanceInParent: i + 1,
-            component: {
-              connect: { id: componentId },
-            },
-          }),
+            appearances + 1,
+            componentId,
+          ),
         );
-      },
-    ).flat();
-
-    await prisma.kanjisenseFigure.update({
-      where: { id },
-      data: {
-        firstClassComponents: {
-          create: firstClassComponentsInput,
-        },
-      },
-    });
+        appearances++;
+      }
+    }
   }
+  return componentUsesDbInput;
 }
 
 async function connectComponentsTreesEntries(

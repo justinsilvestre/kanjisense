@@ -1,5 +1,7 @@
 import type { ComponentUse } from "~/features/dictionary/ComponentUse";
 
+import { forcedMeaninglessFiguresSet } from "./componentMeanings";
+
 export function isComponentFirstClass(
   priorityFiguresIds: Set<string>,
   parent: string,
@@ -10,6 +12,7 @@ export function isComponentFirstClass(
 ) {
   const figureIsAtomic = figuresToComponentsTrees.get(component)!.length <= 1;
   if (figureIsAtomic) return true;
+  if (forcedMeaninglessFiguresSet.has(component)) return false;
 
   const componentIsPriorityFigure = priorityFiguresIds.has(component);
   if (componentIsPriorityFigure) {

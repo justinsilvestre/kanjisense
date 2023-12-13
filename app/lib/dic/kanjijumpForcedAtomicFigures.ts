@@ -178,5 +178,7 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "𠂇",
   "弋",
   "GWS-U20087-11",
-  "CDP-8BF1"
+  "CDP-8BF1",
+  "用",
+  "𠂡"
 ])

@@ -58,22 +58,12 @@ export async function seedKanjisenseFigureReadings(
         where: {
           OR: [
             {
-              id: {
-                in: (
-                  await getAllCharactersAndVariantFigures(prisma)
-                ).allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents.map(
-                  (c) => c.id,
-                ),
-              },
+              isStandaloneCharacter: true,
             },
             {
               asComponent: {
                 soundMarkUses: {
-                  some: {
-                    id: {
-                      notIn: [],
-                    },
-                  },
+                  some: {},
                 },
               },
             },

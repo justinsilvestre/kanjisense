@@ -245,7 +245,7 @@ function FigureTag({
           <div
             className={clsx(
               " [color:initial] ",
-              `  pointer-events-auto fixed z-30  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] [width:18rem]  [border:2px_inset_#afafaf33] [text-transform:none] md:max-w-xl`,
+              `  pointer-events-auto fixed z-30  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [border:2px_inset_#afafaf33]  [box-sizing:border-box] [max-height:88v]  [text-transform:none] [width:18rem] md:max-w-xl`,
               !isClosing && fadeInOutStyles.fadeIn,
               isClosing && "opacity-0 transition-opacity duration-300",
             )}
@@ -328,11 +328,11 @@ function ListTags({
       <KanjiListTag
         code="h"
         className={className}
-        popoverContent={() =>
-          HyogaiJinmeiyoTagPopoverContent({
-            isStandaloneCharacter,
-          })
-        }
+        popoverContent={() => (
+          <HyogaiJinmeiyoTagPopoverContent
+            isStandaloneCharacter={isStandaloneCharacter}
+          />
+        )}
       />
     );
   else if (lists.includes("h"))

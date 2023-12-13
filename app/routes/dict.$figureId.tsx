@@ -84,8 +84,10 @@ export default function FigureDetailsPage() {
   if (loaderData.errorMessage != null) {
     return (
       <DictionaryLayout>
-        <main className="flex flex-col gap-2">
-          <div className="text-2xl text-red-500">{loaderData.errorMessage}</div>
+        <main className="flex flex-grow flex-col gap-2">
+          <div className="m-4 text-center text-xl text-red-600">
+            {loaderData.errorMessage}
+          </div>
         </main>
       </DictionaryLayout>
     );
@@ -98,7 +100,7 @@ export default function FigureDetailsPage() {
     .map((f) => getBadgeProps(f));
   return (
     <DictionaryLayout>
-      <main className="flex flex-col gap-2">
+      <main className="flex flex-grow flex-col gap-2">
         <SingleFigureDictionaryEntry figure={figure} variants={variants} />
       </main>
     </DictionaryLayout>

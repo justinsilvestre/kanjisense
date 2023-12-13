@@ -65,7 +65,7 @@ export const kanjijumpSpecificVariants = [
   ["皮", "CDP-88E2"],
   ["氷", "冫", "⺀"],
   ["竹", "⺮"],
-  ["茲", "兹"],
+  // ["茲", "兹"],
   ["术", "GWS-U672E-VAR-001"],
   ["尚", "𫩠", "尙"],
   ["聿", "CDP-8BC6", "肀", "CDP-884D"],
@@ -97,9 +97,9 @@ export const kanjijumpSpecificVariants = [
   ["舛", "夅"],
   ["臣", "𦣞", "𦣝"],
   ["甫", "GWS-U752B-03-VAR-001"],
-  ["尃", "GWS-U5C03-VAR-001"],
-  ["溥", "GWS-U6EA5-VAR-003"],
-  ["旉", "GWS-U65C9-UE0102"],
+  // ["尃", "GWS-U5C03-VAR-001"],
+  // ["溥", "GWS-U6EA5-VAR-003"],
+  // ["旉", "GWS-U65C9-UE0102"],
   ["卂", "GWS-U5342-VAR-001"],
   ["即", "即", "GWS-KOSEKI-033260"],
   ["俞", "兪"],
@@ -213,5 +213,7 @@ export const kanjijumpSpecificVariants = [
   ["雨", "⻗"],
   ["从", "CDP-8C66"],
   ["盾", "𠂆"],
-  ["子", "𠫓"]
+  ["子", "𠫓"],
+  ["牙", "GWS-U7259-K"],
+  ["用", "𠂡"]
 ]

@@ -16,16 +16,10 @@ function encodeFigure(key: string) {
 // ⿰ ⿱ ⿲ ⿳ ⿴ ⿵ ⿶ ⿷ ⿸ ⿹ ⿺ ⿻
 
 // TODO:
-// - 牙 needs variant
-// - 灼 right part has ichi. check leopard as well
 // - CDP-8BF8 really not the same glyph as CDP-876E here (top stroke pokes out/doesn't):
 //    .replaceIds("CDP-8BF8", "⿱&CDP-876E;十")
-// - 鹽 maybe as 臨 with wrapping wo4
-// - check left/right radical assignments are correct:
-//     右友有左布厷絨
 // - perhaps should have crown and not cover
 //    睿 top part
-// - 藤 should have 'pump', not 'water'
 
 // leaving alone for now:
 // 朩 different in e.g. 術茶 (hane vs no hane)
@@ -55,7 +49,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["賸", "⿸&GWS-U6715-05;貝"],
         ["黱", "⿸&GWS-U6715-05;黑"],
         ["勝", "⿸&GWS-U6715-05;力"],
-        ["滕", "⿸&GWS-U6715-05;水"],
+        ["滕", "⿸&GWS-U6715-05;氺"],
         ["縢", "⿸&GWS-U6715-05;糸"],
         ["騰", "⿸&GWS-U6715-05;馬"],
         ["螣", "⿸&GWS-U6715-05;虫"],
@@ -157,8 +151,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("殻", "⿹&GWS-U23A8A-VAR-001;几")
       .replaceIds("穀", "⿹𣪊禾")
 
-      .replaceIds("有", "⿸&GWS-U20087-11;月")
-      .replaceIds("右", "⿸&GWS-U20087-11;口")
+      .replaceComponentOfFigures("有右布", "𠂇", "&GWS-U20087-11;")
       .replaceIds("㡀", "⿻丷⿻巾八[GT]	⿱小⿵冂小[JK]	⿱⺌⿵冂小[X]")
       .addIdsAfterTransforms("GWS-U3840-G", "⿱⺌⿵冂小")
       .addIdsAfterTransforms("GWS-U655D-G", "⿰&GWS-U3840-G;攵")
@@ -341,16 +334,16 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["垔", "⿱覀土"],
         ["兪", "⿱亼⿰月巜[GT]	⿱𠓛⿰⺼巜[JK]"],
         ["CDP-8CEC", "⿱龷月"],
-        ["用", "⿵⺆&CDP-8BF1;"],
+        // ["用", "⿵⺆&CDP-8BF1;"],
         ["臿", "⿻千臼"],
+        ["実", "⿱宀⿻二大"],
         ["夜", "⿱亠⿰亻⿻夕乀"],
         ["𬎾", "⿻肀用"],
         ["㒸", "⿱䒑𧰨"],
-        ["CDP-8BF8", "⿱&CDP-876E;十"],
-        ["乗", "⿻禾龷"],
-        ["垂", "⿳丿&CDP-876E;一"], // should use well jing3?
-        ["乗", "⿻禾&CDP-876E;"],
-        ["垂", "⿻壬&CDP-876E;"],
+        // ["CDP-8BF8", "⿱&CDP-876E;十"],
+        ["乗", "⿻⿱千艹木"],
+        ["垂", "⿻⿱千艹土"], // should use well jing3?
+        ["華", "⿱艹⿻⿱一艹&CDP-8BF1;"],
         ["頁", "⿱𦣻八"],
         ["𤴔", "⿱乛止"],
         ["犬", "⿻大丶"],
@@ -371,7 +364,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["捌", "⿰扌別"],
         ["槪", "⿰&GWS-U6728-01;既"],
         ["翟", "⿱羽隹"],
-        ["車", "⿻&CDP-8BF1;日"],
+        // ["車", "⿻&CDP-8BF1;日"],
         ["睿", "⿱𣦵⿴谷二"], // maybe should incorporate eye
         ["㕡", "⿹𣦻谷"],
         ["叡", "⿹𣦻⿴谷二"], // maybe should incorporate eye
@@ -395,6 +388,11 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿱人",
         replacementIdsSegment: "⿱𠆢",
+        extractedFigureId: "𠆢",
+      })
+      .extractFigureFromIdsSegment({
+        componentIdsSegment: /⿳(.)人/gu,
+        replacementIdsSegment: "⿳$1𠆢",
         extractedFigureId: "𠆢",
       })
       .extractFigureFromIdsSegment({
@@ -470,13 +468,16 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⿱𭕄冖",
       })
 
+      .replaceIds("耒", "⿻二木")
+
       .addIdsAfterTransforms("GWS-U752B-03-VAR-001", "⿻𤰔丶") // variant of 甫
       .addIdsAfterTransforms("GWS-U5C03-VAR-001", "⿱&GWS-U752B-03-VAR-001;寸") //   // variant of 尃
       .addIdsAfterTransforms("GWS-U65C9-UE0102", "⿱&GWS-U752B-03-VAR-001;方") // variant of 旉
       .replaceEverywhere(/⿱⿺𤰔丶方/gu, "&GWS-U65C9-UE0102;")
-      .replaceEverywhere(/⿱⿺𤰔丶寸/gu, "&GWS-U5C03-VAR-001;")
-      .addIdsAfterTransforms("GWS-U6EA5-VAR-003", "⿰氵&GWS-U5C03-VAR-001;") // variant of 溥
-      .replaceEverywhere(/⿰氵&GWS-U5C03-VAR-001;/gu, "&GWS-U6EA5-VAR-003;")
+      .replaceEverywhere(/⿱⿺𤰔丶寸/gu, "尃")
+      .addIdsAfterTransforms("GWS-U6EA5-VAR-003", "⿰氵尃") // variant of 溥
+      .replaceEverywhere(/⿰氵尃/gu, "&GWS-U6EA5-VAR-003;")
+      .replaceIds("尃", "⿱&GWS-U752B-03-VAR-001;寸")
 
       .addIdsAfterTransforms("GWS-U514D-G", "⿱𠂊&CDP-8BCB;")
       .replaceComponentOfNonSimplifiedCharacters("免", "&GWS-U514D-G;")
@@ -622,6 +623,12 @@ export const patchIds = (patchedIds: PatchedIds) => {
         replacementIdsSegment: "⿰牜",
       })
       .replaceIds("州", "⿰丶⿻川⿰丶丶")
+
+      .replaceIds("𤰇", "⿱龷⿰丿用")
+      .replaceIds("備", "⿰亻𤰇[GTJ]	⿰亻⿱卄⿸厂用[K]")
+
+      .replaceComponentOfFigures("邪芽雅冴", "牙", "&GWS-U7259-K;")
+      .addAtomicIdsLine("GWS-U7259-K")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

@@ -4,6 +4,31 @@ import {
 } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
 
+export function parseAnnotatedKeywordText(
+  annotatedKeywordText: string,
+): HeadingComponentMnemonic {
+  if (!annotatedKeywordText.includes("{{"))
+    return {
+      text: annotatedKeywordText,
+      reference: null,
+      referenceTypeText: null,
+    };
+  const match =
+    annotatedKeywordText?.match(/^(.+?)( \{\{(cf\.|via) (.)}})?$/) ?? [];
+  if (!match)
+    throw new Error(
+      "Invalid annotated keyword text " + JSON.stringify(annotatedKeywordText),
+    );
+  const [, text, , referenceTypeText, reference] = match;
+  return {
+    text,
+    reference: reference || null,
+    referenceTypeText:
+      (referenceTypeText as HeadingComponentMnemonic["referenceTypeText"]) ||
+      null,
+  };
+}
+
 export function getHeadingsMeanings(
   figure: Pick<
     DictionaryPageFigureWithPriorityUses,
@@ -12,17 +37,8 @@ export function getHeadingsMeanings(
     StandaloneCharacterVariantQueryFigure,
 ): HeadingMeanings {
   const mnemonicKeyword = figure.mnemonicKeyword;
-  const [, mnemonicKeywordText, , referenceTypeText, reference] =
-    mnemonicKeyword?.match(/^(.+?)( \{\{(cf\.|via) (.)}})?$/) ?? [];
-
-  const componentMnemonic: HeadingComponentMnemonic | null = mnemonicKeywordText
-    ? {
-        text: mnemonicKeywordText,
-        reference: reference || null,
-        referenceTypeText:
-          (referenceTypeText as HeadingComponentMnemonic["referenceTypeText"]) ||
-          null,
-      }
+  const componentMnemonic = mnemonicKeyword
+    ? parseAnnotatedKeywordText(mnemonicKeyword)
     : null;
 
   if (isStandaloneCharacterVariant(figure)) {

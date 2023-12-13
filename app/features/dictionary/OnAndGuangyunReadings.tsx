@@ -9,14 +9,16 @@ export function OnAndGuangyunReadings({
   hasSoundMarkHighlight?: boolean;
   className?: string;
 }) {
-  if (!katakanaOn && !guangyun) return null;
+  if (!(katakanaOn && katakanaOn !== "[unavailable]") && !guangyun) return null;
 
+  const availableKatakanaOn =
+    katakanaOn === "[unavailable]" ? null : katakanaOn;
   if (hasSoundMarkHighlight) {
     return (
       <span
         className={`whitespace-nowrap rounded border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 p-1 text-sm ${className}`}
       >
-        {katakanaOn}
+        {availableKatakanaOn}
         {guangyun ? <> {guangyun}</> : null}
       </span>
     );
@@ -24,7 +26,7 @@ export function OnAndGuangyunReadings({
 
   return (
     <span className={`text-sm ${className}`}>
-      {katakanaOn}
+      {availableKatakanaOn}
       {guangyun ? <> {guangyun}</> : null}
     </span>
   );

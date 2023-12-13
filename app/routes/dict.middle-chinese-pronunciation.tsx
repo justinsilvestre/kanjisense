@@ -16,15 +16,14 @@ import {
 import css from "app/features/dictionary/middle-chinese.css";
 import { MiddleChineseLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
-import { NavLi } from "~/components/NavLi";
 import { useTocHighlighting } from "~/components/useTocHighlighting";
 import { InitialConsonants } from "~/features/qysInfo/InitialConsonants";
+import { NavLi } from "~/features/qysInfo/NavLi";
 
 import { Finals } from "../features/dictionary/Finals";
 import { Baxter } from "../features/qysInfo/Baxter";
 import { Diacritics } from "../features/qysInfo/Diacritics";
 import { FinalConsonants } from "../features/qysInfo/FinalConsonants";
-// import { InitialConsonants } from "../features/qysInfo/InitialConsonants";
 import { References } from "../features/qysInfo/References";
 import { ScrollLink } from "../features/qysInfo/ScrollLink";
 import { SectionIds } from "../features/qysInfo/SectionIds";

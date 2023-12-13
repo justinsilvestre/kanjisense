@@ -25,6 +25,7 @@ import {
   badgeFigureSelect,
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
+import { parseAnnotatedKeywordText } from "~/features/dictionary/getHeadingsMeanings";
 
 export const meta: MetaFunction = () => [
   { title: "The ~300 atomic kanji components | Kanjisense" },
@@ -320,7 +321,7 @@ export default function FigureDetailsPage() {
               const keywordDisplay = (
                 <div className="text-center">
                   {mnemonicKeyword ? (
-                    <>"{mnemonicKeyword.replace(/ \{\{.+\}\}/, "")}"</>
+                    <>"{parseAnnotatedKeywordText(mnemonicKeyword)?.text}"</>
                   ) : (
                     <>{keyword}</>
                   )}

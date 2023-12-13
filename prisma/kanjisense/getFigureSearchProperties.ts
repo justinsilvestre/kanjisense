@@ -6,7 +6,10 @@ import {
   KanjisenseFigureReading,
 } from "@prisma/client";
 
-import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
+import {
+  getHeadingsMeanings,
+  parseAnnotatedKeywordText,
+} from "~/features/dictionary/getHeadingsMeanings";
 import { kanjidicKanaToRomaji } from "~/features/dictionary/kanjidicKanaToRomaji";
 
 import { SearchPropertySpecs } from "./SearchPropertySpecs";
@@ -171,7 +174,9 @@ export function getFigureSearchPropertySources(
   const onyomi = figure.reading?.selectedOnReadings?.length
     ? figure.reading.selectedOnReadings
     : figure.reading?.kanjidicEntry?.onReadings;
-  const mnemonic = figure.mnemonicKeyword ?? null;
+  const mnemonic = figure.mnemonicKeyword
+    ? parseAnnotatedKeywordText(figure.mnemonicKeyword).text
+    : null;
 
   const kanjidicEnglish =
     (figure.isStandaloneCharacter || null) && figure.meaning?.kanjidicEnglish;
@@ -191,15 +196,6 @@ export function getFigureSearchPropertySources(
   }
 
   english.push(...(kanjidicEnglish ?? []).filter((e) => !english.includes(e)));
-  // if (new Set("显㬎艹").has(figure.key)) {
-  //   console.log(figure.key, {
-  //     kunyomi,
-  //     onyomi,
-  //     english,
-  //     mnemonic,
-  //     variants,
-  //   });
-  // }
 
   return {
     kunyomi,

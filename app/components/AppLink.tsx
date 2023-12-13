@@ -45,12 +45,7 @@ export function DictLink({
     }
   }, [figureId, focusOnLoad]);
   return (
-    <AppLink
-      key={figureId}
-      to={`/dict/${figureId}`}
-      linkRef={linkRef}
-      className={className}
-    >
+    <AppLink to={`/dict/${figureId}`} linkRef={linkRef} className={className}>
       {children || figureId}
     </AppLink>
   );

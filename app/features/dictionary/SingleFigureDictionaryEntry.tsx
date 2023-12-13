@@ -3,7 +3,6 @@ import { KanjisenseFigure, KanjisenseFigureImageType } from "@prisma/client";
 import { clsx } from "clsx";
 import { useState } from "react";
 
-import { DictLink } from "~/components/AppLink";
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
@@ -30,6 +29,7 @@ import { GlyphsJson } from "./GlyphsJson";
 import { kangxiRadicals } from "./kangxiRadicals";
 import kvgStyles from "./kvg.css";
 import type { KvgJsonData } from "./KvgJsonData";
+import { RadicalSection } from "./RadicalSection";
 
 export const links = () => [
   { rel: "stylesheet", href: kvgStyles },
@@ -43,7 +43,7 @@ export function SingleFigureDictionaryEntry({
   variants?: BadgeProps[];
 }) {
   const badgeProps = getBadgeProps(figure);
-  const figureIsStandaloneCharacter = badgeProps.isStandaloneCharacter;
+  const figureIsStandaloneCharacter = figure.isStandaloneCharacter;
 
   const [animationIsShowing, setAnimationIsShowing] = useState(false);
 
@@ -138,7 +138,9 @@ export function SingleFigureDictionaryEntry({
             }
             {isUnicodeCharacter && (glyphsJson || figure.shuowenImage) ? (
               <div className="flex flex-grow flex-row flex-wrap justify-evenly  p-4">
-                {glyphsJson ? GlyphsImagesSection({ glyphsJson }) : null}
+                {glyphsJson ? (
+                  <GlyphsImagesSection glyphsJson={glyphsJson} />
+                ) : null}
                 {figure.shuowenImage ? (
                   <AncientCharacterFormSection
                     className=""
@@ -228,23 +230,7 @@ export function SingleFigureDictionaryEntry({
                 U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
                 <br />{" "}
                 {radicalIndexes?.length ? (
-                  <section>
-                    traditional radical:{" "}
-                    {radicalIndexes?.map((radicalIndex) => (
-                      <span key={radicalIndex?.radical.character}>
-                        <DictLink
-                          figureId={radicalIndex.radical.character}
-                          className="no-underline hover:underline"
-                        >
-                          {radicalIndex.radical.number}&nbsp;
-                          <span className="">
-                            {radicalIndex.radical.character}
-                          </span>
-                          &nbsp; (+{radicalIndex.remainder})
-                        </DictLink>{" "}
-                      </span>
-                    ))}
-                  </section>
+                  <RadicalSection radicalIndexes={radicalIndexes} />
                 ) : null}
               </div>
 
@@ -252,6 +238,7 @@ export function SingleFigureDictionaryEntry({
                 <ExternalDictionaryLinks
                   figureId={figure.id}
                   className="text-sm [min-width:19rem]"
+                  figureIsStandaloneCharacter={figureIsStandaloneCharacter}
                 />
               ) : null}
             </div>
