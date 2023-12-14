@@ -364,7 +364,7 @@ export default function FigureDetailsPage() {
               during kanji study. Paying special attention to the on'yomi has
               some practical advantages. The first has already been mentioned
               above: an understanding of <i>on'yomi</i> and sound indicators
-              helps you identify meaning indicators. These is key to
+              helps you identify meaning indicators. This is key to
               understanding the logic behind a character's structure. Another
               benefit applies when you're quizzing yourself on a kanji's
               meaning.

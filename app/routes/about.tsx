@@ -27,8 +27,8 @@ export default function Index({ error }: { error?: ReactNode }) {
               The idea of learning the kanji via mnemonic keywords + component
               breakdowns is nothing new. Numerous comparable kanji-learning
               systems have popped up over the years in the form of books like
-              Forster and Tamura's <i>Kanji ABC</i>, De Roo's 2001 Kanji, and,
-              most notably, Heisig's <i>Remembering the Kanji</i>.
+              Forster and Tamura's <i>Kanji ABC</i>, De Roo's <i>2001 Kanji</i>,
+              and, most notably, Heisig's <i>Remembering the Kanji</i>.
             </p>
             <p className="mb-4">
               Kanjisense was born out of my personal yearning for a similar
