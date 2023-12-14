@@ -5,6 +5,7 @@ import { PopperOptions } from "~/components/usePaddedPopper";
 import { useHoverPopper } from "./useHoverPopper";
 
 const popoverOptions: PopperOptions = {
+  placement: "auto",
   modifiers: [
     {
       name: "preventOverflow",
@@ -12,6 +13,14 @@ const popoverOptions: PopperOptions = {
         mainAxis: true,
         altAxis: true,
         tether: false,
+      },
+    },
+    {
+      name: "offset",
+      options: {
+        offset: ({ popper, reference }) => {
+          return [-popper.width / reference.width, -popper.height / 2];
+        },
       },
     },
   ],
@@ -28,6 +37,7 @@ export function RadicalSection({
 
   return (
     <section
+      className="relative"
       ref={hoverPopover.setReferenceElement}
       {...hoverPopover.openEventHandlers}
     >
@@ -46,7 +56,7 @@ export function RadicalSection({
       ))}
       {hoverPopover.isOpen ? (
         <div
-          className=" w-95vh absolute z-50 max-h-[95vh] w-[350rem] max-w-[95vw] overflow-y-auto  rounded-md bg-neutral-50 p-4 shadow-md shadow-black/30 "
+          className={`[border:2px inset #afafaf33] fixed z-30 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [overflow-y:auto]  [max-height:400px] [width:30rem] md:max-w-[75vw]`}
           {...hoverPopover.attributes.popper}
           style={hoverPopover.styles.popper}
         >

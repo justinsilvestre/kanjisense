@@ -225,13 +225,16 @@ export function SingleFigureDictionaryEntry({
           )}
           {isUnicodeCharacter ? (
             <div className="flex flex-grow flex-wrap gap-4 [min-width:19rem] max-lg:justify-between lg:flex-col lg:flex-nowrap lg:justify-end">
-              <div className="px-4 [min-width:10rem]">
-                in your browser: <span className="text-2xl">{figure.id}</span>{" "}
-                U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
-                <br />{" "}
-                {radicalIndexes?.length ? (
-                  <RadicalSection radicalIndexes={radicalIndexes} />
-                ) : null}
+              <div className="flex flex-col gap-2 px-4 [min-width:10rem]">
+                <span>
+                  in your browser: <span className="text-2xl">{figure.id}</span>{" "}
+                  U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
+                </span>
+                <div>
+                  {radicalIndexes?.length ? (
+                    <RadicalSection radicalIndexes={radicalIndexes} />
+                  ) : null}
+                </div>
               </div>
 
               {figureIsStandaloneCharacter || figure.isPriority ? (
