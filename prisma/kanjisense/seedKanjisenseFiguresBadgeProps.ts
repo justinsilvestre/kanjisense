@@ -7,6 +7,7 @@ import { executeAndLogTime } from "./executeAndLogTime";
 export async function seedKanjisenseFigureBadgeProps(
   prisma: PrismaClient,
   force = false,
+  shouldUpdateSoundMarkField = false,
 ) {
   const seeded = await prisma.setup.findUnique({
     where: { step: "KanjisenseFigureBadgeProps" },
@@ -88,8 +89,19 @@ export async function seedKanjisenseFigureBadgeProps(
       });
     });
 
-    await executeAndLogTime("updating isPrioritySoundMark field", async () => {
-      const figures = await prisma.kanjisenseFigure.findMany({
+    if (shouldUpdateSoundMarkField)
+      await updateIsPrioritySoundMarkField(prisma);
+
+    await registerSeeded(prisma, "KanjisenseFigureBadgeProps");
+    console.log(`figures seeded. 🌱`);
+  }
+}
+
+export async function updateIsPrioritySoundMarkField(prisma: PrismaClient) {
+  await executeAndLogTime("updating isPrioritySoundMark field", async () => {
+    const figures = await prisma.kanjisenseFigure
+      .findMany({
+        select: { id: true },
         where: {
           asComponent: {
             soundMarkUses: {
@@ -111,19 +123,16 @@ export async function seedKanjisenseFigureBadgeProps(
             },
           ],
         },
-      });
-
-      await prisma.kanjisenseFigure.updateMany({
-        where: {
-          id: { in: figures.map((c) => c.id) },
-        },
-        data: {
-          isPrioritySoundMark: true,
-        },
-      });
+      })
+      .then((fs) => fs.map((f) => f.id));
+    console.log(`updating ${figures.length} figures...`, figures.join(""));
+    await prisma.kanjisenseFigure.updateMany({
+      where: {
+        id: { in: figures },
+      },
+      data: {
+        isPrioritySoundMark: true,
+      },
     });
-
-    await registerSeeded(prisma, "KanjisenseFigureBadgeProps");
-    console.log(`figures seeded. 🌱`);
-  }
+  });
 }

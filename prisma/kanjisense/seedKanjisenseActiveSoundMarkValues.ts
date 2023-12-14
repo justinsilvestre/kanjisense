@@ -10,6 +10,7 @@ import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 import { registerSeeded } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
+import { updateIsPrioritySoundMarkField } from "./seedKanjisenseFiguresBadgeProps";
 
 export async function seedKanjisenseActiveSoundMarkValues(
   prisma: PrismaClient,
@@ -26,6 +27,8 @@ export async function seedKanjisenseActiveSoundMarkValues(
     await executeAndLogTime("registering active sound marks values", () =>
       registerActiveSoundMarkValues(prisma),
     );
+
+    await updateIsPrioritySoundMarkField(prisma);
 
     await registerSeeded(prisma, "KanjisenseActiveSoundMarkValue");
   }

@@ -19,6 +19,7 @@ export async function getGlyphWikiSvgPath(id: string) {
     return path;
   }
 
+  console.log("fetching svg from web", id);
   const glyphwikiSvgFromWeb = await getGlyphWikiSvgFromWeb(id);
 
   return glyphwikiSvgFromWeb;
