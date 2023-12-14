@@ -1,4 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
+import clsx from "clsx";
+
 import { DictLink } from "~/components/AppLink";
 import { PopperOptions } from "~/components/usePaddedPopper";
 
@@ -13,13 +15,14 @@ const popoverOptions: PopperOptions = {
         mainAxis: true,
         altAxis: true,
         tether: false,
+        padding: 4,
       },
     },
     {
       name: "offset",
       options: {
-        offset: ({ popper, reference }) => {
-          return [-popper.width / reference.width, -popper.height / 2];
+        offset: ({ reference }) => {
+          return [-reference.width, 0];
         },
       },
     },
@@ -33,13 +36,15 @@ export function RadicalSection({
     remainder: number;
   }[];
 }) {
-  const hoverPopover = useHoverPopper(popoverOptions);
+  const popper = useHoverPopper(popoverOptions);
 
   return (
     <section
       className="relative"
-      ref={hoverPopover.setReferenceElement}
-      {...hoverPopover.openEventHandlers}
+      ref={popper.setReferenceElement}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex={0}
+      {...popper.openEventHandlers}
     >
       traditional radical:{" "}
       {radicalIndexes?.map((radicalIndex) => (
@@ -54,11 +59,16 @@ export function RadicalSection({
           </DictLink>{" "}
         </span>
       ))}
-      {hoverPopover.isOpen ? (
+      {popper.isOpen ? (
         <div
-          className={`[border:2px inset #afafaf33] fixed z-30 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [overflow-y:auto]  [max-height:400px] [width:30rem] md:max-w-[75vw]`}
-          {...hoverPopover.attributes.popper}
-          style={hoverPopover.styles.popper}
+          className={clsx(
+            `[border:2px inset #afafaf33] fixed z-30 -m-2 w-[95vw] max-w-[30rem] p-3 text-left text-sm shadow shadow-gray-400 transition-opacity  duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em]  [box-sizing:border-box] [max-height:85vh] [overflow-y:auto]`,
+
+            popper.animationClassName,
+          )}
+          ref={popper.setPopperElement}
+          {...popper.attributes.popper}
+          style={popper.styles.popper}
         >
           <h3 className=" mb-4 text-center text-lg">
             {radicalIndexes
@@ -69,17 +79,19 @@ export function RadicalSection({
               .join(", ")}
           </h3>
           <p className="mb-4">
-            These traditional "radicals" are not as useful today, now that most
-            people use electronic dictionaries. But identifying a kanji's{" "}
-            radical is still part of traditional kanji education, and radical
-            knowledge is even tested on the 漢字検定 <i>Kanji Kentei</i> exam,
-            which is used to certify kanji knowledge in Japan.
+            Knowing a character's traditional "radical" is not as useful today
+            as was a couple decades ago. But identifying a kanji's radical is
+            still part of traditional kanji education, and radical knowledge is
+            even tested on the 漢字検定 <i>Kanji Kentei</i> exam, which is used
+            to certify kanji knowledge. These radicals are provided here for
+            your reference.
           </p>
+          <h3 className=" mb-2 text-center font-bold">What is a radical?</h3>
           <p className="mb-4">
             Some English speakers refer to all kanji components as "radicals",
-            but traditionally, the term "radicals" refers to the 214 部首{" "}
-            <i>bushu</i>, literally "section headers". These 部首 <i>bushu</i>{" "}
-            are 214 kanji components that are used to look up kanji in
+            but traditionally, the term "radicals" is a translation of 部首{" "}
+            <i>bushu</i>. The 214 部首 <i>bushu</i>, literally "section
+            headers", are 214 kanji components that are used to look up kanji in
             traditional paper dictionaries. All the way back in 1716, the
             compilers of the authoritative 康熙字典 <i>Kangxi Dictionary</i>{" "}
             (Japanese: <i>Kōki Jiten</i>) looked at each kanji and chose{" "}
@@ -90,6 +102,9 @@ export function RadicalSection({
             This is not always straightforward in practice, but this method of
             organizing dictionaries is still used today.
           </p>
+          <h3 className=" mb-2 text-center font-bold">
+            What do these numbers mean?
+          </h3>
           <p className="mb-4">
             The first number given with the 部首 <i>bushu</i> here refers to
             that section's order in the <i>Kangxi Dictionary</i>, which has

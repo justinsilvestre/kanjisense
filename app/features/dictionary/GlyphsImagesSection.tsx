@@ -85,8 +85,6 @@ export function GlyphsImagesSection({
           )}
           ref={popper.setPopperElement}
           style={popper.styles.popper}
-          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-          tabIndex={0}
           {...popper.attributes.popper}
           onClick={(e) => e.stopPropagation()}
         >
