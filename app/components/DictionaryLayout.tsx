@@ -1,6 +1,8 @@
 import { ScrollRestoration, Scripts, LiveReload } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
 
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
+
 import {
   AboutLink,
   BrowseAtomicComponentsLink,
@@ -10,8 +12,6 @@ import {
 } from "./AppLink";
 import A from "./ExternalLink";
 import { FigureSearchForm } from "./FigureSearchForm";
-
-const ATOMIC_COMPONENTS = 269;
 
 export default function DictionaryLayout({
   children,
@@ -46,7 +46,7 @@ export default function DictionaryLayout({
           </li>
           <li className="">
             <BrowseAtomicComponentsLink className="py-3 text-gray-800 no-underline hover:text-orange-700  hover:underline md:p-4">
-              the {ATOMIC_COMPONENTS} &quot;atomic&quot; components
+              the {TOTAL_ATOMIC_COMPONENTS_COUNT} &quot;atomic&quot; components
             </BrowseAtomicComponentsLink>
           </li>
           <li className="">

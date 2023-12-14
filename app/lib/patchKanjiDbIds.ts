@@ -321,14 +321,14 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["才", "⿻𬺰丿"],
         ["巴", "⿻巳丨"],
         ["史", "⿻口乂"],
-        ["丈", "⿱十乂"],
+        ["丈", "⿻𠂇乀"],
         ["久", "⿱𠂊人"],
         ["隶", "⿱肀氺"],
         ["甘", "⿻廿一"],
         ["廿", "⿻⿰十十一"],
         ["革", "⿱廿⿻口十"],
         ["CDP-89C5", "⿻⿻口十口"],
-        ["ユ", "⿱𠃍一"],
+        // ["ユ", "⿱𠃍一"],
         ["以", "⿲⿱丨㇀丶人"],
 
         ["垔", "⿱覀土"],
@@ -347,7 +347,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["頁", "⿱𦣻八"],
         ["𤴔", "⿱乛止"],
         ["犬", "⿻大丶"],
-        ["舟", "⿱丶⿻丹丨"],
+        ["舟", "⿱㇀⿻丹丨"],
 
         ["卑", "⿱&CDP-89BE;十[GTK]	⿱甶⿶十丿[J]"],
         ["𤰞", "⿱田⿶十丿"], // not in kanjijump; might be used for traditional zh
@@ -362,7 +362,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["營", "⿱𤇾呂"],
         ["串", "⿻中口"],
         ["捌", "⿰扌別"],
-        ["槪", "⿰&GWS-U6728-01;既"],
+        // ["槪", "⿰&GWS-U6728-01;既"],
+        ["槪", "⿰木既"],
         ["翟", "⿱羽隹"],
         // ["車", "⿻&CDP-8BF1;日"],
         ["睿", "⿱𣦵⿴谷二"], // maybe should incorporate eye
@@ -377,6 +378,20 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["幸", "⿻一辛"],
 
         ["危", "⿱𠂊厄"],
+
+        ["乑", "⿻&GWS-CDP-8C66-VAR-001;⿱㇀㇀"],
+
+        ["央", "⿻冂大"],
+        ["夬", "⿻ユ人"],
+
+        // bird
+        ["鳥", "⿻⿱㇀ヨ&CDP-8DBF;"],
+        // bird without fire
+        ["CDP-8CBB", "⿻⿱㇀ヨ&CDP-8BBF;"],
+        // crow
+        ["烏", "⿻⿱㇀コ&CDP-8DBF;"],
+
+        ["尺", "⿻尸乀"],
       ])
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰王",
@@ -587,12 +602,12 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("謎", "⿰言&GWS-U8FF7-K;")
       .addIdsAfterTransforms("GWS-U8FF7-K", "⿺辶米")
 
-      .extractFigureFromIdsSegment({
-        componentIdsSegment: "⿰木",
-        extractedFigureId: "GWS-U6728-01",
-        newCompleteIds: "&GWS-U6728-01;",
-        replacementIdsSegment: "⿰&GWS-U6728-01;",
-      })
+      // .extractFigureFromIdsSegment({
+      //   componentIdsSegment: "⿰木",
+      //   extractedFigureId: "GWS-U6728-01",
+      //   newCompleteIds: "&GWS-U6728-01;",
+      //   replacementIdsSegment: "⿰&GWS-U6728-01;",
+      // })
 
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿱雨",
@@ -607,7 +622,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
 
       .replaceManyIds([
         ["豹", "⿰豸勺"],
-        ["杓", "⿰&GWS-U6728-01;勺"],
+        // ["杓", "⿰&GWS-U6728-01;勺"],
+        ["杓", "⿰木勺"],
         ["灼", "⿰火勺"],
       ])
 

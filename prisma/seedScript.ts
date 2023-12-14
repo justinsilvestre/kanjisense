@@ -45,29 +45,29 @@ export async function seed(prisma: PrismaClient) {
       seedUnihan12(prisma, false),
     );
     await executeAndLogTime("seeding kanjiDB composition data", () =>
-      seedKanjiDbComposition(prisma, false),
+      seedKanjiDbComposition(prisma, true),
     );
     await executeAndLogTime("seeding kanjiDB variants", () =>
-      seedKanjiDbVariants(prisma, false),
+      seedKanjiDbVariants(prisma, true),
     );
-    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma, false));
+    await executeAndLogTime("seeding sbgy", () => seedSbgy(prisma, true));
     await executeAndLogTime("seeding aozora frequencies", () =>
-      seedScriptinAozoraFrequencies(prisma, false),
+      seedScriptinAozoraFrequencies(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
-      seedKanjisenseVariantGroups(prisma, false),
+      seedKanjisenseVariantGroups(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
-      seedKanjisenseFigureRelation(prisma, false),
+      seedKanjisenseFigureRelation(prisma, true),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
-      seedKanjiDbCharacterDerivations(prisma, false),
+      seedKanjiDbCharacterDerivations(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
-      seedKanjisenseFigures(prisma, false),
+      seedKanjisenseFigures(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
-      seedKanjisenseActiveSoundMarks(prisma, false),
+      seedKanjisenseActiveSoundMarks(prisma, true),
     );
     await executeAndLogTime("seeding kanjisense figure badge props", () =>
       seedKanjisenseFigureBadgeProps(prisma, true, true),
@@ -75,11 +75,11 @@ export async function seed(prisma: PrismaClient) {
     await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
 
     await executeAndLogTime("seeding kanjisense figure readings", () =>
-      seedKanjisenseFigureReadings(prisma, false),
+      seedKanjisenseFigureReadings(prisma, true),
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValues(prisma, false),
+      seedKanjisenseActiveSoundMarkValues(prisma, true),
     );
 
     await executeAndLogTime("seed figure images", () =>

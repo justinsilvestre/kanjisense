@@ -22,7 +22,7 @@ export function Finals({
 }) {
   return (
     <section
-      className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+      className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
       id={SectionIds["finals"]}
     >
       <h3>Finals {showContentsButton()}</h3>
@@ -34,10 +34,10 @@ export function Finals({
         context of specific finals.
       </p>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["structure-of-finals"]}
       >
-        <h5>The structure of a final in this notation</h5>
+        <h5 className="mt-2">The structure of a final in this notation</h5>
         <p>
           The part of an <i>on'yomi</i> corresponding to the final in
           traditional Chinese phonology basically always consists of these
@@ -108,8 +108,8 @@ export function Finals({
           </table>
         </div>
 
-        <section className="pb-0 pt-14  md:pt-0" id={SectionIds["medials"]}>
-          <h5>Medials</h5>
+        <section className="pb-2 pt-14  md:pt-0" id={SectionIds["medials"]}>
+          <h5 className="mt-2">Medials</h5>
           <p>
             These "semivowel" sounds in <i>on'yomi</i> readings correspond to
             sounds which scholars of Chinese often call <b>"medials"</b>. They
@@ -153,8 +153,8 @@ export function Finals({
             the W <G g="ẁ" />, rather than an added <G g="y" />.
           </p>
         </section>
-        <section className="pb-0 pt-14  md:pt-0" id={SectionIds["coda"]}>
-          <h5>Coda</h5>
+        <section className="pb-2 pt-14  md:pt-0" id={SectionIds["coda"]}>
+          <h5 className="mt-2">Coda</h5>
           <p>
             As for the <b>coda</b> at the very end of the syllable,{" "}
             <i>on'yomi</i> are much less faithful to the original Chinese, since
@@ -197,10 +197,10 @@ export function Finals({
           </ul>
         </section>
         <section
-          className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+          className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
           id={SectionIds["main-vowels"]}
         >
-          <h5>"Main vowels"</h5>
+          <h5 className="mt-2">"Main vowels"</h5>
           <p>
             We'll call this mandatory vowel at the core the <b>"main vowel"</b>.
             This isn't a technical term, but as we continue to discuss what the
@@ -219,10 +219,10 @@ export function Finals({
         </section>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["tones"]}
       >
-        <h4>Tones {showContentsButton()}</h4>
+        <h4 className="mt-2">Tones {showContentsButton()}</h4>
         <p>
           After the consonants and vowels in this notation, some syllables are
           written with a <G g="ˬ" /> caron or a <G g="ˎ" /> grave accent at the
@@ -278,10 +278,12 @@ export function Finals({
         </p>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["a-finals"]}
       >
-        <h4>Finals with main vowel A {showContentsButton()}</h4>
+        <h4 className="mt-2">
+          Finals with main vowel A {showContentsButton()}
+        </h4>
         <p>
           Finals with main vowel A are divided into three different categories
           by scholars of Middle Chinese.
@@ -427,10 +429,12 @@ export function Finals({
         </ul>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["e-finals"]}
       >
-        <h4>Finals with main vowel E {showContentsButton()}</h4>
+        <h4 className="mt-2">
+          Finals with main vowel E {showContentsButton()}
+        </h4>
         <p>
           Finals with main vowel E in this notation are divided into two
           different categories by scholars of Middle Chinese.
@@ -509,7 +513,7 @@ export function Finals({
           </li>
         </ul>
         <section id="e-chongniu">
-          <h5>Chongniu III finals vs. Chongniu IV finals</h5>
+          <h5 className="mt-2">Chongniu III finals vs. Chongniu IV finals</h5>
           <p>
             Those finals written here with bare <G g="e" /> are sometimes
             divided by scholars into two further groups, when they appear after
@@ -589,10 +593,12 @@ export function Finals({
         </p>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id="i-finals"
       >
-        <h4>Finals with main vowel I {showContentsButton()}</h4>
+        <h4 className="mt-2">
+          Finals with main vowel I {showContentsButton()}
+        </h4>
         <p>
           Finals with main vowel I in this notation all belong to the category
           known to scholars as <b>Division III</b>.
@@ -680,7 +686,7 @@ export function Finals({
           </li>
         </ul>
         <section id="i-chongniu">
-          <h5>Chongniu III finals vs. Chongniu IV finals</h5>
+          <h5 className="mt-2">Chongniu III finals vs. Chongniu IV finals</h5>
           <p>
             Those finals written here with <G g="i" /> <G g="ī" /> <G g="ï" />{" "}
             are sometimes divided by scholars into two further groups, when they
@@ -814,10 +820,12 @@ export function Finals({
         </p>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["o-finals"]}
       >
-        <h4>Finals with main vowel O {showContentsButton()}</h4>
+        <h4 className="mt-2">
+          Finals with main vowel O {showContentsButton()}
+        </h4>
         <p>
           Finals with main vowel O in this notation are divided into two
           different categories by scholars of Middle Chinese.
@@ -927,10 +935,12 @@ export function Finals({
         </ul>
       </section>
       <section
-        className="pb-0 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
+        className="pb-2 pt-14 md:pt-0 md:[margin-bottom:33vh] md:[min-height:50vh] "
         id={SectionIds["u-finals"]}
       >
-        <h4>Finals with main vowel U {showContentsButton()}</h4>
+        <h4 className="mt-2">
+          Finals with main vowel U {showContentsButton()}
+        </h4>
         <p>
           Finals with main vowel U in this notation all belong to the category
           known to scholars as <b>Division III</b>. After{" "}

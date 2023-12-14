@@ -24,6 +24,7 @@ import {
   FigureKeywordDisplay,
   KeywordDisplayFigure,
 } from "~/features/dictionary/FigureKeywordDisplay";
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 
 type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
@@ -125,7 +126,7 @@ export default function FigureDetailsPage() {
             All the {(3530).toLocaleString()} most important kanji can be broken
             down into just{" "}
             <BrowseAtomicComponentsLink>
-              ~300 "atomic" components
+              {TOTAL_ATOMIC_COMPONENTS_COUNT} "atomic" components
             </BrowseAtomicComponentsLink>
             . But sometimes, these atomic components appear again and again in
             the same combinations. These combinations are also considered kanji

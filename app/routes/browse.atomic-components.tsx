@@ -26,9 +26,12 @@ import {
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
 import { parseAnnotatedKeywordText } from "~/features/dictionary/getHeadingsMeanings";
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 
 export const meta: MetaFunction = () => [
-  { title: "The ~300 atomic kanji components | Kanjisense" },
+  {
+    title: `The ${TOTAL_ATOMIC_COMPONENTS_COUNT} atomic kanji components | Kanjisense`,
+  },
 ];
 
 type LoaderData = Awaited<ReturnType<typeof getAtomicFigureBadgeFigures>>;
@@ -263,10 +266,9 @@ export default function FigureDetailsPage() {
               indivisible, kind of like atoms, I've dubbed them the "atomic"
               components. I've also made available{" "}
               <BrowseCompoundComponentsLink>
-                an exhaustive list of all the atomic <em>and</em> compound
-                components
+                an exhaustive list of all the compound components
               </BrowseCompoundComponentsLink>
-              , which number over 1,200.
+              , which number over 900.
             </p>
           </CollapsibleInfoSection>
           <CollapsibleInfoSection

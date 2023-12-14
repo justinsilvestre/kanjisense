@@ -16,6 +16,7 @@ import {
   getDictionaryPageFigure,
   DictionaryPageSearchedFigure,
 } from "~/features/dictionary/getDictionaryPageFigure.server";
+import { parseAnnotatedKeywordText } from "~/features/dictionary/getHeadingsMeanings";
 import {
   links as kvgLinks,
   SingleFigureDictionaryEntry,
@@ -74,7 +75,7 @@ function getPageTitle(
     return `Character definitions, components, readings, and more | Kanjisense`;
   const keyword =
     figure.mnemonicKeyword && figure.mnemonicKeyword !== figure.keyword
-      ? JSON.stringify(figure.mnemonicKeyword)
+      ? JSON.stringify(parseAnnotatedKeywordText(figure.mnemonicKeyword).text)
       : figure.keyword;
   return `${keyword} - definition, components, readings, and more | Kanjisense`;
 }

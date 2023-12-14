@@ -26,6 +26,7 @@ import {
   badgeFigureSelect,
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 import {
   hyogaiKanji,
   jinmeiyoNotInHyogai,
@@ -114,7 +115,7 @@ export default function BrowseCharactersPage() {
               <span className="mb-4 mt-6 text-xl font-bold">
                 ~3500 kanji made from{" "}
                 <BrowseAtomicComponentsLink className="underline hover:text-orange-600">
-                  ~300 components
+                  {TOTAL_ATOMIC_COMPONENTS_COUNT} components
                 </BrowseAtomicComponentsLink>
               </span>
             }

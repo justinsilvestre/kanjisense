@@ -9,7 +9,6 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "CDP-89CA",
   "CDP-89CE",
   "CDP-89E0",
-  "CDP-8B5E",
   "CDP-8B6C",
   "CDP-8B7C",
   "CDP-8BAE",
@@ -132,7 +131,6 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "羽",
   "羽",
   "而",
-  "⺼",
   "臼",
   "艹",
   "衤",
@@ -180,5 +178,7 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "GWS-U20087-11",
   "CDP-8BF1",
   "用",
-  "𠂡"
+  "𠂡",
+  "王",
+  "𫩏"
 ])

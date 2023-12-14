@@ -165,6 +165,9 @@
   historical: second Heavenly Stem
   mnemonic: gasping mouth
   tag: body
+ユ:
+  mnemonic: declaring mouth
+  tag: body
 生:
   historical: life
   mnemonic: plants
@@ -338,7 +341,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   tag: tools
 七:
   historical: seven
-  mnemonic: criss-cross
+  mnemonic: slice
   tag: geo
 欠:
   historical: gap
@@ -459,9 +462,10 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   mnemonic: crossed out
   tag: geo
 円:
-  historical: (various)
-  mnemonic: round
-  tag: geo
+  historical: round
+  mnemonic: elephant head
+  reference: 象
+  tag: animals
 匚:
   historical: container
   mnemonic: shelf
@@ -720,7 +724,7 @@ GWS-U300EE: # 栄,営,覚,学,蛍,労,撹
   historical: tiger stripes
   tag: animals
 𡗗:
-  historical: budding branches
+  mnemonic: budding branches
   tag: plants
 开:
   historical: open
@@ -749,11 +753,6 @@ GWS-U300EE: # 栄,営,覚,学,蛍,労,撹
   mnemonic: sunshine
   standin: 陽
   tag: nature
-𫩏:
-  historical: (various)
-  mnemonic: elephant head
-  standin: 象
-  tag: body
 𠄐:
   historical: spear handle
   tag: weapons
@@ -1509,7 +1508,7 @@ CDP-8C6A: # 款,隷
   tag: body
 CDP-8DBF: # 廌,焉,薦
   historical: (various)
-  mnemonic: bird legs
+  mnemonic: bird body
   reference: 鳥
   tag: animals
 圼:
