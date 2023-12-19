@@ -42,7 +42,7 @@ export default function App() {
         <LiveReload />
         <div
           id="overlay"
-          className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden"
+          className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-10 h-full w-full overflow-hidden"
         ></div>
       </body>
     </html>
@@ -77,7 +77,7 @@ export function ErrorBoundary() {
         <LiveReload />
         <div
           id="overlay"
-          className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden"
+          className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-30 h-full w-full overflow-hidden"
         ></div>
       </body>
     </html>

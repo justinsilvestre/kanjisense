@@ -79,7 +79,7 @@ export function GlyphsImagesSection({
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
           className={clsx(
-            `[border:2px inset #afafaf33] z-30 -m-2 max-w-[95vw] bg-neutral-50/95 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]  `,
+            `[border:2px inset #afafaf33] z-20 -m-2 max-w-[95vw] bg-neutral-50/95 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto]  `,
             popper.animationClassName,
             " backdrop-blur-md",
           )}

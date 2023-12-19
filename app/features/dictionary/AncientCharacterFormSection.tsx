@@ -60,7 +60,7 @@ export function AncientCharacterFormSection({
       {popper.isOpen ? (
         <div
           className={clsx(
-            `[border:2px inset #afafaf33]  z-30 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-7xl`,
+            `[border:2px inset #afafaf33]  z-20 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [background-color:rgba(247,247,247,0.95)]  [overflow-y:auto] [width:18rem] md:max-w-7xl`,
             popper.animationClassName,
           )}
           ref={popper.setPopperElement}

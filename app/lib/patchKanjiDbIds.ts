@@ -129,7 +129,15 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("CDP-8A49", "⿱冖&GWS-FITZGERALD_COP17;")
       .addAtomicIdsLine("GWS-FITZGERALD_COP17")
 
-      .extractFigure("⿹⺄𠂇", "GWS-U5342-VAR-001")
+      // .extractFigure("⿹⺄𠂇", "GWS-U5342-VAR-001")
+      // .replaceIds("GWS-U5342-VAR-001", "⿹乙𠂇")
+      .extractFigureFromIdsSegment({
+        componentIdsSegment: "⿹⺄𠂇",
+        replacementIdsSegment: "&GWS-U5342-VAR-001;",
+        extractedFigureId: "GWS-U5342-VAR-001",
+        newCompleteIds: "⿹乙𠂇",
+      })
+
       .addIdsAfterTransforms("GWS-U524D-UE0101", "⿱䒑&GWS-U5216-VAR-002;")
       .addIdsAfterTransforms("GWS-U5216-VAR-002", "⿰⺼刂")
       .replaceIds("煎", "⿱&GWS-U524D-UE0101;灬")
@@ -238,7 +246,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["繭", "⿱艹&CDP-8DDC;[GTK]	⿱艹&CDP-8DDC;[J]"],
         ["䏍", "⿱厶⺼[T]	⿱厶月[KJ]"],
         ["覃", "⿱覀早[GTKJ]	⿱襾早"],
-        ["𣥂", "⿱⿰丶亅丿"],
         ["候", "⿴侯丨"],
         ["麗", "⿱⿰⿱一⿵冂丶⿱一⿵冂丶鹿"],
         ["CDP-8BB5", "⿰&CDP-88F0;犬	⿰&CDP-8B5E;犬[J]"],
@@ -303,7 +310,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["尢", "⿻一儿"],
         ["重", "⿱千里"],
         ["CDP-8C4B", "⿻廿儿"],
-        ["飛", "⿹⿰⺄⺀⿻丨⿻⿱㇀丿⿰⺄⺀"],
+        ["飛", "⿹⿰乙⺀⿻丨⿻⿱㇀丿⿰乙⺀"],
         ["酉", "⿻西一"],
         ["熏", "⿱千黑"],
         ["已", "⿻己丨"],
@@ -397,6 +404,16 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["烏", "⿻⿱㇀コ&CDP-8DBF;"],
 
         ["尺", "⿻尸乀"],
+
+        ["世", "⿻廿𠃊"],
+        ["胤", "⿴儿⿱幺月[GJK]	⿴儿⿱幺⺼[TV]"],
+        ["斗", "⿻⿱丶丶十"],
+        ["亞", "⿱一&GWS-U2FF1-CDP-88A1-U4E00;"],
+
+        // CDP-8BD1	&CDP-8BD1;	⿹耳壬	⿹耳王
+        ["CDP-8BD1", "⿹耳王"],
+
+        ["鬲", "⿱𠮛⿵冂⿱儿丁[J]"],
       ])
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰王",
@@ -503,7 +520,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceComponentOfNonSimplifiedCharacters("免", "&GWS-U514D-G;")
 
       .replaceComponentOfSimplifiedCharacters("辶", "⻌")
-      .replaceIds("辶", "⿱⻌丶")
 
       .replaceComponentOfNonSimplifiedCharacters("者", "者")
       .replaceIds("者", "⿻者丶")
@@ -663,6 +679,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
 
       .replaceEverywhere("㐅", "乂")
       .replaceEverywhere("卄", "廾")
+      .replaceEverywhere("⺄", "乙")
+
+      .replaceEverywhere("丅", "丁")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

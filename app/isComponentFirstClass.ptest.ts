@@ -30,6 +30,22 @@ describe("isComponentFirstClass", () => {
           ],
         ],
         ["旡", []],
+        [
+          "CDP-8CAB",
+          [
+            ["CDP-8CAB", "𠂤"],
+            ["𠂤", "丿"],
+            ["𠂤", "㠯"],
+            ["CDP-8CAB", "止"],
+          ],
+        ],
+        [
+          "卂",
+          [
+            ["卂", "乙"],
+            ["卂", "十"],
+          ],
+        ],
       ] as [string, [string, string][]][]
     ).map(([id, ct]) => [id, ct.map((c) => new ComponentUse(c[0], c[1]))]),
   );
@@ -98,6 +114,32 @@ describe("isComponentFirstClass", () => {
     const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
       ["旡", new Set(["既", "炁"])],
       ["兂", new Set(["兓"])],
+    ]);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const result = isComponentFirstClass(
+      new Set(priorityFiguresIds),
+      parent,
+      component,
+      componentsToDirectUsesPrimaryVariants,
+      figuresToVariantGroups,
+      figuresToComponentTrees,
+    );
+    expect(result).toEqual(true);
+  });
+
+  it("works with 卂", async () => {
+    const priorityFiguresIds = await prisma.kanjisenseFigure
+      .findMany({
+        where: {
+          isPriority: true,
+        },
+      })
+      .then((fs) => fs.map((f) => f.id));
+    const parent = "迅";
+    const component = "卂";
+    const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
+      ["卂", new Set(["迅", "㷀", "嬴", "巩", "煢"])],
+      ["GWS-U5342-VAR-001", new Set(["訊", "汛", "蝨"])],
     ]);
     const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
     const result = isComponentFirstClass(

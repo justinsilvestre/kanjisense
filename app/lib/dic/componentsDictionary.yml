@@ -33,7 +33,8 @@
   tag: geo
 十:
   historical: ten
-  mnemonic: cross
+  mnemonic: needle
+  standin: 針
   tag: geo
 小:
   historical: small
@@ -114,7 +115,7 @@
   mnemonic: standing person
   tag: personal
 ⺕:
-  mnemonic: holding hand
+  mnemonic: grasping hand
   tag: hands
 止:
   historical: stop
@@ -476,6 +477,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   tag: body
 CDP-8BF5: # 介,齐,粛,弗,界,芥,堺,斎,繍,費,沸,佛,拂
   historical: prying hands
+  reference: 介
   tag: hands
 才:
   historical: talent
@@ -493,6 +495,7 @@ CDP-8BF5: # 介,齐,粛,弗,界,芥,堺,斎,繍,費,沸,佛,拂
   tag: feeling
 廴:
   historical: stretch
+  mnemonic: stretching legs
   tag: geo
 角:
   historical: horn
@@ -524,7 +527,9 @@ GWS-U2FF1-U4E00-CDP-8CC6-VAR-001:
   tag: body
 丹:
   historical: cinnabar
-  tag: nature
+  mnemonic: rusty boat
+  reference: 舟
+  tag: null
 元:
   historical: origin
   tag: nature
@@ -622,9 +627,9 @@ CDP-8CBD: # 卬,兜,仰,迎,抑,昂,CDP-8C79,叚,暇,瑕,蝦,霞,假
   tag: tools
 于:
   historical: at
-  mnemonic: space
-  standin: 宇
-  tag: geo
+  mnemonic: potato
+  standin: 芋
+  tag: null
 CDP-8D46: # 鼠,巤,臘,蠟,獵
   historical: (various)
   mnemonic: mouse
@@ -725,7 +730,7 @@ GWS-U300EE: # 栄,営,覚,学,蛍,労,撹
   tag: hands
 亲:
   historical: spicy
-  mnemonic: stand in tree
+  mnemonic: tree climber
   tag: actions
 𮥶:
   historical: stork
@@ -858,9 +863,8 @@ CDP-8CCC: # 差,羞,着,嗟,磋,嵯,瑳
   mnemonic: shepherd's crook
   tag: tools
 侖:
-  historical: reason
-  mnemonic: huddle
-  tag: actions
+  mnemonic: friends
+  tag: people
 GWS-U226F3-VAR-001: # 聴,徳,德,聽,廳
   historical: moral
   mnemonic: moral
@@ -1171,7 +1175,7 @@ GWS-U6EA5-VAR-003:
   tag: place
 冏:
   historical: jute plant
-  mnemonic: businessman
+  mnemonic: merchant
   reference: 商
   tag: personal
 GWS-CDP-8CA9-07: # 隋,惰,楕,遀,墮,隨,髓
@@ -1180,10 +1184,8 @@ GWS-CDP-8CA9-07: # 隋,惰,楕,遀,墮,隨,髓
   standin: 惰
   tag: feelings
 舄:
-  historical: slipper
-  mnemonic: lagoon
-  standin: 潟
-  tag: place
+  historical: shoe
+  tag: null
 朿:
   historical: thorn
   full: 刺
@@ -1358,7 +1360,7 @@ GWS-U23A8A-VAR-001: # 殻,穀,穀,殼
   tag: tools
 𭔰:
   historical: (various)
-  mnemonic: lima bean
+  mnemonic: small pot
   tag: food
 GWS-U655D-G:
   historical: worn out
@@ -1603,6 +1605,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: weapons
 豆:
   historical: beans
+  mnemonic: cooking pot
   tag: food
 勿:
   historical: not
@@ -1706,6 +1709,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: actions
 直:
   historical: direct
+  mnemonic: straightening
   tag: geo
 早:
   historical: early
@@ -1962,7 +1966,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: place
 予:
   historical: beforehand
-  mnemonic: unused spear
+  mnemonic: stowed spear
   reference: 矛
   tag: weapons
 高:
@@ -2010,8 +2014,9 @@ CDP-8DBF: # 廌,焉,薦
   historical: feeling
   tag: feeling
 亡:
-  historical: deceased
-  tag: process
+  historical: flee
+  mnemonic: departing person
+  tag: null
 交:
   historical: mix
   tag: hands
@@ -2038,8 +2043,8 @@ CDP-8DBF: # 廌,焉,薦
   tag: personal
 壬:
   historical: ninth Heavenly Stem
-  mnemonic: responsible
-  standin: 任
+  mnemonic: burden
+  reference: 任
   tag: feelings
 谷:
   historical: valley
@@ -2214,10 +2219,8 @@ GWS-U20B36-VAR-002:
   standin: 熊
   tag: animals
 要:
-  historical: need
-  mnemonic: waist
-  standin: 腰
-  tag: body
+  historical: pivot
+  tag: null
 象:
   historical: elephant
   tag: animals
@@ -2357,6 +2360,7 @@ GWS-U20B36-VAR-002:
   tag: actions
 丙:
   historical: third Heavenly Stem
+  mnemonic: third-class
   tag: geo
 敬:
   historical: venerate

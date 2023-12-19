@@ -10,7 +10,9 @@ export function isComponentFirstClass(
   figuresToVariantGroups: Map<string, string[]>,
   figuresToComponentsTrees: Map<string, ComponentUse[]>,
 ) {
-  const figureIsAtomic = figuresToComponentsTrees.get(component)!.length <= 1;
+  const componentsTree = figuresToComponentsTrees.get(component);
+  if (!componentsTree) throw new Error(`No components tree for ${component}`);
+  const figureIsAtomic = componentsTree.length <= 1;
   if (figureIsAtomic) return true;
   if (forcedMeaninglessFiguresSet.has(component)) return false;
 

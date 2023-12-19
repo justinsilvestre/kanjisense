@@ -62,7 +62,7 @@ export function RadicalSection({
       {popper.isOpen ? (
         <div
           className={clsx(
-            `[border:2px inset #afafaf33] fixed z-30 -m-2 w-[95vw] max-w-[30rem] p-3 text-left text-sm shadow shadow-gray-400 transition-opacity  duration-300 [background-color:rgba(247,247,247,0.95)] [border-radius:0.3em]  [box-sizing:border-box] [max-height:85vh] [overflow-y:auto]`,
+            `[border:2px inset #afafaf33] fixed z-20 -m-2 w-[95vw] max-w-[30rem] p-3 text-left text-sm shadow shadow-gray-400 transition-opacity  duration-300 [border-radius:0.3em] [box-sizing:border-box]  [background-color:rgba(247,247,247,0.95)] [overflow-y:auto] [max-height:85vh]`,
 
             popper.animationClassName,
           )}

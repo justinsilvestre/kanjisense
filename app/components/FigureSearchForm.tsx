@@ -71,9 +71,10 @@ export function FigureSearchForm({
     },
     onInputValueChange({ inputValue, type }) {
       if (inputValue && type === useCombobox.stateChangeTypes.InputChange) {
-        const queries: string[] = [inputValue.toLowerCase()];
-        const hepburns = toModifiedHepburn(inputValue).filter(
-          (h) => h !== inputValue,
+        const trimmedLowercaseInput = inputValue.trim().toLowerCase();
+        const queries: string[] = [trimmedLowercaseInput];
+        const hepburns = toModifiedHepburn(trimmedLowercaseInput).filter(
+          (h) => h !== trimmedLowercaseInput,
         );
         if (hepburns.length && hepburns.every(couldBeRomaji)) {
           for (const hepburn of hepburns) {

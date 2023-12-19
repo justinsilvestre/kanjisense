@@ -62,7 +62,7 @@ export function FigurePriorityUses({
               />
 
               <div className="relative [height:1.5em] [width:5.5rem] ">
-                <div className="overflow-hidden overflow-ellipsis whitespace-nowrap  [width:6.25rem]  group-hover:absolute  group-hover:overflow-visible  group-hover:whitespace-normal group-hover:[width:8rem] ">
+                <div className="z-10 overflow-hidden overflow-ellipsis whitespace-nowrap  [width:6.25rem]  group-hover:absolute  group-hover:overflow-visible  group-hover:whitespace-normal group-hover:[width:8rem] ">
                   <span className=" [text-stroke-color:white] group-hover:bg-white group-hover:outline  group-hover:outline-offset-1 group-hover:outline-neutral-100/90  group-hover:[text-stroke:3px]">
                     <FigureKeywordDisplay figure={u.parent} />
                     &nbsp;

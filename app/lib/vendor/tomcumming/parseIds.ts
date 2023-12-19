@@ -186,7 +186,9 @@ export function children(ids: IDS): IDS[] {
       if (
         surroundFromLowerLeft.outside.type === "char" &&
         (surroundFromLowerLeft.outside.char === "⻌" ||
-          surroundFromLowerLeft.outside.char === "辶")
+          surroundFromLowerLeft.outside.char === "辶" || 
+          surroundFromLowerLeft.outside.char === "𠃊"
+          )
       ) {
         return [surroundFromLowerLeft.inside, surroundFromLowerLeft.outside];
       }
