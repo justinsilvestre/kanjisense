@@ -114,10 +114,8 @@
   mnemonic: standing person
   tag: personal
 ⺕:
-  historical: pig snout
-  mnemonic: bristles
-  reference: 聿
-  tag: tools
+  mnemonic: holding hand
+  tag: hands
 止:
   historical: stop
   mnemonic: footprint
@@ -147,7 +145,7 @@
   tag: personal
 卜:
   historical: divining
-  mnemonic: fortune teller
+  mnemonic: cracked tortoise-shell
   tag: personal
 自:
   historical: self
@@ -223,16 +221,15 @@
   historical: block
   tag: geo
 隹:
-  historical: old bird
-  mnemonic: perching bird
+  historical: short-tailed bird
   tag: animals
 巾:
   historical: towel
   tag: tools
 示:
   historical: show
-  mnemonic: altar
-  tag: place
+  mnemonic: divinity
+  tag: null
 广:
   historical: cave
   tag: place
@@ -389,7 +386,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   standin: 師
   tag: personal
 世:
-  historical: leaf
+  mnemonic: leaf
   standin: 葉
   tag: plants
 石:
@@ -588,6 +585,7 @@ CDP-8CBD: # 卬,兜,仰,迎,抑,昂,CDP-8C79,叚,暇,瑕,蝦,霞,假
   tag: body
 為:
   historical: sake
+  mnemonic: baby elephant
   tag: null
 乎:
   historical: to
@@ -668,16 +666,11 @@ CDP-8D46: # 鼠,巤,臘,蠟,獵
 攵:
   historical: knock
   tag: actions
-从:
-  mnemonic: twins
-  tag: personal
 屮:
   historical: sprout
   tag: plants
 殳:
-  historical: spear
-  mnemonic: throwing hand
-  reference: 投
+  mnemonic: armed hand
   tag: hands
 氺:
   historical: water
@@ -689,7 +682,7 @@ CDP-8BF1: # 用,半,奉,𠂡,甬,備,𬎾,通,痛,踊,誦,桶,涌,樋,庸,傭,�
   tag: tools
 CDP-8B62: # 𭥴,CDP-88D4,會,曾,檜,繪,僧,層,憎,增,贈,黑,墨,熏,默,點,黨,勳,薰
   historical: (various)
-  mnemonic: cat eyes
+  mnemonic: elephant eyes
   tag: body
 聿:
   historical: brush
@@ -771,7 +764,7 @@ CDP-8BD6: # 奥,向,CDP-8D7C,襖,奧
   tag: tools
 冋:
   historical: (various)
-  mnemonic: mouth covering
+  mnemonic: face mask
   tag: fabric
 娄:
   historical: the bond
@@ -794,9 +787,8 @@ CDP-8BB8: # 愛,受,舜,曖,授,綬,瞬
   mnemonic: opening mouth
   tag: body
 㑒:
-  historical: all, together, unanimous
-  mnemonic: swordsman
-  reference: 剣
+  historical: everyone
+  mnemonic: unanimous
   tag: personal
 坴:
   historical: clod of earth
@@ -835,8 +827,7 @@ CDP-8BE8: # 竜,電,滝,奄,CDP-89BD,俺,庵,亀,縄
   standin: 咲
   tag: plants
 𠀎:
-  historical: (various)
-  mnemonic: grating
+  mnemonic: straw
   tag: place
 枼:
   historical: leafy tree
@@ -1113,8 +1104,7 @@ CDP-8D60:
   tag: personal
 𦰌:
   historical: clay
-  mnemonic: salad
-  tag: food
+  tag: null
 𤔔:
   historical: govern
   mnemonic: trap
@@ -1144,9 +1134,6 @@ GWS-U2FF1-U2D544-U51F6: # 悩,脳,惱,腦
 夹:
   historical: flank
   full: 挟
-  tag: geo
-丗:
-  historical: thirty
   tag: geo
 囱:
   historical: chimney, top of head
@@ -1600,7 +1587,8 @@ CDP-8DBF: # 廌,焉,薦
   tag: geo
 廿:
   historical: twenty
-  tag: geo
+  mnemonic: grassy plant
+  tag: null
 来:
   historical: come
   mnemonic: wheat
@@ -1820,7 +1808,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: hands
 酉:
   historical: year of the Rooster
-  mnemonic: rooster
+  mnemonic: wine jug
   tag: animals
 黒:
   historical: black
@@ -1974,7 +1962,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: place
 予:
   historical: beforehand
-  mnemonic: unfinished spear
+  mnemonic: unused spear
   reference: 矛
   tag: weapons
 高:
@@ -2102,7 +2090,9 @@ CDP-8DBF: # 廌,焉,薦
   tag: feelings
 北:
   historical: north
-  tag: nature
+  mnemonic: back
+  reference: 背
+  tag: body
 卓:
   historical: eminent
   tag: feelings
@@ -2225,7 +2215,9 @@ GWS-U20B36-VAR-002:
   tag: animals
 要:
   historical: need
-  tag: actions
+  mnemonic: waist
+  standin: 腰
+  tag: body
 象:
   historical: elephant
   tag: animals
@@ -2499,7 +2491,7 @@ GWS-U20B36-VAR-002:
   historical: illuminate
   tag: color
 従:
-  historical: complying
+  historical: follow
   tag: null
 頼:
   historical: entrust
@@ -2560,6 +2552,7 @@ GWS-U20B36-VAR-002:
   tag: nature
 尓:
   historical: thus
+  mnemonic: decoration
   tag: null
 既:
   historical: already
@@ -3179,6 +3172,8 @@ GWS-U914B-G:
   tag: geo
 了:
   historical: complete
+  mnemonic: sleeping child
+  reference: 子
   tag: process
 禁:
   historical: prohibit

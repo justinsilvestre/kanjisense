@@ -80,11 +80,11 @@ export function RadicalSection({
           </h3>
           <p className="mb-4">
             Knowing a character's traditional "radical" is not as useful today
-            as was a couple decades ago. But identifying a kanji's radical is
-            still part of traditional kanji education, and radical knowledge is
-            even tested on the 漢字検定 <i>Kanji Kentei</i> exam, which is used
-            to certify kanji knowledge. These radicals are provided here for
-            your reference.
+            as was a couple decades ago. But identifying radicals is still part
+            of traditional kanji education, and radical knowledge is even tested
+            on the 漢字検定 <i>Kanji Kentei</i> exam, which is used to certify
+            kanji knowledge. These radicals are provided here for your
+            reference.
           </p>
           <h3 className=" mb-2 text-center font-bold">What is a radical?</h3>
           <p className="mb-4">

@@ -32,7 +32,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
         "GWS-U7680-08-VAR-001",
         "⿱丨&GWS-CDP-8B7C-VAR-001;",
       )
-      .addAtomicIdsLine("GWS-CDP-8B7C-VAR-001") // 即
       .replaceIds("既", "⿰&GWS-U7680-08-VAR-001;旡")
       .replaceIds("鄕", "⿲乡皀⻏[GTKV]	⿲乡&GWS-U7680-08-VAR-001;⻏[J]") // careful for oozato
       .replaceIds("卿", "⿻卯&GWS-U7680-08-VAR-001;")
@@ -186,7 +185,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["亲", "⿱立木"],
         ["冐", "⿱日月"],
         ["卵", "⿻卯丷"],
-        ["戊", "⿰厂戈"],
+        ["戊", "⿰丿戈"],
         ["我", "⿰手戈"],
         ["赤", "⿻一亦"],
         ["亐", "⿻丂一"],
@@ -210,7 +209,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["党", "⿱𫩠儿"],
         ["由", "⿻田丨"],
         ["来", "⿻一米"],
-        ["周", "⿵⺆⿱土口[GTJV]	⿵⺆⿱&CDP-8BF1;口[K]"],
+        ["周", "⿵冂⿱土口[GTJV]	⿵冂⿱&CDP-8BF1;口[K]"],
         ["舎", "⿳𠆢土口"],
         ["袁", "⿳土口𧘇"],
         ["CDP-89ED", "⿻二巾"],
@@ -283,7 +282,11 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["白", "⿱丿日"],
         ["事", "⿻⿳一口⺕亅"],
         ["承", "⿱乛⿻水三"],
-        ["永", "⿱丶⿻乛水"],
+        ["永", "⿱丶⿻一水"],
+        ["矛", "⿻予丿"],
+        ["子", "⿻了一"],
+        // U+4ECA	今	⿱亽㇇[G]	⿱亼㇇[TJKV]
+        ["今", "⿱亼乛"],
         ["缶", "⿻午山"],
         ["疋", "⿱乛龰"],
         ["疌", "⿻⿱一⺕龰"],
@@ -359,6 +362,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["黙", "⿺黒犬"],
         ["勲", "⿺𤋱力"],
         ["菫", "⿻𦰌一"],
+        ["𦰌", "⿱艹⿻⿱口一土"],
+        ["𦰌", "⿱廿⿻⿱口一土"],
         ["營", "⿱𤇾呂"],
         ["串", "⿻中口"],
         ["捌", "⿰扌別"],
@@ -564,7 +569,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⿱一&CDP-8CC6;",
       })
       .replaceIds("辰", "⿸厂⿱一&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
-      .replaceIds("CDP-8CE5", "⿱卄&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
+      .replaceIds("CDP-8CE5", "⿱廾&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
       .replaceIds("畏", "⿳田一&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
       .replaceIds("喪", "⿱⿻十吅&GWS-U2FF1-U4E00-CDP-8CC6-VAR-001;")
       .replaceIds("CDP-884A", "⿰丨三")
@@ -577,7 +582,13 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⿲二丨二",
       })
 
-      .replaceIds("艮", "⿺&CDP-8CC6;ヨ")
+      .replaceIds("艮", "⿻日&CDP-8CC6;")
+      .replaceIds("CDP-8B7C", "⿻日厶")
+      .addIdsAfterTransforms("GWS-CDP-8B7C-VAR-001", "⿻日⿰丨二")
+      .replaceIds("CDP-89CE", "⿻日丿")
+
+      // U+810A	脊	⿱&CDP-88D2;月[GJK]	⿱&CDP-88D2;⺼[T]
+      .replaceIds("脊", "⿱⿻人⿰二二月")
 
       .replaceIds("𠂢", "⿸𠂆&GWS-U27607-VAR-010;")
       .addAtomicIdsLine("GWS-U27607-VAR-010")
@@ -619,6 +630,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("肉", "⿵内人")
       .replaceIds("CDP-8B5E", "⿵𠂊⺀")
       .replaceIds("⺼", "⿵冂⺀")
+      .replaceEverywhere("⺆", "冂")
+
+      .replaceIds("𠀎", "⿻艹二")
 
       .replaceManyIds([
         ["豹", "⿰豸勺"],
@@ -631,20 +645,24 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .addAtomicIdsLine("CDP-89BF")
       .replaceIds("呉", "⿳⿴口𠃑一八[GJ]	⿱⿳口𠃑一八[T]")
 
-      .extractFigureFromIdsSegment({
-        // 牛 from 牜 left
-        componentIdsSegment: "⿰牛",
-        extractedFigureId: "牜",
-        newCompleteIds: "牜",
-        replacementIdsSegment: "⿰牜",
-      })
+      // .extractFigureFromIdsSegment({
+      //   // 牛 from 牜 left
+      //   componentIdsSegment: "⿰牛",
+      //   extractedFigureId: "牜",
+      //   newCompleteIds: "牜",
+      //   replacementIdsSegment: "⿰牜",
+      // })
       .replaceIds("州", "⿰丶⿻川⿰丶丶")
 
       .replaceIds("𤰇", "⿱龷⿰丿用")
-      .replaceIds("備", "⿰亻𤰇[GTJ]	⿰亻⿱卄⿸厂用[K]")
+      .replaceIds("備", "⿰亻𤰇[GTJ]	⿰亻⿱廾⿸厂用[K]")
 
       .replaceComponentOfFigures("邪芽雅冴", "牙", "&GWS-U7259-K;")
       .addAtomicIdsLine("GWS-U7259-K")
+      .replaceIds("CDP-8B62", "⿻𫩏丷")
+
+      .replaceEverywhere("㐅", "乂")
+      .replaceEverywhere("卄", "廾")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

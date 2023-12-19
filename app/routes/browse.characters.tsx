@@ -125,7 +125,7 @@ export default function BrowseCharactersPage() {
               the systematic way that it treats the graphical{" "}
               <strong>components</strong> of the kanji. Though literacy in
               Japanese requires knowledge of thousands of characters, it's
-              possible to break them down into just around 300 distinct
+              possible to break them down into just around 280 distinct
               components. The idea is that, by learning to recognize these
               components, it becomes much easier to learn new kanji. Here you
               can see{" "}

@@ -158,7 +158,8 @@ const rhymes: Record<
       if (initialGroups["幫"].has(s.canonical母)) return "ūk";
       if (s.canonical母 === "以") return "ẁīk";
       return initialGroups["莊"].has(s.canonical母) ||
-        initialGroups["章"].has(s.canonical母)
+        initialGroups["章"].has(s.canonical母) ||
+        initialGroups["精"].has(s.canonical母)
         ? "yūk"
         : "wīk";
     }

@@ -140,6 +140,10 @@ export async function seedKanjisenseFigureReadings(
       ),
     );
 
+    await executeAndLogTime("deleting old readings", () =>
+      prisma.kanjisenseFigureReading.deleteMany(),
+    );
+
     await executeAndLogTime("creating readings", () =>
       prisma.kanjisenseFigureReading.createMany({
         data: dbInput,
@@ -201,8 +205,6 @@ export async function seedKanjisenseFigureReadings(
     kanjidicEntries: Map<string, Pick<KanjidicEntry, "id" | "onReadings">>,
     unihan15Keys: Set<string>,
   ) {
-    await prisma.kanjisenseFigureReading.deleteMany();
-
     const joyoWikipediaText = readFileSync(files.joyoWikipediaTsv, "utf-8");
     const joyoWikipedia = new Map(
       joyoWikipediaText

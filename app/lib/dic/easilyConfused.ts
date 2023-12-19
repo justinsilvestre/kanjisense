@@ -17,5 +17,6 @@ export const easilyConfusedFigures = [
   ["CDP-8BBF", "丂"],
   ["瓜", "爪"],
   ["片", "爿"],
-  ["乗", "垂"]
+  ["乗", "垂"],
+  ["𠂆", "厂"]
 ];
