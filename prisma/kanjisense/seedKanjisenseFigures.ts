@@ -34,8 +34,6 @@ export async function seedKanjisenseFigures(
   });
   if (seeded && !force) console.log(`figures already seeded. 🌱`);
   else {
-    console.log("Seeding figures...");
-
     const readingIds = new Set(
       await prisma.kanjisenseFigureReading
         .findMany({

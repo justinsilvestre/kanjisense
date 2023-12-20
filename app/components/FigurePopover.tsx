@@ -100,7 +100,6 @@ export function useFigurePopover({
         console.warn(`No badge props for figure ${popperFigureId}`);
         return;
       }
-      console.log(`Loading badge props ${badgeProps.id}`);
       if (isOpen) {
         close();
         loadFigure(badgeProps.id);
@@ -248,6 +247,7 @@ export function usePopoverFigureFetcher(initialBadgeProps?: BadgeProps | null) {
   const fetchedBadgeProps = fetchedFigure && getBadgeProps(fetchedFigure);
   useEffect(() => {
     if (fetchedFigure?.id) {
+      console.log("fetchedFigure.id", fetchedFigure.id);
       setLoadingBadgeProps(null);
     }
   }, [fetchedFigure?.id]);

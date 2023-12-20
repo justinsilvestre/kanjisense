@@ -29,7 +29,6 @@ export function DictLink({
   className,
 }: {
   children?: ReactNode;
-
   className?: string;
 } & Omit<
   LinkProps<{
@@ -50,6 +49,30 @@ export function DictLink({
     </AppLink>
   );
 }
+
+interface PopoverAnchorAttributes {
+  onClick: React.MouseEventHandler;
+  className: string;
+  ref: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+}
+
+export const DictPreviewLink = ({
+  children,
+  className,
+  figureId,
+  popoverAttributes,
+}: LinkProps<{
+  figureId: string;
+  popoverAttributes: PopoverAnchorAttributes;
+}>) => (
+  <a
+    href={`/dict/${figureId}`}
+    {...popoverAttributes}
+    className={`${className} ${popoverAttributes.className}`}
+  >
+    {children}
+  </a>
+);
 
 export const IndexLink = ({ children, className }: LinkProps) => (
   <AppLink to="/" className={className}>

@@ -7,11 +7,7 @@ import { forEachLine } from "~/lib/forEachLine.server";
 
 import { registerSeeded } from "../seedUtils";
 
-export async function seedUnihan15(
-  prisma: PrismaClient,
-  force = false,
-  verbose = false,
-) {
+export async function seedUnihan15(prisma: PrismaClient, force = false) {
   const seeded = await prisma.setup.findUnique({
     where: { step: "Unihan15" },
   });
@@ -91,31 +87,38 @@ export async function seedUnihan15(
       action: (data) => prisma.unihan15.createMany({ data }),
     });
 
-    await executeAndLogTime("connecting readings", async () => {
-      const allReadings = await prisma.kanjisenseFigureReading
-        .findMany({ select: { id: true } })
-        .then((x) => x.map((x) => x.id));
-      for (const readingId of allReadings) {
-        const reading = dbInput.get(readingId);
-        if (reading) {
-          if (verbose && reading.kRSUnicode.includes(" "))
-            console.log(
-              `Found more than one radical for ${readingId}: ${reading.kRSUnicode}`,
-            );
-          await prisma.kanjisenseFigureReading.update({
-            where: {
-              id: readingId,
-            },
-            data: {
-              unihan15Id: readingId,
-            },
-          });
-        }
-      }
-    });
     await registerSeeded(prisma, "Unihan15");
     console.log(`unihan15 seeded. 🌱`);
   }
+}
+
+export async function connectReadings(
+  prisma: PrismaClient,
+  dbInput: Map<string, Record<string, string>>,
+  verbose: boolean,
+) {
+  await executeAndLogTime("connecting readings", async () => {
+    const allReadings = await prisma.kanjisenseFigureReading
+      .findMany({ select: { id: true } })
+      .then((x) => x.map((x) => x.id));
+    for (const readingId of allReadings) {
+      const reading = dbInput.get(readingId);
+      if (reading) {
+        if (verbose && reading.kRSUnicode.includes(" "))
+          console.log(
+            `Found more than one radical for ${readingId}: ${reading.kRSUnicode}`,
+          );
+        await prisma.kanjisenseFigureReading.update({
+          where: {
+            id: readingId,
+          },
+          data: {
+            unihan15Id: readingId,
+          },
+        });
+      }
+    }
+  });
 }
 
 export function getRadicalNumber(character: string, adobeJapanRsText?: string) {

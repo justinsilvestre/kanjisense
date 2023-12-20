@@ -427,7 +427,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   standin: 作
   tag: actions
 曲:
-  historical: turn
+  historical: riverbend
   tag: geo
 覀:
   historical: engulf
@@ -2307,9 +2307,8 @@ GWS-U20B36-VAR-002:
   historical: add
   tag: geo
 升:
-  historical: rise
-  full: 昇
-  tag: geo
+  historical: measuring box
+  tag: null
 将:
   historical: commander
   tag: personal

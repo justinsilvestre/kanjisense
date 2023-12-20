@@ -135,7 +135,6 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "西",
   "覀",
   "豕",
-  "辶",
   "門",
   "面",
   "馬",

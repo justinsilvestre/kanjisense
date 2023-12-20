@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import { simplifiedSoundMarks } from "~/lib/dic/simplifiedSoundMarks";
+import { soundMarksToSimplifications } from "~/lib/dic/simplifiedSoundMarks";
 
 import { ComponentUse } from "../../app/features/dictionary/ComponentUse";
 import { registerSeeded } from "../seedUtils";
@@ -36,7 +36,7 @@ export async function seedKanjisenseActiveSoundMarks(
         ),
       ]),
     );
-    console.log("registering active sound marks...");
+
     await executeAndLogTime("registering active sound marks", () =>
       registerActiveSoundMarks(prisma, componentsTrees),
     );
@@ -47,7 +47,7 @@ export async function seedKanjisenseActiveSoundMarks(
   console.log(`KanjisenseActiveSoundMark seeded. 🌱`);
 }
 
-async function registerActiveSoundMarks(
+export async function registerActiveSoundMarks(
   prisma: PrismaClient,
   componentsTrees: Map<string, ComponentUse[]>,
 ) {
@@ -72,28 +72,33 @@ async function registerActiveSoundMarks(
           character: id.normalize(),
         },
       }));
-    const soundMarkCandidates = tree.filter(({ component }) => {
-      const componentPrimaryVariant = getPrimaryVariantId(component);
+    const soundMarkCandidates = derivation
+      ? tree.filter(({ component }) => {
+          const componentPrimaryVariant = getPrimaryVariantId(component);
 
-      const phoneticMatchInDerivationChain = derivation?.phoneticOrigins.find(
-        (originCharacter) => {
-          const exactMatch =
-            getPrimaryVariantId(originCharacter) === componentPrimaryVariant;
-          if (exactMatch) return true;
-          const simplifiedOriginCharacterVariants =
-            simplifiedSoundMarks[
-              originCharacter as keyof typeof simplifiedSoundMarks
-            ];
-          return (
-            simplifiedOriginCharacterVariants?.some(
-              (variant) =>
-                getPrimaryVariantId(variant) === componentPrimaryVariant,
-            ) ?? false
-          );
-        },
-      );
-      return phoneticMatchInDerivationChain;
-    });
+          const phoneticMatchInDerivationChain =
+            derivation.phoneticOrigins.find((originCharacter) => {
+              const exactMatch =
+                getPrimaryVariantId(originCharacter) ===
+                componentPrimaryVariant;
+              if (exactMatch) return true;
+
+              const simplifiedOriginCharacterVariants =
+                soundMarksToSimplifications[
+                  originCharacter as keyof typeof soundMarksToSimplifications
+                ];
+
+              return (
+                simplifiedOriginCharacterVariants?.some(
+                  (simplifiedSoundMark) =>
+                    getPrimaryVariantId(simplifiedSoundMark) ===
+                    componentPrimaryVariant,
+                ) ?? false
+              );
+            });
+          return phoneticMatchInDerivationChain;
+        })
+      : [];
     const activeSoundMark = soundMarkCandidates[0];
     if (
       activeSoundMark &&

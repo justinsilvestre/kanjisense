@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import { PrismaClient } from "@prisma/client";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -8,25 +7,26 @@ import {
   useRouteError,
 } from "@remix-run/react";
 import clsx from "clsx";
+import { createPortal } from "react-dom";
 
 import {
   AboutLink,
   BrowseCharactersLink,
   BrowseCompoundComponentsLink,
   DictLink,
+  DictPreviewLink,
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
 import { FigureBadge } from "~/components/FigureBadge";
+import { FigurePopoverWindow } from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
 import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
-import {
-  BadgeProps,
-  badgeFigureSelect,
-  getBadgeProps,
-} from "~/features/dictionary/badgeFigure";
+import { useManyFiguresPopover } from "~/features/browse/useManyFiguresPopover";
 import { parseAnnotatedKeywordText } from "~/features/dictionary/getHeadingsMeanings";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
+
+import { getAtomicFigureBadgeFigures } from "../features/browse/getAtomicFigureBadgeFigures";
 
 export const meta: MetaFunction = () => [
   {
@@ -36,131 +36,6 @@ export const meta: MetaFunction = () => [
 
 type LoaderData = Awaited<ReturnType<typeof getAtomicFigureBadgeFigures>>;
 
-const isPriorityComponentWhere = {
-  isPriority: true,
-  listsAsComponent: { isEmpty: false },
-  asComponent: {
-    allUses: {
-      some: {
-        isPriority: true,
-      },
-    },
-  },
-};
-async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
-  const priorityAtomicComponents = await prisma.kanjisenseFigure.findMany({
-    select: {
-      ...badgeFigureSelect,
-      keyword: true,
-      mnemonicKeyword: true,
-      image: true,
-    },
-    orderBy: { aozoraAppearances: "desc" },
-    where: {
-      OR: [
-        {
-          ...isPriorityComponentWhere,
-          componentsTree: { equals: [] },
-        },
-        {
-          listsAsCharacter: { isEmpty: false },
-          componentsTree: { equals: [] },
-        },
-      ],
-    },
-  });
-
-  type QueriedFigure = (typeof priorityAtomicComponents)[number];
-
-  const atomicFiguresMap: Record<string, QueriedFigure> = {};
-  const nonAtomicVariantsMap: Record<string, QueriedFigure> = {};
-  const variantGroupHeads = new Set<string>();
-
-  const primaryVariantToRanking: Record<string, number> = {};
-
-  for (const figure of priorityAtomicComponents) {
-    atomicFiguresMap[figure.id] = figure;
-    if (figure.variantGroupId) variantGroupHeads.add(figure.variantGroupId);
-    else primaryVariantToRanking[figure.id] = figure.aozoraAppearances ?? 0;
-  }
-  const variantGroupsRankings = await prisma.kanjisenseFigure.groupBy({
-    by: ["variantGroupId"],
-    where: {
-      variantGroupId: { in: [...variantGroupHeads] },
-    },
-    _sum: { aozoraAppearances: true },
-  });
-  for (const group of variantGroupsRankings) {
-    const variantGroup = group.variantGroupId!;
-    const appearances = group._sum.aozoraAppearances;
-    primaryVariantToRanking[variantGroup] = appearances ?? 0;
-  }
-
-  const variantFigures = await prisma.kanjisenseVariantGroup.findMany({
-    where: { id: { in: [...variantGroupHeads] } },
-    include: {
-      figures: {
-        where: {
-          id: {
-            notIn: [...priorityAtomicComponents.map((figure) => figure.id)],
-          },
-          listsAsComponent: { isEmpty: false },
-        },
-        select: {
-          ...badgeFigureSelect,
-          keyword: true,
-          mnemonicKeyword: true,
-          image: true,
-        },
-      },
-    },
-  });
-  for (const group of variantFigures) {
-    for (const figure of group.figures) {
-      nonAtomicVariantsMap[figure.id] = figure;
-    }
-  }
-
-  const groups: {
-    id: string;
-    appearances: number;
-    keyword: string;
-    mnemonicKeyword: string | null;
-    figures: {
-      isAtomic: boolean;
-      figure: BadgeProps;
-    }[];
-  }[] = [];
-  for (const [id, ranking] of Object.entries(primaryVariantToRanking)) {
-    const isGroup = variantGroupHeads.has(id);
-    const figures = isGroup
-      ? variantFigures
-          .find((group) => group.id === id)!
-          .variants.flatMap(
-            (v) => atomicFiguresMap[v] || nonAtomicVariantsMap[v] || [],
-          )
-      : [atomicFiguresMap[id] || nonAtomicVariantsMap[id]];
-
-    groups.push({
-      id,
-      appearances: ranking,
-      keyword: figures[0].keyword,
-      mnemonicKeyword: figures[0].mnemonicKeyword,
-      figures: figures.map((figure) => ({
-        isAtomic: Boolean(atomicFiguresMap[figure.id]),
-        figure: getBadgeProps(figure),
-      })),
-    });
-  }
-
-  return {
-    atomicComponentsAndVariants: groups.sort(
-      (a, b) => b.appearances - a.appearances,
-    ),
-    totalAtomicComponents: priorityAtomicComponents.length,
-  };
-}
-
 export const loader: LoaderFunction = async () => {
   const allBadgeFigures = await getAtomicFigureBadgeFigures(prisma);
 
@@ -169,9 +44,29 @@ export const loader: LoaderFunction = async () => {
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
-  const { atomicComponentsAndVariants, totalAtomicComponents } = loaderData;
   return (
     <DictionaryLayout>
+      <AtomicComponentsPageContent loaderData={loaderData} />
+    </DictionaryLayout>
+  );
+}
+
+function AtomicComponentsPageContent({
+  loaderData,
+}: {
+  loaderData: LoaderData;
+}) {
+  const { atomicComponentsAndVariants, totalAtomicComponents } = loaderData;
+  const popover = useManyFiguresPopover();
+  const content = (
+    <>
+      {popover.popper.isOpen
+        ? createPortal(
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <FigurePopoverWindow {...popover} />,
+            document.getElementById("overlay") || document.body,
+          )
+        : null}
       <main className="flex flex-col items-center gap-2">
         <section className="mb-4 max-w-xl  leading-7">
           <h1 className="my-2 text-center font-sans text-2xl font-bold">
@@ -336,14 +231,24 @@ export default function FigureDetailsPage() {
                 >
                   <div className="flex flex-row gap-2">
                     {figures.map(({ figure, isAtomic }) => (
-                      <FigureBadgeLink
+                      // <FigureBadgeLink
+                      //   key={figure.id}
+                      //   id={figure.id}
+                      //   badgeProps={figure}
+                      //   className={clsx("", {
+                      //     "opacity-30": !isAtomic,
+                      //   })}
+                      // />
+                      <DictPreviewLink
                         key={figure.id}
-                        id={figure.id}
-                        badgeProps={figure}
-                        className={clsx("", {
+                        figureId={figure.id}
+                        popoverAttributes={popover.getAnchorAttributes(figure)}
+                        className={clsx({
                           "opacity-30": !isAtomic,
                         })}
-                      />
+                      >
+                        <FigureBadge badgeProps={figure} />
+                      </DictPreviewLink>
                     ))}
                   </div>
                   {keywordDisplay}
@@ -353,12 +258,21 @@ export default function FigureDetailsPage() {
                   key={String(i)}
                   className="inline-flex flex-col flex-wrap gap-2 p-1"
                 >
-                  <FigureBadgeLink
-                    key={figures[0].figure.id}
-                    id={figures[0].figure.id}
-                    badgeProps={figures[0].figure}
-                    className="text-center"
-                  />
+                  <DictPreviewLink
+                    figureId={figures[0].figure.id}
+                    popoverAttributes={popover.getAnchorAttributes(
+                      figures[0].figure,
+                    )}
+                    className={"text-center"}
+                  >
+                    <FigureBadge badgeProps={figures[0].figure} />
+                  </DictPreviewLink>
+                  {/* <FigureBadgeLink
+                      key={figures[0].figure.id}
+                      id={figures[0].figure.id}
+                      badgeProps={figures[0].figure}
+                      className="text-center"
+                    /> */}
                   {keywordDisplay}
                 </div>
               );
@@ -366,24 +280,9 @@ export default function FigureDetailsPage() {
           )}
         </section>
       </main>
-    </DictionaryLayout>
+    </>
   );
-}
-
-function FigureBadgeLink({
-  id: figureId,
-  badgeProps,
-  className,
-}: {
-  id: string;
-  badgeProps: BadgeProps;
-  className?: string;
-}) {
-  return (
-    <DictLink figureId={figureId} className={className}>
-      <FigureBadge badgeProps={badgeProps} />
-    </DictLink>
-  );
+  return content;
 }
 
 export function ErrorBoundary() {

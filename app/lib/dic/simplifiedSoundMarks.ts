@@ -1,4 +1,4 @@
-export const simplifiedSoundMarks = {
+export const soundMarksToSimplifications = {
   㕻: ["咅"],
   䜌: ["亦"],
   剌: ["束"],

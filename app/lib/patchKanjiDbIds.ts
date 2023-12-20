@@ -598,7 +598,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         newCompleteIds: "⿲二丨二",
       })
 
-      .replaceIds("艮", "⿻日&CDP-8CC6;")
+      .replaceIds("艮", "⿻ヨ&CDP-8CC6;")
       .replaceIds("CDP-8B7C", "⿻日厶")
       .addIdsAfterTransforms("GWS-CDP-8B7C-VAR-001", "⿻日⿰丨二")
       .replaceIds("CDP-89CE", "⿻日丿")

@@ -11,14 +11,14 @@ import clsx from "clsx";
 import { PropsWithChildren, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { BrowseAtomicComponentsLink } from "~/components/AppLink";
+import {
+  BrowseAtomicComponentsLink,
+  DictPreviewLink,
+} from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
 import { FigureBadge } from "~/components/FigureBadge";
-import {
-  FigurePopoverWindow,
-  useFigurePopover,
-} from "~/components/FigurePopover";
+import { FigurePopoverWindow } from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
 import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
 import {
@@ -33,6 +33,8 @@ import {
   joyoNotInKyoiku,
   kyoikuKanji,
 } from "~/lib/baseKanji";
+
+import { useManyFiguresPopover } from "../features/browse/useManyFiguresPopover";
 
 export const meta: MetaFunction = () => [
   { title: "The ~3500 most important kanji | Kanjisense" },
@@ -72,24 +74,24 @@ export const loader: LoaderFunction = async () => {
 
 export default function BrowseCharactersPage() {
   const loaderData = useLoaderData<LoaderData>();
-  const { characters } = loaderData;
-
-  const figurePopover = useFigurePopover();
-
-  const handleClickBadge = (
-    badgeProps: BadgeProps,
-    target: React.BaseSyntheticEvent<
-      MouseEvent,
-      EventTarget & HTMLAnchorElement,
-      EventTarget
-    >["nativeEvent"],
-  ) => {
-    figurePopover.popper.setReferenceElement(target.target as HTMLElement);
-    figurePopover.popper.forceUpdate?.();
-  };
-
   return (
     <DictionaryLayout>
+      <BrowseCharactersPageContent loaderData={loaderData} />
+    </DictionaryLayout>
+  );
+}
+
+function BrowseCharactersPageContent({
+  loaderData,
+}: {
+  loaderData: LoaderData;
+}) {
+  const { characters } = loaderData;
+
+  const figurePopover = useManyFiguresPopover();
+
+  const content = (
+    <>
       {figurePopover.popper.isOpen
         ? createPortal(
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -225,7 +227,6 @@ export default function BrowseCharactersPage() {
                       .map((gradeCharacter) => {
                         return characters[gradeCharacter];
                       })}
-                    handleClickBadge={handleClickBadge}
                   />
                 </section>
               );
@@ -258,7 +259,6 @@ export default function BrowseCharactersPage() {
             </p>
           </div>
           <CollapsiblePreviewList
-            handleClickBadge={handleClickBadge}
             popover={figurePopover}
             characters={joyoNotInKyoiku
               .sort(
@@ -294,7 +294,6 @@ export default function BrowseCharactersPage() {
             </p>
           </div>
           <CollapsiblePreviewList
-            handleClickBadge={handleClickBadge}
             popover={figurePopover}
             characters={[...hyogaiKanji]
               .sort(
@@ -330,7 +329,6 @@ export default function BrowseCharactersPage() {
             </p>
           </div>
           <CollapsiblePreviewList
-            handleClickBadge={handleClickBadge}
             popover={figurePopover}
             characters={jinmeiyoNotInHyogai
               .sort(
@@ -344,8 +342,9 @@ export default function BrowseCharactersPage() {
           />
         </section>
       </main>
-    </DictionaryLayout>
+    </>
   );
+  return content;
 }
 
 function KyoikuCollapsibleSection({ children }: PropsWithChildren) {
@@ -377,11 +376,9 @@ function KyoikuCollapsibleSection({ children }: PropsWithChildren) {
 function CollapsiblePreviewList({
   characters,
   popover,
-  handleClickBadge,
 }: {
   characters: BadgeProps[];
-  popover: ReturnType<typeof useFigurePopover>;
-  handleClickBadge: HandleClickBadge;
+  popover: ReturnType<typeof useManyFiguresPopover>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -396,20 +393,14 @@ function CollapsiblePreviewList({
         )}
       >
         {characters.slice(0, isOpen ? undefined : 100).map((c) => {
-          const anchorAttributes = popover.getAnchorAttributes(c);
           return (
-            <a
+            <DictPreviewLink
               key={c.id}
-              href={`/dict/${c.id}`}
-              {...anchorAttributes}
-              onClick={(e) => {
-                handleClickBadge(c, e.nativeEvent);
-                e.preventDefault();
-                anchorAttributes.onClick();
-              }}
+              figureId={c.id}
+              popoverAttributes={popover.getAnchorAttributes(c)}
             >
               <FigureBadge key={c.id} badgeProps={c} />
-            </a>
+            </DictPreviewLink>
           );
         })}
         <button
@@ -426,24 +417,13 @@ function CollapsiblePreviewList({
   );
 }
 
-type HandleClickBadge = (
-  badgeProps: BadgeProps,
-  target: React.BaseSyntheticEvent<
-    MouseEvent,
-    EventTarget & HTMLAnchorElement,
-    EventTarget
-  >["nativeEvent"],
-) => void;
-
 function KyoikuCollapsiblePreviewList({
   characters,
   popover,
-  handleClickBadge,
 }: {
-  popover: ReturnType<typeof useFigurePopover>;
+  popover: ReturnType<typeof useManyFiguresPopover>;
   grade: number;
   characters: BadgeProps[];
-  handleClickBadge: HandleClickBadge;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -460,16 +440,7 @@ function KyoikuCollapsiblePreviewList({
         {characters.slice(0, isOpen ? undefined : 50).map((c) => {
           const anchorAttributes = popover.getAnchorAttributes(c);
           return (
-            <a
-              key={c.id}
-              href={`/dict/${c.id}`}
-              {...anchorAttributes}
-              onClick={(e) => {
-                handleClickBadge(c, e.nativeEvent);
-                e.preventDefault();
-                anchorAttributes.onClick();
-              }}
-            >
+            <a key={c.id} href={`/dict/${c.id}`} {...anchorAttributes}>
               <FigureBadge key={c.id} badgeProps={c} />
             </a>
           );

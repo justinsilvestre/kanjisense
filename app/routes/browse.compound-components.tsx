@@ -9,13 +9,17 @@ import {
 } from "@remix-run/react";
 import clsx from "clsx";
 import { PropsWithChildren, useState } from "react";
+import { createPortal } from "react-dom";
 
-import { BrowseAtomicComponentsLink, DictLink } from "~/components/AppLink";
+import {
+  BrowseAtomicComponentsLink,
+  DictPreviewLink,
+} from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { FigureBadge } from "~/components/FigureBadge";
+import { FigurePopoverWindow } from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
 import {
-  BadgeProps,
   BadgePropsFigure,
   badgeFigureSelect,
   getBadgeProps,
@@ -25,6 +29,8 @@ import {
   KeywordDisplayFigure,
 } from "~/features/dictionary/FigureKeywordDisplay";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
+
+import { useManyFiguresPopover } from "../features/browse/useManyFiguresPopover";
 
 type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
@@ -104,14 +110,36 @@ export const loader: LoaderFunction = async () => {
 
 export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
+  return (
+    <DictionaryLayout>
+      <CompoundComponentsPageContent loaderData={loaderData} />
+    </DictionaryLayout>
+  );
+}
+
+function CompoundComponentsPageContent({
+  loaderData,
+}: {
+  loaderData: LoaderData;
+}) {
   const {
     compoundComponents,
     compoundComponentCharacters,
     totalCompoundComponents,
     totalCompoundComponentCharacters,
   } = loaderData;
-  return (
-    <DictionaryLayout>
+
+  const popover = useManyFiguresPopover();
+
+  const content = (
+    <>
+      {popover.popper.isOpen
+        ? createPortal(
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <FigurePopoverWindow {...popover} />,
+            document.getElementById("overlay") || document.body,
+          )
+        : null}
       <main className="flex flex-col gap-2">
         <h1 className="my-2 text-center font-sans text-2xl font-bold">
           The{" "}
@@ -154,18 +182,25 @@ export default function FigureDetailsPage() {
           <CollapsiblePreviewList>
             <section>
               {Object.entries(compoundComponentCharacters).map(
-                ([id, figure]) => (
-                  <div key={id} className="inline-block p-1 text-center">
-                    <FigureBadgeLink
-                      key={id}
-                      id={id}
-                      badgeProps={getBadgeProps(figure)}
-                    />
-                    <div>
-                      <FigureKeywordDisplay figure={figure} />
+                ([id, figure]) => {
+                  const badgeProps = getBadgeProps(figure);
+                  return (
+                    <div key={id} className="inline-block p-1 text-center">
+                      <DictPreviewLink
+                        figureId={id}
+                        popoverAttributes={popover.getAnchorAttributes(
+                          badgeProps,
+                        )}
+                      >
+                        <FigureBadge badgeProps={badgeProps} />
+                      </DictPreviewLink>
+
+                      <div>
+                        <FigureKeywordDisplay figure={figure} />
+                      </div>
                     </div>
-                  </div>
-                ),
+                  );
+                },
               )}
             </section>
           </CollapsiblePreviewList>
@@ -195,37 +230,28 @@ export default function FigureDetailsPage() {
         </h2>
         <CollapsiblePreviewList>
           <section>
-            {Object.entries(compoundComponents).map(([id, figure]) => (
-              <div key={id} className="inline-block p-1 text-center">
-                <FigureBadgeLink
-                  key={id}
-                  id={id}
-                  badgeProps={getBadgeProps(figure)}
-                />
-                <div>
-                  <FigureKeywordDisplay figure={figure} />
+            {Object.entries(compoundComponents).map(([id, figure]) => {
+              const badgeProps = getBadgeProps(figure);
+              return (
+                <div key={id} className="inline-block p-1 text-center">
+                  <DictPreviewLink
+                    figureId={id}
+                    popoverAttributes={popover.getAnchorAttributes(badgeProps)}
+                  >
+                    <FigureBadge badgeProps={badgeProps} />
+                  </DictPreviewLink>
+                  <div>
+                    <FigureKeywordDisplay figure={figure} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </section>
         </CollapsiblePreviewList>
       </main>
-    </DictionaryLayout>
+    </>
   );
-}
-
-function FigureBadgeLink({
-  id: figureId,
-  badgeProps,
-}: {
-  id: string;
-  badgeProps: BadgeProps;
-}) {
-  return (
-    <DictLink figureId={figureId}>
-      <FigureBadge badgeProps={badgeProps} />
-    </DictLink>
-  );
+  return content;
 }
 
 export function ErrorBoundary() {
