@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -158,6 +159,9 @@ model KanjisenseFigure {
   allComponents         KanjisenseComponent[]    @relation("allComponents")
 
   searchProperties SearchPropertiesOnFigure[]
+
+  baseCorpusUsesAsCharacter CharacterUsagesOnBaseCorpusText[]
+  baseCorpusUsesAsComponent ComponentUsagesOnBaseCorpusText[]
 }
 
 model KanjisenseComponent {
@@ -325,4 +329,66 @@ enum FigureSearchPropertyType {
   KUNYOMI_LATIN_MINUS_OKURIGANA
   TRANSLATION_ENGLISH
   MNEMONIC_ENGLISH
+}
+
+model BaseCorpusText {
+  id Int @id
+
+  course String
+
+  key              String
+  title            String?
+  author           String?
+  source           String
+  section          String?
+  dynasty          String?
+  urls             String[]
+  text             String
+  normalizedText   String
+  normalizedLength Int
+
+  uniqueCharacters CharacterUsagesOnBaseCorpusText[]
+  uniqueComponents ComponentUsagesOnBaseCorpusText[]
+}
+
+model CharacterUsagesOnBaseCorpusText {
+  character        String
+  figureId         String?
+  figure           KanjisenseFigure? @relation(fields: [figureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  baseCorpusTextId Int
+  baseCorpusText   BaseCorpusText    @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  frequencyScore                  Int
+  baseCorpusTextLength            Int
+  baseCorpusUniqueCharactersCount Int
+  baseCorpusUniqueComponentsCount Int
+
+  @@id([baseCorpusTextId, character])
+}
+
+model ComponentUsagesOnBaseCorpusText {
+  figureId         String
+  figure           KanjisenseFigure @relation(fields: [figureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  baseCorpusTextId Int
+  baseCorpusText   BaseCorpusText   @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  frequencyScore                  Int
+  baseCorpusTextLength            Int
+  baseCorpusUniqueCharactersCount Int
+  baseCorpusUniqueComponentsCount Int
+
+  @@id([baseCorpusTextId, figureId])
+}
+
+model Course {
+  id String @id
+
+  // only for curator
+  authors                   String[] @default([])
+  sources                   String[] @default([])
+  seenTexts                 Json?
+  normalizedTextSearchQuery String   @default("")
+  wantedCharacters          String   @default("")
+  minLength                 Int?
+  maxLength                 Int?
 }
