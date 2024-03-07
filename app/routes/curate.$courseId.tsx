@@ -1,4 +1,4 @@
-import type { BaseCorpusText } from "@prisma/client";
+import type { BaseCorpusText, KanjisenseFigure } from "@prisma/client";
 import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import {
   ActionFunctionArgs,
@@ -14,7 +14,7 @@ import {
   useState,
 } from "react";
 
-import { FigureBadge } from "~/components/FigureBadge";
+import { FigureBadgeLink } from "~/components/FigureBadgeLink";
 import { prisma } from "~/db.server";
 import { CharactersProgress } from "~/features/curate/CharactersProgress";
 import {
@@ -119,9 +119,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     course,
     seenTexts,
     seenCharacters,
-    seenComponents,
+    seenFigures,
     defaultTangReadings,
-    remainingKanjijumpCharacters,
+    remainingKanjisenseCharacters,
     remainingMeaningfulComponents,
     allFiguresKeys,
     unseenTexts,
@@ -134,9 +134,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     page,
     seenTexts,
     seenCharacters,
-    seenComponents,
+    seenFigures,
     defaultTangReadings,
-    remainingKanjijumpCharacters,
+    remainingKanjisenseCharacters,
     remainingMeaningfulComponents,
 
     allFiguresKeys,
@@ -165,12 +165,12 @@ export default function CuratePage() {
   const {
     course,
     defaultTangReadings,
-    remainingKanjijumpCharacters,
+    remainingKanjisenseCharacters,
     remainingMeaningfulComponents,
     allFiguresKeys,
     seenTexts,
     seenCharacters,
-    seenComponents,
+    seenFigures,
     unseenTexts,
     priorityFiguresIds,
   } = loaderData;
@@ -179,13 +179,17 @@ export default function CuratePage() {
     [allFiguresKeys],
   );
 
-  const seenComponentsMap = useMemo(
-    () => new Map(seenComponents.map((c) => [c.id, c])),
-    [seenComponents],
+  const seenFiguresMap = useMemo(
+    () => new Map(seenFigures.map((c) => [c.id, c])),
+    [seenFigures],
   );
   const remainingComponentsMap = useMemo(
     () => new Map(remainingMeaningfulComponents.map((c) => [c.id, c])),
     [remainingMeaningfulComponents],
+  );
+  const remainingKanjisenseCharactersMap = useMemo(
+    () => new Map(remainingKanjisenseCharacters.map((c) => [c.id, c])),
+    [remainingKanjisenseCharacters],
   );
 
   const {
@@ -225,6 +229,27 @@ export default function CuratePage() {
   const priorityCharactersSet = useMemo(
     () => new Set(priorityFiguresIds),
     [priorityFiguresIds],
+  );
+
+  const seenMeaningfulFigures = seenFigures.filter((char) => {
+    const figure = char;
+    return figure.isPriority;
+  });
+  const seenMeaningfulAtomicComponents =
+    seenMeaningfulFigures.filter(isFigureAtomic);
+  const nonAtomicCharactersSeenOnlyAsComponents = new Set(
+    remainingKanjisenseCharacters.flatMap((c) => {
+      return seenMeaningfulFigures
+        .filter((sc) => sc.id === c.id && !isFigureAtomic(sc))
+        .map((sc) => sc.id);
+    }),
+  );
+  const atomicCharactersSeenOnlyAsComponents = new Set(
+    remainingKanjisenseCharacters.flatMap((c) => {
+      return seenMeaningfulAtomicComponents
+        .filter((sc) => sc.id === c.id)
+        .map((sc) => sc.id);
+    }),
   );
 
   return (
@@ -279,18 +304,18 @@ export default function CuratePage() {
                       />
                     </div>
                     <div>
-                      {group.texts.map((textKey) => {
+                      {group.texts.map((textKey, seenTextIndex) => {
                         acc.runningTotalTexts++;
 
-                        const t =
+                        const seenText =
                           seenTextsFlat.find((t) => t.key === textKey) ||
                           loaderData?.unseenTexts.find(
                             (t) => t.key === textKey,
                           );
-                        if (!t) return null;
+                        if (!seenText) return null;
 
                         const tg = loaderData?.textGroups.find(
-                          (tg) => tg.baseCorpusTextId === t.id,
+                          (tg) => tg.baseCorpusTextId === seenText.id,
                         );
                         // const unseenCharactersRegex = new RegExp(
                         //   `([^${[...runningSeenCharacters[textKey]].join("")}])`,
@@ -298,7 +323,7 @@ export default function CuratePage() {
                         // );
 
                         return (
-                          <section key={t.id} className="mb-4">
+                          <section key={seenText.id} className="mb-4">
                             {tg ? (
                               <h3>
                                 unique chars:{" "}
@@ -311,29 +336,34 @@ export default function CuratePage() {
                               </h3>
                             ) : null}
                             <h3>
-                              #{acc.runningTotalTexts} {t.author} - {t.title} (
-                              {t.source})
+                              #{acc.runningTotalTexts} {seenText.author} -{" "}
+                              {seenText.title} ({seenText.source})
                             </h3>
-                            {t.text}
+                            {seenText.text}
                             <div className="text-right">
                               <button
                                 className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
-                                onClick={() => removeFromSeenTexts(t.key)}
+                                onClick={() =>
+                                  removeFromSeenTexts(seenText.key)
+                                }
                               >
                                 remove
                               </button>
                               <button
                                 className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
                                 onClick={() =>
-                                  moveWithinSeenTexts(t.key, groupIndex + 1)
+                                  moveWithinSeenTexts(
+                                    seenText.key,
+                                    groupIndex + 1,
+                                  )
                                 }
                               >
                                 move
                               </button>
                               <CopyYmlButton
-                                text={t}
+                                text={seenText}
                                 defaultTangReadings={
-                                  defaultTangReadings?.[t.key]
+                                  defaultTangReadings?.[seenText.key]
                                 }
                               />
                             </div>
@@ -347,28 +377,115 @@ export default function CuratePage() {
                             }}
                           /> */}
                               <ColoredCharactersByInterest
-                                normalizedText={t.normalizedText}
+                                normalizedText={seenText.normalizedText}
                                 wantedCharacters={wantedCharactersSet}
                                 seenCharacters={runningSeenCharacters[textKey]}
                                 priorityFiguresIds={priorityCharactersSet}
                                 defaultTangReadings={
-                                  defaultTangReadings?.[t.key]
+                                  defaultTangReadings?.[seenText.key]
                                 }
                               />
-
                               <div className="m-2">
                                 <TextUniqueComponents
-                                  t={t}
+                                  text={seenText}
                                   getFigure={(id) => {
-                                    const seen = seenComponentsMap.get(id);
+                                    const seen = seenFiguresMap.get(id);
                                     if (!seen) return null;
                                     if (
                                       componentsToFirstSighting.get(id)
-                                        ?.textKey !== t.key
+                                        ?.textKey !== seenText.key
                                     )
                                       return null;
                                     return seen || null;
                                   }}
+                                  newAtomicCharactersSeenOnlyAsComponents={
+                                    // get characters from uniqueCharacters which are NOT in runningSeenCharacters
+                                    // and which are NOT in seenFigures
+                                    new Set(
+                                      seenText.uniqueCharacters.flatMap(
+                                        ({ character }) => {
+                                          if (
+                                            !runningSeenCharacters[textKey].has(
+                                              character,
+                                            )
+                                          ) {
+                                            const figureFirstSighting =
+                                              componentsToFirstSighting.get(
+                                                character,
+                                              );
+                                            const firstSightingWasBeforeThisText =
+                                              figureFirstSighting &&
+                                              (figureFirstSighting.textGroupIndex <
+                                                groupIndex ||
+                                                (figureFirstSighting.textGroupIndex ===
+                                                  groupIndex &&
+                                                  figureFirstSighting.textIndex <
+                                                    seenTextIndex));
+                                            if (
+                                              firstSightingWasBeforeThisText
+                                            ) {
+                                              const figure =
+                                                seenFiguresMap.get(character) ||
+                                                null;
+                                              return figure &&
+                                                isAtomicFigure(figure)
+                                                ? [character]
+                                                : [];
+                                            }
+                                          }
+                                          return [];
+                                        },
+                                      ),
+                                    )
+                                  }
+                                  newNonAtomicCharactersSeenOnlyAsComponents={
+                                    new Set(
+                                      seenText.uniqueCharacters.flatMap(
+                                        ({ character }) => {
+                                          if (
+                                            !runningSeenCharacters[textKey].has(
+                                              character,
+                                            )
+                                          ) {
+                                            const figureFirstSighting =
+                                              componentsToFirstSighting.get(
+                                                character,
+                                              );
+                                            const firstSightingWasBeforeThisText =
+                                              figureFirstSighting &&
+                                              (figureFirstSighting.textGroupIndex <
+                                                groupIndex ||
+                                                (figureFirstSighting.textGroupIndex ===
+                                                  groupIndex &&
+                                                  figureFirstSighting.textIndex <
+                                                    seenTextIndex));
+                                            if (character === "可")
+                                              console.log(
+                                                {
+                                                  firstSightingWasBeforeThisText,
+                                                  groupIndex,
+                                                  seenTextIndex,
+                                                },
+                                                figureFirstSighting,
+                                                "ka",
+                                              );
+                                            if (
+                                              firstSightingWasBeforeThisText
+                                            ) {
+                                              const figure =
+                                                seenFiguresMap.get(character) ||
+                                                null;
+                                              return figure &&
+                                                !isAtomicFigure(figure)
+                                                ? [character]
+                                                : [];
+                                            }
+                                          }
+                                          return [];
+                                        },
+                                      ),
+                                    )
+                                  }
                                 />
                               </div>
                             </div>
@@ -489,9 +606,17 @@ export default function CuratePage() {
         {loaderData ? (
           <CharactersProgress
             seenChars={seenCharacters}
-            seenComponents={seenComponents}
+            seenFigures={seenFigures}
             allFiguresKeysSet={allFiguresKeysSet}
-            remainingKanjijumpCharacters={remainingKanjijumpCharacters}
+            seenMeaningfulFigures={seenMeaningfulFigures}
+            seenMeaningfulAtomicComponents={seenMeaningfulAtomicComponents}
+            nonAtomicCharactersSeenOnlyAsComponents={
+              nonAtomicCharactersSeenOnlyAsComponents
+            }
+            atomicCharactersSeenOnlyAsComponents={
+              atomicCharactersSeenOnlyAsComponents
+            }
+            remainingKanjisenseCharacters={remainingKanjisenseCharacters}
             remainingMeaningfulComponents={remainingMeaningfulComponents}
             getOnClickFigure={() => () => {
               console.log("clicked figure");
@@ -503,8 +628,7 @@ export default function CuratePage() {
         <section>{loaderData?.count} texts total</section>
         {loaderData.count > loaderData.unseenTexts.length ? (
           <div>
-            page {Math.floor(loaderData.count / 500) + 1} of{" "}
-            {Math.ceil(loaderData.count / 500)}:{" "}
+            page {loaderData.page} of {Math.ceil(loaderData.count / 500)}:{" "}
             {Array.from(
               Array(Math.ceil(loaderData.count / 500)).keys(),
               (i) => (
@@ -524,13 +648,13 @@ export default function CuratePage() {
             const ti = loaderData.unseenTexts.findIndex(
               (t) => t.id === tg.baseCorpusTextId,
             )!;
-            const t = loaderData.unseenTexts[ti];
+            const unseenText = loaderData.unseenTexts[ti];
             return (
               // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
               <section
-                key={t.id}
+                key={unseenText.id}
                 className="mb-4"
-                onMouseOver={getOnMouseoverText(t.id)}
+                onMouseOver={getOnMouseoverText(unseenText.id)}
               >
                 <h3 className="text-center">
                   #{tgi + 1} unique chars ={" "}
@@ -542,41 +666,72 @@ export default function CuratePage() {
                     {tg.baseCorpusUniqueComponentsCount}
                   </b>{" "}
                   <br />
+                  non-priority chars ={" "}
+                  <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
+                    {tg.baseCorpusTextNonPriorityCharactersCount}
+                  </b>{" "}
+                  <br />
                   length = {tg.baseCorpusTextLength}; score ={" "}
                   {tg._sum?.frequencyScore?.toLocaleString("en-US")}
                 </h3>
                 <h3>
-                  {t.author} - {t.title} ({t.source})
+                  {unseenText.author} - {unseenText.title} ({unseenText.source})
                   <br />
                 </h3>
-                <p className="">{t.text}</p>
+                <p className="">{unseenText.text}</p>
                 <div className="text-right">
-                  <CopyYmlButton text={t} />
+                  <CopyYmlButton text={unseenText} />
                   <button
                     className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
-                    onClick={() => addToSeenTexts({ textKey: t.key })}
+                    onClick={() => addToSeenTexts({ textKey: unseenText.key })}
                   >
                     add
                   </button>
                 </div>
-                {mouseovered.has(t.id) ? (
+                {mouseovered.has(unseenText.id) ? (
                   <div>
                     <ColoredCharactersByInterest
-                      normalizedText={t.normalizedText}
+                      normalizedText={unseenText.normalizedText}
                       wantedCharacters={wantedCharactersSet}
                       seenCharacters={seenCharactersSet}
                       priorityFiguresIds={priorityCharactersSet}
                     />
                     <div className="m-2">
-                      {TextUniqueComponents({
-                        t,
-                        getFigure: (id) =>
-                          remainingComponentsMap.get(id) || null,
-                      })}
+                      <TextUniqueComponents
+                        text={unseenText}
+                        getFigure={(id) =>
+                          remainingComponentsMap.get(id) || null
+                        }
+                        newAtomicCharactersSeenOnlyAsComponents={
+                          new Set(
+                            unseenText.uniqueCharacters.flatMap(
+                              ({ character }) =>
+                                atomicCharactersSeenOnlyAsComponents.has(
+                                  character,
+                                )
+                                  ? [character]
+                                  : [],
+                            ),
+                          )
+                        }
+                        newNonAtomicCharactersSeenOnlyAsComponents={
+                          new Set(
+                            unseenText.uniqueCharacters.flatMap(
+                              ({ character }) =>
+                                nonAtomicCharactersSeenOnlyAsComponents.has(
+                                  character,
+                                ) &&
+                                remainingKanjisenseCharactersMap.get(character)
+                                  ? [character]
+                                  : [],
+                            ),
+                          )
+                        }
+                      />
                     </div>
                   </div>
                 ) : (
-                  <p>{t.normalizedText}</p>
+                  <p>{unseenText.normalizedText}</p>
                 )}
               </section>
             );
@@ -627,11 +782,11 @@ function ColoredCharactersByInterest({
         }
         if (tangReadingsArray) {
           return (
-            <div key={i} className={`${className} inline-block text-xl`}>
+            <div key={i} className={`inline-block text-xl`}>
               <div className="text-xs">
                 {tangReadingsArray[i]?.replaceAll("/", "\n")}{" "}
               </div>
-              {figureId}
+              <span className={`${className}`}>{figureId}</span>
               {punctuation}
             </div>
           );
@@ -652,52 +807,85 @@ function ColoredCharactersByInterest({
   );
 }
 function TextUniqueComponents({
-  t,
+  text,
   getFigure,
+  newAtomicCharactersSeenOnlyAsComponents,
+  newNonAtomicCharactersSeenOnlyAsComponents,
 }: {
-  t: (
+  text: (
     | CurationState["unseenTexts"]
     | CurationState["seenTexts"][number]
   )[number];
   getFigure: (figureId: string) => BadgePropsFigure | null;
+  newAtomicCharactersSeenOnlyAsComponents: Set<string>;
+  newNonAtomicCharactersSeenOnlyAsComponents: Set<string>;
 }) {
-  const atomic: React.ReactNode[] = [];
-  const nonAtomic: React.ReactNode[] = [];
+  const newAtomic: React.ReactNode[] = [];
+  const newNonAtomic: React.ReactNode[] = [];
 
-  t.uniqueComponents.forEach((c) => {
+  text.uniqueComponents.forEach((c) => {
     const figure = getFigure(c.figureId);
-    const newNode = !figure ? null : (
-      <div key={c.figureId} className="inline-block">
-        <FigureBadge width={3} badgeProps={getBadgeProps(figure)} />
+    const badgeProps = figure && getBadgeProps(figure);
+    const newNode = !badgeProps ? null : (
+      <div key={c.figureId} className="inline-block align-middle">
+        <FigureBadgeLink
+          width={3}
+          id={c.figureId}
+          newWindow
+          badgeProps={
+            figure.id.length === 1
+              ? {
+                  ...badgeProps,
+                  image: undefined,
+                }
+              : badgeProps
+          }
+        />
       </div>
     );
 
     if (figure && newNode) {
       const isAtomic = isAtomicFigure(figure);
       if (isAtomic) {
-        atomic.push(newNode);
+        newAtomic.push(newNode);
       } else {
-        nonAtomic.push(newNode);
+        newNonAtomic.push(newNode);
       }
     }
   });
+
   return (
     <>
-      {atomic.length ? (
+      {newAtomic.length ? (
         <>
-          {atomic.length} atomic: {atomic}
+          {newAtomic.length} atomic: {newAtomic}
         </>
       ) : (
         <>no new atomic figures</>
       )}
       <br />
-      {nonAtomic.length ? (
+      {newAtomicCharactersSeenOnlyAsComponents.size ? (
         <>
-          {nonAtomic.length} non-atomic: {nonAtomic}
+          <br />
+          {newAtomicCharactersSeenOnlyAsComponents.size} atomic newly seen as
+          character: {Array.from(newAtomicCharactersSeenOnlyAsComponents)}
+        </>
+      ) : null}
+      <br />
+      {newNonAtomic.length ? (
+        <>
+          {newNonAtomic.length} compound: {newNonAtomic}
         </>
       ) : (
         <>no new non-atomic figures</>
       )}
+      {newNonAtomicCharactersSeenOnlyAsComponents.size ? (
+        <>
+          <br />
+          {newNonAtomicCharactersSeenOnlyAsComponents.size} compound newly seen
+          as character: {Array.from(newNonAtomicCharactersSeenOnlyAsComponents)}
+        </>
+      ) : null}
     </>
   );
 }
@@ -939,27 +1127,31 @@ const useSeenTextsState = (
       string,
       {
         textGroupIndex: number;
+        textIndex: number;
         textKey: string;
       }
     >
   >(() => {
     const seenSoFar = new Set<string>();
-    const map = new Map<string, { textGroupIndex: number; textKey: string }>();
+    const map = new Map<
+      string,
+      { textGroupIndex: number; textIndex: number; textKey: string }
+    >();
 
     seenTextsState.forEach(({ texts }, textGroupIndex) => {
-      texts.forEach((textKey) => {
+      texts.forEach((textKey, textIndex) => {
         const text = seenTextsFlat.find((t) => t.key === textKey);
         if (!text) return;
         text.uniqueCharacters.forEach((c) => {
           if (!c.figureId) return;
           if (seenSoFar.has(c.figureId)) return;
           seenSoFar.add(c.figureId);
-          map.set(c.figureId, { textGroupIndex, textKey });
+          map.set(c.figureId, { textGroupIndex, textIndex, textKey });
         });
         text.uniqueComponents.forEach((c) => {
           if (seenSoFar.has(c.figureId)) return;
           seenSoFar.add(c.figureId);
-          map.set(c.figureId, { textGroupIndex, textKey });
+          map.set(c.figureId, { textGroupIndex, textIndex, textKey });
         });
       });
     });
@@ -1106,4 +1298,12 @@ function TextGroupDescriptionInput({
       </button>
     </div>
   );
+}
+
+function isFigureAtomic(
+  figure: Pick<KanjisenseFigure, "componentsTree">,
+): boolean {
+  return Array.isArray(figure.componentsTree)
+    ? figure.componentsTree.length === 0
+    : false;
 }

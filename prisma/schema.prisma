@@ -347,6 +347,8 @@ model BaseCorpusText {
   normalizedText   String
   normalizedLength Int
 
+  nonPriorityCharactersCount Int @default(0)
+
   uniqueCharacters CharacterUsagesOnBaseCorpusText[]
   uniqueComponents ComponentUsagesOnBaseCorpusText[]
 }
@@ -358,10 +360,11 @@ model CharacterUsagesOnBaseCorpusText {
   baseCorpusTextId Int
   baseCorpusText   BaseCorpusText    @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  frequencyScore                  Int
-  baseCorpusTextLength            Int
-  baseCorpusUniqueCharactersCount Int
-  baseCorpusUniqueComponentsCount Int
+  frequencyScore                           Int
+  baseCorpusTextLength                     Int
+  baseCorpusUniqueCharactersCount          Int
+  baseCorpusUniqueComponentsCount          Int
+  baseCorpusTextNonPriorityCharactersCount Int @default(0)
 
   @@id([baseCorpusTextId, character])
 }

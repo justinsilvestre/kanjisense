@@ -68,7 +68,7 @@ export function ErrorBoundary() {
                 Error {error.status}: {error.statusText}
               </div>
             ) : (
-              "Something went wrong"
+              "Something went wrong on the server. Please try again later."
             )
           }
         />

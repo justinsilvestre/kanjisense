@@ -1,7 +1,7 @@
 import type { SbgyXiaoyun } from "@prisma/client";
 
-import { Kaihe } from "~/lib/qys/inferOnyomi";
 import { QysInitial } from "~/lib/qys/QysInitial";
+import { Kaihe } from "~/lib/qys/QysSyllableProfile";
 import {
   QysTranscriptionProfile,
   transcribe,

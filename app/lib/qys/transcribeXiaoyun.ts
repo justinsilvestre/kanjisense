@@ -6,7 +6,7 @@ import {
   QysInitial,
 } from "~/lib/qys/QysInitial";
 
-import { Kaihe, QysSyllableProfile } from "./inferOnyomi";
+import { Kaihe, QysSyllableProfile } from "./QysSyllableProfile";
 
 export interface QysTranscriptionProfile {
   is合口: boolean;
@@ -44,8 +44,9 @@ const asciiFinals = {
   won: "won",
   on: "on",
   an: "an",
+  wan: "wan",
   au: "au",
-  ẃa: "ywa",
+  wȧ: "wia",
   wa: "wa",
   ya: "ya",
   a: "a",
@@ -72,6 +73,7 @@ const asciiFinals = {
   wạ: "rwa",
   ạ: "ra",
   wâng: "wvang",
+  ŷang: "vyang",
   wẹng: "rweng",
   ẹng: "reng",
   wạng: "rwang",
@@ -80,14 +82,14 @@ const asciiFinals = {
   ạ̈ng: "raeng",
   äm: "aem",
   ạm: "ram",
-  wèi: "waei",
-  èi: "aei",
-  èm: "aem",
-  wèn: "waen",
-  èn: "aen",
-  èu: "aeu",
-  wèng: "waeng",
-  èng: "aeng",
+  wei: "wei",
+  ei: "ei",
+  em: "em",
+  wen: "wen",
+  en: "en",
+  eu: "eu",
+  weng: "weng",
+  eng: "eng",
   uï: "uie",
   ẁï: "ywie",
   wï: "wie",
@@ -107,12 +109,12 @@ const asciiFinals = {
   u: "u",
   yu: "yu",
   ẁei: "ywei",
-  wei: "wei",
+  wėi: "wiei",
   yei: "yei",
-  ei: "ei",
+  ėi: "iei",
   âi: "vai",
   yeu: "yeu",
-  eu: "eu",
+  ėu: "ieu",
   ū: "uu",
   iū: "iuu",
   ông: "vong",
@@ -129,29 +131,30 @@ const asciiFinals = {
   wên: "wven",
   ên: "ven",
   ẁen: "ywen",
-  wen: "wen",
+  wėn: "wien",
   yen: "yen",
-  en: "en",
-  âng: "wvang",
+  ėn: "ien",
+  âng: "vang",
   yang: "yang",
   ẁeng: "yweng",
-  weng: "weng",
+  wėng: "wieng",
   yeng: "yeng",
-  eng: "eng",
+  ėng: "ieng",
   wĭng: "wcing",
   ŷŏng: "vycong",
   yŏng: "ycong",
   yim: "yim",
   im: "im",
   yem: "yem",
-  em: "em",
+  ėm: "iem",
   êm: "vem",
   âm: "vam",
 };
 
 const rhymes: Record<
   QieyunRhymeCycleHead,
-  string | ((syllable: QysTranscriptionProfile) => string)
+  | keyof typeof asciiFinals
+  | ((syllable: QysTranscriptionProfile) => keyof typeof asciiFinals)
 > = {
   東: (s) => {
     if (s.tone聲 === "入" && s.contrastiveRow等 === "三") {
@@ -175,10 +178,10 @@ const rhymes: Record<
   咍: "ai",
   魂: "won",
   痕: "on",
-  寒: "an",
+  寒: (s) => (s.is合口 ? "wan" : "an"),
   豪: "au",
   歌: (s) => {
-    if (s.is合口) return s.contrastiveRow等 === "三" ? "ẃa" : "wa";
+    if (s.is合口) return s.contrastiveRow等 === "三" ? "wȧ" : "wa";
     return s.contrastiveRow等 === "三" ? "ya" : "a";
   },
   唐: (s) => (s.is合口 ? "wang" : "ang"),
@@ -208,11 +211,11 @@ const rhymes: Record<
   銜: "ạm",
 
   // 四等韻
-  齊: (s) => (s.is合口 ? "wèi" : "èi"),
-  先: (s) => (s.is合口 ? "wèn" : "èn"),
-  蕭: "èu",
-  青: (s) => (s.is合口 ? "wèng" : "èng"),
-  添: "èm",
+  齊: (s) => (s.is合口 ? "wei" : "ei"),
+  先: (s) => (s.is合口 ? "wen" : "en"),
+  蕭: "eu",
+  青: (s) => (s.is合口 ? "weng" : "eng"),
+  添: "em",
 
   // 三等陰聲韻
   支: (s) => {
@@ -285,14 +288,14 @@ const rhymes: Record<
             initialGroups["見"].has(s.canonical母) ||
             initialGroups["影"].has(s.canonical母)))
         ? "ẁei"
-        : "wei";
+        : "wėi";
     return s.canonical母 === "以" ||
       (s.is重紐A類 &&
         (initialGroups["幫"].has(s.canonical母) ||
           initialGroups["見"].has(s.canonical母) ||
           initialGroups["影"].has(s.canonical母)))
       ? "yei"
-      : "ei";
+      : "ėi";
   },
   廢: "âi",
   宵: (s) =>
@@ -302,7 +305,7 @@ const rhymes: Record<
         initialGroups["見"].has(s.canonical母) ||
         initialGroups["影"].has(s.canonical母)))
       ? "yeu"
-      : "eu",
+      : "ėu",
   尤: (s) => (initialGroups["幫"].has(s.canonical母) ? "ū" : "iū"),
   幽: "iu",
 
@@ -352,17 +355,22 @@ const rhymes: Record<
             initialGroups["見"].has(s.canonical母) ||
             initialGroups["影"].has(s.canonical母)))
         ? "ẁen"
-        : "wen";
+        : "wėn";
     return s.canonical母 === "以" ||
       (s.is重紐A類 &&
         (initialGroups["幫"].has(s.canonical母) ||
           initialGroups["見"].has(s.canonical母) ||
           initialGroups["影"].has(s.canonical母)))
       ? "yen"
-      : "en";
+      : "ėn";
   },
   陽: (s) => {
-    if (s.is合口) return "wâng";
+    if (s.is合口)
+      return s.canonical母 === "影" ||
+        s.canonical母 === "以" ||
+        s.canonical母 === "云"
+        ? "wâng"
+        : "ŷang";
     return initialGroups["幫"].has(s.canonical母) ||
       initialGroups["莊"].has(s.canonical母)
       ? "âng"
@@ -376,14 +384,14 @@ const rhymes: Record<
             initialGroups["見"].has(s.canonical母) ||
             initialGroups["影"].has(s.canonical母)))
         ? "ẁeng"
-        : "weng";
+        : "wėng";
     return s.canonical母 === "以" ||
       (s.is重紐A類 &&
         (initialGroups["幫"].has(s.canonical母) ||
           initialGroups["見"].has(s.canonical母) ||
           initialGroups["影"].has(s.canonical母)))
       ? "yeng"
-      : "eng";
+      : "ėng";
   },
   蒸: (s) => {
     if (s.is合口) return s.canonical母 === "云" ? "wĭng" : "ŷŏng";
@@ -404,7 +412,7 @@ const rhymes: Record<
         initialGroups["見"].has(s.canonical母) ||
         initialGroups["影"].has(s.canonical母)))
       ? "yem"
-      : "em",
+      : "ėm",
   嚴: "êm",
   凡: "âm",
 };

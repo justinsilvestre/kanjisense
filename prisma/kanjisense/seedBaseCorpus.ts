@@ -1,24 +1,33 @@
-import { readFileSync } from "fs";
+import { createReadStream } from "fs";
+import readline from "readline";
 
 import { type PrismaClient } from "@prisma/client";
 
-import { BaseCorpus } from "~/features/curate/CuratorCorpusText";
+import {
+  BaseCorpus,
+  CuratorCorpusText,
+} from "~/features/curate/CuratorCorpusText";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 
 const COURSE = "kj";
 
-export async function seedCorpus(
-  prisma: PrismaClient,
-  corpusJsonPath = "/Users/justin/code/hanz/curator/build/baseCorpus.json2",
-) {
+export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
   const startTime = Date.now();
 
   console.log("Seeding corpus");
 
-  const corpusJson = JSON.parse(
-    readFileSync(corpusJsonPath, "utf-8"),
-  ) as BaseCorpus;
+  const fileStream = createReadStream(corpusTextPath, "utf8");
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity,
+  });
+  const corpusJson: BaseCorpus = {};
+  for await (const line of rl) {
+    const poem = JSON.parse(line) as CuratorCorpusText;
+    corpusJson[poem.normalizedText] = poem;
+  }
+  await fileStream.close();
 
   await executeAndLogTime("Deleting all baseCorpusTexts", () =>
     prisma.baseCorpusText.deleteMany({
@@ -90,6 +99,7 @@ export async function seedCorpus(
   let seeded = 0;
   await inBatchesOf(2000, Object.entries(corpusJson), async (batch) => {
     const lengthCache = new Array<number>(batch.length);
+    const nonPriorityCharactersCountCache = new Array<number>(batch.length);
     const hashCache = new Array<number>(batch.length);
     const uniquePriorityComponentsCache = new Array<string[]>(batch.length);
     const hashAndCache = (text: string, i: number) => {
@@ -115,8 +125,21 @@ export async function seedCorpus(
       return uniquePriorityComponentsCache[i];
     };
 
+    const priorityFigures = await prisma.kanjisenseFigure
+      .findMany({
+        where: {
+          isPriority: true,
+        },
+      })
+      .then((figures) => new Set(figures.map(({ id }) => id)));
+
     const batchData = batch.map(([key, value], i) => {
       lengthCache[i] = value.normalizedText.length;
+      let nonPriorityCharactersCount = 0;
+      for (const char of value.normalizedText) {
+        if (!priorityFigures.has(char)) nonPriorityCharactersCount++;
+      }
+      nonPriorityCharactersCountCache[i] = nonPriorityCharactersCount;
       return {
         id: hashAndCache(key, i),
         key,
@@ -131,6 +154,7 @@ export async function seedCorpus(
 
         normalizedText: value.normalizedText,
         normalizedLength: value.normalizedText.length,
+        nonPriorityCharactersCount,
       };
     });
     const result = await prisma.baseCorpusText.createMany({
@@ -142,25 +166,23 @@ export async function seedCorpus(
 
     console.log("Seeding character relations...");
 
-    const characterUsagesData = batch.flatMap(
-      ([, { uniqueChars, normalizedText }], i) => {
-        const uniqueComponents = getAllUniqueComponentsAndCache(uniqueChars, i);
+    const characterUsagesData = batch.flatMap(([, { uniqueChars }], i) => {
+      const uniqueComponents = getAllUniqueComponentsAndCache(uniqueChars, i);
 
-        console.log(normalizedText);
-
-        return Array.from(uniqueChars, (character) => {
-          return {
-            character,
-            baseCorpusTextId: hashCache[i],
-            figureId: allFiguresWithTrees.has(character) ? character : null,
-            frequencyScore: allFiguresFrequencyScores.get(character) ?? 0,
-            baseCorpusTextLength: lengthCache[i],
-            baseCorpusUniqueCharactersCount: uniqueChars.length,
-            baseCorpusUniqueComponentsCount: uniqueComponents.length,
-          };
-        });
-      },
-    );
+      return Array.from(uniqueChars, (character) => {
+        return {
+          character,
+          baseCorpusTextId: hashCache[i],
+          figureId: allFiguresWithTrees.has(character) ? character : null,
+          frequencyScore: allFiguresFrequencyScores.get(character) ?? 0,
+          baseCorpusTextLength: lengthCache[i],
+          baseCorpusUniqueCharactersCount: uniqueChars.length,
+          baseCorpusUniqueComponentsCount: uniqueComponents.length,
+          baseCorpusTextNonPriorityCharactersCount:
+            nonPriorityCharactersCountCache[i],
+        };
+      });
+    });
     await prisma.characterUsagesOnBaseCorpusText.createMany({
       data: characterUsagesData,
     });

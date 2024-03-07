@@ -1,11 +1,18 @@
-import { SbgyXiaoyun, KanjisenseFigure } from "@prisma/client";
+import { writeFileSync } from "fs";
+import { join } from "path";
+
+import {
+  KanjisenseFigure,
+  KanjiDbVariantType,
+  SbgyXiaoyun,
+} from "@prisma/client";
 
 import { prisma } from "~/db.server";
 import {
   badgeFigureSelect,
   isAtomicFigure,
-  isPriorityComponent,
 } from "~/features/dictionary/badgeFigure";
+import { baseKanji, baseKanjiSet, joyoKanji } from "~/lib/baseKanji";
 
 import { BadgeFigure } from "../dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "../dictionary/transcribeSbgyXiaoyun";
@@ -13,6 +20,170 @@ import { transcribeSbgyXiaoyun } from "../dictionary/transcribeSbgyXiaoyun";
 export type CurationState = Awaited<ReturnType<typeof getCurationState>>;
 
 export async function getCurationState(courseId: string, page: number) {
+  const priorityCharacters = [...baseKanji];
+  const priorityCharactersSet = baseKanjiSet;
+  const nonPriorityVariants1 = await prisma.kanjiDbVariant.findMany({
+    where: {
+      variantType: {
+        in: [KanjiDbVariantType.OldStyle, KanjiDbVariantType.TwEduVariant],
+      },
+      base: {
+        in: priorityCharacters,
+      },
+      variant: {
+        notIn: priorityCharacters,
+      },
+    },
+  });
+  const nonPriorityVariants2 = await prisma.unihan14.findMany({
+    where: {
+      id: {
+        notIn: priorityCharacters,
+      },
+      OR: [
+        {
+          kSemanticVariant: {
+            hasSome: priorityCharacters,
+          },
+        },
+        {
+          kZVariant: {
+            hasSome: priorityCharacters,
+          },
+        },
+      ],
+    },
+  });
+  const nonPriorityToPriority: Record<string, string[]> = {};
+  for (const { base, variant } of nonPriorityVariants1) {
+    nonPriorityToPriority[variant] ||= [];
+    if (
+      priorityCharactersSet.has(base) &&
+      !nonPriorityToPriority[variant].includes(base)
+    )
+      nonPriorityToPriority[variant].push(base);
+  }
+  for (const { id, kSemanticVariant, kZVariant } of nonPriorityVariants2) {
+    nonPriorityToPriority[id] ||= [];
+    if (kSemanticVariant) {
+      for (const variant of kSemanticVariant) {
+        if (
+          priorityCharactersSet.has(variant) &&
+          !nonPriorityToPriority[id].includes(variant)
+        )
+          nonPriorityToPriority[id].push(variant);
+      }
+    }
+    if (kZVariant) {
+      for (const variant of kZVariant) {
+        if (
+          priorityCharactersSet.has(variant) &&
+          !nonPriorityToPriority[id].includes(variant)
+        )
+          nonPriorityToPriority[id].push(variant);
+      }
+    }
+  }
+  const joyo = new Set(joyoKanji);
+  for (const variants of Object.values(nonPriorityToPriority)) {
+    variants.sort((a, b) => {
+      if (joyo.has(a) && !joyo.has(b)) return -1;
+      if (joyo.has(b) && !joyo.has(a)) return 1;
+      return 0;
+    });
+  }
+
+  const joyoKanjiWithVariants = await prisma.kanjisenseFigure.findMany({
+    where: {
+      isPriority: true,
+      listsAsCharacter: { has: "j" },
+      variantGroupId: {
+        not: null,
+      },
+    },
+    select: {
+      id: true,
+      variantGroup: {
+        select: {
+          id: true,
+          figures: {
+            where: {
+              isStandaloneCharacter: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  const oldToNew: Record<string, string> = {};
+  for (const { id, variantGroup } of joyoKanjiWithVariants) {
+    const variants = variantGroup!.figures.map((f) => f.id);
+    for (const variant of variants) {
+      if (id !== variant) oldToNew[variant] = id;
+    }
+  }
+
+  const nonJoyoLessCommonPriorityToMoreCommonPriority: Record<string, string> =
+    {};
+  const nonJoyoPriorityCharsWithVariants =
+    await prisma.kanjisenseFigure.findMany({
+      where: {
+        isPriority: true,
+        listsAsCharacter: { isEmpty: false },
+        variantGroupId: {
+          not: null,
+        },
+        variantGroup: {
+          figures: {
+            none: {
+              listsAsCharacter: { has: "j" },
+            },
+            some: {
+              listsAsCharacter: { isEmpty: false },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        variantGroup: {
+          select: {
+            id: true,
+            figures: {
+              where: {
+                isStandaloneCharacter: true,
+                listsAsCharacter: { isEmpty: false },
+              },
+            },
+          },
+        },
+      },
+    });
+
+  writeFileSync(
+    join(process.cwd(), "kanjiVariants.log.json"),
+    JSON.stringify({
+      oldToNew,
+      nonPriorityToPriority,
+      nonJoyoLessCommonPriorityToMoreCommonPriority,
+    }),
+  );
+  console.log(join(process.cwd(), "kanjiVariants.log.json"));
+
+  for (const { variantGroup } of nonJoyoPriorityCharsWithVariants) {
+    const variants = variantGroup!.figures!.sort(
+      // by aozora appearances desc
+      (a, b) => b.aozoraAppearances - a.aozoraAppearances,
+    );
+    if (variants.length > 1) {
+      const [mostCommonVariant, ...otherVariants] = variants;
+      for (const variant of otherVariants) {
+        nonJoyoLessCommonPriorityToMoreCommonPriority[variant.id] =
+          mostCommonVariant.id;
+      }
+    }
+  }
+
   await prisma.course.upsert({
     where: {
       id: "kj2x",
@@ -61,7 +232,7 @@ export async function getCurationState(courseId: string, page: number) {
       return text;
     }),
   );
-  // excluding characters not in kanjijump
+  // excluding characters not in kanjisense
   const seenCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
       id: {
@@ -77,7 +248,7 @@ export async function getCurationState(courseId: string, page: number) {
       },
     },
   });
-  const seenComponents = await prisma.kanjisenseFigure.findMany({
+  const seenFigures = await prisma.kanjisenseFigure.findMany({
     where: {
       id: {
         in: [
@@ -105,46 +276,44 @@ export async function getCurationState(courseId: string, page: number) {
     },
   });
 
-  const seenCharsTangReadings = await prisma.kanjisenseFigureReading
-    .findMany({
-      where: {
-        id: {
-          in: seenCharacters.map((c) => c.id),
-        },
-        sbgyXiaoyuns: {
-          some: {},
+  const seenCharsTangReadings = await prisma.kanjisenseFigureReading.findMany({
+    where: {
+      id: {
+        in: seenCharacters.map((c) => c.id),
+      },
+      sbgyXiaoyuns: {
+        some: {},
+      },
+    },
+    select: {
+      id: true,
+      sbgyXiaoyunsMatchingExemplars: true,
+      sbgyXiaoyuns: {
+        select: {
+          sbgyXiaoyun: true,
         },
       },
-      select: {
-        id: true,
-        sbgyXiaoyuns: {
-          select: {
-            sbgyXiaoyun: true,
-          },
-        },
-      },
-    })
-    .then((rs) => new Map(rs.map((r) => [r.id, r.sbgyXiaoyuns])));
+    },
+  });
+  const seenCharsTangReadingsMap = new Map(
+    seenCharsTangReadings.map((r) => [r.id, r]),
+  );
   const defaultTangReadings = Object.fromEntries(
     seenTexts.flat().map((text) => {
       return [
         text.key,
         getDefaultTangReadings(text.normalizedText, (id) => {
-          return seenCharsTangReadings.get(id)?.map((x) => x.sbgyXiaoyun) || [];
+          return (
+            seenCharsTangReadingsMap
+              .get(id)
+              ?.sbgyXiaoyuns.map((x) => x.sbgyXiaoyun) || []
+          );
         }),
       ];
     }),
   );
 
-  // const remainingKanjijumpCharacters = allFiguresKeys.filter((f) => {
-  //   const figure = getFigure(f)!;
-  //   return (
-  //     figure.isPriority &&
-  //     !seenChars.has(figure.primaryVariant()) &&
-  //     figure.isStandaloneCharacter()
-  //   );
-  // });
-  const remainingKanjijumpCharacters = await prisma.kanjisenseFigure.findMany({
+  const remainingKanjisenseCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
       id: {
         notIn: seenCharacters.map((c) => c.id),
@@ -183,7 +352,7 @@ export async function getCurationState(courseId: string, page: number) {
   const remainingMeaningfulComponents = await prisma.kanjisenseFigure.findMany({
     where: {
       id: {
-        notIn: seenComponents.map((c) => c.id),
+        notIn: seenFigures.map((c) => c.id),
       },
       isPriority: true,
       // should include those without directUses
@@ -235,13 +404,14 @@ export async function getCurationState(courseId: string, page: number) {
           ]),
         ]
       : null;
+
   // const seenCharacters = course?.seenCharacters
   //   ? [...course.seenCharacters].filter((c) => !soughtCharacters?.includes(c))
   //   : null;
   console.log({
     seenCharacters: seenCharacters.map((c) => c.id).join(""),
-    seenComponents: seenComponents.map((c) => c.id).join(" "),
-    remainingKanjijumpCharacters: remainingKanjijumpCharacters
+    seenFigures: seenFigures.map((c) => c.id).join(" "),
+    remainingKanjisenseCharacters: remainingKanjisenseCharacters
       .map((c) => c.id)
       .join(""),
     remainingMeaningfulComponents: remainingMeaningfulComponents
@@ -287,12 +457,15 @@ export async function getCurationState(courseId: string, page: number) {
     "花",
     charactersNotNeededAnymore.includes("花"),
   );
+
+  // todo: extract querying for reuse with count below
   const textGroups = await prisma.characterUsagesOnBaseCorpusText.groupBy({
     by: [
       "baseCorpusTextId",
       "baseCorpusTextLength",
       "baseCorpusUniqueCharactersCount",
       "baseCorpusUniqueComponentsCount",
+      "baseCorpusTextNonPriorityCharactersCount",
     ],
     _count: {
       baseCorpusTextId: true,
@@ -331,6 +504,13 @@ export async function getCurationState(courseId: string, page: number) {
                 : undefined,
           },
         ],
+        // uniqueCharacters: {
+        //   none: {
+        //     figure: {
+        //       isPriority: false,
+        //     },
+        //   },
+        // },
         // uniqueCharacters: soughtCharacters
         //   ? {
         //       some: {
@@ -363,6 +543,9 @@ export async function getCurationState(courseId: string, page: number) {
       },
       figureId: {
         notIn: charactersNotNeededAnymore,
+        in: course?.wantedCharacters.length
+          ? course.wantedCharacters.split("")
+          : undefined,
       },
     },
     _sum: {
@@ -370,7 +553,10 @@ export async function getCurationState(courseId: string, page: number) {
     },
     orderBy: [
       {
-        // useful to switch with baseCorpusUniqueCharactersCount
+        baseCorpusTextNonPriorityCharactersCount: "asc",
+      },
+      {
+        // useful to switch with baseCorpusUniqueCharactersCount, baseCorpusTextNonPriorityCharactersCount
         baseCorpusUniqueComponentsCount: "asc",
       },
       {
@@ -387,9 +573,13 @@ export async function getCurationState(courseId: string, page: number) {
     skip: (page - 1) * 500,
   });
 
+  console.log("geting text groups");
   const textGroupsCount = (
     await prisma.characterUsagesOnBaseCorpusText.groupBy({
       by: ["baseCorpusTextId"],
+      _count: {
+        baseCorpusTextId: true,
+      },
 
       where: {
         baseCorpusText: {
@@ -400,6 +590,37 @@ export async function getCurationState(courseId: string, page: number) {
           id: {
             notIn: seenTexts.flatMap((ts) => ts.map((t) => t.id)),
           },
+          AND: [
+            {
+              author:
+                wantedAuthors?.length || unwantedAuthors?.length
+                  ? {
+                      in: wantedAuthors?.length ? wantedAuthors : undefined,
+                      notIn: unwantedAuthors?.length
+                        ? unwantedAuthors
+                        : undefined,
+                    }
+                  : undefined,
+            },
+            {
+              source:
+                wantedSources?.length || unwantedSources?.length
+                  ? {
+                      in: wantedSources?.length ? wantedSources : undefined,
+                      notIn: unwantedSources?.length
+                        ? unwantedSources
+                        : undefined,
+                    }
+                  : undefined,
+            },
+          ],
+          // uniqueCharacters: {
+          //   none: {
+          //     figure: {
+          //       isPriority: false,
+          //     },
+          //   },
+          // },
           // uniqueCharacters: soughtCharacters
           //   ? {
           //       some: {
@@ -410,38 +631,65 @@ export async function getCurationState(courseId: string, page: number) {
           //       },
           //     }
           //   : undefined,
-          author: course?.authors.length ? { in: course.authors } : undefined,
-          normalizedText: course?.normalizedTextSearchQuery
-            ? {
-                contains: course.normalizedTextSearchQuery,
-              }
+          // author:
+          //   wantedAuthors?.length || unwantedAuthors?.length
+          //     ? {
+          //         in: wantedAuthors?.length ? wantedAuthors : undefined,
+          //         notIn: unwantedAuthors?.length ? unwantedAuthors : undefined,
+          //       }
+          //     : undefined,
+          // source:
+          //   wantedSources?.length || unwantedSources?.length
+          //     ? {
+          //         in: wantedSources?.length ? wantedSources : undefined,
+          //         notIn: unwantedSources?.length ? unwantedSources : undefined,
+          //       }
+          //     : undefined,
+          OR: course?.normalizedTextSearchQuery
+            ? course.normalizedTextSearchQuery
+                .split("|")
+                .map((q) => ({ normalizedText: { contains: q } }))
             : undefined,
         },
         figureId: {
           notIn: charactersNotNeededAnymore,
+          in: course?.wantedCharacters.length
+            ? course.wantedCharacters.split("")
+            : undefined,
         },
       },
     })
   ).length;
 
+  console.log("geting texts");
   const unseenTexts = await prisma.baseCorpusText.findMany({
     where: {
       id: {
         in: textGroups.map((g) => g.baseCorpusTextId),
       },
+      // uniqueCharacters: {
+      //   some: {
+      //     figureId: {
+      //       in: course?.wantedCharacters.length
+      //         ? course.wantedCharacters.split("")
+      //         : undefined,
+      //     },
+      //   },
+      // },
     },
     include: {
       uniqueCharacters: true,
       uniqueComponents: true,
     },
   });
+
   return {
     course,
     seenTexts,
     seenCharacters,
-    seenComponents,
+    seenFigures,
     defaultTangReadings,
-    remainingKanjijumpCharacters,
+    remainingKanjisenseCharacters,
     remainingMeaningfulComponents,
     allFiguresKeys,
     unseenTexts,

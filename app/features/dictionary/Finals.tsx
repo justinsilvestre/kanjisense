@@ -445,15 +445,16 @@ export function Finals({
             <tbody>
               <tr>
                 <th rowSpan={3}>Div. III</th>
+                ◌̇ y- ẁ-
                 <td className="bg-gray-400"></td>
-                <td>(w/y/ẁ)eng</td>
-                <td>(w/y/ẁ)ek</td>
-                <td>(w/y/ẁ)ei</td>
-                <td>(w/y/ẁ)en</td>
-                <td>(w/y/ẁ)et</td>
-                <td>(y)eu</td>
-                <td>(y)em</td>
-                <td>(y)ep</td>
+                <td>(w/y/ẁ)ėng</td>
+                <td>(w/y/ẁ)ėk</td>
+                <td>(w/y/ẁ)ėi</td>
+                <td>(w/y/ẁ)ėn</td>
+                <td>(w/y/ẁ)ėt</td>
+                <td>(y)ėu</td>
+                <td>(y)ėm</td>
+                <td>(y)ėp</td>
               </tr>{" "}
               <tr>
                 <td className="bg-gray-400"></td>
@@ -481,17 +482,16 @@ export function Finals({
                 <th rowSpan={1}>
                   Div. IV
                   <br />
-                  ◌̀
                 </th>
                 <td className="bg-gray-400"></td>
-                <td>(w)èng</td>
-                <td>(w)èk</td>
-                <td>(w)èi</td>
-                <td>(w)èn</td>
-                <td>(w)èt</td>
-                <td>èu</td>
-                <td>èm</td>
-                <td>èp</td>
+                <td>(w)eng</td>
+                <td>(w)ek</td>
+                <td>(w)ei</td>
+                <td>(w)en</td>
+                <td>(w)et</td>
+                <td>eu</td>
+                <td>em</td>
+                <td>ep</td>
               </tr>
             </tbody>
           </table>

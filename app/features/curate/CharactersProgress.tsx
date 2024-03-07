@@ -7,22 +7,29 @@ import { CurationState } from "./getCurationState";
 export function CharactersProgress({
   allFiguresKeysSet,
   seenChars,
-  seenComponents,
+  seenFigures,
   getOnClickFigure,
-  remainingKanjijumpCharacters,
+  remainingKanjisenseCharacters,
   remainingMeaningfulComponents,
+  seenMeaningfulAtomicComponents,
+  nonAtomicCharactersSeenOnlyAsComponents,
+  atomicCharactersSeenOnlyAsComponents,
 }: {
   allFiguresKeysSet: Set<string>;
   seenChars: CurationState["seenCharacters"];
-  seenComponents: CurationState["seenComponents"];
+  seenFigures: CurationState["seenFigures"];
   getOnClickFigure: (char: string) => () => void;
 
-  remainingKanjijumpCharacters: (KanjisenseFigure & {
+  remainingKanjisenseCharacters: (KanjisenseFigure & {
     asComponent: {
       allUses: Pick<KanjisenseFigure, "aozoraAppearances">[];
     } | null;
   })[];
   remainingMeaningfulComponents: CurationState["remainingMeaningfulComponents"];
+  atomicCharactersSeenOnlyAsComponents: Set<string>;
+  seenMeaningfulFigures: CurationState["seenFigures"];
+  seenMeaningfulAtomicComponents: CurationState["seenFigures"];
+  nonAtomicCharactersSeenOnlyAsComponents: Set<string>;
 }) {
   const [
     specialRemainingCharactersSortMethod,
@@ -80,9 +87,9 @@ export function CharactersProgress({
     return 1;
   }
 
-  const sortedRemainingKanjijumpCharacters =
+  const sortedRemainingKanjisenseCharacters =
     specialRemainingCharactersSortMethod
-      ? remainingKanjijumpCharacters.sort((figureA, figureB) => {
+      ? remainingKanjisenseCharacters.sort((figureA, figureB) => {
           if (!figureA || !figureB) return 0;
           switch (specialRemainingCharactersSortMethod) {
             case "byLists":
@@ -109,36 +116,19 @@ export function CharactersProgress({
               return 0;
           }
         })
-      : remainingKanjijumpCharacters;
+      : remainingKanjisenseCharacters;
 
-  const seenMeaningfulComponents = [...seenComponents].filter((char) => {
-    const figure = char;
-    return figure.isPriority;
-  });
-  const seenMeaningfulAtomicComponents =
-    seenMeaningfulComponents.filter(isFigureAtomic);
   // const remainingMeaningfulComponents = allFiguresKeys.filter((char) => {
   //   const figure = getFigure(char)!;
   //   return (
   //     figure.keyword &&
-  //     figure.isKanjijumpMeaningfulComponent() &&
+  //     figure.isKanjisenseMeaningfulComponent() &&
   //     !seenComponents.some(c=>c.id === char)
   //   );
   // });
   const remainingMeaningfulAtomicComponents =
     remainingMeaningfulComponents.filter(isFigureAtomic);
-  const nonAtomicCharactersSeenOnlyAsComponents =
-    remainingKanjijumpCharacters.flatMap((c) => {
-      return seenMeaningfulComponents
-        .filter((sc) => sc.id === c.id && !isFigureAtomic(sc))
-        .map((sc) => sc.id);
-    });
-  const atomicCharactersSeenOnlyAsComponents =
-    remainingKanjijumpCharacters.flatMap((c) => {
-      return seenMeaningfulAtomicComponents
-        .filter((sc) => sc.id === c.id)
-        .map((sc) => sc.id);
-    });
+
   return (
     <section>
       <p>
@@ -148,86 +138,87 @@ export function CharactersProgress({
         atomic components seen ({remainingMeaningfulAtomicComponents.length}{" "}
         remaining)
         <br />
-        {seenChars.length} characters seen:{" "}
-        {[...seenChars].map((entry, i) => {
-          const char = typeof entry === "string" ? entry : entry.id;
-          if (allFiguresKeysSet.has(char))
+        {seenChars.length} characters seen (
+        {
+          // priority
+          seenChars.filter((c) => c.isPriority).length
+        }{" "}
+        priority figures, {seenChars.filter((c) => !c.isPriority).length}{" "}
+        other):{" "}
+        {[...seenChars]
+          .sort((a, b) => {
+            return b.aozoraAppearances - a.aozoraAppearances;
+          })
+          .map((entry, i) => {
+            const char = typeof entry === "string" ? entry : entry.id;
+            if (allFiguresKeysSet.has(char))
+              return (
+                <span key={char + i}>
+                  <ColorCodedFigure
+                    key={char}
+                    display={char}
+                    lists={entry.listsAsCharacter}
+                    onClick={getOnClickFigure(char)}
+                  />
+                  {entry.isStandaloneCharacter ? null : "!"}
+                </span>
+              );
             return (
-              <span key={char + i}>
-                <ColorCodedFigure
-                  key={char}
-                  char={char}
-                  lists={entry.listsAsCharacter}
-                  onClick={getOnClickFigure(char)}
-                />
-                {entry.isStandaloneCharacter ? null : "!"}
+              <span key={char + i} className={"nonPriorityChar"}>
+                *{char}
               </span>
             );
-          return (
-            <span key={char + i} className={"nonPriorityChar"}>
-              *{char}
-            </span>
-          );
-        })}
+          })}
       </p>
       <p>
-        {seenComponents.length} components seen:
-        {[...seenComponents].map((c, i) => (
-          <ColorCodedFigure
-            key={c.id + i}
-            char={c.id}
-            lists={c.listsAsComponent}
-            onClick={getOnClickFigure(c.id)}
-          />
-        ))}
+        {seenFigures.length} components seen:
+        {[...seenFigures]
+          .sort((a, b) => {
+            return b.aozoraAppearances - a.aozoraAppearances;
+          })
+          .map((c, i) => (
+            <ColorCodedFigure
+              key={c.id + i}
+              display={c.id}
+              lists={c.listsAsComponent}
+              onClick={getOnClickFigure(c.id)}
+            />
+          ))}
       </p>
       <section>
         {seenMeaningfulAtomicComponents.length} atomic components seen:
         {seenMeaningfulAtomicComponents.map((c, i) => (
           <ColorCodedFigure
             key={c.id + i}
-            char={c.id}
+            display={c.id}
             lists={c.listsAsComponent}
             onClick={getOnClickFigure(c.id)}
           />
         ))}
         <br />
         <br />
+        {atomicCharactersSeenOnlyAsComponents.size} atomic characters
+        encountered only as components:
         {atomicCharactersSeenOnlyAsComponents}
         <br />
+        {nonAtomicCharactersSeenOnlyAsComponents.size} other characters
+        encountered only as components:
         {nonAtomicCharactersSeenOnlyAsComponents}
         <br />
         <br />
         {/* TODO: only count those non-joyo components which are used in non-joyo kanji that are NOT variants of joyo kanji */}
-        <b>{remainingMeaningfulAtomicComponents.length} remaining:</b>{" "}
+        <b>
+          {remainingMeaningfulAtomicComponents.length} remaining atomic
+          components:
+        </b>{" "}
         <div>
-          {remainingMeaningfulAtomicComponents.map((c, i) => {
-            const figure = c;
-
+          {remainingMeaningfulAtomicComponents.map((figure) => {
             return (
-              <div
-                key={c.id + i}
-                className="border-1 mx-1 inline-block border border-blue-300 "
-              >
-                <ColorCodedFigure
-                  char={c.id}
-                  onClick={getOnClickFigure(c.id)}
-                  lists={c.listsAsComponent}
-                />{" "}
-                -{" "}
-                {figure.asComponent?.allUses.map((u, i) => {
-                  return (
-                    <span key={u.id + i}>
-                      <ColorCodedFigure
-                        char={u.id}
-                        lists={u.listsAsCharacter || u.listsAsComponent || []}
-                        key={u + " " + u.id}
-                        onClick={getOnClickFigure(u.id)}
-                      />
-                    </span>
-                  );
-                })}
-              </div>
+              <ColorCodedComponentWithUses
+                key={figure.id}
+                figure={figure}
+                getOnClickFigure={getOnClickFigure}
+              />
             );
           })}
         </div>
@@ -235,7 +226,7 @@ export function CharactersProgress({
 
       <Collapsible
         summary={
-          <>{remainingKanjijumpCharacters.length} priority characters left: </>
+          <>{remainingKanjisenseCharacters.length} priority characters left: </>
         }
       >
         <section>
@@ -256,28 +247,23 @@ export function CharactersProgress({
                 setSpecialRemainingCharactersSortMethod(null);
             }}
           >
-            ${specialRemainingCharactersSortMethod || "frequency"}{" "}
+            order: {specialRemainingCharactersSortMethod || "frequency"}{" "}
           </b>
 
-          {sortedRemainingKanjijumpCharacters.map((c, i) => {
-            const lists = new Set([
-              ...c.listsAsCharacter,
-              ...c.listsAsComponent,
-            ]);
-
+          {sortedRemainingKanjisenseCharacters.map((c, i) => {
             return (
               <span
                 key={c.id + i}
                 className={
-                  seenComponents.some((sc) => sc.id === c.id)
+                  seenFigures.some((sc) => sc.id === c.id)
                     ? "text-opacity-50"
                     : ""
                 }
               >
                 <ColorCodedFigure
-                  char={c.id}
+                  display={c.id}
                   onClick={getOnClickFigure(c.id)}
-                  lists={[...lists]}
+                  lists={c.listsAsCharacter}
                 />
               </span>
             );
@@ -307,21 +293,25 @@ export function CharactersProgress({
                   className={
                     primaryVariant &&
                     (seenChars.some((sc) => sc.id === primaryVariant) ||
-                      seenComponents.some((sc) => sc.id === primaryVariant))
-                      ? "opacity-30"
+                      seenFigures.some((sc) => sc.id === primaryVariant))
+                      ? "bg-slate-300 opacity-50"
                       : ""
                   }
                 >
-                  <ColorCodedFigure
-                    char={c.id}
-                    onClick={getOnClickFigure(c.id)}
-                    lists={c.listsAsComponent}
+                  <ColorCodedComponentWithUses
+                    figure={c}
+                    getOnClickFigure={getOnClickFigure}
                   />
                 </span>
               );
             })}
           <br />
-          also standalone characters;
+          also standalone characters:{" "}
+          {
+            remainingMeaningfulComponents.filter((c) => c.isStandaloneCharacter)
+              .length
+          }{" "}
+          figures{" "}
           {remainingMeaningfulComponents
             .filter((c) => c.isStandaloneCharacter)
             .map((c) => {
@@ -332,13 +322,13 @@ export function CharactersProgress({
                   className={
                     primaryVariant &&
                     (seenChars.some((sc) => sc.id === primaryVariant) ||
-                      seenComponents.some((sc) => sc.id === primaryVariant))
+                      seenFigures.some((sc) => sc.id === primaryVariant))
                       ? "opacity-30"
                       : ""
                   }
                 >
                   <ColorCodedFigure
-                    char={c.id}
+                    display={c.id}
                     onClick={getOnClickFigure(c.id)}
                     lists={c.listsAsComponent}
                   />
@@ -348,6 +338,37 @@ export function CharactersProgress({
         </section>
       </Collapsible>
     </section>
+  );
+}
+
+function ColorCodedComponentWithUses({
+  figure,
+  getOnClickFigure,
+}: {
+  figure: CurationState["remainingMeaningfulComponents"][number];
+  getOnClickFigure: (char: string) => () => void;
+}) {
+  return (
+    <div className="border-1 mx-1 inline-block border border-blue-300 ">
+      <ColorCodedFigure
+        display={figure.id}
+        onClick={getOnClickFigure(figure.id)}
+        lists={figure.listsAsComponent}
+      />{" "}
+      -{" "}
+      {figure.asComponent?.allUses.map((u, i) => {
+        return (
+          <span key={u.id + i}>
+            <ColorCodedFigure
+              display={u.id}
+              lists={u.listsAsCharacter || u.listsAsComponent || []}
+              key={u + " " + u.id}
+              onClick={getOnClickFigure(u.id)}
+            />
+          </span>
+        );
+      })}
+    </div>
   );
 }
 
@@ -373,11 +394,11 @@ function Collapsible({
 }
 
 function ColorCodedFigure({
-  char,
+  display,
   lists,
   onClick,
 }: {
-  char: string;
+  display: string;
   lists: string[];
   onClick: () => void;
 }) {
@@ -397,7 +418,7 @@ function ColorCodedFigure({
         (lists.includes("h") && "[color:rgb(187,0,255)]")
       }`}
     >
-      {char}
+      {display}
     </span>
   );
 }
