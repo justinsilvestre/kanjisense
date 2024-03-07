@@ -127,4 +127,4 @@ const prettySbgyRhymeCycles: (
   ["", "", "泰"],
   ["", "", "夬"],
   ["", "", "廢"],
-] as const;
+];
