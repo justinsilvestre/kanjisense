@@ -131,7 +131,6 @@ export const QysDialogContent = ({
             const medial = /^[yŷẁw]/.test(initial)
               ? null
               : final.match(/^[yŷẁẃw]/);
-            console.log({ initial, medial: medial?.[0], final });
             const medialHint = medial ? (
               <MedialHint medial={medial[0]} final={final} />
             ) : null;

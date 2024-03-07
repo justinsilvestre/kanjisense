@@ -405,9 +405,6 @@ export async function getCurationState(courseId: string, page: number) {
         ]
       : null;
 
-  // const seenCharacters = course?.seenCharacters
-  //   ? [...course.seenCharacters].filter((c) => !soughtCharacters?.includes(c))
-  //   : null;
   console.log({
     seenCharacters: seenCharacters.map((c) => c.id).join(""),
     seenFigures: seenFigures.map((c) => c.id).join(" "),
@@ -444,19 +441,6 @@ export async function getCurationState(courseId: string, page: number) {
   const charactersNotNeededAnymore = seenCharacters
     .map((c) => c.id)
     .filter((id) => !soughtCharacters?.includes(id));
-  console.log(
-    {
-      wantedAuthors,
-      unwantedAuthors,
-      wantedSources,
-      unwantedSources,
-      normalizedTextSearchQuery: course?.normalizedTextSearchQuery,
-      charactersNotNeededAnymore,
-      soughtCharacters,
-    },
-    "花",
-    charactersNotNeededAnymore.includes("花"),
-  );
 
   // todo: extract querying for reuse with count below
   const textGroups = await prisma.characterUsagesOnBaseCorpusText.groupBy({
@@ -726,16 +710,7 @@ async function getComponentsFromCharsAsync(
         return [];
       }
       const components: string[] = [];
-      if (figure.id === "百") {
-        console.log(
-          "hundred",
-          {
-            isPriorityComponent: figure.isPriorityComponent,
-            isAtomicFigure: isAtomicFigure(figure),
-          },
-          figure.componentsTree,
-        );
-      }
+
       if (figure.isPriorityComponent || isAtomicFigure(figure))
         components.push(char);
       const componentsTree = (figure.componentsTree || []) as [

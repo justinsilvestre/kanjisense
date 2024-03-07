@@ -28,28 +28,7 @@ import {
   getCurationState,
 } from "../features/curate/getCurationState";
 
-// remaining UI:
-// - [ ] new characters/components in seen texts
-// - [ ] new characters/components in unknown texts
-// - [ ] go to page
-// - [ ] filter by sources
-
-// const LENGTH_RANGES = Object.entries({
-//   small: [1, 19],
-//   quatrains: [20, 28],
-//   "between 1-2 stanzas": [28 + 1, 20 * 2 - 1],
-//   "two stanzas": [20 * 2, 28 * 2],
-//   "between 2-3 stanzas": [28 * 2 + 1, 20 * 3 - 1],
-//   "3+ stanzas": [20 * 3, 28 * 3],
-//   "between 3-4 stanzas": [28 * 3 + 1, 20 * 4 - 1],
-//   "4+ stanzas": [20 * 4, 28 * 4],
-//   "between 4-5 stanzas": [28 * 4 + 1, 20 * 5 - 1],
-//   "5+ stanzas": [20 * 5, Infinity],
-// });
-
 export const action = async ({ request }: ActionFunctionArgs) => {
-  console.log("action!!!!!");
-
   const formData = await request.formData();
 
   const seenCharactersParam = formData.get("sc") as string;
@@ -459,16 +438,7 @@ export default function CuratePage() {
                                                   groupIndex &&
                                                   figureFirstSighting.textIndex <
                                                     seenTextIndex));
-                                            if (character === "可")
-                                              console.log(
-                                                {
-                                                  firstSightingWasBeforeThisText,
-                                                  groupIndex,
-                                                  seenTextIndex,
-                                                },
-                                                figureFirstSighting,
-                                                "ka",
-                                              );
+
                                             if (
                                               firstSightingWasBeforeThisText
                                             ) {
