@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { KanjisenseFigure, KanjisenseFigureImageType } from "@prisma/client";
+import { KanjisenseFigureImageType } from "@prisma/client";
 import { clsx } from "clsx";
 import { useState } from "react";
 
@@ -8,6 +8,7 @@ import { FigurePopoverBadge } from "~/components/FigurePopover";
 import {
   BadgeProps,
   getBadgeProps,
+  isAtomicFigure,
   isPrioritySoundMark,
 } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
@@ -50,7 +51,7 @@ export function SingleFigureDictionaryEntry({
   const kvgImage =
     figure.image?.type === KanjisenseFigureImageType.Kvg ? figure.image : null;
   const isUnicodeCharacter = [...figure.id].length === 1;
-  const figureIsAtomic = isFigureAtomic(figure);
+  const figureIsAtomic = isAtomicFigure(figure);
 
   const glyphsJson = figure.glyphImage
     ? (figure.glyphImage.json as GlyphsJson)
@@ -250,14 +251,6 @@ export function SingleFigureDictionaryEntry({
       ) : null}
     </section>
   );
-}
-
-function isFigureAtomic(
-  figure: Pick<KanjisenseFigure, "componentsTree">,
-): boolean {
-  return Array.isArray(figure.componentsTree)
-    ? figure.componentsTree.length === 0
-    : false;
 }
 
 function parseRadicalNumbers(unicodeRadicalText: string) {

@@ -93,16 +93,21 @@ export default function FigureDetailsPage() {
       </DictionaryLayout>
     );
   }
-  const { searchedFigure: figure } = loaderData;
-  const variants = figure.variantGroup?.variants
+  const { searchedFigure } = loaderData;
+  const variants = searchedFigure.variantGroup?.variants
     .flatMap((vid) => {
-      return figure.variantGroup?.figures.find((f) => f.id === vid) || [];
+      return (
+        searchedFigure.variantGroup?.figures.find((f) => f.id === vid) || []
+      );
     })
     .map((f) => getBadgeProps(f));
   return (
     <DictionaryLayout>
       <main className="flex flex-grow flex-col gap-2">
-        <SingleFigureDictionaryEntry figure={figure} variants={variants} />
+        <SingleFigureDictionaryEntry
+          figure={searchedFigure}
+          variants={variants}
+        />
       </main>
     </DictionaryLayout>
   );

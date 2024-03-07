@@ -79,8 +79,8 @@ export function Diacritics({
             <G g="◌̂" /> only show up in syllables placed in the third row.
           </li>
           <li>
-            The <b>grave accent</b> <G g="◌̀" /> only shows up in syllables
-            placed in the fourth row.
+            The <b>grave accent</b> <G g="◌̀" /> and the <b>bare letter E</b>{" "}
+            only show up in syllables placed in the fourth row.
           </li>
         </ul>
         <p>
@@ -148,21 +148,21 @@ export function Diacritics({
                 <td>/a/</td>
                 <td className="italic text-gray-900">default</td>
                 <td>◌̣</td>
-                <td>y- ẃ- ◌̂</td>
+                <td>y- ◌̇ ◌̂</td>
                 <td className="bg-gray-400"></td>
               </tr>
               <tr>
                 <td>/e/</td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
+                <td>◌̇</td>
                 <td className="italic text-gray-900">default</td>
-                <td>◌̀</td>
               </tr>
               <tr>
                 <td>/i/</td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
-                <td className="italic text-gray-900">default</td>
+                <td className="italic text-gray-900">invariant</td>
                 <td className="bg-gray-400"></td>
               </tr>
               <tr>
@@ -176,7 +176,7 @@ export function Diacritics({
                 <td>/u/</td>
                 <td className="bg-gray-400"></td>
                 <td className="bg-gray-400"></td>
-                <td className="italic text-gray-900">default</td>
+                <td className="italic text-gray-900">invariant</td>
                 <td className="bg-gray-400"></td>
               </tr>
             </tbody>
@@ -270,7 +270,7 @@ export function Diacritics({
               </tr>
               <tr>
                 <td>
-                  <G g="e" /> <G g="è" />
+                  <G g="ė" /> <G g="e" />
                 </td>
                 <td>/e/</td>
                 <td>/e/ /a/</td>

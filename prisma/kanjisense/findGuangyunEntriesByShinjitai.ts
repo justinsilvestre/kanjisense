@@ -24,6 +24,7 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
   "GWS-U6EA5-VAR-003": ["溥"],
   "GWS-U5C03-VAR-001": ["尃"],
   円: ["圎"], // was taking 元 in addition to 圎
+  万: ["萬"], // was taking 万 in addition to 萬
 };
 
 export async function findGuangyunEntriesByShinjitai(

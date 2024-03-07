@@ -1,11 +1,9 @@
 import {
   InferredOnyomiType,
-  Kaihe,
-  QysSyllableProfile,
-  Tone,
   inferOnyomi,
   toModernKatakana,
 } from "./inferOnyomi";
+import { Kaihe, QysSyllableProfile, Tone } from "./QysSyllableProfile";
 
 describe("getAttestedOnFinals", () => {
   it("infers onyomi from 生 in default format", () => {

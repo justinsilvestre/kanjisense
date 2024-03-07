@@ -171,12 +171,15 @@ async function getkanjiDbOldStyleDbInput(
   deregisterOldAndNewVariants(dbInput, "紋");
   //given traditional form doesnt seem valid
   deregisterOldAndNewVariants(dbInput, "棚");
-  // 簾 and 廉 seem to be clearly distinguished in modern Japanese
+
+  // 簾 and 廉 seem to be clearly distinguished in modern Japanese;
+  // must have actually been mistake for 廉
   deregisterOldAndNewVariants(dbInput, "簾");
   // we don't want 欲 to be considered a component
   // if its only usage as a component is in a variant of itself
   // and that variant isn't even a base character (from our lists of important kanji).
   deregisterOldAndNewVariants(dbInput, "欲");
+
   // "擔" as old variant for "栃" is probably a mistake
   deregisterOldAndNewVariants(dbInput, "栃");
 

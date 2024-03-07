@@ -3,14 +3,17 @@ import { PropsWithChildren } from "react";
 
 import { MiddleChineseTranscriptionLink } from "~/components/AppLink";
 import { IpaLink, IpaSymbols } from "~/features/dictionary/IpaLink";
-import { Kaihe, QysSyllableProfile } from "~/lib/qys/inferOnyomi";
 import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
 import { initialGroups } from "~/lib/qys/QysInitial";
+import { Kaihe, QysSyllableProfile } from "~/lib/qys/QysSyllableProfile";
 
 import A from "../../components/ExternalLink";
 
-const noMDentilabializationFinals = new Set<QieyunRhymeCycleHead>(["尤", "東"]);
-const alwaysDentilabializationFinals = new Set<QieyunRhymeCycleHead>([
+export const noMDentilabializationFinals = new Set<QieyunRhymeCycleHead>([
+  "尤",
+  "東",
+]);
+export const alwaysDentilabializationFinals = new Set<QieyunRhymeCycleHead>([
   "元",
   "陽",
   "凡",
@@ -21,7 +24,13 @@ const alwaysDentilabializationFinals = new Set<QieyunRhymeCycleHead>([
   "鍾",
 ]);
 
-function hasDentilabialization({ cycleHead, initial }: QysSyllableProfile) {
+function hasDentilabialization({
+  cycleHead,
+  initial,
+  dengOrChongniu,
+}: QysSyllableProfile) {
+  if (cycleHead === "東" && dengOrChongniu !== "三") return false;
+
   if (!initialGroups.幫.has(initial)) return false;
 
   if (noMDentilabializationFinals.has(cycleHead)) {
@@ -950,8 +959,7 @@ export const MedialHints = {
       like <IpaLink sound="w" /> or <IpaLink sound="u" />. It may have been
       fronted to something like <IpaLink sound="y" /> or <IpaLink sound="ʉ" />{" "}
       in certain contexts, especially before <i>front vowels</i> (written here{" "}
-      <G g="e" /> and <G g="i" />) and when written with the acute accent as{" "}
-      <G g="ẃ" />.
+      <G g="e" /> and <G g="i" />) and when written before <G g="ȧ" />.
     </>
   ),
   Y: () => (
@@ -1395,10 +1403,15 @@ export const VowelHints = {
   ),
   E3: () => (
     <>
-      Bare <G g="e" /> marks finals in the category <b>Division III</b> in this
-      notation. Scholars tend to reconstruct the vowel of these finals with an
-      onset something like /i/ or /j/, and a main vowel like{" "}
-      <IpaLink sound="ɛ" /> or <IpaLink sound="e" />.
+      For finals written with E in this notation, the <G g="ė" /> dot above is
+      the usual mark of the category called <b>Division III</b>. Scholars tend
+      to reconstruct the vowel of these finals with an onset something like /i/
+      or /j/, and a main vowel like <IpaLink sound="ɛ" /> or{" "}
+      <IpaLink sound="e" />. When written with the a{" "}
+      <b>
+        leading <G g="y" /> or <G g="ẁ" />
+      </b>
+      , the the dot above is omitted for the sake of brevity.
     </>
   ),
   E3Circumflex: () => (
@@ -1429,12 +1442,11 @@ export const VowelHints = {
   ),
   E4: () => (
     <>
-      The <strong>grave accent</strong> <G g="`" /> over E in this notation
-      marks finals in the category <b>Division IV</b>. At earlier stages of
-      Middle Chinese, these finals were probably pronounced with a vowel
-      something like <IpaLink sound="ɛ" /> or <IpaLink sound="e" />. That is,
-      they were identical to the corresponding finals of Division III (with bare{" "}
-      <G g="e" />
+      The bare letter E in this notation marks finals in the category{" "}
+      <b>Division IV</b>. At earlier stages of Middle Chinese, these finals were
+      probably pronounced with a vowel something like <IpaLink sound="ɛ" /> or{" "}
+      <IpaLink sound="e" />. That is, they were identical to the corresponding
+      finals of Division III (with bare <G g="e" />
       ), but without the /i/-like glide before the vowel. Eventually, this
       Division IV series also was pronounced with a glide, and most (if not all)
       of these pairs merged.

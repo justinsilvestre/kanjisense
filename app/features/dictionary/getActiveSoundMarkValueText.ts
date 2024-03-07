@@ -2,6 +2,13 @@ import { SbgyXiaoyun } from "@prisma/client";
 
 import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
+import { QieyunRhymeCycleHead } from "~/lib/qys/QieyunRhymeCycleHead";
+import {
+  DengOrChongniu,
+  Kaihe,
+  QysSyllableProfile,
+  Tone,
+} from "~/lib/qys/QysSyllableProfile";
 
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 
@@ -11,14 +18,15 @@ export function serializeXiaoyunProfile(xiaoyun: SbgyXiaoyun) {
   }${xiaoyun.cycleHead}${xiaoyun.tone}`;
 }
 
-export function deserializeXiaoyunProfile(profile: string) {
+export function deserializeXiaoyunProfile(profile: string): QysSyllableProfile {
   const [initial, kaihe, dengOrChongniu, cycleHead, tone] = profile.split("");
   return {
-    initial,
-    kaihe: kaihe === "x" ? null : kaihe,
-    dengOrChongniu: dengOrChongniu === "x" ? null : dengOrChongniu,
-    cycleHead,
-    tone,
+    initial: initial as QysSyllableProfile["initial"],
+    kaihe: kaihe === "x" ? null : (kaihe as Kaihe),
+    dengOrChongniu:
+      dengOrChongniu === "x" ? null : (dengOrChongniu as DengOrChongniu),
+    cycleHead: cycleHead as QieyunRhymeCycleHead,
+    tone: tone as Tone,
   };
 }
 

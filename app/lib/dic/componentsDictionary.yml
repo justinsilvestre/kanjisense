@@ -395,7 +395,7 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   tag: nature
 巳:
   historical: year of the Snake
-  mnemonic: snake
+  mnemonic: python
   tag: animals
 西:
   historical: west
@@ -486,9 +486,8 @@ CDP-8BF5: # 介,齐,粛,弗,界,芥,堺,斎,繍,費,沸,佛,拂
   tag: tools
 非:
   historical: not
-  mnemonic: sad
-  standin: 悲
-  tag: feeling
+  mnemonic: flying wings
+  tag: null
 疒:
   historical: illness
   mnemonic: sickbed
@@ -781,7 +780,7 @@ CDP-8BD6: # 奥,向,CDP-8D7C,襖,奧
   mnemonic: chopping hand
   tag: hands
 夭:
-  historical: calamity
+  historical: youth
   tag: null
 CDP-8BB8: # 愛,受,舜,曖,授,綬,瞬
   historical: (various)
@@ -1315,9 +1314,9 @@ GWS-U2FF1-U2008A-U65E7: # 陥,焰,閻,陷
   tag: place
 它:
   historical: other
-  mnemonic: snake pole
+  mnemonic: garden snake
   reference: 蛇
-  tag: tools
+  tag: animals
 匊:
   historical: handful, scoop
   mnemonic: chrysanthemum
@@ -1349,10 +1348,8 @@ GWS-U23A8A-VAR-001: # 殻,穀,穀,殼
   standin: 誇
   tag: actions
 賁:
-  historical: energetic, bright
-  mnemonic: tomb
-  standin: 墳
-  tag: place
+  mnemonic: ornament
+  tag: null
 茲:
   historical: here
   mnemonic: magnet
@@ -1600,7 +1597,7 @@ CDP-8DBF: # 廌,焉,薦
   tag: personal
 戊:
   historical: fifth Heavenly Stem
-  mnemonic: garrison
+  mnemonic: guard
   reference: 戌
   tag: weapons
 豆:
@@ -1684,8 +1681,8 @@ CDP-8DBF: # 廌,焉,薦
   tag: animals
 曽:
   historical: once before
-  mnemonic: monk
-  standin: 僧
+  mnemonic: steamer basket
+  reference: 甑
   tag: personal
 左:
   historical: left-hand
@@ -1983,7 +1980,8 @@ CDP-8DBF: # 廌,焉,薦
   tag: personal
 韋:
   historical: soft leather
-  tag: tools
+  mnemonic: patrol
+  tag: null
 色:
   historical: color
   tag: color
@@ -3165,7 +3163,7 @@ GWS-U914B-G:
   historical: rule
   tag: feeling
 戒:
-  historical: guard against
+  historical: ward off
   tag: geo
 曹:
   historical: officer

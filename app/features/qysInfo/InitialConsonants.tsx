@@ -81,7 +81,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td className="[width:5em]">並 bèngˬ</td>
+                <td className="[width:5em]">並 bengˬ</td>
                 <td className="text-center">
                   <G g="b" bold />
                 </td>
@@ -129,7 +129,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td className="[width:5em]">定 dèngˎ</td>
+                <td className="[width:5em]">定 dengˎ</td>
                 <td className="text-center">
                   <G g="d" bold />
                 </td>
@@ -138,7 +138,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td className="[width:5em]">泥 nèiˎ</td>
+                <td className="[width:5em]">泥 neiˎ</td>
                 <td className="text-center">
                   <G g="n" bold />
                 </td>
@@ -165,7 +165,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td className="[width:5em]">溪 kʻèi</td>
+                <td className="[width:5em]">溪 kʻei</td>
                 <td className="text-center">
                   <G g="kʻ" bold />
                 </td>
@@ -250,7 +250,7 @@ export function InitialConsonants({
                   幫 pang
                   <br />
                   端 twan
-                  <br />見 kènˎ
+                  <br />見 kenˎ
                 </td>
                 <td>
                   <G g="p" bold /> <br /> <G g="t" bold /> <br />{" "}
@@ -353,7 +353,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td>禪 dźenˎ</td>
+                <td>禪 dźėnˎ</td>
                 <td>
                   <G g="ẓ" bold />
                   <G g="ź" bold />
@@ -363,7 +363,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td>穿 tśʻwen</td>
+                <td>穿 tśʻwėn</td>
                 <td>
                   <G g="tṣʻ" bold />
                   <G g="tśʻ" bold />
@@ -383,7 +383,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td>照 tśeuˎ</td>
+                <td>照 tśėuˎ</td>
                 <td>
                   <G g="tṣ" bold />
                   <G g="tś" bold />
@@ -444,7 +444,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td rowSpan={2}>照 tśeuˎ</td>
+                <td rowSpan={2}>照 tśėuˎ</td>
                 <td className="text-center">
                   <G g="tṣ" bold />
                 </td>
@@ -462,7 +462,7 @@ export function InitialConsonants({
                 <td></td>
               </tr>
               <tr>
-                <td rowSpan={2}>穿 tśʻwen</td>
+                <td rowSpan={2}>穿 tśʻwėn</td>
                 <td className="text-center">
                   <G g="tṣʻ" bold />
                 </td>
@@ -502,7 +502,7 @@ export function InitialConsonants({
                 </td>
               </tr>
               <tr>
-                <td rowSpan={2}>禪 dźenˎ</td>
+                <td rowSpan={2}>禪 dźėnˎ</td>
                 <td className="text-center">
                   <G g="ẓ" bold />
                 </td>
@@ -545,7 +545,7 @@ export function InitialConsonants({
             </thead>
             <tbody>
               <tr>
-                <td>曉 khèuˬ</td>
+                <td>曉 kheuˬ</td>
                 <td>
                   <G g="kh" bold />{" "}
                 </td>
@@ -606,10 +606,10 @@ export function InitialConsonants({
           "tongue-head" sounds, and the other as 舌上 "tongue-up" sounds.
         </p>
         <p>
-          In general, before any vowel sound written with the{" "}
-          <strong>underdot</strong> <G g="◌̣" />, and before the{" "}
-          <strong>letters Y, I, E, and U</strong>, these letters represent the
-          "tongue-up" sounds, which were likely pronounced with{" "}
+          In general, whenever any syllable is written with a{" "}
+          <b>dot above or below</b> the main vowel, or immediately before
+          letters <b>I and Y</b>, these letters represent the "tongue-up"
+          sounds, which were likely pronounced with{" "}
           <A href="https://en.wikipedia.org/wiki/Retroflex_consonant">
             retroflex
           </A>{" "}
@@ -621,9 +621,8 @@ export function InitialConsonants({
           have been pronounced slightly differently in different environments.
         </p>
         <p>
-          Before <strong>other vowels</strong>, and before the vowel <G g="è" />{" "}
-          <strong>with grave accent</strong>, these letters represent the
-          "tongue-head" sounds, which were likely pronounced with{" "}
+          In all other syllables, these letters represent the "tongue-head"
+          sounds, which were likely pronounced with{" "}
           <A href="https://en.wikipedia.org/wiki/Dental_consonant">dental</A>{" "}
           articulation, i.e. with the tongue closer to the teeth.
         </p>
@@ -648,7 +647,7 @@ export function InitialConsonants({
               <td rowSpan={2} className="text-center">
                 <G g="tʻ" bold />
               </td>
-              <td className="[width:5em]">徹 tʻet</td>
+              <td className="[width:5em]">徹 tʻėt</td>
               <td>
                 <ConsonantHints.Trx />
               </td>
@@ -669,7 +668,7 @@ export function InitialConsonants({
               </td>
             </tr>
             <tr>
-              <td className="[width:5em]">定 dèngˎ</td>
+              <td className="[width:5em]">定 dengˎ</td>
               <td>
                 <ConsonantHints.D />
               </td>
@@ -684,7 +683,7 @@ export function InitialConsonants({
               </td>
             </tr>
             <tr>
-              <td className="[width:5em]">泥 nèiˎ</td>
+              <td className="[width:5em]">泥 neiˎ</td>
               <td>
                 <ConsonantHints.N />
               </td>
@@ -692,9 +691,10 @@ export function InitialConsonants({
           </table>
         </div>
         <p>
-          In general, the vowel determines whether to choose between
-          "tongue-head" or "tongue-up" sounds. (Linguists might describe these
-          sounds as being in <i>nearly</i>{" "}
+          This spelling rule is in place because, in general, the vowel
+          determines whether to choose between "tongue-head" or "tongue-up"
+          sounds. (Linguists might describe these sounds as being in{" "}
+          <i>nearly</i>{" "}
           <A href="https://en.wikipedia.org/wiki/Complementary_distribution">
             complementary distribution
           </A>
@@ -817,7 +817,7 @@ export function InitialConsonants({
               </thead>
               <tbody>
                 <tr>
-                  <td className="[width:5em]">並 bèngˬ</td>
+                  <td className="[width:5em]">並 bengˬ</td>
                   <td className="text-center">
                     <G g="b" bold />
                   </td>
@@ -839,7 +839,7 @@ export function InitialConsonants({
                   </td>
                 </tr>
                 <tr>
-                  <td className="[width:5em]">定 dèngˎ</td>
+                  <td className="[width:5em]">定 dengˎ</td>
                   <td className="text-center">
                     <G g="d" bold />
                   </td>
@@ -947,7 +947,7 @@ export function InitialConsonants({
                   </td>
                 </tr>
                 <tr>
-                  <td className="[width:5em]">禪 dźenˎ</td>
+                  <td className="[width:5em]">禪 dźėnˎ</td>
                   <td className="text-center">
                     <G g="ẓ" bold />
                     <G g="ź" bold />
@@ -1042,7 +1042,7 @@ export function InitialConsonants({
                   <td rowSpan={2}>
                     <G g="b" />
                   </td>
-                  <td>並 bèngˬ</td>
+                  <td>並 bengˬ</td>
                   <td colSpan={2}>
                     <IpaLink sound="b" /> as in{" "}
                     <i>

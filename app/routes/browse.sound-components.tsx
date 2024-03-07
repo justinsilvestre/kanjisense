@@ -17,7 +17,6 @@ import {
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
-import { FigureBadge } from "~/components/FigureBadge";
 import { prisma } from "~/db.server";
 import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
 import { abbreviateTranscriptions } from "~/features/dictionary/abbreviateTranscriptions";
@@ -30,6 +29,8 @@ import {
   parseActiveSoundMarkValue,
   transcribeSerializedXiaoyunProfile,
 } from "~/features/dictionary/getActiveSoundMarkValueText";
+
+import { FigureBadgeLink } from "../components/FigureBadgeLink";
 
 type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
@@ -549,20 +550,6 @@ export default function FigureDetailsPage() {
         </section>
       </main>
     </DictionaryLayout>
-  );
-}
-
-function FigureBadgeLink({
-  id: figureId,
-  badgeProps,
-}: {
-  id: string;
-  badgeProps: BadgeProps;
-}) {
-  return (
-    <DictLink figureId={figureId}>
-      <FigureBadge badgeProps={badgeProps} />
-    </DictLink>
   );
 }
 

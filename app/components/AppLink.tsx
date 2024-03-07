@@ -4,6 +4,7 @@ import { useEffect, type ReactNode, useRef } from "react";
 type LinkProps<T = object> = T & {
   children: ReactNode;
   className?: string;
+  newWindow?: boolean;
 };
 
 function AppLink({
@@ -11,12 +12,18 @@ function AppLink({
   children,
   className = "underline hover:text-orange-600",
   linkRef,
+  newWindow,
 }: LinkProps<{
   to: string;
   linkRef?: React.Ref<HTMLAnchorElement>;
 }>) {
   return (
-    <Link to={to} className={className} ref={linkRef}>
+    <Link
+      to={to}
+      className={className}
+      ref={linkRef}
+      {...(newWindow ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
       {children}
     </Link>
   );
@@ -27,11 +34,13 @@ export function DictLink({
   figureId,
   focusOnLoad,
   className,
+  newWindow,
 }: {
   children?: ReactNode;
   className?: string;
 } & Omit<
   LinkProps<{
+    newWindow?: boolean;
     figureId: string;
     focusOnLoad?: boolean;
   }>,
@@ -44,7 +53,12 @@ export function DictLink({
     }
   }, [figureId, focusOnLoad]);
   return (
-    <AppLink to={`/dict/${figureId}`} linkRef={linkRef} className={className}>
+    <AppLink
+      to={`/dict/${figureId}`}
+      linkRef={linkRef}
+      className={className}
+      newWindow={newWindow}
+    >
       {children || figureId}
     </AppLink>
   );

@@ -477,7 +477,7 @@ export default function MiddleChinese() {
                 <br />
                 <Ruby rt="ŷok">欲</Ruby>
                 <Ruby rt="giūng">窮</Ruby>
-                <Ruby rt="tsʻèn">千</Ruby>
+                <Ruby rt="tsʻen">千</Ruby>
                 <Ruby rt="liˬ">里</Ruby>
                 <Ruby rt="mūk">目</Ruby>
                 <br />
