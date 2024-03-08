@@ -593,7 +593,7 @@ function getVariantsMessage(variants: string[]) {
 
 async function getAllComponentsTrees(
   prisma: PrismaClient,
-  figuresKeys: Iterable<string>,
+  figuresKeys: string[],
   figuresToVariantGroups: Map<string, string[]>,
 ) {
   const componentsTreesInput = new Map<string, ComponentUse[]>();
@@ -601,18 +601,29 @@ async function getAllComponentsTrees(
   const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>();
   const charactersToComponents = new Map<string, Set<string>>();
   const getSelectedIdsComponentsCache = new Map<string, string[]>();
+  let visitedFigures = 0;
+
   for (const treeRoot of figuresKeys) {
+    visitedFigures++;
+    if (visitedFigures % 1000 === 0 || visitedFigures === figuresKeys.length) {
+      console.log(`${visitedFigures} / ${figuresKeys.length} processed`);
+    }
+
     const componentsTree = await getComponentsTree(treeRoot, async (id) => {
       if (getSelectedIdsComponentsCache.has(id))
         return getSelectedIdsComponentsCache.get(id)!;
-
-      const relation = await prisma.kanjisenseFigureRelation.findUnique({
-        where: { id },
-        select: { selectedIdsComponents: true },
-      });
-      if (!relation) throw new Error(`figure ${id} not found`);
-      getSelectedIdsComponentsCache.set(id, relation.selectedIdsComponents);
-      return relation.selectedIdsComponents;
+      try {
+        const relation = await prisma.kanjisenseFigureRelation.findUnique({
+          where: { id },
+          select: { selectedIdsComponents: true },
+        });
+        if (!relation) throw new Error(`figure ${id} not found`);
+        getSelectedIdsComponentsCache.set(id, relation.selectedIdsComponents);
+        return relation.selectedIdsComponents;
+      } catch (err) {
+        console.error(`error getting selectedIdsComponents for figure ${id}`);
+        throw err;
+      }
     });
     for (const { component, parent: treeMemberParent } of componentsTree) {
       if (treeMemberParent === treeRoot) {
@@ -634,6 +645,7 @@ async function getAllComponentsTrees(
     }
     componentsTreesInput.set(treeRoot, componentsTree);
   }
+
   return {
     componentsTreesInput,
     componentsToUses,
