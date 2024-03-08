@@ -55,10 +55,10 @@ export async function seed(prisma: PrismaClient) {
       seedScriptinAozoraFrequencies(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
-      seedKanjisenseVariantGroups(prisma, true),
+      seedKanjisenseVariantGroups(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
-      seedKanjisenseFigureRelation(prisma, true),
+      seedKanjisenseFigureRelation(prisma, false),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
       seedKanjiDbCharacterDerivations(prisma, true),
