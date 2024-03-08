@@ -67,34 +67,34 @@ export async function seed(prisma: PrismaClient) {
       seedKanjisenseFigures(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
-      seedKanjisenseActiveSoundMarks(prisma, true),
+      seedKanjisenseActiveSoundMarks(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense figure badge props", () =>
-      seedKanjisenseFigureBadgeProps(prisma, true, false),
+      seedKanjisenseFigureBadgeProps(prisma, false, false),
     );
     await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
 
     await executeAndLogTime("seeding kanjisense figure readings", () =>
-      seedKanjisenseFigureReadings(prisma, true),
+      seedKanjisenseFigureReadings(prisma, false),
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValues(prisma, true),
+      seedKanjisenseActiveSoundMarkValues(prisma, false),
     );
 
     await executeAndLogTime("seed figure images", () =>
-      seedFigureImages(prisma, true),
+      seedFigureImages(prisma, false),
     );
 
     await executeAndLogTime("seeding shuowen images", () =>
-      seedShuowenImages(prisma, true),
+      seedShuowenImages(prisma, false),
     );
     await executeAndLogTime("seeding glyph images", () =>
-      seedGlyphImages(prisma, true),
+      seedGlyphImages(prisma, false),
     );
 
     await executeAndLogTime("seeding kanjisense figure search properties", () =>
-      seedFigureSearchProperties(prisma, 100, true),
+      seedFigureSearchProperties(prisma, 100, false),
     );
 
     console.log(
