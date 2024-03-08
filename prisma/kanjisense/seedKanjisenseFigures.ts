@@ -98,7 +98,7 @@ export async function seedKanjisenseFigures(
     const { charactersAndPriorityComponentsMeanings } = await executeAndLogTime(
       "preparing characters and priority components meanings",
       () =>
-        prepareCharactersAndPriorityComponentsMeaningsMeanings(
+        prepareCharactersAndPriorityComponentsMeanings(
           prisma,
           componentsDictionary,
           allStandaloneCharactersMinusSomeDoublingAsNonPriorityComponents,
@@ -522,7 +522,7 @@ async function prepareFiguresForMeaningAssignments(
   }
   return { meaningfulComponents, meaninglessComponents };
 }
-async function prepareCharactersAndPriorityComponentsMeaningsMeanings(
+async function prepareCharactersAndPriorityComponentsMeanings(
   prisma: PrismaClient,
   componentsDictionary: Record<string, ComponentMeaning>,
   allStandaloneCharacters: KanjisenseFigureRelation[],
@@ -532,53 +532,74 @@ async function prepareCharactersAndPriorityComponentsMeaningsMeanings(
     string,
     Awaited<ReturnType<typeof getFigureMeaningsText>>
   >();
-  for (const figure of [...allStandaloneCharacters, ...meaningfulComponents]) {
-    const primaryVariantId = figure.variantGroupId || figure.id;
+  let visitedFigures = 0;
+  const combinedMeaningCandidates = new Map(
+    [...allStandaloneCharacters, ...meaningfulComponents].map((f) => [f.id, f]),
+  );
+  console.log(
+    "!! ",
+    allStandaloneCharacters.length + meaningfulComponents.length,
+    combinedMeaningCandidates.size,
+  );
 
-    const componentsDictionaryEntry = componentsDictionary[primaryVariantId];
-    let meaning = await getFigureMeaningsText(
-      prisma,
-      figure,
-      componentsDictionaryEntry || null,
-    );
-    if (!meaning) {
-      const variants =
-        (
-          await prisma.kanjisenseVariantGroup.findUnique({
-            where: { id: primaryVariantId },
-            select: { variants: true },
-          })
-        )?.variants ?? [];
-      for (const variant of variants) {
-        const variantFigure = await getFigureById(prisma, variant);
-        meaning = await getFigureMeaningsText(
-          prisma,
-          variantFigure,
-          componentsDictionaryEntry || null,
+  await Promise.all(
+    Array.from(combinedMeaningCandidates).map(async ([, figure]) => {
+      visitedFigures++;
+      if (
+        visitedFigures % 1000 === 0 ||
+        visitedFigures === combinedMeaningCandidates.size
+      ) {
+        console.log(
+          `|| ${visitedFigures} / ${combinedMeaningCandidates.size} processed`,
         );
-        if (meaning) {
-          // console.warn(
-          //   `meaning not found for priority figure variant ${figure.id}, using variant ${variant}, ${meaning.kanjidicEnglish} // ${meaning.unihanDefinitionText}`,
-          // );
-          break;
+      }
+      const primaryVariantId = figure.variantGroupId || figure.id;
+
+      const componentsDictionaryEntry = componentsDictionary[primaryVariantId];
+      let meaning = await getFigureMeaningsText(
+        prisma,
+        figure,
+        componentsDictionaryEntry || null,
+      );
+      if (!meaning) {
+        const variants =
+          (
+            await prisma.kanjisenseVariantGroup.findUnique({
+              where: { id: primaryVariantId },
+              select: { variants: true },
+            })
+          )?.variants ?? [];
+        for (const variant of variants) {
+          const variantFigure = await getFigureById(prisma, variant);
+          meaning = await getFigureMeaningsText(
+            prisma,
+            variantFigure,
+            componentsDictionaryEntry || null,
+          );
+          if (meaning) {
+            // console.warn(
+            //   `meaning not found for priority figure variant ${figure.id}, using variant ${variant}, ${meaning.kanjidicEnglish} // ${meaning.unihanDefinitionText}`,
+            // );
+            break;
+          }
+        }
+        if (!meaning)
+          console.error(
+            `meaning not found for any variants of priority figure ${
+              figure.id
+            } having ${getVariantsMessage(variants)}`,
+          );
+        if (meaning && !meaning.keyword) {
+          console.error(
+            `keyword not found for priority figure ${
+              figure.id
+            } having ${getVariantsMessage(variants)}`,
+          );
         }
       }
-      if (!meaning)
-        console.error(
-          `meaning not found for any variants of priority figure ${
-            figure.id
-          } having ${getVariantsMessage(variants)}`,
-        );
-      if (meaning && !meaning.keyword) {
-        console.error(
-          `keyword not found for priority figure ${
-            figure.id
-          } having ${getVariantsMessage(variants)}`,
-        );
-      }
-    }
-    charactersAndPriorityComponentsMeanings.set(figure.id, meaning);
-  }
+      charactersAndPriorityComponentsMeanings.set(figure.id, meaning);
+    }),
+  );
 
   return {
     /** not necesarily all characters and priority components */
@@ -606,7 +627,7 @@ async function getAllComponentsTrees(
   for (const treeRoot of figuresKeys) {
     visitedFigures++;
     if (visitedFigures % 1000 === 0 || visitedFigures === figuresKeys.length) {
-      console.log(`${visitedFigures} / ${figuresKeys.length} processed`);
+      console.log(`|| ${visitedFigures} / ${figuresKeys.length} processed`);
     }
 
     const componentsTree = await getComponentsTree(treeRoot, async (id) => {

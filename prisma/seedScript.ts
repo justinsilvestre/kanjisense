@@ -61,7 +61,7 @@ export async function seed(prisma: PrismaClient) {
       seedKanjisenseFigureRelation(prisma, false),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
-      seedKanjiDbCharacterDerivations(prisma, true),
+      seedKanjiDbCharacterDerivations(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
       seedKanjisenseFigures(prisma, true),
