@@ -148,31 +148,48 @@ export async function seedKanjisenseFigures(
     });
 
     await executeAndLogTime("preparing non-priority figures", async () => {
-      for (const figure of [
+      const nonPriorityFigures = [
         ...nonPriorityCharacters,
         ...meaninglessComponents,
-      ]) {
-        const id = figure.id;
+      ];
 
-        const meaning = await getFigureMeaningsText(
-          prisma,
-          figure,
-          componentsDictionary[figure.variantGroupId ?? figure.id] || null,
-        );
-        const keyword =
-          meaning?.kanjidicEnglish?.[0] ||
-          meaning?.unihanDefinitionText?.split("; ")?.[0] ||
-          "[UNNAMED FIGURE]";
-        const createFigureInput = getCreateFigureInput(
-          figure,
-          keyword,
-          null,
-          false,
-          meaning,
-          oldVariantsToBaseKanji.get(id),
-        );
-        dbInput.set(id, createFigureInput);
-      }
+      let visitedFigures = 0;
+      await runAllWithConcurrencyLimit(
+        500,
+        nonPriorityFigures,
+        async (figure) => {
+          const id = figure.id;
+
+          const meaning = await getFigureMeaningsText(
+            prisma,
+            figure,
+            componentsDictionary[figure.variantGroupId ?? figure.id] || null,
+          );
+          const keyword =
+            meaning?.kanjidicEnglish?.[0] ||
+            meaning?.unihanDefinitionText?.split("; ")?.[0] ||
+            "[UNNAMED FIGURE]";
+          const createFigureInput = getCreateFigureInput(
+            figure,
+            keyword,
+            null,
+            false,
+            meaning,
+            oldVariantsToBaseKanji.get(id),
+          );
+          dbInput.set(id, createFigureInput);
+
+          visitedFigures++;
+          if (
+            visitedFigures % 1000 === 0 ||
+            visitedFigures === nonPriorityFigures.length
+          ) {
+            console.log(
+              `|| ${visitedFigures} / ${nonPriorityFigures.length} processed`,
+            );
+          }
+        },
+      );
     });
 
     console.log("cleaning slate before creating figures");
@@ -533,24 +550,20 @@ async function prepareCharactersAndPriorityComponentsMeanings(
     Awaited<ReturnType<typeof getFigureMeaningsText>>
   >();
   let visitedFigures = 0;
-  const combinedMeaningCandidates = new Map(
-    [...allStandaloneCharacters, ...meaningfulComponents].map((f) => [f.id, f]),
-  );
-  console.log(
-    "!! ",
-    allStandaloneCharacters.length + meaningfulComponents.length,
-    combinedMeaningCandidates.size,
-  );
+  const combinedMeaningCandidates = [
+    ...allStandaloneCharacters,
+    ...meaningfulComponents,
+  ];
 
   await Promise.all(
-    Array.from(combinedMeaningCandidates).map(async ([, figure]) => {
+    Array.from(combinedMeaningCandidates).map(async (figure) => {
       visitedFigures++;
       if (
         visitedFigures % 1000 === 0 ||
-        visitedFigures === combinedMeaningCandidates.size
+        visitedFigures === combinedMeaningCandidates.length
       ) {
         console.log(
-          `|| ${visitedFigures} / ${combinedMeaningCandidates.size} processed`,
+          `|| ${visitedFigures} / ${combinedMeaningCandidates.length} processed`,
         );
       }
       const primaryVariantId = figure.variantGroupId || figure.id;
@@ -624,28 +637,27 @@ async function getAllComponentsTrees(
   const getSelectedIdsComponentsCache = new Map<string, string[]>();
   let visitedFigures = 0;
 
-  for (const treeRoot of figuresKeys) {
-    visitedFigures++;
-    if (visitedFigures % 1000 === 0 || visitedFigures === figuresKeys.length) {
-      console.log(`|| ${visitedFigures} / ${figuresKeys.length} processed`);
-    }
-
-    const componentsTree = await getComponentsTree(treeRoot, async (id) => {
-      if (getSelectedIdsComponentsCache.has(id))
-        return getSelectedIdsComponentsCache.get(id)!;
-      try {
-        const relation = await prisma.kanjisenseFigureRelation.findUnique({
-          where: { id },
-          select: { selectedIdsComponents: true },
-        });
-        if (!relation) throw new Error(`figure ${id} not found`);
-        getSelectedIdsComponentsCache.set(id, relation.selectedIdsComponents);
-        return relation.selectedIdsComponents;
-      } catch (err) {
-        console.error(`error getting selectedIdsComponents for figure ${id}`);
-        throw err;
-      }
-    });
+  await runAllWithConcurrencyLimit(500, figuresKeys, async (treeRoot) => {
+    const componentsTree = await getComponentsTree(
+      treeRoot,
+      async (id) => {
+        if (getSelectedIdsComponentsCache.has(id))
+          return getSelectedIdsComponentsCache.get(id)!;
+        try {
+          const relation = await prisma.kanjisenseFigureRelation.findUnique({
+            where: { id },
+            select: { selectedIdsComponents: true },
+          });
+          if (!relation) throw new Error(`figure ${id} not found`);
+          getSelectedIdsComponentsCache.set(id, relation.selectedIdsComponents);
+          return relation.selectedIdsComponents;
+        } catch (err) {
+          console.error(`error getting selectedIdsComponents for figure ${id}`);
+          throw err;
+        }
+      },
+      componentsTreesInput,
+    );
     for (const { component, parent: treeMemberParent } of componentsTree) {
       if (treeMemberParent === treeRoot) {
         if (!componentsToDirectUsesPrimaryVariants.has(component))
@@ -665,7 +677,14 @@ async function getAllComponentsTrees(
       charactersToComponents.get(treeRoot)!.add(component);
     }
     componentsTreesInput.set(treeRoot, componentsTree);
-  }
+
+    visitedFigures++;
+    if (visitedFigures % 1000 === 0 || visitedFigures === figuresKeys.length) {
+      console.log(`|| ${visitedFigures} / ${figuresKeys.length} processed`);
+      console.dir(componentsTree);
+    }
+  });
+  console.log("WOP!");
 
   return {
     componentsTreesInput,
@@ -734,4 +753,20 @@ function setReduce<T, U>(
     acc = reducer(acc, next);
   }
   return acc;
+}
+
+async function runAllWithConcurrencyLimit<T, U>(
+  maxConcurrentOperations: number,
+  collection: T[],
+  operation: (a: T) => Promise<U>,
+) {
+  const results = [];
+  let i = 0;
+
+  while (i < collection.length) {
+    const batch = collection.slice(i, i + maxConcurrentOperations);
+    results.push(...(await Promise.all(batch.map(operation))));
+    i += maxConcurrentOperations;
+  }
+  return results;
 }
