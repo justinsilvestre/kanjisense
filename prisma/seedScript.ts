@@ -97,8 +97,8 @@ export async function seed(prisma: PrismaClient) {
       seedFigureSearchProperties(prisma, 100, false),
     );
 
-    console.log("updating keys");
-    for (const { id } of await prisma.kanjisenseFigure.findMany({
+    console.log("updating glyphimage keys");
+    for (const { id } of await prisma.glyphImage.findMany({
       select: { id: true },
     })) {
       await prisma.glyphImage.update({
@@ -107,13 +107,12 @@ export async function seed(prisma: PrismaClient) {
           key: id,
         },
       });
+    }
+    console.log("updating kanjisenseFigureImage keys");
+    for (const { id } of await prisma.kanjisenseFigureImage.findMany({
+      select: { id: true },
+    })) {
       await prisma.kanjisenseFigureImage.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-      await prisma.shuowenImage.update({
         where: { id },
         data: {
           key: id,

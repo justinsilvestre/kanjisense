@@ -238,7 +238,6 @@ enum KanjisenseFigureImageType {
 
 model ShuowenImage {
   id      String             @id
-  key     String?
   version Int                @default(0)
   paths   String[]
   figures KanjisenseFigure[]
