@@ -101,7 +101,19 @@ export async function seed(prisma: PrismaClient) {
     for (const { id } of await prisma.kanjisenseFigure.findMany({
       select: { id: true },
     })) {
-      await prisma.kanjisenseFigure.update({
+      await prisma.glyphImage.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+      await prisma.kanjisenseFigureImage.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+      await prisma.shuowenImage.update({
         where: { id },
         data: {
           key: id,
