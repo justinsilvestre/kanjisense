@@ -97,28 +97,63 @@ export async function seed(prisma: PrismaClient) {
       seedFigureSearchProperties(prisma, 100, false),
     );
 
-    console.log("updating glyphimage keys");
-    for (const { id } of await prisma.glyphImage.findMany({
+    console.log("updating kanjisenseComponent keys");
+    for (const { id } of await prisma.kanjisenseComponent.findMany({
       select: { id: true },
     })) {
-      await prisma.glyphImage.update({
+      await prisma.kanjisenseComponent.update({
         where: { id },
         data: {
           key: id,
         },
       });
     }
-    console.log("updating kanjisenseFigureImage keys");
-    for (const { id } of await prisma.kanjisenseFigureImage.findMany({
+    console.log("updating kanjisenseFigureMeaning keys");
+    for (const { id } of await prisma.kanjisenseFigureMeaning.findMany({
       select: { id: true },
     })) {
-      await prisma.kanjisenseFigureImage.update({
+      await prisma.kanjisenseFigureMeaning.update({
         where: { id },
         data: {
           key: id,
         },
       });
     }
+    console.log("updating KanjisenseFigureReading keys");
+    for (const { id } of await prisma.kanjisenseFigureReading.findMany({
+      select: { id: true },
+    })) {
+      await prisma.kanjisenseFigureReading.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+    }
+
+    console.log("updating KanjisenseFigureRelation keys");
+    for (const { id } of await prisma.kanjisenseFigureRelation.findMany({
+      select: { id: true },
+    })) {
+      await prisma.kanjisenseFigureRelation.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+    }
+    console.log("updating KanjisenseVariantGroup keys");
+    for (const { id } of await prisma.kanjisenseVariantGroup.findMany({
+      select: { id: true },
+    })) {
+      await prisma.kanjisenseVariantGroup.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+    }
+
     console.log("keys updated");
 
     console.log(
