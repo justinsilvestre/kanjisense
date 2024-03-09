@@ -192,8 +192,9 @@ export async function seedKanjisenseFigures(
       );
     });
 
-    console.log("cleaning slate before creating figures");
-    await prisma.kanjisenseFigure.deleteMany({});
+    await executeAndLogTime("cleaning slate before creating figures", () =>
+      prisma.kanjisenseFigure.deleteMany({}),
+    );
 
     await executeAndLogTime("seeding figures", async () => {
       await inBatchesOf({
@@ -426,44 +427,49 @@ async function connectComponentsTreesEntries(
     }
   >,
 ) {
-  for (const [id, componentsTree] of componentsTreesInput) {
-    const figureUsesAsComponent = getComponentUses(id);
-    try {
-      const combinedAozoraAppearances =
-        (allAozoraCharacterFrequencies[id]?.appearances ?? 0) +
-        (figureUsesAsComponent
-          ? setReduce(
-              figureUsesAsComponent,
-              (acc, parentId) =>
-                acc +
-                (allAozoraCharacterFrequencies[parentId]?.appearances ?? 0),
-              0,
-            )
-          : 0);
+  return await Promise.all(
+    Array.from(componentsTreesInput, async ([id, componentsTree]) => {
+      const figureUsesAsComponent = getComponentUses(id);
+      try {
+        const combinedAozoraAppearances =
+          (allAozoraCharacterFrequencies[id]?.appearances ?? 0) +
+          (figureUsesAsComponent
+            ? setReduce(
+                figureUsesAsComponent,
+                (acc, parentId) =>
+                  acc +
+                  (allAozoraCharacterFrequencies[parentId]?.appearances ?? 0),
+                0,
+              )
+            : 0);
 
-      await prisma.kanjisenseFigure.update({
-        where: { id },
-        data: {
-          aozoraAppearances: combinedAozoraAppearances,
-          componentsTree: componentsTree.map((c) => c.toJSON()),
-          asComponent: figureUsesAsComponent?.size
-            ? {
-                create: {
-                  allUses: {
-                    connect: Array.from(figureUsesAsComponent, (parentId) => ({
-                      id: parentId,
-                    })),
+        await prisma.kanjisenseFigure.update({
+          where: { id },
+          data: {
+            aozoraAppearances: combinedAozoraAppearances,
+            componentsTree: componentsTree.map((c) => c.toJSON()),
+            asComponent: figureUsesAsComponent?.size
+              ? {
+                  create: {
+                    allUses: {
+                      connect: Array.from(
+                        figureUsesAsComponent,
+                        (parentId) => ({
+                          id: parentId,
+                        }),
+                      ),
+                    },
                   },
-                },
-              }
-            : undefined,
-        },
-      });
-    } catch (e) {
-      console.log({ id, componentsTree, figureUsesAsComponent });
-      throw e;
-    }
-  }
+                }
+              : undefined,
+          },
+        });
+      } catch (e) {
+        console.log({ id, componentsTree, figureUsesAsComponent });
+        throw e;
+      }
+    }),
+  );
 }
 
 async function prepareFiguresForMeaningAssignments(
@@ -681,10 +687,8 @@ async function getAllComponentsTrees(
     visitedFigures++;
     if (visitedFigures % 1000 === 0 || visitedFigures === figuresKeys.length) {
       console.log(`|| ${visitedFigures} / ${figuresKeys.length} processed`);
-      console.dir(componentsTree);
     }
   });
-  console.log("WOP!");
 
   return {
     componentsTreesInput,

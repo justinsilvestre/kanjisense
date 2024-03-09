@@ -60,7 +60,12 @@ export async function registerActiveSoundMarks(
   function getPrimaryVariantId(id: string) {
     return allVariantsToVariantGroupHead[id] || id;
   }
-  for (const [id, tree] of componentsTrees.entries()) {
+  let visitedCount = 0;
+  for (const [id, tree] of componentsTrees) {
+    visitedCount++;
+    if (visitedCount % 500 === 0 || visitedCount === componentsTrees.size) {
+      console.log(`|| processed ${visitedCount} / ${componentsTrees.size}`);
+    }
     const derivation =
       (await prisma.kanjiDbCharacterDerivation.findUnique({
         where: {

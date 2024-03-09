@@ -97,6 +97,19 @@ export async function seed(prisma: PrismaClient) {
       seedFigureSearchProperties(prisma, 100, false),
     );
 
+    console.log("updating keys");
+    for (const { id } of await prisma.kanjisenseFigure.findMany({
+      select: { id: true },
+    })) {
+      await prisma.kanjisenseFigure.update({
+        where: { id },
+        data: {
+          key: id,
+        },
+      });
+    }
+    console.log("keys updated");
+
     console.log(
       "disk usage after:",
       await prisma.$queryRaw`SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database`,

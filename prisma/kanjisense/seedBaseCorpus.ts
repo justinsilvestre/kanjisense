@@ -194,11 +194,11 @@ export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
         data: batch.reduce(
           (all, [, { uniqueChars }], i) => {
             const uniqueComponents = uniquePriorityComponentsCache[i];
-            for (const figureId of uniqueComponents) {
+            for (const figureKey of uniqueComponents) {
               all.push({
-                figureId,
+                figureKey,
                 baseCorpusTextId: hashCache[i],
-                frequencyScore: allFiguresFrequencyScores.get(figureId) ?? 0,
+                frequencyScore: allFiguresFrequencyScores.get(figureKey) ?? 0,
                 baseCorpusTextLength: lengthCache[i],
                 baseCorpusUniqueCharactersCount: uniqueChars.length,
                 baseCorpusUniqueComponentsCount: uniqueComponents.length,
@@ -207,7 +207,7 @@ export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
             return all;
           },
           [] as {
-            figureId: string;
+            figureKey: string;
             baseCorpusTextId: number;
             frequencyScore: number;
             baseCorpusTextLength: number;

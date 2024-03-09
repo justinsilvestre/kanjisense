@@ -67,6 +67,8 @@ const nichi: BadgeProps = {
   id: "日",
   image: {
     id: "日",
+    key: "日",
+    version: 0,
     type: "Kvg",
     content: {
       n: [
@@ -96,6 +98,8 @@ const getsu: BadgeProps = {
   id: "月",
   image: {
     id: "月",
+    key: "月",
+    version: 0,
     type: "Kvg",
     content: {
       n: [
@@ -125,6 +129,8 @@ const akarui: BadgeProps = {
   id: "明",
   image: {
     id: "明",
+    key: "明",
+    version: 1,
     type: "Kvg",
     content: {
       n: [
@@ -162,6 +168,8 @@ const mei: BadgeProps = {
   id: "盟",
   image: {
     id: "盟",
+    key: "盟",
+    version: 1,
     type: "Kvg",
     content: {
       n: [

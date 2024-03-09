@@ -102,6 +102,8 @@ model ScriptinAozoraFrequency {
 
 model KanjisenseVariantGroup {
   id                     String             @id
+  key                    String?
+  version                Int                @default(0)
   variants               String[]
   // built after variants are set
   figures                KanjisenseFigure[]
@@ -110,6 +112,8 @@ model KanjisenseVariantGroup {
 
 model KanjisenseFigureRelation {
   id                    String            @id
+  key                   String?
+  version               Int               @default(0)
   variantGroupId        String?
   directUses            String[]
   listsAsComponent      String[]
@@ -127,6 +131,8 @@ model KanjiDbCharacterDerivation {
 
 model KanjisenseFigure {
   id                    String                   @id
+  key                   String?
+  version               Int                      @default(0)
   keyword               String
   isPriority            Boolean
   isStandaloneCharacter Boolean                  @default(false)
@@ -159,13 +165,12 @@ model KanjisenseFigure {
   allComponents         KanjisenseComponent[]    @relation("allComponents")
 
   searchProperties SearchPropertiesOnFigure[]
-
-  baseCorpusUsesAsCharacter CharacterUsagesOnBaseCorpusText[]
-  baseCorpusUsesAsComponent ComponentUsagesOnBaseCorpusText[]
 }
 
 model KanjisenseComponent {
   id              String             @id
+  key             String?
+  version         Int                @default(0)
   componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   soundMarkUses   KanjisenseFigure[] @relation("activeSoundMark")
   allUses         KanjisenseFigure[] @relation("allComponents")
@@ -184,6 +189,8 @@ model KanjisenseComponentUse {
 
 model KanjisenseFigureReading {
   id                            String            @id
+  key                           String?
+  version                       Int               @default(0)
   sbgyXiaoyunsMatchingExemplars Json?
   inferredOnReadingCandidates   Json
   kanjidicEntryId               String?           @unique
@@ -207,15 +214,18 @@ model KanjisenseFigureReadingToSbgyXiaoyun {
 
 model KanjisenseFigureMeaning {
   id               String           @id
+  key              String?
+  version          Int              @default(0)
   unihanDefinition String?
   kanjidicEnglish  String[]
   figure           KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model KanjisenseFigureImage {
-  id String @id
-
-  type KanjisenseFigureImageType
+  id      String                    @id
+  key     String?
+  version Int                       @default(0)
+  type    KanjisenseFigureImageType
 
   content Json
   figure  KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -228,14 +238,18 @@ enum KanjisenseFigureImageType {
 
 model ShuowenImage {
   id      String             @id
+  key     String?
+  version Int                @default(0)
   paths   String[]
   figures KanjisenseFigure[]
 }
 
 model GlyphImage {
-  id     String           @id
-  json   Json
-  figure KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id      String           @id
+  key     String?
+  version Int              @default(0)
+  json    Json
+  figure  KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model User {
@@ -355,10 +369,8 @@ model BaseCorpusText {
 
 model CharacterUsagesOnBaseCorpusText {
   character        String
-  figureId         String?
-  figure           KanjisenseFigure? @relation(fields: [figureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   baseCorpusTextId Int
-  baseCorpusText   BaseCorpusText    @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  baseCorpusText   BaseCorpusText @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   frequencyScore                           Int
   baseCorpusTextLength                     Int
@@ -370,17 +382,16 @@ model CharacterUsagesOnBaseCorpusText {
 }
 
 model ComponentUsagesOnBaseCorpusText {
-  figureId         String
-  figure           KanjisenseFigure @relation(fields: [figureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  figureKey        String
   baseCorpusTextId Int
-  baseCorpusText   BaseCorpusText   @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  baseCorpusText   BaseCorpusText @relation(fields: [baseCorpusTextId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   frequencyScore                  Int
   baseCorpusTextLength            Int
   baseCorpusUniqueCharactersCount Int
   baseCorpusUniqueComponentsCount Int
 
-  @@id([baseCorpusTextId, figureId])
+  @@id([baseCorpusTextId, figureKey])
 }
 
 model Course {

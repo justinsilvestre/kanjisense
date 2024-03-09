@@ -1,3 +1,5 @@
+import { writeFileSync } from "fs";
+
 import type { BaseCorpusText, KanjisenseFigure } from "@prisma/client";
 import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import {
@@ -94,6 +96,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     ? parseInt(queryStringParams.get("p")!)
     : 1;
 
+  writeFileSync(
+    __dirname + "/curatorCoursesArchive.json",
+    JSON.stringify(
+      (await prisma.course.findMany()).map((c) => ({
+        id: c.id,
+        seenTexts: c.seenTexts,
+      })),
+    ),
+  );
+  console.log(__dirname + "/curatorCoursesArchive.json");
   const {
     course,
     seenTexts,
@@ -794,13 +806,13 @@ function TextUniqueComponents({
   const newNonAtomic: React.ReactNode[] = [];
 
   text.uniqueComponents.forEach((c) => {
-    const figure = getFigure(c.figureId);
+    const figure = getFigure(c.figureKey);
     const badgeProps = figure && getBadgeProps(figure);
     const newNode = !badgeProps ? null : (
-      <div key={c.figureId} className="inline-block align-middle">
+      <div key={c.figureKey} className="inline-block align-middle">
         <FigureBadgeLink
           width={3}
-          id={c.figureId}
+          id={c.figureKey}
           newWindow
           badgeProps={
             figure.id.length === 1
@@ -878,7 +890,7 @@ function CopyYmlButton({
   defaultTangReadings,
 }: {
   text: BaseCorpusText & {
-    uniqueCharacters: { figureId: string | null }[];
+    uniqueCharacters: { character: string | null }[];
   };
   defaultTangReadings?: string;
 }) {
@@ -1084,7 +1096,7 @@ const useSeenTextsState = (
           if (!text) return [t, oldSeenChars];
           runningTotal = new Set([
             ...runningTotal,
-            ...text.uniqueCharacters.flatMap((c) => c.figureId || []),
+            ...text.uniqueCharacters.flatMap((c) => c.character || []),
           ]);
           return [t, oldSeenChars];
         });
@@ -1113,15 +1125,15 @@ const useSeenTextsState = (
         const text = seenTextsFlat.find((t) => t.key === textKey);
         if (!text) return;
         text.uniqueCharacters.forEach((c) => {
-          if (!c.figureId) return;
-          if (seenSoFar.has(c.figureId)) return;
-          seenSoFar.add(c.figureId);
-          map.set(c.figureId, { textGroupIndex, textIndex, textKey });
+          if (!c.character) return;
+          if (seenSoFar.has(c.character)) return;
+          seenSoFar.add(c.character);
+          map.set(c.character, { textGroupIndex, textIndex, textKey });
         });
         text.uniqueComponents.forEach((c) => {
-          if (seenSoFar.has(c.figureId)) return;
-          seenSoFar.add(c.figureId);
-          map.set(c.figureId, { textGroupIndex, textIndex, textKey });
+          if (seenSoFar.has(c.figureKey)) return;
+          seenSoFar.add(c.figureKey);
+          map.set(c.figureKey, { textGroupIndex, textIndex, textKey });
         });
       });
     });

@@ -241,7 +241,7 @@ export async function getCurationState(courseId: string, page: number) {
             seenTexts
               .flat()
               .flatMap((t) =>
-                t.uniqueCharacters.flatMap((c) => c.figureId || []),
+                t.uniqueCharacters.flatMap((c) => c.character || []),
               ),
           ),
         ],
@@ -525,7 +525,7 @@ export async function getCurationState(courseId: string, page: number) {
               .map((q) => ({ normalizedText: { contains: q } }))
           : undefined,
       },
-      figureId: {
+      character: {
         notIn: charactersNotNeededAnymore,
         in: course?.wantedCharacters.length
           ? course.wantedCharacters.split("")
@@ -635,7 +635,7 @@ export async function getCurationState(courseId: string, page: number) {
                 .map((q) => ({ normalizedText: { contains: q } }))
             : undefined,
         },
-        figureId: {
+        character: {
           notIn: charactersNotNeededAnymore,
           in: course?.wantedCharacters.length
             ? course.wantedCharacters.split("")
