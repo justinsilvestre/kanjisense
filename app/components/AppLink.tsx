@@ -31,7 +31,7 @@ function AppLink({
 
 export function DictLink({
   children,
-  figureId,
+  figureKey,
   focusOnLoad,
   className,
   newWindow,
@@ -41,7 +41,7 @@ export function DictLink({
 } & Omit<
   LinkProps<{
     newWindow?: boolean;
-    figureId: string;
+    figureKey: string;
     focusOnLoad?: boolean;
   }>,
   "children"
@@ -51,15 +51,15 @@ export function DictLink({
     if (focusOnLoad) {
       linkRef.current?.focus();
     }
-  }, [figureId, focusOnLoad]);
+  }, [figureKey, focusOnLoad]);
   return (
     <AppLink
-      to={`/dict/${figureId}`}
+      to={`/dict/${figureKey}`}
       linkRef={linkRef}
       className={className}
       newWindow={newWindow}
     >
-      {children || figureId}
+      {children || figureKey}
     </AppLink>
   );
 }
@@ -73,14 +73,14 @@ interface PopoverAnchorAttributes {
 export const DictPreviewLink = ({
   children,
   className,
-  figureId,
+  figureKey,
   popoverAttributes,
 }: LinkProps<{
-  figureId: string;
+  figureKey: string;
   popoverAttributes: PopoverAnchorAttributes;
 }>) => (
   <a
-    href={`/dict/${figureId}`}
+    href={`/dict/${figureKey}`}
     {...popoverAttributes}
     className={`${className} ${popoverAttributes.className}`}
   >

@@ -12,6 +12,7 @@ import fadeInOutStyles from "~/components/fadeInOut.module.css";
 import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
 import { KanjiListCode, isKyoikuCode } from "~/lib/dic/KanjiListCode";
+import { parseFigureId } from "~/models/figure";
 
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "./TOTAL_ATOMIC_COMPONENTS_COUNT";
 import { useHoverPopper } from "./useHoverPopper";
@@ -245,7 +246,7 @@ function FigureTag({
           <div
             className={clsx(
               " [color:initial] ",
-              `  pointer-events-auto fixed z-20  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] [width:18rem]  [border:2px_inset_#afafaf33] [text-transform:none] md:max-w-xl`,
+              `  pointer-events-auto fixed z-20  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] [border:2px_inset_#afafaf33]  [text-transform:none] [width:18rem] md:max-w-xl`,
               !isClosing && fadeInOutStyles.fadeIn,
               isClosing && "opacity-0 transition-opacity duration-300",
             )}
@@ -574,7 +575,7 @@ const VariantPopoverContent = ({
       <>
         <p className="mb-3 mt-0">
           This component is considered a <strong>variant form</strong> of{" "}
-          {[...primaryVariantId].length === 1 ? (
+          {[...(parseFigureId(primaryVariantId)?.key || "")].length === 1 ? (
             primaryVariantId
           ) : (
             <>another component or character</>

@@ -29,6 +29,7 @@ import {
   KeywordDisplayFigure,
 } from "~/features/dictionary/FigureKeywordDisplay";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
+import { FIGURES_VERSION } from "~/models/figure";
 
 import { useManyFiguresPopover } from "../features/browse/useManyFiguresPopover";
 
@@ -57,6 +58,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
       select: commonSelect,
       orderBy: { aozoraAppearances: "desc" },
       where: {
+        version: FIGURES_VERSION,
         ...isPriorityComponentWhere,
         componentsTree: { not: [] },
         OR: [
@@ -71,6 +73,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
     select: commonSelect,
     orderBy: { aozoraAppearances: "desc" },
     where: {
+      version: FIGURES_VERSION,
       ...isPriorityComponentWhere,
       componentsTree: { not: [] },
       id: {
@@ -187,7 +190,7 @@ function CompoundComponentsPageContent({
                   return (
                     <div key={id} className="inline-block p-1 text-center">
                       <DictPreviewLink
-                        figureId={id}
+                        figureKey={badgeProps.key}
                         popoverAttributes={popover.getAnchorAttributes(
                           badgeProps,
                         )}
@@ -235,7 +238,7 @@ function CompoundComponentsPageContent({
               return (
                 <div key={id} className="inline-block p-1 text-center">
                   <DictPreviewLink
-                    figureId={id}
+                    figureKey={id}
                     popoverAttributes={popover.getAnchorAttributes(badgeProps)}
                   >
                     <FigureBadge badgeProps={badgeProps} />

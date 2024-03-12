@@ -1,7 +1,8 @@
 import { FigureSearchPropertyType } from "@prisma/client";
 import { type PrismaClient } from "@prisma/client";
 
-import { registerSeeded } from "prisma/seedUtils";
+import { runSetupStep } from "prisma/seedUtils";
+import { getFigureId } from "~/models/figure";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import {
@@ -13,193 +14,211 @@ import { SearchPropertySpecs } from "./SearchPropertySpecs";
 
 export async function seedFigureSearchProperties(
   prisma: PrismaClient,
+  version: number,
   processBatchSize = 500,
   force = false,
+  verbose = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseFigureSearchProperty" },
-  });
-  if (seeded && !force) {
-    console.log(`figure search properties already seeded. 🌱`);
-    return;
-  }
+  await runSetupStep({
+    prisma,
+    step: "KanjisenseFigureSearchProperty",
+    version,
+    force,
+    async setup() {
+      console.log("Deleting search properties on figures...");
+      await executeAndLogTime(
+        "deleting search properties on figures",
+        async () => {
+          await prisma.searchPropertiesOnFigure.deleteMany({
+            where: { version },
+          });
 
-  console.log("Deleting search properties on figures...");
-  await executeAndLogTime("deleting search properties on figures", async () => {
-    await prisma.searchPropertiesOnFigure.deleteMany({});
-
-    await prisma.figureSearchProperty.deleteMany({});
-  });
-
-  const figureIds = await prisma.kanjisenseFigure
-    .findMany({
-      select: { id: true },
-    })
-    .then((fs) => fs.map((f) => f.id));
-
-  await inBatchesOf({
-    batchSize: processBatchSize,
-    collection: figureIds,
-    action: async (batchIds) => {
-      const figures = await prisma.kanjisenseFigure.findMany({
-        where: {
-          id: {
-            in: batchIds,
-          },
+          await prisma.figureSearchProperty.deleteMany({ where: { version } });
         },
-        include: {
-          reading: {
-            include: {
-              kanjidicEntry: true,
+      );
+
+      const figureIds = await prisma.kanjisenseFigure
+        .findMany({
+          where: { version },
+          select: { id: true },
+        })
+        .then((fs) => fs.map((f) => f.id));
+
+      await inBatchesOf({
+        batchSize: processBatchSize,
+        collection: figureIds,
+        action: async (batchIds) => {
+          const figures = await prisma.kanjisenseFigure.findMany({
+            where: {
+              id: {
+                in: batchIds,
+              },
             },
-          },
-          meaning: true,
-        },
-      });
-      const searchPropertiesForFiguresInBatch = new Map<
-        SearchPropertyKey,
-        SearchPropertySpecs
-      >();
-      const searchPropertiesOnFiguresDbInput = new Map<
-        string,
-        Map<string, SearchPropertiesOnFigureSpecs>
-      >();
-
-      for (const figure of figures) {
-        const { id } = figure;
-
-        const searchPropertiesByType = getFigureSearchProperties(
-          id,
-          getFigureSearchPropertySources(
-            figure,
-            (await prisma.kanjisenseVariantGroup
-              .findFirst({
-                where: {
-                  figures: {
-                    some: {
-                      id,
-                    },
-                  },
-                },
+            include: {
+              reading: {
                 include: {
-                  figures: {
-                    include: {
-                      reading: {
-                        include: {
-                          kanjidicEntry: true,
+                  kanjidicEntry: true,
+                },
+              },
+              meaning: true,
+            },
+          });
+          const searchPropertiesForFiguresInBatch = new Map<
+            SearchPropertyKey,
+            SearchPropertySpecs
+          >();
+          const searchPropertiesOnFiguresDbInput = new Map<
+            string,
+            Map<string, SearchPropertiesOnFigureSpecs>
+          >();
+
+          for (const figure of figures) {
+            const { key } = figure;
+
+            const searchPropertiesByType = getFigureSearchProperties(
+              key,
+              getFigureSearchPropertySources(
+                figure,
+                (await prisma.kanjisenseVariantGroup
+                  .findFirst({
+                    where: {
+                      version,
+                      figures: {
+                        some: {
+                          key,
                         },
                       },
-                      meaning: true,
                     },
+                    include: {
+                      figures: {
+                        include: {
+                          reading: {
+                            include: {
+                              kanjidicEntry: true,
+                            },
+                          },
+                          meaning: true,
+                        },
+                      },
+                    },
+                  })
+                  .then((v) => v?.figures)) || [],
+              ),
+            );
+            const searchProperties = Object.values(
+              searchPropertiesByType,
+            ).flat();
+
+            const notEnoughSearchProperties =
+              figure.isPriority &&
+              searchProperties.length ===
+                1 +
+                  (searchPropertiesByType[FigureSearchPropertyType.VARIANT]
+                    ?.length || 0);
+            if (notEnoughSearchProperties) {
+              console.warn(
+                `             Figure ${key} has only KEY and VARIANTS search properties`,
+              );
+            }
+
+            for (const searchProperty of searchProperties) {
+              searchPropertiesForFiguresInBatch.set(
+                searchProperty.key,
+                searchProperty,
+              );
+
+              addSearchPropertyOnFigureSpecs(key, searchProperty);
+            }
+          }
+          const existingSearchProperties = new Set(
+            (
+              await prisma.figureSearchProperty.findMany({
+                where: {
+                  key: {
+                    in: Array.from(searchPropertiesForFiguresInBatch.keys()),
                   },
                 },
               })
-              .then((v) => v?.figures)) || [],
-          ),
-        );
-        const searchProperties = Object.values(searchPropertiesByType).flat();
-
-        const notEnoughSearchProperties =
-          figure.isPriority &&
-          searchProperties.length ===
-            1 +
-              (searchPropertiesByType[FigureSearchPropertyType.VARIANT]
-                ?.length || 0);
-        if (notEnoughSearchProperties) {
-          console.warn(
-            `             Figure ${id} has only KEY and VARIANTS search properties`,
+            ).map((sp) => sp.key),
           );
-        }
+          const searchPropertiesToCreate = [
+            ...searchPropertiesForFiguresInBatch,
+          ].filter(([spKey]) => !existingSearchProperties.has(spKey));
+          if (verbose) {
+            console.log(
+              "searchPropertiesToCreate.length",
+              searchPropertiesToCreate.length,
+            );
+            console.log(
+              "searchPropertiesForFiguresInBatch.size",
+              searchPropertiesForFiguresInBatch.size,
+            );
+            console.log(
+              "new Set(searchPropertiesToCreate.map(sp=>sp.key)).size",
 
-        for (const searchProperty of searchProperties) {
-          searchPropertiesForFiguresInBatch.set(
-            searchProperty.key,
-            searchProperty,
+              new Set(searchPropertiesToCreate.map(([spKey]) => spKey)).size,
+            );
+          }
+
+          const created = await prisma.figureSearchProperty.createMany({
+            data: searchPropertiesToCreate.map(([, sp]) => ({
+              version,
+              text: sp.text,
+              type: sp.type,
+              display: sp.display,
+              key: sp.key,
+            })),
+          });
+
+          console.log(
+            `Created ${created.count} of ${searchPropertiesToCreate.length} search props`,
+          );
+          await executeAndLogTime(
+            "connecting figures and search properties",
+            () =>
+              prisma.searchPropertiesOnFigure.createMany({
+                data: mapFlatmap(
+                  searchPropertiesOnFiguresDbInput,
+                  (figureKey, specsKeysToSpecs) =>
+                    Array.from(specsKeysToSpecs, ([, specs]) => ({
+                      version,
+                      figureId: getFigureId(version, figureKey),
+                      searchPropertyKey: specs.searchPropertyKey,
+                      index: specs.index,
+                    })),
+                ),
+              }),
           );
 
-          addSearchPropertyOnFigureSpecs(id, searchProperty);
-        }
-      }
-      const existingSearchProperties = new Set(
-        (
-          await prisma.figureSearchProperty.findMany({
-            where: {
-              key: {
-                in: Array.from(searchPropertiesForFiguresInBatch.keys()),
-              },
-            },
-          })
-        ).map((sp) => sp.key),
-      );
-      const searchPropertiesToCreate = [
-        ...searchPropertiesForFiguresInBatch,
-      ].filter(([spKey]) => !existingSearchProperties.has(spKey));
-      console.log(
-        "searchPropertiesToCreate.length",
-        searchPropertiesToCreate.length,
-      );
-      console.log(
-        "searchPropertiesForFiguresInBatch.size",
-        searchPropertiesForFiguresInBatch.size,
-      );
-      console.log(
-        "new Set(searchPropertiesToCreate.map(sp=>sp.key)).size",
-
-        new Set(searchPropertiesToCreate.map(([spKey]) => spKey)).size,
-      );
-
-      const created = await prisma.figureSearchProperty.createMany({
-        data: searchPropertiesToCreate.map(([, sp]) => ({
-          text: sp.text,
-          type: sp.type,
-          display: sp.display,
-          key: sp.key,
-        })),
+          function addSearchPropertyOnFigureSpecs(
+            key: string,
+            searchProperty: SearchPropertySpecs,
+          ) {
+            const searchPropertiesOnFigureSpecs =
+              searchPropertiesOnFiguresDbInput.get(key) || new Map();
+            if (!searchPropertiesOnFigureSpecs.has(searchProperty.key))
+              searchPropertiesOnFigureSpecs.set(
+                searchProperty.key,
+                new SearchPropertiesOnFigureSpecs(
+                  key,
+                  searchProperty.key,
+                  searchProperty.index,
+                ),
+              );
+            searchPropertiesOnFiguresDbInput.set(
+              key,
+              searchPropertiesOnFigureSpecs,
+            );
+          }
+        },
       });
-
-      console.log(
-        `Created ${created.count} of ${searchPropertiesToCreate.length} search props`,
-      );
-      await executeAndLogTime("connecting figures and search properties", () =>
-        prisma.searchPropertiesOnFigure.createMany({
-          data: mapFlatmap(
-            searchPropertiesOnFiguresDbInput,
-            (figureId, specsKeysToSpecs) =>
-              Array.from(specsKeysToSpecs, ([, specs]) => ({
-                figureId,
-                searchPropertyKey: specs.searchPropertyKey,
-                index: specs.index,
-              })),
-          ),
-        }),
-      );
-
-      function addSearchPropertyOnFigureSpecs(
-        id: string,
-        searchProperty: SearchPropertySpecs,
-      ) {
-        const searchPropertiesOnFigureSpecs =
-          searchPropertiesOnFiguresDbInput.get(id) || new Map();
-        if (!searchPropertiesOnFigureSpecs.has(searchProperty.key))
-          searchPropertiesOnFigureSpecs.set(
-            searchProperty.key,
-            new SearchPropertiesOnFigureSpecs(
-              id,
-              searchProperty.key,
-              searchProperty.index,
-            ),
-          );
-        searchPropertiesOnFiguresDbInput.set(id, searchPropertiesOnFigureSpecs);
-      }
     },
   });
-
-  await registerSeeded(prisma, "KanjisenseFigureSearchProperty");
 }
 
 class SearchPropertiesOnFigureSpecs {
   constructor(
-    public figureId: string,
+    public figureKey: string,
     public searchPropertyKey: SearchPropertyKey,
     public index: number,
   ) {}

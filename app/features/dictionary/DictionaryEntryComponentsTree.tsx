@@ -9,7 +9,7 @@ import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 import {
   ComponentsTreeMemberFigure,
   FigureComponentsAnalysisLoaderData,
-} from "~/routes/dict.$figureId.analyze";
+} from "~/routes/dict.$figureKey.analyze";
 
 import { FigureKeywordDisplay } from "./FigureKeywordDisplay";
 import {
@@ -60,7 +60,7 @@ function DictionaryEntryComponentsTreeMember({
   size: Size;
 }) {
   const { analyzeFigure, fetcher } = useAnalyzeFigureFetcher(
-    componentFigure.id,
+    componentFigure.key,
   );
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -154,7 +154,7 @@ function transcribeSoundMarkReading(
   return null;
 }
 
-export function useAnalyzeFigureFetcher(figureId: string) {
+export function useAnalyzeFigureFetcher(figureKey: string) {
   const fetcher = useFetcher<FigureComponentsAnalysisLoaderData>();
 
   return {
@@ -162,10 +162,10 @@ export function useAnalyzeFigureFetcher(figureId: string) {
 
     analyzeFigure() {
       if (
-        (!fetcher.data || fetcher.data.figure?.id !== figureId) &&
+        (!fetcher.data || fetcher.data.figure?.key !== figureKey) &&
         fetcher.state === "idle"
       )
-        fetcher.load(`/dict/${figureId}/analyze`);
+        fetcher.load(`/dict/${figureKey}/analyze`);
     },
   };
 }

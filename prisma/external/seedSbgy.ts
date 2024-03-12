@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 import { files, readJsonSync } from "~/lib/files.server";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 import { getYuntuJson } from "./getYuntuJson";
 import { overrides } from "./yuntuOverrides";
@@ -41,44 +41,41 @@ const replacementExemplars: Record<number, (text: string) => string> = {
 };
 
 export async function seedSbgy(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "SbgyXiaoyun" },
+  await runSetupStep({
+    prisma,
+    step: "SbgyXiaoyun",
+    force,
+    version: "KEYLESS STEP",
+    async setup() {
+      await prisma.sbgyXiaoyun.deleteMany({});
+
+      const dbInput = await getDbInput();
+
+      await prisma.sbgyXiaoyun.createMany({
+        data: Object.values(dbInput).map(
+          ({
+            xiaoyun,
+            fanqie,
+            exemplars,
+            initial,
+            cycleHead,
+            tone,
+            kaihe,
+            dengOrChongniu,
+          }) => ({
+            xiaoyun,
+            fanqie,
+            exemplars,
+            initial,
+            cycleHead,
+            tone,
+            kaihe,
+            dengOrChongniu,
+          }),
+        ),
+      });
+    },
   });
-  if (seeded && !force) console.log(`SbgyXiaoyun already seeded. 🌱`);
-  else {
-    console.log(`seeding SbgyXiaoyun...`);
-    await prisma.sbgyXiaoyun.deleteMany({});
-
-    const dbInput = await getDbInput();
-
-    await prisma.sbgyXiaoyun.createMany({
-      data: Object.values(dbInput).map(
-        ({
-          xiaoyun,
-          fanqie,
-          exemplars,
-          initial,
-          cycleHead,
-          tone,
-          kaihe,
-          dengOrChongniu,
-        }) => ({
-          xiaoyun,
-          fanqie,
-          exemplars,
-          initial,
-          cycleHead,
-          tone,
-          kaihe,
-          dengOrChongniu,
-        }),
-      ),
-    });
-  }
-
-  await registerSeeded(prisma, "SbgyXiaoyun");
-
-  console.log(`SbgyXiaoyun seeded. 🌱`);
 }
 
 async function getDbInput() {

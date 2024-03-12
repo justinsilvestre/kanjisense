@@ -50,7 +50,7 @@ export function RadicalSection({
       {radicalIndexes?.map((radicalIndex) => (
         <span key={radicalIndex?.radical.character}>
           <DictLink
-            figureId={radicalIndex.radical.character}
+            figureKey={radicalIndex.radical.character}
             className="no-underline hover:underline"
           >
             {radicalIndex.radical.number}&nbsp;

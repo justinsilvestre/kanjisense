@@ -1,4 +1,5 @@
 import { baseKanjiSet } from "~/lib/baseKanji";
+import { FigureKey } from "~/models/figure";
 
 export const forcedMeaninglessFiguresSet = new Set<string>([
   "亏",
@@ -21,21 +22,21 @@ const MINIMUM_USES_IN_PRIORITY_CANDIDATES = 2;
  * should be assigned a name in kanjisense
  */
 export async function shouldComponentBeAssignedMeaning(
-  figuresToVariantGroups: Map<string, string[]>,
-  componentsToDirectUsesPrimaryVariants: Map<string, Set<string>>,
-  priorityCandidatesIds: Set<string>,
-  componentId: string,
+  figuresToVariantGroups: Map<FigureKey, FigureKey[]>,
+  componentsToDirectUsesPrimaryVariants: Map<FigureKey, Set<FigureKey>>,
+  priorityCandidatesKeys: Set<FigureKey>,
+  componentKey: string,
 ) {
-  if (forcedMeaninglessFiguresSet.has(componentId))
+  if (forcedMeaninglessFiguresSet.has(componentKey))
     return {
       result: false,
       reason: "forced",
     };
 
-  const componentVariants = figuresToVariantGroups.get(componentId);
-  const variantGroupId = componentVariants?.[0] ?? null;
+  const componentVariants = figuresToVariantGroups.get(componentKey);
+  const variantGroupKey = componentVariants?.[0] ?? null;
   const primaryVariantIsInBaseKanji = baseKanjiSet.has(
-    variantGroupId ?? componentId,
+    variantGroupKey ?? componentKey,
   );
   if (primaryVariantIsInBaseKanji)
     return {
@@ -43,17 +44,17 @@ export async function shouldComponentBeAssignedMeaning(
       reason: "base kanji or variant thereof",
     };
 
-  const figureIsPriorityCandidateOrVariantThereof = (id: string) => {
-    if (priorityCandidatesIds.has(id)) return true;
-    const variantGroup = figuresToVariantGroups.get(id);
+  const figureIsPriorityCandidateOrVariantThereof = (key: string) => {
+    if (priorityCandidatesKeys.has(key)) return true;
+    const variantGroup = figuresToVariantGroups.get(key);
     if (!variantGroup) return false;
-    return variantGroup.some((v) => priorityCandidatesIds.has(v));
+    return variantGroup.some((v) => priorityCandidatesKeys.has(v));
   };
 
   const usesInPriorityCandidatesAndTheirVariants = new Set<string>();
   if (!componentVariants) {
     const directUsesPrimaryVariants =
-      componentsToDirectUsesPrimaryVariants.get(componentId);
+      componentsToDirectUsesPrimaryVariants.get(componentKey);
     for (const v of directUsesPrimaryVariants || []) {
       if (figureIsPriorityCandidateOrVariantThereof(v))
         usesInPriorityCandidatesAndTheirVariants.add(v);

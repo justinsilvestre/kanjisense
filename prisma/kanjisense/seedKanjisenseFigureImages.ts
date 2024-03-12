@@ -1,9 +1,10 @@
 import { PrismaClient, KanjisenseFigureImageType } from "@prisma/client";
 import SVGPathCommander from "svg-path-commander";
 
-import { registerSeeded } from "prisma/seedUtils";
+import { runSetupStep } from "prisma/seedUtils";
 import { kanjivgExtractedComponents } from "~/lib/dic/kanjivgExtractedComponents";
 import { getKvgFilePath } from "~/lib/files.server";
+import { FigureKey, getFigureId } from "~/models/figure";
 
 import { KvgJsonData } from "../../app/features/dictionary/KvgJsonData";
 
@@ -12,68 +13,74 @@ import { getFileTextIfPresent } from "./getFileTextIfPresent";
 import { getGlyphWikiSvgPath } from "./getGlyphWikiSvgPath";
 import { inBatchesOf } from "./inBatchesOf";
 
-export async function seedFigureImages(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseFigureImage" },
-  });
-
-  if (seeded && !force) console.log(`KanjisenseFigureImage already seeded. 🌱`);
-  else {
-    console.log(`seeding KanjisenseFigureImage...`);
-
-    console.log("preparing images data");
-    const allFiguresIds = await prisma.kanjisenseFigure.findMany({
-      select: { id: true },
-    });
-    const dbInput = new Map<
-      string,
-      | {
-          type: Extract<KanjisenseFigureImageType, "Kvg">;
-          content: KvgJsonData;
-        }
-      | {
-          type: Extract<KanjisenseFigureImageType, "GlyphWiki">;
-          content: string;
-        }
-    >();
-    for (const { id } of allFiguresIds) {
-      const kvgPath = getKvgFilePath(id);
-      const kvgJson = await getKvgJson(id, kvgPath);
-      if (kvgJson) {
-        dbInput.set(id, {
-          type: KanjisenseFigureImageType.Kvg,
-          content: kvgJson as unknown as KvgJsonData,
-        });
-      } else {
-        const path = await getGlyphWikiSvgPath(id);
-        if (path)
-          dbInput.set(id, {
-            type: KanjisenseFigureImageType.GlyphWiki,
-            content: JSON.stringify(path),
+export async function seedFigureImages(
+  prisma: PrismaClient,
+  version: number,
+  force = false,
+) {
+  await runSetupStep({
+    prisma,
+    version,
+    step: "KanjisenseFigureImage",
+    force,
+    async setup() {
+      console.log("preparing images data");
+      const allFiguresKeys = await prisma.kanjisenseFigure.findMany({
+        select: { key: true },
+        where: { version },
+      });
+      const dbInput = new Map<
+        FigureKey,
+        | {
+            type: Extract<KanjisenseFigureImageType, "Kvg">;
+            content: KvgJsonData;
+          }
+        | {
+            type: Extract<KanjisenseFigureImageType, "GlyphWiki">;
+            content: string;
+          }
+      >();
+      for (const { key } of allFiguresKeys) {
+        const kvgPath = getKvgFilePath(key);
+        const kvgJson = await getKvgJson(key, kvgPath);
+        if (kvgJson) {
+          dbInput.set(key, {
+            type: KanjisenseFigureImageType.Kvg,
+            content: kvgJson as unknown as KvgJsonData,
           });
+        } else {
+          const path = await getGlyphWikiSvgPath(key);
+          if (path)
+            dbInput.set(key, {
+              type: KanjisenseFigureImageType.GlyphWiki,
+              content: JSON.stringify(path),
+            });
+        }
       }
-    }
 
-    await prisma.kanjisenseFigureImage.deleteMany({});
+      await prisma.kanjisenseFigureImage.deleteMany({
+        where: { version },
+      });
 
-    await executeAndLogTime("seeding images data", () =>
-      inBatchesOf({
-        batchSize: 500,
-        collection: dbInput,
-        getBatchItem: ([id, { type, content }]) => ({
-          id,
-          type,
-          content: content as unknown as Record<string, string[]>,
-        }),
-        action: (data) =>
-          prisma.kanjisenseFigureImage.createMany({
-            data,
+      await executeAndLogTime("seeding images data", () =>
+        inBatchesOf({
+          batchSize: 500,
+          collection: dbInput,
+          getBatchItem: ([key, { type, content }]) => ({
+            id: getFigureId(version, key),
+            key,
+            version,
+            type,
+            content: content as unknown as Record<string, string[]>,
           }),
-      }),
-    );
-
-    await registerSeeded(prisma, "KanjisenseFigureImage");
-  }
+          action: (data) =>
+            prisma.kanjisenseFigureImage.createMany({
+              data,
+            }),
+        }),
+      );
+    },
+  });
 }
 
 async function getKvgJson(

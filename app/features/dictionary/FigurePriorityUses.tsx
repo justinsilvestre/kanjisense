@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import type { DictionaryPageFigureWithPriorityUses } from "~/features/dictionary/getDictionaryPageFigure.server";
-import { FigurePriorityUsesLoaderData } from "~/routes/dict.$figureId.uses";
+import { FigurePriorityUsesLoaderData } from "~/routes/dict.$figureKey.uses";
 
 import { FigureKeywordDisplay } from "./FigureKeywordDisplay";
 import { getParentReadingMatchingSoundMark } from "./getParentReadingMatchingSoundMark";
@@ -26,7 +26,7 @@ export function FigurePriorityUses({
   const {
     fetcher: { data: fetcherData, state: fetcherState },
     getFigurePriorityUses,
-  } = useComponentUsesFetcher(componentFigure.id);
+  } = useComponentUsesFetcher(componentFigure.key);
 
   if (!priorityUses.length) return null;
 
@@ -140,16 +140,16 @@ export function FigurePriorityUses({
   );
 }
 
-function useComponentUsesFetcher(figureId: string) {
+function useComponentUsesFetcher(figureKey: string) {
   const fetcher = useFetcher<FigurePriorityUsesLoaderData>();
   return {
     fetcher,
     getFigurePriorityUses() {
       if (
         fetcher.state === "idle" ||
-        (fetcher.data && fetcher.data.id !== figureId)
+        (fetcher.data && fetcher.data.key !== figureKey)
       ) {
-        fetcher.load(`/dict/${figureId}/uses`);
+        fetcher.load(`/dict/${figureKey}/uses`);
       }
     },
   };

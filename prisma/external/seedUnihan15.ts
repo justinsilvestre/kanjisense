@@ -5,101 +5,104 @@ import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 export async function seedUnihan15(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "Unihan15" },
+  await runSetupStep({
+    prisma,
+    step: "Unihan15",
+    force,
+    version: "KEYLESS STEP",
+    async setup() {
+      await prisma.unihan15.deleteMany({});
+
+      const dbInput = new Map<string, Record<string, string>>();
+
+      await executeAndLogTime("getting readings data", async () => {
+        await forEachLine(files.unihanReadings15, async (line) => {
+          if (!line || line.startsWith("#")) return;
+
+          const { uCode, fieldName, body } =
+            /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>\w+)\s+(?<body>.+)/u.exec(
+              line,
+            )!.groups!;
+          const head = String.fromCodePoint(parseInt(uCode, 16));
+          const entry = dbInput.get(head) || {};
+          entry[fieldName] = body;
+          dbInput.set(head, entry);
+        });
+      });
+
+      await executeAndLogTime("getting radical data", async () => {
+        await forEachLine(files.unihanIrgSources15, async (line) => {
+          if (!line || line.startsWith("#")) return;
+
+          const { uCode, fieldName, body } =
+            /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>\w+)\s+(?<body>.+)/u.exec(
+              line,
+            )!.groups!;
+          if (fieldName !== "kRSUnicode") return;
+
+          const head = String.fromCodePoint(parseInt(uCode, 16));
+          const entry = dbInput.get(head) || {};
+          entry.kRSUnicode = body;
+          dbInput.set(head, entry);
+        });
+
+        await forEachLine(files.unihanRadicals15, async (line) => {
+          if (!line || line.startsWith("#")) return;
+
+          const { uCode, body } =
+            /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>kRSAdobe_Japan1_6)\s+(?<body>.+)/u.exec(
+              line,
+            )!.groups!;
+          const head = String.fromCodePoint(parseInt(uCode, 16));
+
+          const entry = dbInput.get(head) || {};
+          entry.kRSAdobe_Japan1_6 = body;
+          dbInput.set(head, entry);
+        });
+      });
+
+      await inBatchesOf({
+        batchSize: 500,
+        collection: dbInput,
+        getBatchItem: ([id, fields]) => ({
+          id,
+          kDefinition: fields.kDefinition || null,
+          kCantonese: fields.kCantonese?.split(" ") || [],
+          kHangul: fields.kHangul?.split(" ") || [],
+          kHanyuPinlu: fields.kHanyuPinlu?.split(" ") || [],
+          kHanyuPinyin: fields.kHanyuPinyin?.split(" ") || [],
+          kJapaneseKun: fields.kJapaneseKun?.split(" ") || [],
+          kJapaneseOn: fields.kJapaneseOn?.split(" ") || [],
+          kKorean: fields.kKorean?.split(" ") || [],
+          kMandarin: fields.kMandarin?.split(" ") || [],
+          kTang: fields.kTang?.split(" ") || [],
+          kTGHZ2013: fields.kTGHZ2013?.split(" ") || [],
+          kVietnamese: fields.kVietnamese?.split(" ") || [],
+          kXHC1983: fields.kXHC1983?.split(" ") || [],
+          kRSAdobe_Japan1_6: fields.kRSAdobe_Japan1_6?.split(" ") || [],
+          kRSUnicode: fields.kRSUnicode?.split(" ") || [],
+        }),
+        action: (data) => prisma.unihan15.createMany({ data }),
+      });
+    },
   });
-  if (seeded && !force) console.log(`unihan15 already seeded. 🌱`);
-  else {
-    await prisma.unihan15.deleteMany({});
-
-    const dbInput = new Map<string, Record<string, string>>();
-
-    await executeAndLogTime("getting readings data", async () => {
-      await forEachLine(files.unihanReadings15, async (line) => {
-        if (!line || line.startsWith("#")) return;
-
-        const { uCode, fieldName, body } =
-          /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>\w+)\s+(?<body>.+)/u.exec(
-            line,
-          )!.groups!;
-        const head = String.fromCodePoint(parseInt(uCode, 16));
-        const entry = dbInput.get(head) || {};
-        entry[fieldName] = body;
-        dbInput.set(head, entry);
-      });
-    });
-
-    await executeAndLogTime("getting radical data", async () => {
-      await forEachLine(files.unihanIrgSources15, async (line) => {
-        if (!line || line.startsWith("#")) return;
-
-        const { uCode, fieldName, body } =
-          /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>\w+)\s+(?<body>.+)/u.exec(
-            line,
-          )!.groups!;
-        if (fieldName !== "kRSUnicode") return;
-
-        const head = String.fromCodePoint(parseInt(uCode, 16));
-        const entry = dbInput.get(head) || {};
-        entry.kRSUnicode = body;
-        dbInput.set(head, entry);
-      });
-
-      await forEachLine(files.unihanRadicals15, async (line) => {
-        if (!line || line.startsWith("#")) return;
-
-        const { uCode, body } =
-          /U\+(?<uCode>[A-Z0-9]+)\s+(?<fieldName>kRSAdobe_Japan1_6)\s+(?<body>.+)/u.exec(
-            line,
-          )!.groups!;
-        const head = String.fromCodePoint(parseInt(uCode, 16));
-
-        const entry = dbInput.get(head) || {};
-        entry.kRSAdobe_Japan1_6 = body;
-        dbInput.set(head, entry);
-      });
-    });
-
-    await inBatchesOf({
-      batchSize: 500,
-      collection: dbInput,
-      getBatchItem: ([id, fields]) => ({
-        id,
-        kDefinition: fields.kDefinition || null,
-        kCantonese: fields.kCantonese?.split(" ") || [],
-        kHangul: fields.kHangul?.split(" ") || [],
-        kHanyuPinlu: fields.kHanyuPinlu?.split(" ") || [],
-        kHanyuPinyin: fields.kHanyuPinyin?.split(" ") || [],
-        kJapaneseKun: fields.kJapaneseKun?.split(" ") || [],
-        kJapaneseOn: fields.kJapaneseOn?.split(" ") || [],
-        kKorean: fields.kKorean?.split(" ") || [],
-        kMandarin: fields.kMandarin?.split(" ") || [],
-        kTang: fields.kTang?.split(" ") || [],
-        kTGHZ2013: fields.kTGHZ2013?.split(" ") || [],
-        kVietnamese: fields.kVietnamese?.split(" ") || [],
-        kXHC1983: fields.kXHC1983?.split(" ") || [],
-        kRSAdobe_Japan1_6: fields.kRSAdobe_Japan1_6?.split(" ") || [],
-        kRSUnicode: fields.kRSUnicode?.split(" ") || [],
-      }),
-      action: (data) => prisma.unihan15.createMany({ data }),
-    });
-
-    await registerSeeded(prisma, "Unihan15");
-    console.log(`unihan15 seeded. 🌱`);
-  }
 }
 
 export async function connectReadings(
   prisma: PrismaClient,
+  version: number,
   dbInput: Map<string, Record<string, string>>,
   verbose: boolean,
 ) {
   await executeAndLogTime("connecting readings", async () => {
     const allReadings = await prisma.kanjisenseFigureReading
-      .findMany({ select: { id: true } })
+      .findMany({
+        where: { version },
+        select: { id: true },
+      })
       .then((x) => x.map((x) => x.id));
     for (const readingId of allReadings) {
       const reading = dbInput.get(readingId);
@@ -113,7 +116,7 @@ export async function connectReadings(
             id: readingId,
           },
           data: {
-            unihan15Id: readingId,
+            unihan15Id: reading.key,
           },
         });
       }

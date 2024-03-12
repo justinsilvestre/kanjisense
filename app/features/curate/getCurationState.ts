@@ -6,6 +6,7 @@ import {
   KanjiDbVariantType,
   SbgyXiaoyun,
 } from "@prisma/client";
+import { VERSION } from "ts-node";
 
 import { prisma } from "~/db.server";
 import {
@@ -13,6 +14,7 @@ import {
   isAtomicFigure,
 } from "~/features/dictionary/badgeFigure";
 import { baseKanji, baseKanjiSet, joyoKanji } from "~/lib/baseKanji";
+import { getLatestFigureId } from "~/models/figure";
 
 import { BadgeFigure } from "../dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "../dictionary/transcribeSbgyXiaoyun";
@@ -95,6 +97,7 @@ export async function getCurationState(courseId: string, page: number) {
 
   const joyoKanjiWithVariants = await prisma.kanjisenseFigure.findMany({
     where: {
+      version: VERSION,
       isPriority: true,
       listsAsCharacter: { has: "j" },
       variantGroupId: {
@@ -102,10 +105,10 @@ export async function getCurationState(courseId: string, page: number) {
       },
     },
     select: {
-      id: true,
+      key: true,
       variantGroup: {
         select: {
-          id: true,
+          key: true,
           figures: {
             where: {
               isStandaloneCharacter: true,
@@ -116,10 +119,10 @@ export async function getCurationState(courseId: string, page: number) {
     },
   });
   const oldToNew: Record<string, string> = {};
-  for (const { id, variantGroup } of joyoKanjiWithVariants) {
-    const variants = variantGroup!.figures.map((f) => f.id);
+  for (const { key, variantGroup } of joyoKanjiWithVariants) {
+    const variants = variantGroup!.figures.map((f) => f.key);
     for (const variant of variants) {
-      if (id !== variant) oldToNew[variant] = id;
+      if (key !== variant) oldToNew[variant] = key;
     }
   }
 
@@ -128,6 +131,7 @@ export async function getCurationState(courseId: string, page: number) {
   const nonJoyoPriorityCharsWithVariants =
     await prisma.kanjisenseFigure.findMany({
       where: {
+        version: VERSION,
         isPriority: true,
         listsAsCharacter: { isEmpty: false },
         variantGroupId: {
@@ -235,6 +239,7 @@ export async function getCurationState(courseId: string, page: number) {
   // excluding characters not in kanjisense
   const seenCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
+      version: VERSION,
       id: {
         in: [
           ...new Set(
@@ -254,15 +259,15 @@ export async function getCurationState(courseId: string, page: number) {
         in: [
           ...new Set(
             await getComponentsFromCharsAsync(
-              (id) =>
+              (key) =>
                 prisma.kanjisenseFigure.findUnique({
-                  where: { id },
+                  where: { id: getLatestFigureId(key) },
                   select: {
                     ...badgeFigureSelect,
                     componentsTree: true,
                   },
                 }),
-              new Set(seenCharacters.map((c) => c.id)),
+              new Set(seenCharacters.map((c) => c.key)),
             ),
           ),
         ],
@@ -315,6 +320,7 @@ export async function getCurationState(courseId: string, page: number) {
 
   const remainingKanjisenseCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
+      version: VERSION,
       id: {
         notIn: seenCharacters.map((c) => c.id),
       },
@@ -351,6 +357,7 @@ export async function getCurationState(courseId: string, page: number) {
 
   const remainingMeaningfulComponents = await prisma.kanjisenseFigure.findMany({
     where: {
+      version: VERSION,
       id: {
         notIn: seenFigures.map((c) => c.id),
       },
@@ -375,7 +382,7 @@ export async function getCurationState(courseId: string, page: number) {
 
       asComponent: {
         select: {
-          id: true,
+          key: true,
           allUses: {
             select: {
               id: true,

@@ -1,4 +1,4 @@
-type FigureId = string;
+type FigureKey = string;
 
 type IdsTransform =
   | { type: "REPLACE_SINGLE_IDS"; key: string; newIds: string }
@@ -22,26 +22,26 @@ type IdsTransform =
 
 export class PatchedIds {
   _transforms: IdsTransform[] = [];
-  _additions: Set<FigureId> = new Set<FigureId>();
-  _forcedAtomic = new Set<FigureId>(); // allow analyzing form of atomic kanjijump components for comparison with similar components, though we don't analyze components' meanings
+  _additions: Set<FigureKey> = new Set<FigureKey>();
+  _forcedAtomic = new Set<FigureKey>(); // allow analyzing form of atomic kanjijump components for comparison with similar components, though we don't analyze components' meanings
 
-  _lookupCache = new Map<FigureId, string>();
+  _lookupCache = new Map<FigureKey, string>();
 
   constructor(
     // use shorthand for this.getOriginalIds
-    private getOriginalIds: (key: FigureId) => Promise<string | null>,
+    private getOriginalIds: (key: FigureKey) => Promise<string | null>,
     private variantsHelpers: {
-      figureIsSimplifiedInStandardForm: (key: FigureId) => Promise<boolean>;
-      figureIsNonSimplified: (key: FigureId) => Promise<boolean>;
+      figureIsSimplifiedInStandardForm: (key: FigureKey) => Promise<boolean>;
+      figureIsNonSimplified: (key: FigureKey) => Promise<boolean>;
     },
   ) {}
 
-  private cache(key: FigureId, ids: string) {
+  private cache(key: FigureKey, ids: string) {
     this._lookupCache.set(key, ids);
     return ids;
   }
 
-  async getIds(key: FigureId) {
+  async getIds(key: FigureKey) {
     const cached = this._lookupCache.get(key);
     if (cached) {
       return cached;
@@ -52,11 +52,11 @@ export class PatchedIds {
     if (!originalIds) throw new Error(`No ids found in original for ${key}`);
     let transformed = originalIds;
 
-    const figuresSimpliiedInStandardForm = new Map<FigureId, boolean>();
-    const figuresNotSimplifiedInStandardForm = new Map<FigureId, boolean>();
+    const figuresSimpliiedInStandardForm = new Map<FigureKey, boolean>();
+    const figuresNotSimplifiedInStandardForm = new Map<FigureKey, boolean>();
 
     const memoizedVariantsHelpers = {
-      figureIsSimplifiedInStandardForm: async (key: FigureId) => {
+      figureIsSimplifiedInStandardForm: async (key: FigureKey) => {
         if (figuresSimpliiedInStandardForm.has(key))
           return figuresSimpliiedInStandardForm.get(key)!;
         const result =
@@ -64,7 +64,7 @@ export class PatchedIds {
         figuresSimpliiedInStandardForm.set(key, result);
         return result;
       },
-      figureIsNonSimplified: async (key: FigureId) => {
+      figureIsNonSimplified: async (key: FigureKey) => {
         if (figuresNotSimplifiedInStandardForm.has(key))
           return figuresNotSimplifiedInStandardForm.get(key)!;
         const result = await this.variantsHelpers.figureIsNonSimplified(key);
@@ -94,7 +94,7 @@ export class PatchedIds {
     return this.cache(key, transformed);
   }
 
-  addIdsAfterTransforms(figure: FigureId, ids: string) {
+  addIdsAfterTransforms(figure: FigureKey, ids: string) {
     if (this._additions.has(figure))
       throw new Error(`IDS for ${figure} was already added.`);
     this._additions.add(figure);
@@ -103,7 +103,7 @@ export class PatchedIds {
     return this;
   }
 
-  addAtomicIdsLine(figure: FigureId) {
+  addAtomicIdsLine(figure: FigureKey) {
     return this.addIdsAfterTransforms(figure, encodeFigure(figure));
   }
 
@@ -207,8 +207,8 @@ export class PatchedIds {
 
 async function applyTransform(
   variantsHelpers: {
-    figureIsSimplifiedInStandardForm: (key: FigureId) => Promise<boolean>;
-    figureIsNonSimplified: (key: FigureId) => Promise<boolean>;
+    figureIsSimplifiedInStandardForm: (key: FigureKey) => Promise<boolean>;
+    figureIsNonSimplified: (key: FigureKey) => Promise<boolean>;
   },
   transform: IdsTransform,
   transformed: string,

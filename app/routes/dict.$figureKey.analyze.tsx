@@ -3,6 +3,7 @@ import { json } from "@remix-run/server-runtime";
 
 import { prisma } from "~/db.server";
 import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";
+import { getLatestFigureId } from "~/models/figure";
 
 export type FigureComponentsAnalysisLoaderData =
   | {
@@ -18,11 +19,12 @@ export type FigureComponentsAnalysis = NonNullable<
 export type ComponentsTreeMemberFigure =
   FigureComponentsAnalysis["firstClassComponents"][number]["component"];
 
-async function analyzeFigureComponents(figureId: string) {
+async function analyzeFigureComponents(figureKey: string) {
   return await prisma.kanjisenseFigure.findUnique({
-    where: { id: figureId },
+    where: { id: getLatestFigureId(figureKey) },
     select: {
       id: true,
+      key: true,
       firstClassComponents: {
         orderBy: { indexInTree: "asc" },
         select: {
@@ -68,15 +70,15 @@ async function analyzeFigureComponents(figureId: string) {
 }
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const figureId = params.figureId!;
+  const figureKey = params.figureKey!;
 
-  const figure = await analyzeFigureComponents(figureId);
+  const figure = await analyzeFigureComponents(figureKey);
 
   if (!figure) {
     return json<FigureComponentsAnalysisLoaderData>(
       {
         error: `No figure ${JSON.stringify(
-          figureId,
+          figureKey,
         )} could be found in the database. `,
       },
       { status: 404 },

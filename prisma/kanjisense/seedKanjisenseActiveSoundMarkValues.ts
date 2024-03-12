@@ -7,41 +7,40 @@ import { getActiveSoundMarkValueText } from "~/features/dictionary/getActiveSoun
 import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import { updateIsPrioritySoundMarkField } from "./seedKanjisenseFiguresBadgeProps";
 
 export async function seedKanjisenseActiveSoundMarkValues(
   prisma: PrismaClient,
+  version: number,
   force = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseActiveSoundMarkValue" },
+  await runSetupStep({
+    prisma,
+    step: "KanjisenseActiveSoundMarkValue",
+    version,
+    force,
+    async setup() {
+      await executeAndLogTime("registering active sound marks values", () =>
+        registerActiveSoundMarkValues(prisma, version),
+      );
+
+      await updateIsPrioritySoundMarkField(prisma, version);
+    },
   });
-  if (seeded && !force)
-    console.log(`KanjisenseActiveSoundMarkValue already seeded. 🌱`);
-  else {
-    console.log(`seeding KanjisenseActiveSoundMarkValue...`);
-
-    await executeAndLogTime("registering active sound marks values", () =>
-      registerActiveSoundMarkValues(prisma),
-    );
-
-    await updateIsPrioritySoundMarkField(prisma);
-
-    await registerSeeded(prisma, "KanjisenseActiveSoundMarkValue");
-  }
-
-  console.log(`KanjisenseActiveSoundMarkValue seeded. 🌱`);
 }
 
-async function registerActiveSoundMarkValues(prisma: PrismaClient) {
-  const allActiveSoundMarks = await getAllActiveSoundMarks(prisma);
+async function registerActiveSoundMarkValues(
+  prisma: PrismaClient,
+  version: number,
+) {
+  const allActiveSoundMarks = await getAllActiveSoundMarks(prisma, version);
 
   for (const soundMarkFigure of allActiveSoundMarks) {
     if (!soundMarkFigure.reading) {
-      console.log("no reading for", soundMarkFigure.id);
+      console.log("no reading for", soundMarkFigure.key);
     } else {
       // sort sound mark's kanjidic readings by compatibility with inferred onyomi
       // assign activeSoundMarkValue on soundMarkUseFigure based on that.
@@ -74,7 +73,7 @@ async function registerActiveSoundMarkValues(prisma: PrismaClient) {
   }
 }
 
-async function getAllActiveSoundMarks(prisma: PrismaClient) {
+async function getAllActiveSoundMarks(prisma: PrismaClient, version: number) {
   const commonInclude = {
     reading: {
       include: {
@@ -115,6 +114,7 @@ async function getAllActiveSoundMarks(prisma: PrismaClient) {
   };
   return await prisma.kanjisenseFigure.findMany({
     where: {
+      version,
       asComponent: {
         soundMarkUses: {
           some: {},

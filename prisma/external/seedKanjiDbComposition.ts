@@ -4,37 +4,33 @@ import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 export async function seedKanjiDbComposition(
   prisma: PrismaClient,
   force = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjiDbComposition" },
+  await runSetupStep({
+    prisma,
+    step: "KanjiDbComposition",
+    force,
+    version: "KEYLESS STEP",
+    async setup() {
+      const dbInput = await getDbInput();
+
+      await prisma.kanjiDbComposition.deleteMany({});
+      await inBatchesOf({
+        batchSize: 500,
+        collection: dbInput,
+        getBatchItem: (entry) => entry[1],
+        action: async (batch) => {
+          await prisma.kanjiDbComposition.createMany({
+            data: batch,
+          });
+        },
+      });
+    },
   });
-  if (seeded && !force) console.log(`KanjiDbComposition already seeded. 🌱`);
-  else {
-    console.log(`seeding KanjiDbComposition...`);
-
-    const dbInput = await getDbInput();
-
-    await prisma.kanjiDbComposition.deleteMany({});
-    await inBatchesOf({
-      batchSize: 500,
-      collection: dbInput,
-      getBatchItem: (entry) => entry[1],
-      action: async (batch) => {
-        await prisma.kanjiDbComposition.createMany({
-          data: batch,
-        });
-      },
-    });
-
-    await registerSeeded(prisma, "KanjiDbComposition");
-  }
-
-  console.log(`KanjiDbComposition seeded. 🌱`);
 }
 
 class KanjiDbComposition {

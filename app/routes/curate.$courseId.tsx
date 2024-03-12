@@ -24,6 +24,7 @@ import {
   getBadgeProps,
   isAtomicFigure,
 } from "~/features/dictionary/badgeFigure";
+import { FIGURES_VERSION } from "~/models/figure";
 
 import {
   CurationState,
@@ -142,6 +143,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
           id: true,
         },
         where: {
+          version: FIGURES_VERSION,
           isPriority: true,
         },
       })
@@ -812,7 +814,7 @@ function TextUniqueComponents({
       <div key={c.figureKey} className="inline-block align-middle">
         <FigureBadgeLink
           width={3}
-          id={c.figureKey}
+          figureKey={c.figureKey}
           newWindow
           badgeProps={
             figure.id.length === 1

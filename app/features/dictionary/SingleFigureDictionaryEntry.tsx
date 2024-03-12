@@ -50,7 +50,7 @@ export function SingleFigureDictionaryEntry({
 
   const kvgImage =
     figure.image?.type === KanjisenseFigureImageType.Kvg ? figure.image : null;
-  const isUnicodeCharacter = [...figure.id].length === 1;
+  const isUnicodeCharacter = [...figure.key].length === 1;
   const figureIsAtomic = isAtomicFigure(figure);
 
   const glyphsJson = figure.glyphImage
@@ -164,7 +164,7 @@ export function SingleFigureDictionaryEntry({
         ) ? (
           <div className="SingleFigureDictionaryEntry_middle flex flex-col gap-4">
             <DictEntryReadings
-              figureId={figure.id}
+              figureKey={figure.key}
               readings={figure.reading}
               isStandaloneCharacter={figureIsStandaloneCharacter}
               className=""
@@ -228,8 +228,9 @@ export function SingleFigureDictionaryEntry({
             <div className="flex flex-grow flex-wrap gap-4 [min-width:19rem] max-lg:justify-between lg:flex-col lg:flex-nowrap lg:justify-end">
               <div className="flex flex-col gap-2 px-4 [min-width:10rem]">
                 <span>
-                  in your browser: <span className="text-2xl">{figure.id}</span>{" "}
-                  U+{figure.id.codePointAt(0)?.toString(16).toUpperCase()}
+                  in your browser:{" "}
+                  <span className="text-2xl">{figure.key}</span> U+
+                  {figure.key.codePointAt(0)?.toString(16).toUpperCase()}
                 </span>
                 <div>
                   {radicalIndexes?.length ? (
@@ -240,7 +241,7 @@ export function SingleFigureDictionaryEntry({
 
               {figureIsStandaloneCharacter || figure.isPriority ? (
                 <ExternalDictionaryLinks
-                  figureId={figure.id}
+                  figureKey={figure.key}
                   className="text-sm [min-width:19rem]"
                   figureIsStandaloneCharacter={figureIsStandaloneCharacter}
                 />

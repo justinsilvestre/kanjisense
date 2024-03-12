@@ -19,7 +19,7 @@ export function FigureBadge({
   width?: number;
   className?: string;
 }) {
-  const figureId = badgeProps.id;
+  const figureKey = badgeProps.key;
 
   const innerWidth = outerWidth - outerWidth / 7;
 
@@ -34,7 +34,7 @@ export function FigureBadge({
   );
 
   const figureIsSecondaryVariant = isSecondaryVariant(
-    figureId,
+    badgeProps.id,
     badgeProps.variantGroupId,
   );
 
@@ -77,16 +77,17 @@ export function FigureBadge({
         }}
       >
         {badgeProps.image?.type === "Kvg" ? (
-          <FigureKvg id={figureId} content={badgeProps.image.content} />
+          <FigureKvg figureKey={figureKey} content={badgeProps.image.content} />
         ) : null}
         {badgeProps.image?.type === "GlyphWiki" ? (
           <FigureGlyphWikiSvg
-            id={figureId}
+            key={figureKey}
+            figureKey={figureKey}
             content={badgeProps.image.content}
           />
         ) : null}
-        {!badgeProps.image && [...figureId].length === 1 ? figureId : null}
-        {!badgeProps.image && [...figureId].length > 1
+        {!badgeProps.image && [...figureKey].length === 1 ? figureKey : null}
+        {!badgeProps.image && [...figureKey].length > 1
           ? GETA_BLOCK_CHARACTER
           : null}
       </div>
@@ -201,7 +202,12 @@ export const kvgAttributes = {
   },
 } as const;
 
-function FigureKvg({ content }: { id: string; content: Prisma.JsonValue }) {
+function FigureKvg({
+  content,
+}: {
+  figureKey: string;
+  content: Prisma.JsonValue;
+}) {
   return (
     <svg {...kvgAttributes} style={{ ...kvgAttributes.style }}>
       {(content as unknown as KvgJsonData).p.map((d, i) => (
@@ -214,7 +220,7 @@ function FigureKvg({ content }: { id: string; content: Prisma.JsonValue }) {
 function FigureGlyphWikiSvg({
   content,
 }: {
-  id: string;
+  figureKey: string;
   content: Prisma.JsonValue;
 }) {
   return (

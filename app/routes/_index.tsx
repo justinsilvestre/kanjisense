@@ -9,6 +9,7 @@ import DictionaryLayout from "~/components/DictionaryLayout";
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { BadgeHue, BadgeProps } from "~/features/dictionary/badgeFigure";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
+import { getLatestFigureId } from "~/models/figure";
 
 export const meta: MetaFunction = () => [{ title: "Kanjisense" }];
 
@@ -64,9 +65,10 @@ export default function Index({ error }: { error?: ReactNode }) {
 }
 
 const nichi: BadgeProps = {
-  id: "日",
+  id: getLatestFigureId("日"),
+  key: "日",
   image: {
-    id: "日",
+    id: getLatestFigureId("日"),
     key: "日",
     version: 0,
     type: "Kvg",
@@ -95,9 +97,10 @@ const nichi: BadgeProps = {
   isPrioritySoundMark: true,
 };
 const getsu: BadgeProps = {
-  id: "月",
+  id: getLatestFigureId("月"),
+  key: "月",
   image: {
-    id: "月",
+    id: getLatestFigureId("月"),
     key: "月",
     version: 0,
     type: "Kvg",
@@ -122,13 +125,14 @@ const getsu: BadgeProps = {
   hue: BadgeHue.KYOIKU,
   isStandaloneCharacter: true,
   isPriorityComponent: true,
-  variantGroupId: "月",
+  variantGroupId: getLatestFigureId("月"),
   isPrioritySoundMark: true,
 };
 const akarui: BadgeProps = {
-  id: "明",
+  id: getLatestFigureId("明"),
+  key: "明",
   image: {
-    id: "明",
+    id: getLatestFigureId("明"),
     key: "明",
     version: 1,
     type: "Kvg",
@@ -165,9 +169,10 @@ const akarui: BadgeProps = {
   isPrioritySoundMark: true,
 };
 const mei: BadgeProps = {
-  id: "盟",
+  id: getLatestFigureId("盟"),
+  key: "盟",
   image: {
-    id: "盟",
+    id: getLatestFigureId("盟"),
     key: "盟",
     version: 1,
     type: "Kvg",

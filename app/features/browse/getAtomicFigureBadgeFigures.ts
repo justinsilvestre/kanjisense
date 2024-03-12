@@ -5,6 +5,12 @@ import {
   badgeFigureSelect,
   getBadgeProps,
 } from "~/features/dictionary/badgeFigure";
+import {
+  FIGURES_VERSION,
+  FigureKey,
+  getLatestFigureId,
+  parseFigureId,
+} from "~/models/figure";
 
 const isPriorityComponentWhere = {
   isPriority: true,
@@ -28,6 +34,7 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
     },
     orderBy: { aozoraAppearances: "desc" },
     where: {
+      version: FIGURES_VERSION,
       OR: [
         {
           ...isPriorityComponentWhere,
@@ -43,16 +50,16 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
 
   type QueriedFigure = (typeof priorityAtomicComponents)[number];
 
-  const atomicFiguresMap: Record<string, QueriedFigure> = {};
-  const nonAtomicVariantsMap: Record<string, QueriedFigure> = {};
+  const atomicFiguresMap: Record<FigureKey, QueriedFigure> = {};
+  const nonAtomicVariantsMap: Record<FigureKey, QueriedFigure> = {};
   const variantGroupHeads = new Set<string>();
 
-  const primaryVariantToRanking: Record<string, number> = {};
+  const primaryVariantToRanking: Record<FigureKey, number> = {};
 
   for (const figure of priorityAtomicComponents) {
-    atomicFiguresMap[figure.id] = figure;
+    atomicFiguresMap[figure.key] = figure;
     if (figure.variantGroupId) variantGroupHeads.add(figure.variantGroupId);
-    else primaryVariantToRanking[figure.id] = figure.aozoraAppearances ?? 0;
+    else primaryVariantToRanking[figure.key] = figure.aozoraAppearances ?? 0;
   }
   const variantGroupsRankings = await prisma.kanjisenseFigure.groupBy({
     by: ["variantGroupId"],
@@ -62,9 +69,9 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
     _sum: { aozoraAppearances: true },
   });
   for (const group of variantGroupsRankings) {
-    const variantGroup = group.variantGroupId!;
-    const appearances = group._sum.aozoraAppearances;
-    primaryVariantToRanking[variantGroup] = appearances ?? 0;
+    const variantGroupKey = parseFigureId(group.variantGroupId!).key;
+    const appearances = group._sum?.aozoraAppearances ?? 0;
+    primaryVariantToRanking[variantGroupKey] = appearances ?? 0;
   }
 
   const variantFigures = await prisma.kanjisenseVariantGroup.findMany({
@@ -72,6 +79,7 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
     include: {
       figures: {
         where: {
+          version: FIGURES_VERSION,
           id: {
             notIn: [...priorityAtomicComponents.map((figure) => figure.id)],
           },
@@ -88,12 +96,12 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
   });
   for (const group of variantFigures) {
     for (const figure of group.figures) {
-      nonAtomicVariantsMap[figure.id] = figure;
+      nonAtomicVariantsMap[figure.key] = figure;
     }
   }
 
   const groups: {
-    id: string;
+    key: string;
     appearances: number;
     keyword: string;
     mnemonicKeyword: string | null;
@@ -102,23 +110,26 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
       figure: BadgeProps;
     }[];
   }[] = [];
-  for (const [id, ranking] of Object.entries(primaryVariantToRanking)) {
-    const isGroup = variantGroupHeads.has(id);
+  for (const [key, ranking] of Object.entries(primaryVariantToRanking)) {
+    const isGroup = variantGroupHeads.has(getLatestFigureId(key));
     const figures = isGroup
       ? variantFigures
-          .find((group) => group.id === id)!
+          .find((group) => group.key === key)!
           .variants.flatMap(
             (v) => atomicFiguresMap[v] || nonAtomicVariantsMap[v] || [],
           )
-      : [atomicFiguresMap[id] || nonAtomicVariantsMap[id]];
+      : [atomicFiguresMap[key] || nonAtomicVariantsMap[key]];
+
+    const groupHead = figures[0];
+    if (!groupHead) console.error("No group head for", key);
 
     groups.push({
-      id,
+      key,
       appearances: ranking,
-      keyword: figures[0].keyword,
-      mnemonicKeyword: figures[0].mnemonicKeyword,
+      keyword: groupHead.keyword,
+      mnemonicKeyword: groupHead.mnemonicKeyword,
       figures: figures.map((figure) => ({
-        isAtomic: Boolean(atomicFiguresMap[figure.id]),
+        isAtomic: Boolean(atomicFiguresMap[figure.key]),
         figure: getBadgeProps(figure),
       })),
     });

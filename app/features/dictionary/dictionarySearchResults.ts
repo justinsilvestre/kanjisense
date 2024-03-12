@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { FigureSearchPropertyType } from "@prisma/client";
 
 import { prisma } from "~/db.server";
+import { FIGURES_VERSION, getFigureId } from "~/models/figure";
 
 import { badgeFigureSelect } from "./badgeFigure";
 
@@ -34,10 +35,12 @@ const WANTED_SEARCH_PROPERTY_TYPES = [
 
 export async function getDictionarySearchResults(searchQueries: string[]) {
   const figures = await getDictionarySearchResultsFigures(searchQueries);
+
   const images = await prisma.kanjisenseFigureImage.findMany({
     where: {
-      id: {
-        in: figures.flatMap((f) => (!f.isStandaloneCharacter ? f.id : [])),
+      version: FIGURES_VERSION,
+      key: {
+        in: figures.flatMap((f) => (!f.isStandaloneCharacter ? f.key : [])),
       },
     },
   });
@@ -85,6 +88,7 @@ export async function getDictionarySearchResultsFigures(
             text: true,
             type: true,
             display: true,
+            version: true,
           },
         },
       },
@@ -102,6 +106,7 @@ export async function getDictionarySearchResultsFigures(
       findMany: () =>
         prisma.kanjisenseFigure.findMany({
           where: {
+            version: FIGURES_VERSION,
             searchProperties: {
               some: formSearchPropertiesWhereQuery1(searchQueries),
             },
@@ -117,6 +122,7 @@ export async function getDictionarySearchResultsFigures(
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
+            version: FIGURES_VERSION,
             searchProperties: {
               some: formSearchPropertiesWhereQuery2(searchQueries),
             },
@@ -135,6 +141,7 @@ export async function getDictionarySearchResultsFigures(
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
+            version: FIGURES_VERSION,
             searchProperties: {
               some: formSearchPropertiesWhereQuery3(searchQueries),
             },
@@ -153,6 +160,7 @@ export async function getDictionarySearchResultsFigures(
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
+            version: FIGURES_VERSION,
             searchProperties: {
               some: formSearchPropertiesWhereQuery2(searchQueries, false),
             },
@@ -171,6 +179,7 @@ export async function getDictionarySearchResultsFigures(
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
+            version: FIGURES_VERSION,
             searchProperties: {
               some: formSearchPropertiesWhereQuery3(searchQueries, false),
             },
@@ -193,6 +202,7 @@ function formSearchPropertiesWhereQuery1(
   searchQueries: string[],
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
+    version: FIGURES_VERSION,
     OR: [
       {
         figure: { isPriority: true },
@@ -209,7 +219,9 @@ function formSearchPropertiesWhereQuery1(
       },
       {
         figureId: {
-          in: searchQueries.flatMap((qs) => [...qs]),
+          in: searchQueries.flatMap((qs) =>
+            Array.from(qs, (key) => getFigureId(FIGURES_VERSION, key)),
+          ),
         },
       },
     ],
@@ -221,6 +233,7 @@ function formSearchPropertiesWhereQuery2(
   isPriority = true,
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
+    version: FIGURES_VERSION,
     OR: searchQueries.flatMap((query) =>
       formSearchPropertiesWhereQuery2Component(query, isPriority),
     ),
@@ -231,6 +244,7 @@ function formSearchPropertiesWhereQuery3(
   isPriority = true,
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
+    version: FIGURES_VERSION,
     OR: searchQueries.flatMap((query) =>
       formSearchPropertiesWhereQuery3Component(query, isPriority),
     ),

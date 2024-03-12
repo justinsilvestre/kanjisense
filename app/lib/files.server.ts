@@ -54,9 +54,9 @@ export function getKvgFilePath(character: string) {
   return path.resolve(__dirname, "vendor", "kanjivg", "svgs", filename);
 }
 
-export function getGlyphwikiSvgFilePath(figureId: string) {
+export function getGlyphwikiSvgFilePath(figureKey: string) {
   const filename = `${
-    [...figureId].length === 1 ? getGlyphWikiCode(figureId) : figureId
+    [...figureKey].length === 1 ? getGlyphWikiCode(figureKey) : figureKey
   }.svg`;
   return path.resolve(__dirname, "vendor", "glyphwiki", "svgs", filename);
 }

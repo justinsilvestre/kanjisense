@@ -3,6 +3,7 @@ import { getFiguresToVariantGroups } from "prisma/kanjisense/seedKanjisenseFigur
 import { prisma } from "~/db.server";
 
 import { ComponentUse } from "./features/dictionary/ComponentUse";
+import { FIGURES_VERSION } from "./models/figure";
 
 describe("isComponentFirstClass", () => {
   const figuresToComponentTrees = new Map<string, ComponentUse[]>(
@@ -54,6 +55,7 @@ describe("isComponentFirstClass", () => {
     const priorityFiguresKeys = await prisma.kanjisenseFigure
       .findMany({
         where: {
+          version: FIGURES_VERSION,
           isPriority: true,
         },
       })
@@ -63,7 +65,10 @@ describe("isComponentFirstClass", () => {
     const componentsToDirectUsesPrimaryVariants = new Map<string, Set<string>>([
       ["CDP-8CAB", new Set(["帰"])],
     ]);
-    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(
+      prisma,
+      FIGURES_VERSION,
+    );
     const result = isComponentFirstClass(
       new Set(priorityFiguresKeys),
       parent,
@@ -79,6 +84,7 @@ describe("isComponentFirstClass", () => {
     const priorityFiguresKeys = await prisma.kanjisenseFigure
       .findMany({
         where: {
+          version: FIGURES_VERSION,
           isPriority: true,
         },
       })
@@ -89,7 +95,10 @@ describe("isComponentFirstClass", () => {
       ["𠚍", new Set(["鬯", "𡕰"])],
       ["鬯", new Set(["鬱"])],
     ]);
-    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(
+      prisma,
+      FIGURES_VERSION,
+    );
     const result = isComponentFirstClass(
       new Set(priorityFiguresKeys),
       parent,
@@ -105,6 +114,7 @@ describe("isComponentFirstClass", () => {
     const priorityFiguresKeys = await prisma.kanjisenseFigure
       .findMany({
         where: {
+          version: FIGURES_VERSION,
           isPriority: true,
         },
       })
@@ -115,7 +125,10 @@ describe("isComponentFirstClass", () => {
       ["旡", new Set(["既", "炁"])],
       ["兂", new Set(["兓"])],
     ]);
-    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(
+      prisma,
+      FIGURES_VERSION,
+    );
     const result = isComponentFirstClass(
       new Set(priorityFiguresKeys),
       parent,
@@ -131,6 +144,7 @@ describe("isComponentFirstClass", () => {
     const priorityFiguresKeys = await prisma.kanjisenseFigure
       .findMany({
         where: {
+          version: FIGURES_VERSION,
           isPriority: true,
         },
       })
@@ -141,7 +155,10 @@ describe("isComponentFirstClass", () => {
       ["卂", new Set(["迅", "㷀", "嬴", "巩", "煢"])],
       ["GWS-U5342-VAR-001", new Set(["訊", "汛", "蝨"])],
     ]);
-    const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
+    const figuresToVariantGroups = await getFiguresToVariantGroups(
+      prisma,
+      FIGURES_VERSION,
+    );
     const result = isComponentFirstClass(
       new Set(priorityFiguresKeys),
       parent,

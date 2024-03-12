@@ -3,35 +3,31 @@ import { KanjiDbVariantType, Prisma, PrismaClient } from "@prisma/client";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 // this reading isn't in modern usage,
 // i.e. the simplified form was borrowed from an existing character
 const suppressedOldVariants = new Set("糸虫万");
 
 export async function seedKanjiDbVariants(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjiDbVariant" },
+  await runSetupStep({
+    prisma,
+    step: "KanjiDbVariant",
+    force,
+    version: "KEYLESS STEP",
+    async setup() {
+      await prisma.kanjiDbVariant.deleteMany({});
+
+      console.log("getting old-style variants");
+      await getOldStyleDbVariants(prisma);
+      console.log("getting borrowed variants");
+      await getKanjiDbBorrowedVariant(prisma);
+      console.log("getting twedu variants");
+      await getKanjiDbTwEduVariants(prisma);
+      console.log("getting hanyu dacidian variants");
+      await getKanjiDbHanyuDaCidianVariants(prisma);
+    },
   });
-  if (seeded && !force) console.log(`KanjiDbVariant already seeded. 🌱`);
-  else {
-    await prisma.kanjiDbVariant.deleteMany({});
-
-    console.log(`seeding KanjiDbVariant...`);
-
-    console.log("getting old-style variants");
-    await getOldStyleDbVariants(prisma);
-    console.log("getting borrowed variants");
-    await getKanjiDbBorrowedVariant(prisma);
-    console.log("getting twedu variants");
-    await getKanjiDbTwEduVariants(prisma);
-    console.log("getting hanyu dacidian variants");
-    await getKanjiDbHanyuDaCidianVariants(prisma);
-
-    await registerSeeded(prisma, "KanjiDbVariant");
-
-    console.log(`KanjiDbVariant seeded. 🌱`);
-  }
 }
 
 function getKanjiDbVariantTmpId(

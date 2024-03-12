@@ -14,15 +14,15 @@ export type DictPreviewLoaderData =
   | { error: string; figure?: null };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const figureId = params.figureId!;
+  const figureKey = params.figureKey!;
 
-  const figure = await getPopoverFigure(figureId);
+  const figure = await getPopoverFigure(figureKey);
 
   if (!figure) {
     return json<DictPreviewLoaderData>(
       {
         error: `No figure ${JSON.stringify(
-          figureId,
+          figureKey,
         )} could be found in the database. `,
       },
       { status: 404 },

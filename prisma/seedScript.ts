@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { FIGURES_VERSION } from "~/models/figure";
+import { deleteOldFiguresData } from "~/models/versionedFigureData.server";
+
 import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
 import { seedKanjidic } from "./external/seedKanjidic";
@@ -23,6 +26,8 @@ import { seedKanjisenseFigureBadgeProps } from "./kanjisense/seedKanjisenseFigur
 import { seedKanjisenseVariantGroups } from "./kanjisense/seedKanjisenseVariantGroups";
 import { seedShuowenImages } from "./kanjisense/seedShuowenImages";
 import { seedJMDict } from "./seedJMDict";
+
+const version = FIGURES_VERSION;
 
 export async function seed(prisma: PrismaClient) {
   const startTime = Date.now();
@@ -55,106 +60,56 @@ export async function seed(prisma: PrismaClient) {
       seedScriptinAozoraFrequencies(prisma, false),
     );
     await executeAndLogTime("seeding kanjisense variant groups", () =>
-      seedKanjisenseVariantGroups(prisma, false),
+      seedKanjisenseVariantGroups(prisma, version, false),
     );
     await executeAndLogTime("seeding kanjisense figure relations", () =>
-      seedKanjisenseFigureRelation(prisma, false),
+      seedKanjisenseFigureRelation(prisma, version, false),
     );
     await executeAndLogTime("seeding kanjidb character derivations", () =>
-      seedKanjiDbCharacterDerivations(prisma, false),
+      seedKanjiDbCharacterDerivations(prisma, version, false),
     );
     await executeAndLogTime("seeding kanjisense figures", () =>
-      seedKanjisenseFigures(prisma, false),
+      seedKanjisenseFigures(prisma, version, false),
     );
     await executeAndLogTime("seeding kanjisense active sound marks", () =>
-      seedKanjisenseActiveSoundMarks(prisma, false),
+      seedKanjisenseActiveSoundMarks(prisma, version, false),
     );
     await executeAndLogTime("seeding kanjisense figure badge props", () =>
-      seedKanjisenseFigureBadgeProps(prisma, false, false),
+      seedKanjisenseFigureBadgeProps({
+        prisma,
+        version,
+        force: false,
+        shouldUpdateSoundMarkField: false,
+      }),
     );
     await executeAndLogTime("seeding JMDict", () => seedJMDict(prisma));
 
     await executeAndLogTime("seeding kanjisense figure readings", () =>
-      seedKanjisenseFigureReadings(prisma, false),
+      seedKanjisenseFigureReadings(prisma, version, false),
     );
 
     await executeAndLogTime("seeding kanjisense active sound mark values", () =>
-      seedKanjisenseActiveSoundMarkValues(prisma, false),
+      seedKanjisenseActiveSoundMarkValues(prisma, version, false),
     );
 
     await executeAndLogTime("seed figure images", () =>
-      seedFigureImages(prisma, false),
+      seedFigureImages(prisma, version, false),
     );
 
     await executeAndLogTime("seeding shuowen images", () =>
-      seedShuowenImages(prisma, false),
+      seedShuowenImages(prisma, version, false),
     );
     await executeAndLogTime("seeding glyph images", () =>
-      seedGlyphImages(prisma, false),
+      seedGlyphImages(prisma, version, false),
     );
 
     await executeAndLogTime("seeding kanjisense figure search properties", () =>
-      seedFigureSearchProperties(prisma, 100, false),
+      seedFigureSearchProperties(prisma, version, 100, false),
     );
 
-    console.log("updating kanjisenseComponent keys");
-    for (const { id } of await prisma.kanjisenseComponent.findMany({
-      select: { id: true },
-    })) {
-      await prisma.kanjisenseComponent.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-    }
-    console.log("updating kanjisenseFigureMeaning keys");
-    for (const { id } of await prisma.kanjisenseFigureMeaning.findMany({
-      select: { id: true },
-    })) {
-      await prisma.kanjisenseFigureMeaning.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-    }
-    console.log("updating KanjisenseFigureReading keys");
-    for (const { id } of await prisma.kanjisenseFigureReading.findMany({
-      select: { id: true },
-    })) {
-      await prisma.kanjisenseFigureReading.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-    }
-
-    console.log("updating KanjisenseFigureRelation keys");
-    for (const { id } of await prisma.kanjisenseFigureRelation.findMany({
-      select: { id: true },
-    })) {
-      await prisma.kanjisenseFigureRelation.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-    }
-    console.log("updating KanjisenseVariantGroup keys");
-    for (const { id } of await prisma.kanjisenseVariantGroup.findMany({
-      select: { id: true },
-    })) {
-      await prisma.kanjisenseVariantGroup.update({
-        where: { id },
-        data: {
-          key: id,
-        },
-      });
-    }
-
-    console.log("keys updated");
+    await executeAndLogTime("deleting old figures data", () =>
+      deleteOldFiguresData(prisma, version),
+    );
 
     console.log(
       "disk usage after:",

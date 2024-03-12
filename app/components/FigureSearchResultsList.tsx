@@ -77,7 +77,7 @@ export function FigureSearchResultsList({
                   className={cx(searchIsPending ? "opacity-70" : "")}
                 >
                   <Link
-                    to={`/dict/${figure.id}`}
+                    to={`/dict/${figure.key}`}
                     className={cx(
                       highlightedIndex === index && "bg-blue-100",
 
@@ -140,7 +140,10 @@ export function SearchPropertiesDisplay({
   findExactMatchingQuery: (text: string) => string | undefined;
 }) {
   function addJapaneseReading(
-    reading: Pick<FigureSearchProperty, "type" | "display" | "text">,
+    reading: Pick<
+      FigureSearchProperty,
+      "type" | "display" | "text" | "version"
+    >,
     registry: Record<
       string,
       { kana: FigureSearchProperty | null; latin: FigureSearchProperty | null }
@@ -186,17 +189,17 @@ export function SearchPropertiesDisplay({
     }
   }
   const searchProperties = figure.searchProperties.reduce(
-    (all, { searchProperty: { text, type, display } }) => {
+    (all, { searchProperty: { text, type, display, version } }) => {
       switch (type) {
         case FigureSearchPropertyType.ONYOMI_KANA:
         case FigureSearchPropertyType.ONYOMI_LATIN:
-          addJapaneseReading({ text, type, display }, all.onyomi);
+          addJapaneseReading({ text, type, display, version }, all.onyomi);
           return all;
         case FigureSearchPropertyType.KUNYOMI_KANA:
         case FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA:
         case FigureSearchPropertyType.KUNYOMI_LATIN:
         case FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA:
-          addJapaneseReading({ text, type, display }, all.kunyomi);
+          addJapaneseReading({ text, type, display, version }, all.kunyomi);
           return all;
         // not these prolly
         case FigureSearchPropertyType.TRANSLATION_ENGLISH:
@@ -204,12 +207,14 @@ export function SearchPropertiesDisplay({
             text,
             type,
             display,
+            version,
             key: getKey(type, text, display),
           });
           all.mnemonic.push({
             text,
             type,
             display,
+            version,
             key: getKey(type, text, display),
           });
           return all;
@@ -218,6 +223,7 @@ export function SearchPropertiesDisplay({
             text,
             type,
             display,
+            version,
             key: getKey(type, text, display),
           });
       }

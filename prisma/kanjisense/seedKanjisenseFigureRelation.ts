@@ -12,185 +12,195 @@ import { KanjiListCode, listCodes } from "~/lib/dic/KanjiListCode";
 import { PatchedIds } from "~/lib/PatchedIds.server";
 import { patchIds } from "~/lib/patchKanjiDbIds";
 import * as ParseIds from "~/lib/vendor/tomcumming/parseIds";
+import { FigureKey, getFigureId } from "~/models/figure";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedKanjisenseFigureRelation(
   prisma: PrismaClient,
+  version: number,
   force = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseFigureRelation" },
-  });
-  if (seeded && !force)
-    console.log(`KanjisenseFigureRelation already seeded. 🌱`);
-  else {
-    const patchedIds = patchIds(
-      new PatchedIds(
-        async (key) => {
-          const kanjiDbComposition = await prisma.kanjiDbComposition.findUnique(
-            { where: { id: key } },
-          );
-          return kanjiDbComposition?.ids ?? null;
-        },
-        {
-          async figureIsSimplifiedInStandardForm(key) {
-            const kanjiDbVariants = await prisma.kanjiDbVariant.count({
-              where: {
-                base: key,
-                variantType: {
-                  in: [
-                    KanjiDbVariantType.OldStyle,
-                    KanjiDbVariantType.VariationSelectorVariant,
-                  ],
+  await runSetupStep({
+    version,
+    force,
+    prisma,
+    step: "KanjisenseFigureRelation",
+    async setup() {
+      const patchedIds = patchIds(
+        new PatchedIds(
+          async (key) => {
+            const kanjiDbComposition =
+              await prisma.kanjiDbComposition.findUnique({
+                where: { id: key },
+              });
+            return kanjiDbComposition?.ids ?? null;
+          },
+          {
+            async figureIsSimplifiedInStandardForm(key) {
+              const kanjiDbVariants = await prisma.kanjiDbVariant.count({
+                where: {
+                  base: key,
+                  variantType: {
+                    in: [
+                      KanjiDbVariantType.OldStyle,
+                      KanjiDbVariantType.VariationSelectorVariant,
+                    ],
+                  },
                 },
-              },
-            });
+              });
 
-            return kanjiDbVariants > 0;
-          },
-          async figureIsNonSimplified(key) {
-            const allVariants = await prisma.kanjiDbVariant.count({
-              where: {
-                base: key,
-              },
-            });
-            if (allVariants === 0) return true;
+              return kanjiDbVariants > 0;
+            },
+            async figureIsNonSimplified(key) {
+              const allVariants = await prisma.kanjiDbVariant.count({
+                where: {
+                  base: key,
+                },
+              });
+              if (allVariants === 0) return true;
 
-            const newStyleVariants = await prisma.kanjiDbVariant.count({
-              where: {
-                base: key,
-                variantType: KanjiDbVariantType.NewStyle,
-              },
-            });
-            return newStyleVariants !== 0;
+              const newStyleVariants = await prisma.kanjiDbVariant.count({
+                where: {
+                  base: key,
+                  variantType: KanjiDbVariantType.NewStyle,
+                },
+              });
+              return newStyleVariants !== 0;
+            },
           },
+        ),
+      );
+
+      const allVariantGroups = (
+        await prisma.kanjisenseVariantGroup.findMany({ where: { version } })
+      )?.map((g) => g.variants);
+      const allKanjidicCharacters = await prisma.kanjidicEntry.findMany({
+        select: { id: true },
+      });
+
+      const dbInput = new Map<string, CreateFigureRelationInput>();
+
+      await executeAndLogTime(
+        `Analyzing ${baseKanji.length} base kanji`,
+        async () => {
+          await inBatchesOf({
+            batchSize: 250,
+            collection: [...baseKanji],
+            action: async (batch) => {
+              analyzeFiguresRelations(
+                prisma,
+                version,
+                allVariantGroups,
+                batch,
+                dbInput,
+                patchedIds,
+                {
+                  isPriority: true,
+                },
+              );
+            },
+          });
         },
-      ),
-    );
+      );
 
-    const allVariantGroups = (
-      await prisma.kanjisenseVariantGroup.findMany({})
-    )?.map((g) => g.variants);
-    const allKanjidicCharacters = await prisma.kanjidicEntry.findMany({
-      select: { id: true },
-    });
+      const priorityVariants = allVariantGroups.flatMap((g) =>
+        g.some((v) => baseKanjiSet.has(v))
+          ? g.filter((v) => !dbInput.has(v))
+          : [],
+      );
 
-    const dbInput = new Map<string, CreateFigureRelationInput>();
+      await executeAndLogTime(
+        `Analyzing ${priorityVariants.length} priority variants`,
+        () =>
+          analyzeFiguresRelations(
+            prisma,
+            version,
+            allVariantGroups,
+            priorityVariants,
+            dbInput,
+            patchedIds,
+            {
+              isPriority: true,
+            },
+          ),
+      );
+      const nonPriorityVariants = allVariantGroups.flatMap((g) =>
+        g.filter((v) => !dbInput.has(v)),
+      );
+      await executeAndLogTime(
+        `Analyzing ${nonPriorityVariants.length} non-priority variants`,
+        () =>
+          analyzeFiguresRelations(
+            prisma,
+            version,
+            allVariantGroups,
+            nonPriorityVariants,
+            dbInput,
+            patchedIds,
+            {
+              isPriority: false,
+            },
+          ),
+      );
 
-    await executeAndLogTime(
-      `Analyzing ${baseKanji.length} base kanji`,
-      async () => {
-        await inBatchesOf({
-          batchSize: 250,
-          collection: [...baseKanji],
-          action: async (batch) => {
-            analyzeFiguresRelations(
-              prisma,
-              allVariantGroups,
-              batch,
-              dbInput,
-              patchedIds,
-              {
-                isPriority: true,
-              },
-            );
-          },
-        });
-      },
-    );
+      await executeAndLogTime(
+        `Analyzing ${allKanjidicCharacters.length} kanjidic characters`,
+        async () => {
+          await inBatchesOf({
+            batchSize: 250,
+            collection: allKanjidicCharacters,
+            action: async (batch) => {
+              await analyzeFiguresRelations(
+                prisma,
+                version,
+                allVariantGroups,
+                batch.flatMap((c) => c.id).filter((v) => !dbInput.has(v)),
+                dbInput,
+                patchedIds,
+                {
+                  isPriority: false,
+                },
+              );
+            },
+          });
+        },
+      );
 
-    const priorityVariants = allVariantGroups.flatMap((g) =>
-      g.some((v) => baseKanjiSet.has(v))
-        ? g.filter((v) => !dbInput.has(v))
-        : [],
-    );
-
-    await executeAndLogTime(
-      `Analyzing ${priorityVariants.length} priority variants`,
-      () =>
-        analyzeFiguresRelations(
-          prisma,
-          allVariantGroups,
-          priorityVariants,
-          dbInput,
-          patchedIds,
-          {
-            isPriority: true,
-          },
-        ),
-    );
-    const nonPriorityVariants = allVariantGroups.flatMap((g) =>
-      g.filter((v) => !dbInput.has(v)),
-    );
-    await executeAndLogTime(
-      `Analyzing ${nonPriorityVariants.length} non-priority variants`,
-      () =>
-        analyzeFiguresRelations(
-          prisma,
-          allVariantGroups,
-          nonPriorityVariants,
-          dbInput,
-          patchedIds,
-          {
-            isPriority: false,
-          },
-        ),
-    );
-
-    await executeAndLogTime(
-      `Analyzing ${allKanjidicCharacters.length} kanjidic characters`,
-      async () => {
-        await inBatchesOf({
-          batchSize: 250,
-          collection: allKanjidicCharacters,
-          action: async (batch) => {
-            await analyzeFiguresRelations(
-              prisma,
-              allVariantGroups,
-              batch.flatMap((c) => c.id).filter((v) => !dbInput.has(v)),
-              dbInput,
-              patchedIds,
-              {
-                isPriority: false,
-              },
-            );
-          },
-        });
-      },
-    );
-
-    await prisma.kanjisenseFigureRelation.deleteMany({});
-    await inBatchesOf({
-      batchSize: 1000,
-      collection: dbInput,
-      getBatchItem: ([, r]) => ({
-        id: r.id,
-        idsText: r.idsText,
-        selectedIdsComponents: r.selectedIdsComponents,
-        directUses: [...r.directUses],
-        listsAsComponent: [...r.listsAsComponent],
-        isPriorityCandidate: r.isPriorityCandidate,
-        variantGroupId: r.variantGroupId,
-      }),
-      action: async (batch) => {
-        await prisma.kanjisenseFigureRelation.createMany({
-          data: batch,
-        });
-      },
-    });
-
-    await registerSeeded(prisma, "KanjisenseFigureRelation");
-  }
-
-  console.log(`KanjisenseFigureRelation seeded. 🌱`);
+      await prisma.kanjisenseFigureRelation.deleteMany({
+        where: { version },
+      });
+      await inBatchesOf({
+        batchSize: 1000,
+        collection: dbInput,
+        getBatchItem: ([, r]) => ({
+          id: r.id,
+          key: r.key,
+          version: r.version,
+          idsText: r.idsText,
+          selectedIdsComponents: r.selectedIdsComponents,
+          directUses: [...r.directUses],
+          listsAsComponent: [...r.listsAsComponent],
+          isPriorityCandidate: r.isPriorityCandidate,
+          variantGroupId: r.variantGroupId,
+        }),
+        action: async (batch) => {
+          await prisma.kanjisenseFigureRelation.createMany({
+            data: batch,
+          });
+        },
+      });
+    },
+  });
 }
 
 class CreateFigureRelationInput {
   id: string;
+  key: string;
+  version: number;
   variantGroupId?: string | null;
   idsText: string;
   selectedIdsComponents: string[];
@@ -199,13 +209,16 @@ class CreateFigureRelationInput {
   isPriorityCandidate: boolean;
 
   constructor(
-    id: string,
+    key: string,
+    version: number,
     idsText: string,
     selectedIdsComponents: string[],
     isPriorityCandidate: boolean,
     variantGroupId: string | null,
   ) {
-    this.id = id;
+    this.id = getFigureId(version, key);
+    this.key = key;
+    this.version = version;
     this.idsText = idsText;
     this.selectedIdsComponents = selectedIdsComponents;
     this.directUses = new Set();
@@ -217,47 +230,49 @@ class CreateFigureRelationInput {
 
 async function analyzeFiguresRelations(
   prisma: PrismaClient,
-  variantGroups: string[][],
-  figureIds: string[],
-  cache: Map<string, CreateFigureRelationInput>,
+  version: number,
+  variantGroups: FigureKey[][],
+  figureKeys: string[],
+  cache: Map<FigureKey, CreateFigureRelationInput>,
   patchedIds: PatchedIds,
   options: { isPriority: boolean; parentLists?: Set<KanjiListCode> },
   verbose = false,
 ) {
-  for (const figureId of figureIds) {
-    const cached = cache.get(figureId);
-    const idsText = cached?.idsText ?? (await patchedIds.getIds(figureId));
-    const ids = parseIds(figureId, idsText);
+  for (const figureKey of figureKeys) {
+    const cached = cache.get(figureKey);
+    const idsText = cached?.idsText ?? (await patchedIds.getIds(figureKey));
+    const ids = parseIds(figureKey, idsText);
     const jLocaleIndex = ids.locales["J"];
     if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
-      console.log(`Arbitrarily choosing first sequence for ${figureId}`);
+      console.log(`Arbitrarily choosing first sequence for ${figureKey}`);
     }
     const selectedIds = ids.sequences[jLocaleIndex ?? 0];
     if (!selectedIds) {
       console.error(
-        `Failed to get selectedIds for ${figureId} from ${idsText}`,
+        `Failed to get selectedIds for ${figureKey} from ${idsText}`,
       );
       continue;
     }
     const selectedIdsComponents = getComponentsFromIds(selectedIds).filter(
-      (c) => c !== figureId,
+      (c) => c !== figureKey,
     );
 
-    const variantGroupId =
+    const variantGroupKey =
       cached?.variantGroupId ??
-      variantGroups.find((v) => v.includes(figureId))?.[0] ??
+      variantGroups.find((v) => v.includes(figureKey))?.[0] ??
       null;
 
     const figureRelation =
       cached ||
       new CreateFigureRelationInput(
-        figureId,
+        figureKey,
+        version,
         idsText,
         selectedIdsComponents,
         options.isPriority,
-        variantGroupId,
+        variantGroupKey ? getFigureId(version, variantGroupKey) : null,
       );
-    if (!cached) cache.set(figureId, figureRelation);
+    if (!cached) cache.set(figureKey, figureRelation);
     for (const list of options.parentLists ?? []) {
       figureRelation.listsAsComponent.add(list);
     }
@@ -266,6 +281,7 @@ async function analyzeFiguresRelations(
       if (selectedIdsComponents.length > 1) {
         await analyzeFiguresRelations(
           prisma,
+          version,
           variantGroups,
           selectedIdsComponents,
           cache,
@@ -273,14 +289,14 @@ async function analyzeFiguresRelations(
           {
             isPriority: options.isPriority,
             parentLists: new Set([
-              ...getListsMembership(figureId),
+              ...getListsMembership(figureKey),
               ...figureRelation.listsAsComponent,
             ]),
           },
         );
       }
       for (const componentKey of selectedIdsComponents) {
-        cache.get(componentKey)!.directUses.add(figureId);
+        cache.get(componentKey)!.directUses.add(figureKey);
       }
     }
   }

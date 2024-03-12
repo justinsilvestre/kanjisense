@@ -13,6 +13,7 @@ import {
 
 export interface BadgeProps {
   id: string;
+  key: string;
   image?: KanjisenseFigureImage | null;
   aozoraAppearances: number;
   hue: BadgeHue;
@@ -26,6 +27,8 @@ export interface BadgeProps {
 
 export const badgeFigureSelect = {
   id: true,
+  key: true,
+  version: true,
   listsAsCharacter: true,
   listsAsComponent: true,
   variantGroupId: true,
@@ -120,6 +123,7 @@ export function isSecondaryVariant(
   figureId: string,
   variantGroupId: KanjisenseFigure["variantGroupId"],
 ) {
+  console.log({ figureId, variantGroupId });
   return Boolean(variantGroupId && variantGroupId !== figureId);
 }
 
@@ -151,6 +155,7 @@ export function memoizeById<T extends { id: string }, U>(fn: (arg: T) => U) {
 
 export type BadgePropsFigure = Pick<
   KanjisenseFigure,
+  | "key"
   | "id"
   | "variantGroupId"
   | "listsAsCharacter"
@@ -169,6 +174,7 @@ function _getBadgeProps(figure: BadgePropsFigure): BadgeProps {
   const lists = getLists(figureIsStandaloneCharacter, figure);
   return {
     id: figure.id,
+    key: figure.key,
     image: figure.image,
     aozoraAppearances: figure.aozoraAppearances,
     listsAsCharacter: figure.listsAsCharacter as KanjiListCode[] | null,

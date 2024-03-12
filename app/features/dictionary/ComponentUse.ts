@@ -1,6 +1,8 @@
 export class ComponentUse {
   constructor(
+    /** figure key */
     public parent: string,
+    /** figure key */
     public component: string,
   ) {}
 

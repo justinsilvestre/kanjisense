@@ -29,6 +29,7 @@ import {
   parseActiveSoundMarkValue,
   transcribeSerializedXiaoyunProfile,
 } from "~/features/dictionary/getActiveSoundMarkValueText";
+import { FIGURES_VERSION, FigureKey, parseFigureId } from "~/models/figure";
 
 import { FigureBadgeLink } from "../components/FigureBadgeLink";
 
@@ -85,6 +86,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
       aozoraAppearances: "desc",
     },
     where: {
+      version: FIGURES_VERSION,
       isPriority: true,
       listsAsComponent: { isEmpty: false },
       asComponent: {
@@ -98,7 +100,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
   });
 
   const map: Record<
-    string,
+    FigureKey,
     {
       badge: BadgeProps;
       readings: (typeof prioritySoundComponents)[number]["reading"];
@@ -109,11 +111,13 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
   > = {};
 
   for (const figure of prioritySoundComponents) {
-    map[figure.id] = {
+    map[figure.key] = {
       badge: getBadgeProps(figure),
       readings: figure.reading,
       usesCount: figure.asComponent!.soundMarkUses.length,
-      uses: figure.asComponent!.soundMarkUses.map((u) => u.id),
+      uses: figure.asComponent!.soundMarkUses.map(
+        (u) => parseFigureId(u.id).key,
+      ),
       values: [
         ...new Set(
           figure.asComponent!.soundMarkUses.flatMap(
@@ -504,7 +508,11 @@ export default function FigureDetailsPage() {
                     </h2>
                   ) : null}
                   <div className="m-1 inline-flex flex-row gap-2" key={id}>
-                    <FigureBadgeLink key={id} id={id} badgeProps={badge} />
+                    <FigureBadgeLink
+                      key={id}
+                      figureKey={badge.key}
+                      badgeProps={badge}
+                    />
                     <div className="flex flex-col">
                       <div>
                         {parsedValues.map((v, i) => (

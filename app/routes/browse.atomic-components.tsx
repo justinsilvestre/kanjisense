@@ -241,7 +241,7 @@ function AtomicComponentsPageContent({
                       // />
                       <DictPreviewLink
                         key={figure.id}
-                        figureId={figure.id}
+                        figureKey={figure.key}
                         popoverAttributes={popover.getAnchorAttributes(figure)}
                         className={clsx({
                           "opacity-30": !isAtomic,
@@ -259,7 +259,7 @@ function AtomicComponentsPageContent({
                   className="inline-flex flex-col flex-wrap gap-2 p-1"
                 >
                   <DictPreviewLink
-                    figureId={figures[0].figure.id}
+                    figureKey={figures[0].figure.id}
                     popoverAttributes={popover.getAnchorAttributes(
                       figures[0].figure,
                     )}

@@ -22,6 +22,7 @@ import {
   SingleFigureDictionaryEntry,
 } from "~/features/dictionary/SingleFigureDictionaryEntry";
 import css from "~/features/dictionary/styles.css";
+import { getLatestFigureId } from "~/models/figure";
 
 type LoaderData =
   | {
@@ -32,7 +33,7 @@ type LoaderData =
 
 export const meta: MetaFunction<typeof loader> = (a) => [
   {
-    title: getPageTitle(a.params.figureId, a.data.searchedFigure),
+    title: getPageTitle(a.params.figureKey, a.data.searchedFigure),
   },
 ];
 
@@ -45,7 +46,8 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { figureId } = params;
+  const { figureKey } = params;
+  const figureId = figureKey && getLatestFigureId(figureKey);
   const searchedFigure = figureId
     ? await getDictionaryPageFigure(figureId)
     : null;
@@ -66,11 +68,11 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 function getPageTitle(
-  figureId: string | null | undefined,
+  figureKey: string | null | undefined,
   figure: DictionaryPageSearchedFigure,
 ): unknown | string {
-  if ([...(figureId || "")].length === 1)
-    return `${figureId} - definition, components, readings, and more | Kanjisense`;
+  if ([...(figureKey || "")].length === 1)
+    return `${figureKey} - definition, components, readings, and more | Kanjisense`;
   if (!figure)
     return `Character definitions, components, readings, and more | Kanjisense`;
   const keyword =
@@ -95,9 +97,11 @@ export default function FigureDetailsPage() {
   }
   const { searchedFigure } = loaderData;
   const variants = searchedFigure.variantGroup?.variants
-    .flatMap((vid) => {
+    .flatMap((variantKey) => {
       return (
-        searchedFigure.variantGroup?.figures.find((f) => f.id === vid) || []
+        searchedFigure.variantGroup?.figures.find(
+          (f) => f.key === variantKey,
+        ) || []
       );
     })
     .map((f) => getBadgeProps(f));

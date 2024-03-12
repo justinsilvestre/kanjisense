@@ -9,7 +9,7 @@ import { FigureKeywordDisplay } from "~/features/dictionary/FigureKeywordDisplay
 import { FigureTags } from "~/features/dictionary/FigureTags";
 import { getHeadingsMeanings } from "~/features/dictionary/getHeadingsMeanings";
 import { PopoverFigure } from "~/features/dictionary/PopoverFigure";
-import { DictPreviewLoaderData } from "~/routes/dict.$figureId.preview";
+import { DictPreviewLoaderData } from "~/routes/dict.$figureKey.preview";
 
 import { DictLink } from "./AppLink";
 import { FigureBadge } from "./FigureBadge";
@@ -40,7 +40,7 @@ export function FigurePopover({
   badgeProps: BadgeProps;
   className?: string;
 }>) {
-  const figureId = initialBadgeProps.id;
+  const figureKey = initialBadgeProps.key;
   const figurePopover = useFigurePopover({
     className,
     initialBadgeProps,
@@ -56,7 +56,7 @@ export function FigurePopover({
         e.preventDefault();
         anchorAttributes.onClick();
       },
-      href: `/dict/${figureId}`,
+      href: `/dict/${figureKey}`,
     },
     children,
     popper.isOpen
@@ -85,26 +85,26 @@ export function useFigurePopover({
   const fetchedFigure = fetcher.data?.figure;
 
   useEffect(() => {
-    if (fetchedFigure?.id) {
+    if (fetchedFigure?.key) {
       update?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchedFigure?.id]);
+  }, [fetchedFigure?.key]);
 
-  const popperFigureId = fetchedFigure?.id || badgeProps?.id;
+  const popperFigureKey = fetchedFigure?.key || badgeProps?.key;
   const getAnchorAttributes = (badgeProps?: BadgeProps | null) => ({
     className: `${className}`,
     ref: setReferenceElement,
     onClick: () => {
       if (!badgeProps) {
-        console.warn(`No badge props for figure ${popperFigureId}`);
+        console.warn(`No badge props for figure ${popperFigureKey}`);
         return;
       }
       if (isOpen) {
         close();
-        loadFigure(badgeProps.id);
+        loadFigure(badgeProps.key);
       } else {
-        loadFigure(badgeProps.id);
+        loadFigure(badgeProps.key);
         open();
       }
     },
@@ -115,7 +115,7 @@ export function useFigurePopover({
     loadFigure,
     fetcher,
     badgeProps,
-    popperFigureId,
+    popperFigureKey,
     getAnchorAttributes,
     popper,
   };
@@ -141,7 +141,7 @@ export function FigurePopoverWindow({
   const loading = fetcher.state === "loading";
 
   if (!badgeProps || !popper.isOpen) return null;
-  const popperFigureId = badgeProps.id;
+  const popperFigureKey = badgeProps.key;
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
@@ -160,7 +160,7 @@ export function FigurePopoverWindow({
           "flex flex-row flex-wrap items-center  gap-4",
         )}
       >
-        <DictLink figureId={popperFigureId} focusOnLoad className="">
+        <DictLink figureKey={popperFigureKey} focusOnLoad className="">
           <FigureBadge badgeProps={badgeProps} width={6} />
         </DictLink>
         {loading ? (
@@ -180,10 +180,10 @@ export function FigurePopoverWindow({
                 className="inline-flex cursor-pointer items-center"
                 onClick={(e) => {
                   e.preventDefault();
-                  loadFigure(c.component.id, getBadgeProps(c.component));
+                  loadFigure(c.component.key, getBadgeProps(c.component));
                 }}
                 role="button"
-                href={`/dict/${c.component.id}`}
+                href={`/dict/${c.component.key}`}
               >
                 <FigureBadge
                   badgeProps={getBadgeProps(c.component)}
@@ -255,15 +255,15 @@ export function usePopoverFigureFetcher(initialBadgeProps?: BadgeProps | null) {
   return {
     fetcher,
     badgeProps: loadingBadgeProps || fetchedBadgeProps || initialBadgeProps,
-    loadFigure(figureToFetchId: string, badgeProps?: BadgeProps | null) {
+    loadFigure(figureToFetchKey: string, badgeProps?: BadgeProps | null) {
       if (
-        (!fetcher.data || fetcher.data.figure?.id !== figureToFetchId) &&
+        (!fetcher.data || fetcher.data.figure?.key !== figureToFetchKey) &&
         fetcher.state === "idle"
       ) {
         if (badgeProps) {
           setLoadingBadgeProps(badgeProps);
         }
-        fetcher.load(`/dict/${figureToFetchId}/preview`);
+        fetcher.load(`/dict/${figureToFetchKey}/preview`);
       }
     },
   };

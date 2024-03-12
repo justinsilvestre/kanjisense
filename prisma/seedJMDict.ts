@@ -6,23 +6,19 @@ import { files } from "~/lib/files.server";
 
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
 import { parseXmlChunks } from "./kanjisense/parseXmlChunks";
-import { registerSeeded } from "./seedUtils";
+import { runSetupStep } from "./seedUtils";
 
 export async function seedJMDict(prisma: PrismaClient, force = false) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "JMDictEntry" },
+  await runSetupStep({
+    prisma,
+    step: "JMDictEntry",
+    force,
+    version: "KEYLESS STEP",
+    async setup() {
+      await prisma.jmDictEntry.deleteMany({});
+      await executeAndLogTime("parsing xml", () => parseXml(prisma));
+    },
   });
-  if (seeded && !force) console.log(`JMDict already seeded. 🌱`);
-  else {
-    console.log(`seeding JMDict...`);
-
-    await prisma.jmDictEntry.deleteMany({});
-    await executeAndLogTime("parsing xml", () => parseXml(prisma));
-
-    await registerSeeded(prisma, "JMDictEntry");
-  }
-
-  console.log(`JMDict seeded. 🌱`);
 }
 
 async function parseXml(prisma: PrismaClient, entriesBatchSize = 10000) {

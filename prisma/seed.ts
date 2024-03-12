@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "~/db.server";
 
 import { seed } from "./seedScript";
-
-const prisma = new PrismaClient();
 
 seed(prisma)
   .catch((e) => {

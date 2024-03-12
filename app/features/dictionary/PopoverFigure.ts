@@ -1,10 +1,11 @@
 import { prisma } from "~/db.server";
 import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";
+import { getLatestFigureId } from "~/models/figure";
 
 export type PopoverFigure = Awaited<ReturnType<typeof getPopoverFigure>>;
-export async function getPopoverFigure(figureId: string) {
+export async function getPopoverFigure(figureKey: string) {
   return await prisma.kanjisenseFigure.findFirst({
-    where: { id: figureId },
+    where: { id: getLatestFigureId(figureKey) },
     select: {
       ...badgeFigureSelect,
       keyword: true,

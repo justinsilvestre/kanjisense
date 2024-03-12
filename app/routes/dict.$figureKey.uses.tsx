@@ -6,21 +6,23 @@ import {
   DictionaryPageFigureWithPriorityUses,
   dictionaryPageFigureInclude,
 } from "~/features/dictionary/getDictionaryPageFigure.server";
+import { FIGURES_VERSION, getFigureId } from "~/models/figure";
 
 export type FigurePriorityUsesLoaderData =
   | {
+      key: string;
       id: string;
       firstClassUses: FigurePriorityUses | null;
       error?: null;
     }
-  | { error: string; id?: null; firstClassUses?: null };
+  | { error: string; id?: null; key?: null; firstClassUses?: null };
 
 export type FigurePriorityUses =
   NonNullable<DictionaryPageFigureWithPriorityUses>["firstClassUses"];
 
-async function getComponentPriorityUses(figureId: string) {
+async function getComponentPriorityUses(figureKey: string) {
   return await prisma.kanjisenseFigure.findUnique({
-    where: { id: figureId },
+    where: { id: getFigureId(FIGURES_VERSION, figureKey) },
     select: {
       id: true,
       firstClassUses: {
@@ -32,15 +34,15 @@ async function getComponentPriorityUses(figureId: string) {
 }
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const figureId = params.figureId!;
+  const figureKey = params.figureKey!;
 
-  const figure = await getComponentPriorityUses(figureId);
+  const figure = await getComponentPriorityUses(figureKey);
 
   if (!figure) {
     return json<FigurePriorityUsesLoaderData>(
       {
         error: `No figure ${JSON.stringify(
-          figureId,
+          figureKey,
         )} could be found in the database. `,
       },
       { status: 404 },
@@ -49,6 +51,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   return json<FigurePriorityUsesLoaderData>({
     id: figure.id,
+    key: figureKey,
     firstClassUses: figure.firstClassUses || null,
   });
 };

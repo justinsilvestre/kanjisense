@@ -65,7 +65,7 @@ export function FigureSearchForm({
     defaultInputValue: defaultSearchText,
     onSelectedItemChange({ selectedItem }) {
       if (selectedItem) {
-        const key = selectedItem.id;
+        const key = selectedItem.key;
         navigate(`/dict/${key}`);
       }
     },
@@ -103,7 +103,7 @@ export function FigureSearchForm({
     e.preventDefault();
 
     if (comboBox.selectedItem) {
-      const key = comboBox.selectedItem.id;
+      const key = comboBox.selectedItem.key;
       navigate(`/dict/${key}`);
     }
   };

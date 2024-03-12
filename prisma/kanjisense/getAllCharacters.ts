@@ -4,17 +4,21 @@ import { baseKanjiSet } from "~/lib/baseKanji";
 
 import { getBaseKanjiVariantGroups } from "./getBaseKanjiVariantGroups";
 
-export async function getAllCharactersAndVariantFigures(prisma: PrismaClient) {
+export async function getAllCharactersAndVariantFigures(
+  prisma: PrismaClient,
+  version: number,
+) {
   const baseKanjiVariantsGroups = await getBaseKanjiVariantGroups(prisma);
   const priorityCharactersAndTheirNonComponentVariants =
     await prisma.kanjisenseFigureRelation.findMany({
       where: {
+        version,
         OR: [
           {
-            id: { in: [...baseKanjiSet] },
+            key: { in: [...baseKanjiSet] },
           },
           {
-            id: {
+            key: {
               in: Object.values(baseKanjiVariantsGroups).flatMap(
                 (g) => g.variants,
               ),
@@ -27,7 +31,8 @@ export async function getAllCharactersAndVariantFigures(prisma: PrismaClient) {
   const priorityCharactersComponentVariants =
     await prisma.kanjisenseFigureRelation.findMany({
       where: {
-        id: {
+        version,
+        key: {
           in: Object.values(baseKanjiVariantsGroups).flatMap((g) => g.variants),
         },
         directUses: { isEmpty: false },
@@ -36,9 +41,10 @@ export async function getAllCharactersAndVariantFigures(prisma: PrismaClient) {
 
   const nonPriorityCharacters = await prisma.kanjisenseFigureRelation.findMany({
     where: {
+      version,
       directUses: { isEmpty: true },
-      id: {
-        notIn: priorityCharactersAndTheirNonComponentVariants.map((c) => c.id),
+      key: {
+        notIn: priorityCharactersAndTheirNonComponentVariants.map((c) => c.key),
       },
     },
   });

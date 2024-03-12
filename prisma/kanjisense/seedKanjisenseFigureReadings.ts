@@ -16,183 +16,196 @@ import {
   inferOnyomi,
   toModernKatakana,
 } from "~/lib/qys/inferOnyomi";
+import { FigureKey, getFigureId } from "~/models/figure";
 
-import { registerSeeded } from "../seedUtils";
+import { runSetupStep } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 import { findGuangyunEntriesByShinjitai } from "./findGuangyunEntriesByShinjitai";
 
 export async function seedKanjisenseFigureReadings(
   prisma: PrismaClient,
+  version: number,
   force = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseFigureReading" },
-  });
-  if (seeded && !force)
-    console.log(`KanjisenseFigureReading already seeded. 🌱`);
-  else {
-    console.log(`seeding KanjisenseFigureReading...`);
+  await runSetupStep({
+    version,
+    force,
+    prisma,
+    step: "KanjisenseFigureReading",
+    async setup() {
+      const kanjidicEntries = new Map(
+        Array.from(
+          await prisma.kanjidicEntry.findMany({
+            select: { id: true, onReadings: true },
+          }),
+          (e) => [e.id, e],
+        ),
+      );
+      const unihan15Keys = new Set(
+        Array.from(
+          await prisma.unihan15.findMany({
+            select: { id: true },
+          }),
+          (e) => e.id,
+        ),
+      );
 
-    const kanjidicEntries = new Map(
-      Array.from(
-        await prisma.kanjidicEntry.findMany({
-          select: { id: true, onReadings: true },
-        }),
-        (e) => [e.id, e],
-      ),
-    );
-    const unihan15Keys = new Set(
-      Array.from(
-        await prisma.unihan15.findMany({
-          select: { id: true },
-        }),
-        (e) => e.id,
-      ),
-    );
-
-    const figuresNeedingReadingsIds = Array.from(
-      await prisma.kanjisenseFigure.findMany({
-        select: { id: true },
-        where: {
-          OR: [
-            {
-              isStandaloneCharacter: true,
-            },
-            {
-              asComponent: {
-                soundMarkUses: {
-                  some: {},
+      const figuresNeedingReadingsKeys = Array.from(
+        await prisma.kanjisenseFigure.findMany({
+          select: { key: true },
+          where: {
+            version,
+            OR: [
+              {
+                isStandaloneCharacter: true,
+              },
+              {
+                asComponent: {
+                  soundMarkUses: {
+                    some: {},
+                  },
                 },
               },
-            },
-          ],
-        },
-      }),
-      (f) => f.id,
-    );
-
-    console.log(
-      `Will look up guangyun entries of ${figuresNeedingReadingsIds.length} figures.`,
-    );
-
-    console.log("preparing variants...");
-    const newToOldFiguresIds = new Map<string, string[]>();
-    const newToZVariants14 = new Map<string, string[]>();
-    const allOldFiguresIds = new Set<string>();
-    for (const {
-      base: newFigure,
-      variant: oldFigure,
-    } of await prisma.kanjiDbVariant.findMany({
-      where: {
-        variantType: KanjiDbVariantType.OldStyle,
-        base: { in: figuresNeedingReadingsIds },
-      },
-    })) {
-      allOldFiguresIds.add(oldFigure);
-      if (!newToOldFiguresIds.has(newFigure)) {
-        newToOldFiguresIds.set(newFigure, []);
-      }
-      newToOldFiguresIds.get(newFigure)?.push(oldFigure);
-    }
-
-    const sbgyCharactersToXiaoyunNumbers = new Map<string, number[]>();
-    for (const { xiaoyun, exemplars } of await prisma.sbgyXiaoyun.findMany()) {
-      for (const exemplar of exemplars) {
-        if (!sbgyCharactersToXiaoyunNumbers.has(exemplar)) {
-          sbgyCharactersToXiaoyunNumbers.set(exemplar, []);
-        }
-        sbgyCharactersToXiaoyunNumbers.get(exemplar)!.push(xiaoyun);
-      }
-    }
-
-    for (const { id: newFigure, kZVariant } of await prisma.unihan14.findMany({
-      where: {
-        kZVariant: { isEmpty: false },
-        id: { in: figuresNeedingReadingsIds },
-      },
-      select: { kZVariant: true, id: true },
-    })) {
-      if (!newToZVariants14.has(newFigure)) {
-        newToZVariants14.set(newFigure, []);
-      }
-      newToZVariants14.get(newFigure)?.push(...kZVariant);
-    }
-
-    const figuresToXiaoyunsWithMatchingExemplars = await executeAndLogTime(
-      "preparing guangyun entries",
-      async () =>
-        await prepareGuangyunEntries({
-          figuresNeedingReadingsIds,
-          prisma,
-          newToOldFiguresIds,
-          sbgyCharactersToXiaoyunNumbers,
-          newToZVariants14,
-        }),
-    );
-
-    const dbInput = await executeAndLogTime("preparing readings", () =>
-      prepareReadings(
-        figuresNeedingReadingsIds,
-        figuresToXiaoyunsWithMatchingExemplars,
-        kanjidicEntries,
-        unihan15Keys,
-      ),
-    );
-
-    await executeAndLogTime("deleting old readings", () =>
-      prisma.kanjisenseFigureReading.deleteMany(),
-    );
-
-    await executeAndLogTime("creating readings", () =>
-      prisma.kanjisenseFigureReading.createMany({
-        data: dbInput,
-      }),
-    );
-
-    await executeAndLogTime("hooking up figures", async () => {
-      const readingsIds = await prisma.kanjisenseFigureReading
-        .findMany({ select: { id: true } })
-        .then((rs) => rs.map((r) => r.id));
-      const figuresIds = await prisma.kanjisenseFigure
-        .findMany({
-          select: { id: true },
-          where: {
-            id: {
-              in: readingsIds,
-            },
+            ],
           },
-        })
-        .then((fs) => fs.map((f) => f.id));
+        }),
+        (f) => f.key,
+      );
 
-      for (const id of figuresIds) {
-        await prisma.kanjisenseFigure.update({
-          where: { id: id },
-          data: { readingId: id },
-        });
+      console.log(
+        `Will look up guangyun entries of ${figuresNeedingReadingsKeys.length} figures.`,
+      );
+
+      console.log("preparing variants...");
+      const newToOldFiguresKeys = new Map<string, string[]>();
+      const newToZVariants14 = new Map<string, string[]>();
+      const allOldFiguresKeys = new Set<string>();
+      for (const {
+        base: newFigure,
+        variant: oldFigure,
+      } of await prisma.kanjiDbVariant.findMany({
+        where: {
+          variantType: KanjiDbVariantType.OldStyle,
+          base: { in: figuresNeedingReadingsKeys },
+        },
+      })) {
+        allOldFiguresKeys.add(oldFigure);
+        if (!newToOldFiguresKeys.has(newFigure)) {
+          newToOldFiguresKeys.set(newFigure, []);
+        }
+        newToOldFiguresKeys.get(newFigure)?.push(oldFigure);
       }
-    });
 
-    await executeAndLogTime("hooking up guangyun entries", async () => {
-      await prisma.kanjisenseFigureReadingToSbgyXiaoyun.createMany({
-        data: [...figuresToXiaoyunsWithMatchingExemplars].flatMap(
-          ([figureId, xiaoyuns]) =>
-            Array.from(xiaoyuns.keys(), (sbgyXiaoyunId) => ({
-              figureReadingId: figureId,
-              sbgyXiaoyunId,
-            })),
+      const sbgyCharactersToXiaoyunNumbers = new Map<string, number[]>();
+      for (const {
+        xiaoyun,
+        exemplars,
+      } of await prisma.sbgyXiaoyun.findMany()) {
+        for (const exemplar of exemplars) {
+          if (!sbgyCharactersToXiaoyunNumbers.has(exemplar)) {
+            sbgyCharactersToXiaoyunNumbers.set(exemplar, []);
+          }
+          sbgyCharactersToXiaoyunNumbers.get(exemplar)!.push(xiaoyun);
+        }
+      }
+
+      for (const { id: newFigure, kZVariant } of await prisma.unihan14.findMany(
+        {
+          where: {
+            kZVariant: { isEmpty: false },
+            id: { in: figuresNeedingReadingsKeys },
+          },
+          select: { kZVariant: true, id: true },
+        },
+      )) {
+        if (!newToZVariants14.has(newFigure)) {
+          newToZVariants14.set(newFigure, []);
+        }
+        newToZVariants14.get(newFigure)?.push(...kZVariant);
+      }
+
+      const figuresKeysToXiaoyunsWithMatchingExemplars =
+        await executeAndLogTime(
+          "preparing guangyun entries",
+          async () =>
+            await prepareGuangyunEntries({
+              figuresNeedingReadingsKeys,
+              prisma,
+              newToOldFiguresKeys,
+              sbgyCharactersToXiaoyunNumbers,
+              newToZVariants14,
+            }),
+        );
+
+      const dbInput = await executeAndLogTime("preparing readings", () =>
+        prepareReadings(
+          version,
+          figuresNeedingReadingsKeys,
+          figuresKeysToXiaoyunsWithMatchingExemplars,
+          kanjidicEntries,
+          unihan15Keys,
         ),
-      });
-    });
+      );
 
-    await registerSeeded(prisma, "KanjisenseFigureReading");
-  }
+      await executeAndLogTime("deleting old readings", () =>
+        prisma.kanjisenseFigureReading.deleteMany({
+          where: { version },
+        }),
+      );
+
+      await executeAndLogTime("creating readings", () =>
+        prisma.kanjisenseFigureReading.createMany({
+          data: dbInput,
+        }),
+      );
+
+      await executeAndLogTime("hooking up figures", async () => {
+        const readingsIds = await prisma.kanjisenseFigureReading
+          .findMany({
+            select: { id: true },
+            where: { version },
+          })
+          .then((rs) => rs.map((r) => r.id));
+        const figuresIds = await prisma.kanjisenseFigure
+          .findMany({
+            select: { id: true },
+            where: {
+              id: {
+                in: readingsIds,
+              },
+            },
+          })
+          .then((fs) => fs.map((f) => f.id));
+
+        for (const id of figuresIds) {
+          await prisma.kanjisenseFigure.update({
+            where: { id: id },
+            data: { readingId: id },
+          });
+        }
+      });
+
+      await executeAndLogTime("hooking up guangyun entries", async () => {
+        await prisma.kanjisenseFigureReadingToSbgyXiaoyun.createMany({
+          data: [...figuresKeysToXiaoyunsWithMatchingExemplars].flatMap(
+            ([figureKey, xiaoyuns]) =>
+              Array.from(xiaoyuns.keys(), (sbgyXiaoyunId) => ({
+                figureReadingId: getFigureId(version, figureKey),
+                sbgyXiaoyunId,
+              })),
+          ),
+        });
+      });
+    },
+  });
 
   console.log(`KanjisenseFigureReading seeded. 🌱`);
 
   async function prepareReadings(
-    figuresNeedingReadingsIds: string[],
-    figuresToXiaoyunsWithMatchingExemplars: Map<
+    version: number,
+    figuresNeedingReadingsKeys: string[],
+    figuresKeysToXiaoyunsWithMatchingExemplars: Map<
       string,
       Map<
         number,
@@ -223,15 +236,18 @@ export async function seedKanjisenseFigureReadings(
 
     const dbInput: {
       id: string;
+      key: string;
+      version: number;
       kanjidicEntryId: string | null;
       unihan15Id: string | null;
       inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns;
       sbgyXiaoyunsMatchingExemplars: Record<string, string[]>;
       selectedOnReadings: string[];
     }[] = [];
-    for (const readingFigureId of figuresNeedingReadingsIds) {
+    for (const readingFigureKey of figuresNeedingReadingsKeys) {
       const inferredOnyomiForFigure = getInferredOnReadings(
-        figuresToXiaoyunsWithMatchingExemplars.get(readingFigureId) || null,
+        figuresKeysToXiaoyunsWithMatchingExemplars.get(readingFigureKey) ||
+          null,
       );
 
       const inferredOnReadingCandidates: OnReadingToTypeToXiaoyuns = {};
@@ -255,25 +271,25 @@ export async function seedKanjisenseFigureReadings(
 
       const selectedOnReadings: string[] = [];
       if (
-        isSingleCharacter(readingFigureId) &&
-        (kanjidicEntries.get(readingFigureId)?.onReadings?.length ?? 0) > 1
+        isSingleCharacter(readingFigureKey) &&
+        (kanjidicEntries.get(readingFigureKey)?.onReadings?.length ?? 0) > 1
       ) {
-        const joyoReadings = joyoWikipedia.get(readingFigureId);
+        const joyoReadings = joyoWikipedia.get(readingFigureKey);
         if (joyoReadings?.length) {
           selectedOnReadings.push(...joyoReadings);
         } else {
           const jmdictEntriesWithKanjiArePresent =
             await prisma.jmDictEntry.count({
-              where: { head: { contains: readingFigureId } },
+              where: { head: { contains: readingFigureKey } },
               take: 1,
             });
           if (jmdictEntriesWithKanjiArePresent) {
             const katakanaKanjidicOnReadings =
-              kanjidicEntries.get(readingFigureId)?.onReadings || [];
+              kanjidicEntries.get(readingFigureKey)?.onReadings || [];
             const jmdictEntriesWithKanjidicOnReadings =
               await prisma.jmDictEntry.findMany({
                 where: {
-                  head: { contains: readingFigureId },
+                  head: { contains: readingFigureKey },
                   OR: katakanaKanjidicOnReadings.map((katakanaReading) => ({
                     readingText: {
                       contains: katakanaOnyomiToHiragana(katakanaReading),
@@ -299,19 +315,23 @@ export async function seedKanjisenseFigureReadings(
       for (const [
         xiaoyun,
         { matchingExemplars },
-      ] of figuresToXiaoyunsWithMatchingExemplars
-        .get(readingFigureId)
+      ] of figuresKeysToXiaoyunsWithMatchingExemplars
+        .get(readingFigureKey)
         ?.entries() || []) {
         sbgyXiaoyunsMatchingExemplars[xiaoyun] ||= [];
         sbgyXiaoyunsMatchingExemplars[xiaoyun].push(...matchingExemplars);
       }
 
       dbInput.push({
-        id: readingFigureId,
-        kanjidicEntryId: kanjidicEntries.has(readingFigureId)
-          ? readingFigureId
+        id: getFigureId(version, readingFigureKey),
+        key: readingFigureKey,
+        version,
+        kanjidicEntryId: kanjidicEntries.has(readingFigureKey)
+          ? readingFigureKey
           : null,
-        unihan15Id: unihan15Keys.has(readingFigureId) ? readingFigureId : null,
+        unihan15Id: unihan15Keys.has(readingFigureKey)
+          ? readingFigureKey
+          : null,
         inferredOnReadingCandidates,
         sbgyXiaoyunsMatchingExemplars,
         selectedOnReadings,
@@ -320,8 +340,8 @@ export async function seedKanjisenseFigureReadings(
     return dbInput;
   }
 }
-function isSingleCharacter(readingFigureId: string) {
-  return [...readingFigureId].length === 1;
+function isSingleCharacter(readingFigureKey: string) {
+  return [...readingFigureKey].length === 1;
 }
 
 function getInferredOnReadings(
@@ -377,20 +397,20 @@ function getInferredOnReadings(
 }
 
 async function prepareGuangyunEntries({
-  figuresNeedingReadingsIds,
+  figuresNeedingReadingsKeys,
   prisma,
-  newToOldFiguresIds,
+  newToOldFiguresKeys,
   sbgyCharactersToXiaoyunNumbers,
   newToZVariants14,
 }: {
-  figuresNeedingReadingsIds: string[];
+  figuresNeedingReadingsKeys: string[];
   prisma: PrismaClient;
-  newToOldFiguresIds: Map<string, string[]>;
+  newToOldFiguresKeys: Map<string, string[]>;
   sbgyCharactersToXiaoyunNumbers: Map<string, number[]>;
   newToZVariants14: Map<string, string[]>;
 }) {
-  const figuresToXiaoyunsWithMatchingExemplars = new Map<
-    string,
+  const figuresKeysToXiaoyunsWithMatchingExemplars = new Map<
+    FigureKey,
     Map<
       number,
       {
@@ -399,20 +419,20 @@ async function prepareGuangyunEntries({
       }
     >
   >();
-  for (const figureId of figuresNeedingReadingsIds) {
+  for (const figureKey of figuresNeedingReadingsKeys) {
     const guangyunEntries = await findGuangyunEntriesByShinjitai(
       prisma,
-      newToOldFiguresIds,
+      newToOldFiguresKeys,
       sbgyCharactersToXiaoyunNumbers,
       newToZVariants14,
-      figureId,
+      figureKey,
     );
     for (const [
       xiaoyunNumber,
       { xiaoyun, matchingExemplars },
     ] of guangyunEntries) {
       const xiaoyunsToExemplars =
-        figuresToXiaoyunsWithMatchingExemplars.get(figureId) ||
+        figuresKeysToXiaoyunsWithMatchingExemplars.get(figureKey) ||
         new Map<
           number,
           {
@@ -420,7 +440,10 @@ async function prepareGuangyunEntries({
             matchingExemplars: Set<string>;
           }
         >();
-      figuresToXiaoyunsWithMatchingExemplars.set(figureId, xiaoyunsToExemplars);
+      figuresKeysToXiaoyunsWithMatchingExemplars.set(
+        figureKey,
+        xiaoyunsToExemplars,
+      );
 
       const xiaoyunExemplars: {
         xiaoyun: SbgyXiaoyun;
@@ -435,7 +458,7 @@ async function prepareGuangyunEntries({
       }
     }
   }
-  return figuresToXiaoyunsWithMatchingExemplars;
+  return figuresKeysToXiaoyunsWithMatchingExemplars;
 }
 
 const katakanaToHiraganaOnCache = new Map<string, string>();

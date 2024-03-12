@@ -30,11 +30,11 @@ function LinkListItem({
 }
 
 export function ExternalDictionaryLinks({
-  figureId,
+  figureKey,
   className,
   figureIsStandaloneCharacter,
 }: {
-  figureId: string;
+  figureKey: string;
   className?: string;
   figureIsStandaloneCharacter?: boolean;
 }) {
@@ -43,25 +43,25 @@ export function ExternalDictionaryLinks({
       <ul className=" pl-1">
         {figureIsStandaloneCharacter ? (
           <LinkListItem
-            href={`https://jisho.org/search/*${encodeURIComponent(figureId)}*`}
+            href={`https://jisho.org/search/*${encodeURIComponent(figureKey)}*`}
             icon={<MdIcons.MdList />}
           >
-            words containing {figureId}
+            words containing {figureKey}
           </LinkListItem>
         ) : null}
         {figureIsStandaloneCharacter ? (
           <LinkListItem
             href={`https://tatoeba.org/eng/sentences/search?query=${encodeURIComponent(
-              figureId,
+              figureKey,
             )}&from=jpn&to=und`}
             icon={<MdIcons.MdChatBubbleOutline />}
           >
-            sentences containing {figureId}
+            sentences containing {figureKey}
           </LinkListItem>
         ) : null}
         <LinkListItem
           href={`https://en.wiktionary.org/wiki/${encodeURIComponent(
-            figureId,
+            figureKey,
           )}#Japanese`}
           icon={<MdIcons.MdTranslate />}
         >
@@ -70,7 +70,7 @@ export function ExternalDictionaryLinks({
         {figureIsStandaloneCharacter ? (
           <LinkListItem
             href={`https://dictionary.goo.ne.jp/word/kanji/${encodeURIComponent(
-              figureId,
+              figureKey,
             )}/`}
             icon={
               <span className="inline-block align-middle text-sm" role="img">

@@ -5,7 +5,7 @@ import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
 import { Fragment, useRef, useState } from "react";
 
 import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
-import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureId.sino";
+import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureKey.sino";
 
 import { abbreviateTranscriptions } from "./abbreviateTranscriptions";
 import {
@@ -26,12 +26,12 @@ export const links: LinksFunction = () => [
 ];
 
 export function DictEntryReadings({
-  figureId,
+  figureKey,
   readings,
   isStandaloneCharacter,
   className = "",
 }: {
-  figureId: string;
+  figureKey: string;
   readings: DictionaryPageFigureWithPriorityUses["reading"];
   isStandaloneCharacter?: boolean;
   className?: string;
@@ -63,7 +63,7 @@ export function DictEntryReadings({
   const {
     fetcher: { data: fetcherData, state: fetcherState },
     getSinoReadings,
-  } = useSinoReadingsFetcher(figureId);
+  } = useSinoReadingsFetcher(figureKey);
 
   if (!readings) return null;
 
@@ -287,7 +287,7 @@ function QysDialog({
           </dd>
         </div>
       </DialogTrigger>
-      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:95vh] [max-width:95vw] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
+      <DialogContent className=" [border:2px inset #afafaf33] p-3 text-sm shadow-xl shadow-black/60 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [background-color:rgba(247,247,247,0.95)] [max-height:95vh] [max-width:95vw] [min-width:17rem] [overflow-y:auto]  [width:40v] md:max-w-xl  md:[max-height:95vh] ">
         <QysDialogContent
           onClickClose={() => setOpen(false)}
           attestedOnReadings={
@@ -369,13 +369,13 @@ function convertNumbersToSuperscript(string: string) {
   );
 }
 
-function useSinoReadingsFetcher(figureId: string) {
+function useSinoReadingsFetcher(figureKey: string) {
   const fetcher = useFetcher<FigureSinoReadingsLoaderData>();
   return {
     fetcher,
     getSinoReadings() {
       if (fetcher.state === "idle") {
-        fetcher.load(`/dict/${figureId}/sino`);
+        fetcher.load(`/dict/${figureKey}/sino`);
       }
     },
   };

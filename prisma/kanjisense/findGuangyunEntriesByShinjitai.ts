@@ -1,5 +1,7 @@
 import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
 
+import { FigureKey } from "~/models/figure";
+
 import { toukeiBetsujiMappings } from "../../app/lib/dic/toukeiBetsujiMappings";
 
 import { KanjiVariant, lookUpVariants } from "./KanjiVariant";
@@ -29,7 +31,7 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
 
 export async function findGuangyunEntriesByShinjitai(
   prisma: PrismaClient,
-  newToOldFiguresIds: Map<string, string[]>,
+  newToOldFiguresKeys: Map<FigureKey, FigureKey[]>,
   sbgyCharactersToXiaoyunNumbers: Map<string, number[]>,
   newToZVariants14: Map<string, string[]>,
   shinjitai: string,
@@ -44,7 +46,7 @@ export async function findGuangyunEntriesByShinjitai(
   const shinkyuuForms =
     entrySourceOverrides[shinjitai] ||
     toukeiBetsujiMappings[shinjitai] ||
-    (newToOldFiguresIds.get(shinjitai) || []).concat(shinjitai);
+    (newToOldFiguresKeys.get(shinjitai) || []).concat(shinjitai);
 
   for (const jiForm of shinkyuuForms) {
     const jiXiaoyunNumbers = sbgyCharactersToXiaoyunNumbers.get(jiForm);

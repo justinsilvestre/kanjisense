@@ -33,6 +33,7 @@ import {
   joyoNotInKyoiku,
   kyoikuKanji,
 } from "~/lib/baseKanji";
+import { FIGURES_VERSION } from "~/models/figure";
 
 import { useManyFiguresPopover } from "../features/browse/useManyFiguresPopover";
 
@@ -50,6 +51,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
     select: { ...badgeFigureSelect },
     orderBy: { aozoraAppearances: "desc" },
     where: {
+      version: FIGURES_VERSION,
       listsAsCharacter: {
         isEmpty: false,
       },
@@ -57,7 +59,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
   });
   const characters: Record<string, BadgeProps> = Object.fromEntries(
     priorityCharacters.map((figure) => {
-      return [figure.id, getBadgeProps(figure)];
+      return [figure.key, getBadgeProps(figure)];
     }),
   );
   return {
@@ -396,7 +398,7 @@ function CollapsiblePreviewList({
           return (
             <DictPreviewLink
               key={c.id}
-              figureId={c.id}
+              figureKey={c.id}
               popoverAttributes={popover.getAnchorAttributes(c)}
             >
               <FigureBadge key={c.id} badgeProps={c} />
@@ -440,7 +442,7 @@ function KyoikuCollapsiblePreviewList({
         {characters.slice(0, isOpen ? undefined : 50).map((c) => {
           const anchorAttributes = popover.getAnchorAttributes(c);
           return (
-            <a key={c.id} href={`/dict/${c.id}`} {...anchorAttributes}>
+            <a key={c.id} href={`/dict/${c.key}`} {...anchorAttributes}>
               <FigureBadge key={c.id} badgeProps={c} />
             </a>
           );

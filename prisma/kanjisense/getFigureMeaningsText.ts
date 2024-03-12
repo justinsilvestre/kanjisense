@@ -6,13 +6,13 @@ export async function getFigureMeaningsText(
   figure: KanjisenseFigureRelation,
   componentMeaning: ComponentMeaning | null,
 ) {
-  const figureId = figure.id;
+  const figureKey = figure.key;
   const unihanDefinitionLookup = prisma.unihan15.findUnique({
-    where: { id: figureId },
+    where: { id: figureKey },
     select: { kDefinition: true },
   });
   const kanjidicEnglishLookup = prisma.kanjidicEntry.findUnique({
-    where: { id: figureId },
+    where: { id: figureKey },
     select: { definitions: true },
   });
 

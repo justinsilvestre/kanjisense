@@ -1,8 +1,9 @@
 import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
-import { registerSeeded } from "prisma/seedUtils";
+import { runSetupStep } from "prisma/seedUtils";
 import { baseKanji, lists } from "~/lib/baseKanji";
 import { kanjijumpSpecificVariants } from "~/lib/dic/kanjijumpSpecificVariants";
+import { getFigureId } from "~/models/figure";
 
 const oldFormAsStandard = [
   // joyo 2010 additions
@@ -20,130 +21,138 @@ const oldFormAsStandard = [
 
 export async function seedKanjisenseVariantGroups(
   prisma: PrismaClient,
+  version: number,
   force = false,
 ) {
-  const seeded = await prisma.setup.findUnique({
-    where: { step: "KanjisenseVariantGroup" },
-  });
-  if (seeded && !force) {
-    console.log(`KanjisenseVariantGroup already seeded. 🌱`);
-  } else {
-    console.log(`seeding KanjisenseVariantGroup...`);
+  await runSetupStep({
+    version,
+    force,
+    prisma,
+    step: "KanjisenseVariantGroup",
+    async setup() {
+      console.log(`seeding KanjisenseVariantGroup...`);
 
-    const appearances = Object.fromEntries(
-      (await prisma.scriptinAozoraFrequency.findMany()).map(
-        ({ character, appearances }) => [character, appearances],
-      ),
-    );
+      const appearances = Object.fromEntries(
+        (await prisma.scriptinAozoraFrequency.findMany()).map(
+          ({ character, appearances }) => [character, appearances],
+        ),
+      );
 
-    const baseKanjiAndVariants = new Set<string>();
+      const baseKanjiAndVariants = new Set<string>();
 
-    // build "base variant groups" by aggregating kdb-OLD-variants of base kanji
-    let baseVariantGroups: string[][] = [];
-    const oldVariants = (
-      await prisma.kanjiDbVariant.findMany({
-        where: {
-          base: { in: [...baseKanji] },
-          variantType: KanjiDbVariantType.OldStyle,
-        },
-      })
-    ).reduce((baseToVariants, { base, variant }) => {
-      const variants = baseToVariants.get(base) || [];
-      variants.push(variant);
-      baseToVariants.set(base, variants);
-      return baseToVariants;
-    }, new Map<string, string[]>());
+      // build "base variant groups" by aggregating kdb-OLD-variants of base kanji
+      let baseVariantGroups: string[][] = [];
+      const oldVariants = (
+        await prisma.kanjiDbVariant.findMany({
+          where: {
+            base: { in: [...baseKanji] },
+            variantType: KanjiDbVariantType.OldStyle,
+          },
+        })
+      ).reduce((baseToVariants, { base, variant }) => {
+        const variants = baseToVariants.get(base) || [];
+        variants.push(variant);
+        baseToVariants.set(base, variants);
+        return baseToVariants;
+      }, new Map<string, string[]>());
 
-    for (const [baseChar, variants] of oldVariants) {
-      if (variants) {
-        const variantGroup = [
-          baseChar,
-          ...variants
-            .filter((variant) => variant !== baseChar)
-            .map((variant) => variant),
-        ];
-        baseVariantGroups = mergeVariants(baseVariantGroups, [variantGroup]);
-      }
-    }
-    for (const variantGroup of baseVariantGroups) {
-      for (const variant of variantGroup) {
-        baseKanjiAndVariants.add(variant);
-      }
-    }
-
-    // incorporate variants with old form as standard, preserving the old form in "primary" position
-    baseVariantGroups = mergeVariants(baseVariantGroups, oldFormAsStandard).map(
-      (g) => g.sort(byPriorityDescending),
-    );
-    // incorporate kanjijump-specific variants
-    baseVariantGroups = mergeVariants(
-      baseVariantGroups,
-      kanjijumpSpecificVariants,
-    );
-
-    const kanjidicKanji = (
-      await prisma.kanjidicEntry.findMany({
-        select: { id: true },
-      })
-    ).map(({ id }) => id);
-
-    const kanjidicNewVariants = (
-      await prisma.kanjiDbVariant.findMany({
-        where: { variantType: KanjiDbVariantType.NewStyle },
-      })
-    ).reduce(
-      (acc, { base, variant }) => {
-        acc[base] ||= [];
-        acc[base].push(variant);
-        return acc;
-      },
-      {} as Record<string, string[]>,
-    );
-    const variantsOutsideKanjijump = kanjidicKanji.reduce(
-      (allVariants, kanjidicChar) => {
-        if (baseKanjiAndVariants.has(kanjidicChar)) return allVariants;
-
-        const newVariants = kanjidicNewVariants[kanjidicChar]?.filter((v) =>
-          kanjidicKanji.includes(v),
-        );
-        if (newVariants?.length) {
-          return mergeVariants(allVariants, [[kanjidicChar, ...newVariants]]);
+      for (const [baseChar, variants] of oldVariants) {
+        if (variants) {
+          const variantGroup = [
+            baseChar,
+            ...variants
+              .filter((variant) => variant !== baseChar)
+              .map((variant) => variant),
+          ];
+          baseVariantGroups = mergeVariants(baseVariantGroups, [variantGroup]);
         }
-
-        return allVariants;
-      },
-      [] as string[][],
-    );
-    const variants = mergeVariants(baseVariantGroups, variantsOutsideKanjijump);
-
-    await prisma.kanjisenseVariantGroup.deleteMany({});
-
-    const repeatedIds = new Map<string, string[]>();
-    for (const group of variants) {
-      const [char] = group;
-      if (repeatedIds.has(char)) {
-        console.log(repeatedIds.get(char), group);
       }
-      repeatedIds.set(char, group);
-    }
+      for (const variantGroup of baseVariantGroups) {
+        for (const variant of variantGroup) {
+          baseKanjiAndVariants.add(variant);
+        }
+      }
 
-    await prisma.kanjisenseVariantGroup.createMany({
-      data: variants.map((group) => ({
-        id: group[0],
-        variants: group,
-      })),
-    });
+      // incorporate variants with old form as standard, preserving the old form in "primary" position
+      baseVariantGroups = mergeVariants(
+        baseVariantGroups,
+        oldFormAsStandard,
+      ).map((g) => g.sort(byPriorityDescending));
+      // incorporate kanjijump-specific variants
+      baseVariantGroups = mergeVariants(
+        baseVariantGroups,
+        kanjijumpSpecificVariants,
+      );
 
-    await registerSeeded(prisma, "KanjisenseVariantGroup");
+      const kanjidicKanji = (
+        await prisma.kanjidicEntry.findMany({
+          select: { id: true },
+        })
+      ).map(({ id }) => id);
 
-    // eslint-disable-next-line no-inner-declarations
-    function byPriorityDescending(a: string, b: string) {
-      const priorityDifference = getPriority(b) - getPriority(a);
-      if (priorityDifference) return priorityDifference;
+      const kanjidicNewVariants = (
+        await prisma.kanjiDbVariant.findMany({
+          where: { variantType: KanjiDbVariantType.NewStyle },
+        })
+      ).reduce(
+        (acc, { base, variant }) => {
+          acc[base] ||= [];
+          acc[base].push(variant);
+          return acc;
+        },
+        {} as Record<string, string[]>,
+      );
+      const variantsOutsideKanjijump = kanjidicKanji.reduce(
+        (allVariants, kanjidicChar) => {
+          if (baseKanjiAndVariants.has(kanjidicChar)) return allVariants;
 
-      return (appearances[a] ?? 0) - (appearances[b] ?? 0);
-    }
-  }
+          const newVariants = kanjidicNewVariants[kanjidicChar]?.filter((v) =>
+            kanjidicKanji.includes(v),
+          );
+          if (newVariants?.length) {
+            return mergeVariants(allVariants, [[kanjidicChar, ...newVariants]]);
+          }
+
+          return allVariants;
+        },
+        [] as string[][],
+      );
+      const variants = mergeVariants(
+        baseVariantGroups,
+        variantsOutsideKanjijump,
+      );
+
+      await prisma.kanjisenseVariantGroup.deleteMany({
+        where: { version },
+      });
+
+      const repeatedIds = new Map<string, string[]>();
+      for (const group of variants) {
+        const [char] = group;
+        if (repeatedIds.has(char)) {
+          console.log(repeatedIds.get(char), group);
+        }
+        repeatedIds.set(char, group);
+      }
+
+      await prisma.kanjisenseVariantGroup.createMany({
+        data: variants.map((group) => ({
+          id: getFigureId(version, group[0]),
+          version,
+          key: group[0],
+          variants: group,
+        })),
+      });
+
+      // eslint-disable-next-line no-inner-declarations
+      function byPriorityDescending(a: string, b: string) {
+        const priorityDifference = getPriority(b) - getPriority(a);
+        if (priorityDifference) return priorityDifference;
+
+        return (appearances[a] ?? 0) - (appearances[b] ?? 0);
+      }
+    },
+  });
 }
 
 function getPriority(char: string) {

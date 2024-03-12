@@ -3,12 +3,18 @@ import { PrismaClient } from "@prisma/client";
 import { getAllCharactersAndVariantFigures } from "prisma/kanjisense/getAllCharacters";
 
 import { permittedLostSoundMarks } from "./lib/dic/permittedLostSoundMarks";
+import {
+  FIGURES_VERSION,
+  FigureKey,
+  getFigureId,
+  parseFigureId,
+} from "./models/figure";
 
 describe("lost sound marks", () => {
   test("Any figures with entries in etymology data containing sound marks not present in components tree should be accounted for in `permittedLostSoundMarks`", async () => {
     const prisma = new PrismaClient();
     const potentiallyHelpfulLostSoundMarks =
-      await getPotentiallyHelpfulLostSoundMarks(prisma);
+      await getPotentiallyHelpfulLostSoundMarks(prisma, FIGURES_VERSION);
 
     const unaccountedForLostSoundMarks: Record<string, string> = {};
     for (const [lostSoundMark, uses] of potentiallyHelpfulLostSoundMarks) {
@@ -33,27 +39,34 @@ describe("lost sound marks", () => {
   }, 30000);
 });
 
-async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
-  const allFiguresIds = (
+async function getPotentiallyHelpfulLostSoundMarks(
+  prisma: PrismaClient,
+  version: number,
+) {
+  const allFiguresKeys = (
     await prisma.kanjisenseFigureRelation.findMany({
-      select: { id: true },
+      select: { key: true },
+      where: { version },
     })
-  ).map(({ id }) => id);
-  const allFiguresIdsSet = new Set(allFiguresIds);
+  ).map(({ key }) => key);
+  const allFiguresKeysSet = new Set(allFiguresKeys);
   const { priorityCharactersAndTheirNonComponentVariants } =
-    await getAllCharactersAndVariantFigures(prisma);
-  const allPriorityCharactersAndVariantsIdsSet = new Set(
-    priorityCharactersAndTheirNonComponentVariants.map(({ id }) => id),
+    await getAllCharactersAndVariantFigures(prisma, version);
+  const allPriorityCharactersAndVariantsKeysSet = new Set(
+    priorityCharactersAndTheirNonComponentVariants.map(({ key }) => key),
   );
 
-  const allLostSoundMarks: Record<string, Set<string>> = {};
+  const allLostSoundMarks: Record<FigureKey, Set<FigureKey>> = {};
 
-  const figuresToActiveSoundMarks = new Map<string, string>();
+  const figuresToActiveSoundMarks = new Map<FigureKey, FigureKey>();
   for (const figure of await prisma.kanjisenseFigure.findMany({
-    select: { id: true, activeSoundMarkId: true },
-    where: { activeSoundMarkId: { not: null } },
+    select: { key: true, activeSoundMarkId: true },
+    where: { activeSoundMarkId: { not: null }, version: FIGURES_VERSION },
   })) {
-    figuresToActiveSoundMarks.set(figure.id, figure.activeSoundMarkId!);
+    figuresToActiveSoundMarks.set(
+      figure.key,
+      parseFigureId(figure.activeSoundMarkId!).key,
+    );
   }
 
   for (const {
@@ -61,7 +74,7 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
     phoneticOrigins,
   } of await prisma.kanjiDbCharacterDerivation.findMany({
     where: {
-      character: { in: allFiguresIds },
+      character: { in: allFiguresKeys },
     },
   })) {
     const activeSoundMark = figuresToActiveSoundMarks.get(character);
@@ -79,8 +92,9 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
     if (
       await isSoundMarkUseful(
         prisma,
-        allFiguresIdsSet,
-        allPriorityCharactersAndVariantsIdsSet,
+        version,
+        allFiguresKeysSet,
+        allPriorityCharactersAndVariantsKeysSet,
         lostSoundMark,
         uses,
       )
@@ -94,20 +108,21 @@ async function getPotentiallyHelpfulLostSoundMarks(prisma: PrismaClient) {
 
 async function isSoundMarkUseful(
   prisma: PrismaClient,
-  allFiguresIdsSet: Set<string>,
-  allPriorityCharactersAndVariantsIdsSet: Set<string>,
+  version: number,
+  allFiguresKeysSet: Set<string>,
+  allPriorityCharactersAndVariantsKeysSet: Set<string>,
   lostSoundMark: string,
   uses: Set<string>,
 ) {
-  if (!allFiguresIdsSet.has(lostSoundMark)) return false;
+  if (!allFiguresKeysSet.has(lostSoundMark)) return false;
 
   if (uses.size < 1) return false;
 
-  if (!allPriorityCharactersAndVariantsIdsSet.has(lostSoundMark)) return false;
+  if (!allPriorityCharactersAndVariantsKeysSet.has(lostSoundMark)) return false;
 
   const topLevelPriorityUsesCount = await prisma.kanjisenseComponentUse.count({
     where: {
-      componentId: lostSoundMark,
+      componentId: getFigureId(version, lostSoundMark),
       parent: {
         OR: [
           {
@@ -126,12 +141,13 @@ async function isSoundMarkUseful(
     await prisma.kanjisenseComponentUse.findFirst({
       where: {
         component: {
+          version,
           variantGroup: {
             AND: [
               {
                 figures: {
                   some: {
-                    id: lostSoundMark,
+                    key: lostSoundMark,
                   },
                 },
               },

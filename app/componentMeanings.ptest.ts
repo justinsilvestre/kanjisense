@@ -3,13 +3,15 @@ import { prisma } from "~/db.server";
 
 import { shouldComponentBeAssignedMeaning } from "../prisma/kanjisense/componentMeanings";
 
+import { FIGURES_VERSION } from "./models/figure";
+
 describe("shouldComponentBeAssignedMeaning", () => {
   it("works with 圼", async () => {
-    const { figuresToVariantGroups, priorityCandidatesIds } = await setup();
+    const { figuresToVariantGroups, priorityCandidatesKeys } = await setup();
     const result = await shouldComponentBeAssignedMeaning(
       figuresToVariantGroups,
       new Map([["圼", new Set(["涅", "捏"])]]),
-      priorityCandidatesIds,
+      priorityCandidatesKeys,
       "圼",
     );
 
@@ -20,7 +22,7 @@ describe("shouldComponentBeAssignedMeaning", () => {
   });
 
   it("works with 詹", async () => {
-    const { figuresToVariantGroups, priorityCandidatesIds } = await setup();
+    const { figuresToVariantGroups, priorityCandidatesKeys } = await setup();
     const result = await shouldComponentBeAssignedMeaning(
       figuresToVariantGroups,
       new Map([
@@ -44,7 +46,7 @@ describe("shouldComponentBeAssignedMeaning", () => {
           ]),
         ],
       ]),
-      priorityCandidatesIds,
+      priorityCandidatesKeys,
       "詹",
     );
 
@@ -55,14 +57,14 @@ describe("shouldComponentBeAssignedMeaning", () => {
   });
 
   it("works with 旡", async () => {
-    const { figuresToVariantGroups, priorityCandidatesIds } = await setup();
+    const { figuresToVariantGroups, priorityCandidatesKeys } = await setup();
     const result = await shouldComponentBeAssignedMeaning(
       figuresToVariantGroups,
       new Map([
         ["旡", new Set(["既", "炁"])],
         ["兂", new Set(["兓"])],
       ]),
-      priorityCandidatesIds,
+      priorityCandidatesKeys,
       "旡",
     );
 
@@ -73,15 +75,20 @@ describe("shouldComponentBeAssignedMeaning", () => {
   });
 });
 async function setup() {
-  const figuresToVariantGroups = await getFiguresToVariantGroups(prisma);
-  const priorityCandidatesIds = new Set(
+  const figuresToVariantGroups = await getFiguresToVariantGroups(
+    prisma,
+    FIGURES_VERSION,
+  );
+  const priorityCandidatesKeys = new Set(
     await prisma.kanjisenseFigureRelation
       .findMany({
+        select: { key: true },
         where: {
+          version: FIGURES_VERSION,
           isPriorityCandidate: true,
         },
       })
-      .then((fs) => fs.map((f) => f.id)),
+      .then((fs) => fs.map((f) => f.key)),
   );
-  return { figuresToVariantGroups, priorityCandidatesIds };
+  return { figuresToVariantGroups, priorityCandidatesKeys };
 }

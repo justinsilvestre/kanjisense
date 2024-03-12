@@ -1,14 +1,15 @@
 import type { ComponentUse } from "~/features/dictionary/ComponentUse";
+import { FigureKey } from "~/models/figure";
 
 import { forcedMeaninglessFiguresSet } from "./componentMeanings";
 
 export function isComponentFirstClass(
-  priorityFiguresIds: Set<string>,
-  parent: string,
-  component: string,
-  componentsToDirectUsesPrimaryVariants: Map<string, Set<string>>,
-  figuresToVariantGroups: Map<string, string[]>,
-  figuresToComponentsTrees: Map<string, ComponentUse[]>,
+  priorityFiguresKeys: Set<FigureKey>,
+  parent: FigureKey,
+  component: FigureKey,
+  componentsToDirectUsesPrimaryVariants: Map<FigureKey, Set<FigureKey>>,
+  figuresToVariantGroups: Map<FigureKey, FigureKey[]>,
+  figuresToComponentsTrees: Map<FigureKey, ComponentUse[]>,
 ) {
   const componentsTree = figuresToComponentsTrees.get(component);
   if (!componentsTree) throw new Error(`No components tree for ${component}`);
@@ -16,14 +17,14 @@ export function isComponentFirstClass(
   if (figureIsAtomic) return true;
   if (forcedMeaninglessFiguresSet.has(component)) return false;
 
-  const componentIsPriorityFigure = priorityFiguresIds.has(component);
+  const componentIsPriorityFigure = priorityFiguresKeys.has(component);
   if (componentIsPriorityFigure) {
     return true;
   } else {
-    if (priorityFiguresIds.has(parent)) return false;
+    if (priorityFiguresKeys.has(parent)) return false;
 
     const variants = figuresToVariantGroups.get(component);
-    const componentIsPriorityFigureVariant = priorityFiguresIds.has(
+    const componentIsPriorityFigureVariant = priorityFiguresKeys.has(
       variants?.[0] || component,
     );
     if (componentIsPriorityFigureVariant) return true;
@@ -31,7 +32,7 @@ export function isComponentFirstClass(
     if (!variants) {
       const priorityDirectUses = [
         ...(componentsToDirectUsesPrimaryVariants.get(component) || []),
-      ].filter((f) => priorityFiguresIds.has(f));
+      ].filter((f) => priorityFiguresKeys.has(f));
 
       return priorityDirectUses.length > 1;
     }

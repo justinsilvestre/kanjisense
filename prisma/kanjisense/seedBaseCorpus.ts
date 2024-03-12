@@ -7,12 +7,16 @@ import {
   BaseCorpus,
   CuratorCorpusText,
 } from "~/features/curate/CuratorCorpusText";
+import { FIGURES_VERSION } from "~/models/figure";
 
 import { executeAndLogTime } from "./executeAndLogTime";
 
 const COURSE = "kj";
 
-export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
+export async function seedCorpus(
+  prisma: PrismaClient,
+  corpusTextPath = "/Users/justin/code/notes/2020/han_character_course/compiledTexts.txt",
+) {
   const startTime = Date.now();
 
   console.log("Seeding corpus");
@@ -41,13 +45,17 @@ export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
   const priorityFiguresKeys = await prisma.kanjisenseFigure
     .findMany({
       select: { id: true },
-      where: { isPriority: true },
+      where: { version: FIGURES_VERSION, isPriority: true },
     })
     .then((figures) => new Set(figures.map(({ id }) => id)));
   const priorityComponentsKeys = await prisma.kanjisenseFigure
     .findMany({
       select: { id: true },
-      where: { isPriorityComponent: true, isPriority: true },
+      where: {
+        version: FIGURES_VERSION,
+        isPriorityComponent: true,
+        isPriority: true,
+      },
     })
     .then((figures) => new Set(figures.map(({ id }) => id)));
   const allFiguresWithTrees = await prisma.kanjisenseFigure
@@ -127,9 +135,7 @@ export async function seedCorpus(prisma: PrismaClient, corpusTextPath: string) {
 
     const priorityFigures = await prisma.kanjisenseFigure
       .findMany({
-        where: {
-          isPriority: true,
-        },
+        where: { version: FIGURES_VERSION, isPriority: true },
       })
       .then((figures) => new Set(figures.map(({ id }) => id)));
 

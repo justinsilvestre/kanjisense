@@ -9,21 +9,24 @@ datasource db {
 }
 
 model Setup {
-  step String @id
+  step    String
+  version Int    @default(0)
+
+  @@id([step, version])
 }
 
 model KanjidicEntry {
-  id            String                   @id
-  onReadings    String[]
-  kunReadings   String[]
-  tag           String?
-  definitions   String[]
-  meta          Json?
-  figureReading KanjisenseFigureReading? @relation("kanjidicEntry")
+  id             String                    @id
+  onReadings     String[]
+  kunReadings    String[]
+  tag            String?
+  definitions    String[]
+  meta           Json?
+  figureReadings KanjisenseFigureReading[] @relation("kanjidicEntry")
 }
 
 model Unihan15 {
-  id                String                   @id
+  id                String                    @id
   kDefinition       String?
   kCantonese        String[]
   kHangul           String[]
@@ -39,7 +42,7 @@ model Unihan15 {
   kXHC1983          String[]
   kRSAdobe_Japan1_6 String[]
   kRSUnicode        String[]
-  figureReading     KanjisenseFigureReading? @relation("unihan15")
+  figureReadings    KanjisenseFigureReading[] @relation("unihan15")
 }
 
 model Unihan12 {
@@ -102,8 +105,9 @@ model ScriptinAozoraFrequency {
 
 model KanjisenseVariantGroup {
   id                     String             @id
-  key                    String?
-  version                Int                @default(0)
+  key                    String
+  version                Int
+  // keys
   variants               String[]
   // built after variants are set
   figures                KanjisenseFigure[]
@@ -112,8 +116,8 @@ model KanjisenseVariantGroup {
 
 model KanjisenseFigureRelation {
   id                    String            @id
-  key                   String?
-  version               Int               @default(0)
+  key                   String
+  version               Int
   variantGroupId        String?
   directUses            String[]
   listsAsComponent      String[]
@@ -131,8 +135,8 @@ model KanjiDbCharacterDerivation {
 
 model KanjisenseFigure {
   id                    String                   @id
-  key                   String?
-  version               Int                      @default(0)
+  key                   String
+  version               Int
   keyword               String
   isPriority            Boolean
   isStandaloneCharacter Boolean                  @default(false)
@@ -165,12 +169,14 @@ model KanjisenseFigure {
   allComponents         KanjisenseComponent[]    @relation("allComponents")
 
   searchProperties SearchPropertiesOnFigure[]
+
+  @@index([version])
 }
 
 model KanjisenseComponent {
   id              String             @id
-  key             String?
-  version         Int                @default(0)
+  key             String
+  version         Int
   componentFigure KanjisenseFigure   @relation("asComponent", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   soundMarkUses   KanjisenseFigure[] @relation("activeSoundMark")
   allUses         KanjisenseFigure[] @relation("allComponents")
@@ -189,12 +195,12 @@ model KanjisenseComponentUse {
 
 model KanjisenseFigureReading {
   id                            String            @id
-  key                           String?
-  version                       Int               @default(0)
+  key                           String
+  version                       Int
   sbgyXiaoyunsMatchingExemplars Json?
   inferredOnReadingCandidates   Json
-  kanjidicEntryId               String?           @unique
-  unihan15Id                    String?           @unique
+  kanjidicEntryId               String?
+  unihan15Id                    String?
   figure                        KanjisenseFigure?
 
   kanjidicEntry      KanjidicEntry?                         @relation("kanjidicEntry", fields: [kanjidicEntryId], references: [id])
@@ -214,8 +220,8 @@ model KanjisenseFigureReadingToSbgyXiaoyun {
 
 model KanjisenseFigureMeaning {
   id               String           @id
-  key              String?
-  version          Int              @default(0)
+  key              String
+  version          Int
   unihanDefinition String?
   kanjidicEnglish  String[]
   figure           KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -223,8 +229,8 @@ model KanjisenseFigureMeaning {
 
 model KanjisenseFigureImage {
   id      String                    @id
-  key     String?
-  version Int                       @default(0)
+  key     String
+  version Int
   type    KanjisenseFigureImageType
 
   content Json
@@ -238,15 +244,15 @@ enum KanjisenseFigureImageType {
 
 model ShuowenImage {
   id      String             @id
-  version Int                @default(0)
+  version Int
   paths   String[]
   figures KanjisenseFigure[]
 }
 
 model GlyphImage {
   id      String           @id
-  key     String?
-  version Int              @default(0)
+  key     String
+  version Int
   json    Json
   figure  KanjisenseFigure @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
@@ -300,7 +306,8 @@ model JmDictEntry {
   head        String
   readingText String
 
-  @@index([head, readingText])
+  @@index([head])
+  @@index([readingText])
 }
 
 model FigureSearchProperty {
@@ -310,11 +317,13 @@ model FigureSearchProperty {
   // extra text parsed according to type
   display String
 
+  version Int @default(0)
+
   figures SearchPropertiesOnFigure[]
 
   key String @id
 
-  @@unique([type, text, display])
+  @@unique([type, text, display, version])
 }
 
 model SearchPropertiesOnFigure {
@@ -323,10 +332,12 @@ model SearchPropertiesOnFigure {
   searchProperty    FigureSearchProperty @relation(fields: [searchPropertyKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
   searchPropertyKey String
 
+  version Int @default(0)
+
   // index for sorting
   index Int
 
-  @@id([figureId, searchPropertyKey])
+  @@id([figureId, searchPropertyKey, version])
 }
 
 enum FigureSearchPropertyType {
