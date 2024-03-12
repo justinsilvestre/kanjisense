@@ -25,7 +25,7 @@ export function DictionaryHeadingMeanings({
               {" "}
               ({headingsMeanings.componentMnemonic.referenceTypeText}{" "}
               <DictLink
-                figureId={headingsMeanings.componentMnemonic.reference}
+                figureKey={headingsMeanings.componentMnemonic.reference}
               />
               )
             </>

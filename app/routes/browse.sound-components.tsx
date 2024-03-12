@@ -300,7 +300,7 @@ export default function FigureDetailsPage() {
               To be clear,{" "}
               <strong>it's not always as easy as in the examples above</strong>!
               Some sound components only vaguely hint at a character's sound,
-              via <DictLink figureId="矢">rhyme</DictLink> or looser
+              via <DictLink figureKey="矢">rhyme</DictLink> or looser
               connections, obscured by the passage of time. Moreover, the fact
               that a component <em>can</em> serve as a sound mark doesn't mean
               that it always <em>does</em>. For example, 産 <i>give birth</i> is
@@ -439,8 +439,8 @@ export default function FigureDetailsPage() {
               </li>
             </ul>
             <p className="my-2 text-justify text-sm leading-7">
-              If you know your sound components <DictLink figureId="闌" /> and{" "}
-              <DictLink figureId="主" />, it's nearly impossible to mix up the
+              If you know your sound components <DictLink figureKey="闌" /> and{" "}
+              <DictLink figureKey="主" />, it's nearly impossible to mix up the
               two.
             </p>
             <p className="my-2 text-justify text-sm leading-7">
@@ -542,7 +542,7 @@ export default function FigureDetailsPage() {
                           <span key={u}>
                             <DictLink
                               key={u}
-                              figureId={u}
+                              figureKey={u}
                               className=" no-underline hover:underline"
                             >
                               {u}

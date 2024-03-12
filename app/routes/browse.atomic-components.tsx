@@ -136,12 +136,12 @@ function AtomicComponentsPageContent({
               shape, and there is a logic to which variant is used when. For
               example, the component 羊 <i>sheep</i> has the common variant form
               𦍌. If you go to{" "}
-              <DictLink figureId="𦍌">the entry for 𦍌</DictLink>, you'll notice
-              that it's always used <em>on top</em> of other components inside a
-              character; it's almost like the tail end of 羊 is politely
-              contracting to make room for the other components. It's nice to
-              think of the components this way, as helpful alternative forms
-              that make the characters easier to write.
+              <DictLink figureKey="𦍌">the entry for 𦍌</DictLink>, you'll
+              notice that it's always used <em>on top</em> of other components
+              inside a character; it's almost like the tail end of 羊 is
+              politely contracting to make room for the other components. It's
+              nice to think of the components this way, as helpful alternative
+              forms that make the characters easier to write.
             </p>
             <p className="my-3 text-justify text-sm leading-7">
               Just a few variant forms exhibit more dramatic variations in
