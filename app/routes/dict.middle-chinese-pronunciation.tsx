@@ -17,6 +17,7 @@ import css from "app/features/dictionary/middle-chinese.css";
 import { MiddleChineseLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { useTocHighlighting } from "~/components/useTocHighlighting";
+import { GuangyunRhymesTable } from "~/features/qysInfo/GuangyunRhymesTable";
 import { InitialConsonants } from "~/features/qysInfo/InitialConsonants";
 import { NavLi } from "~/features/qysInfo/NavLi";
 
@@ -28,7 +29,6 @@ import { References } from "../features/qysInfo/References";
 import { ScrollLink } from "../features/qysInfo/ScrollLink";
 import { SectionIds } from "../features/qysInfo/SectionIds";
 import { Vowels } from "../features/qysInfo/Vowels";
-import { GuangyunRhymesTable } from "~/features/qysInfo/GuangyunRhymesTable";
 
 export const meta: MetaFunction = () => [
   { title: "Middle Chinese pronunciation | Kanjisense" },

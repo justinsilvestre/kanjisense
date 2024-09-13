@@ -92,10 +92,10 @@ export function GuangyunRhymesTable() {
           return (
             <Fragment key={i}>
               <div key={i} className="md:min-w-[24rem]">
-                {rhymeCharacters.length === 1 && <>
+                {rhymeCharacters.length === 1 ? <>
                   <div className="inline-block md:min-w-[6rem]"> </div>
                   <div className="inline-block md:min-w-[6rem]"> </div>
-                </>}
+                </> : null}
                 {rhymeCharacters.map(([character, romanized], j) => (
                   <div key={j} className="inline-block md:min-w-[6rem] p-2 md:p-0">
                     <span className={clsx("md:text-3xl text-xl block", {
@@ -104,19 +104,17 @@ export function GuangyunRhymesTable() {
                   </div>
                 ))}
               </div>
-              {extra.length > 0 && (
-                <div className="min-w-[14rem] max-w-[24rem] mb-2 py-1 px-2 rounded-md border-yellow-800/30 border-solid border">
-                  variations in this group:{' '}
-                  {extra.map(([character, romanized, note], j) => (
-                    <span key={j}>
-                      <span className="">{character}</span> <span className="">{romanized}</span>{
-                        note ? <span className=""> {note.replace(/_/g, ' ')}</span> : ''
+              {extra.length > 0 ? <div className="min-w-[14rem] max-w-[24rem] mb-2 py-1 px-2 rounded-md border-yellow-800/30 border-solid border">
+                variations in this group:{' '}
+                {extra.map(([character, romanized, note], j) => (
+                  <span key={j}>
+                    <span className="">{character}</span> <span className="">{romanized}</span>{
+                      note ? <span className=""> {note.replace(/_/g, ' ')}</span> : ''
 
-                      }{j < extra.length - 1 ? <>,&nbsp;</> : ''}
-                    </span>
-                  ))}
-                </div>
-              )}
+                    }{j < extra.length - 1 ? <>,&nbsp;</> : ''}
+                  </span>
+                ))}
+              </div> : null}
               {<><hr className="w-[21rem] bg-black/10 border-solid border border-black/10 h-px my-2" /></>}
 
             </Fragment>
