@@ -28,6 +28,7 @@ import { References } from "../features/qysInfo/References";
 import { ScrollLink } from "../features/qysInfo/ScrollLink";
 import { SectionIds } from "../features/qysInfo/SectionIds";
 import { Vowels } from "../features/qysInfo/Vowels";
+import { GuangyunRhymesTable } from "~/features/qysInfo/GuangyunRhymesTable";
 
 export const meta: MetaFunction = () => [
   { title: "Middle Chinese pronunciation | Kanjisense" },
@@ -168,6 +169,7 @@ const sections = [
     ],
   ),
   section(0, SectionIds["baxter"], "Why not Baxter's transcription?"),
+  section(0, SectionIds["guangyun-rhymes-table"], "The 206 Guangyun rhymes transcribed"),
   section(0, SectionIds["references"], "References"),
 ];
 
@@ -250,6 +252,7 @@ export default function MiddleChinese() {
           ></Finals>
           <Diacritics showContentsButton={showContentsButton}></Diacritics>
           <Baxter></Baxter>
+          <GuangyunRhymesTable></GuangyunRhymesTable>
           <References showContentsButton={showContentsButton}></References>
         </main>
 

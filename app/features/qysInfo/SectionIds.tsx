@@ -32,5 +32,6 @@ export const SectionIds = {
   "go-on": "go-on",
   "kan-on-diacritics": "kan-on-diacritics",
   baxter: "baxter",
+  "guangyun-rhymes-table": "guangyun-rhymes-table",
   references: "references",
 };
