@@ -46,10 +46,10 @@ const RHYMES = `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with
 廢-pâiˎ
 宵-sėu 小-sėuˬ 笑-sėuˎ / 要-ʾyeu-(重紐)
 尤-iū 有-iūˬ 宥-iūˎ / 浮-bū-(漢音_vowel_alternation)
-幽-ʾiu 黝-ʾyī 幼-ʾiuˎ
+幽-ʾiu 黝-ʾʾiuˬ 幼-ʾiuˎ
 鍾-tśŷong 腫-tśŷongˬ 用-ŷongˎ 燭-tśŷok
-真-tśīn 軫-tśīnˬ 震-tśīnˎ 質-tīˎ / 因-ʾyīn-(重紐四等) 筠-wīn 均-kẁīn 諄-tśyūn
-諄-tśyūn 準-tśyūnˬ 稕-tśyūnˎ 術-źyūt  / 均-kẁīn-(重紐四等)
+真-tśīn 軫-tśīnˬ 震-tśīnˎ 質-tśīt / 因-ʾyīn-(重紐四等) 筠-wīn 均-kẁīn 諄-tśyūn
+諄-tśyūn 準-tśyūnˬ 稕-tśyūnˎ 術-źyūt / 均-kẁīn-(重紐四等)
 臻-tsịn 櫛-tsịt
 文-mun 吻-munˬ 問-munˎ 物-mut
 欣-khin 隱-ʾinˬ 焮-khinˎ 迄-khit
