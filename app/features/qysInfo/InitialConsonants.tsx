@@ -1072,10 +1072,11 @@ export function InitialConsonants({
           <p>
             Dentilabialization also affected the sound written <G g="m" />
             , which eventually became something like a W or V sound in English.
-            So, words like 物 <G g="mut" /> became <i>wù</i> in Mandarin. All
-            the same vowel sounds caused dentilabialization of <G g="m" />, with
-            the exception of sounds written here with the macron <G g="ū" />. 目{" "}
-            <G g="mūk" /> became <i>mù</i> instead of <i>wù</i>.
+            So, words like 物 <G g="mut" /> became <i>wù</i> in Mandarin. The
+            same vowel sounds that caused dentilabialization of <G g="p" />{" "}
+            <G g="pʻ" /> and <G g="b" /> also caused dentilabialization of{" "}
+            <G g="m" />, with the exception of sounds written here with the
+            macron <G g="ū" />.
           </p>
 
           <div className="overflow-x-auto">

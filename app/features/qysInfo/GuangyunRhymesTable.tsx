@@ -1,7 +1,8 @@
-import clsx from "clsx"
-import { Fragment } from "react"
+import clsx from "clsx";
+import { Fragment } from "react";
 
-const RHYMES = `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with_initial_影) 中-tiūng-(三等) 風-pūng-(三等,_labial_initials) 縮-ṣyūk-(入聲,_with_三等_and_二等_sibilants) 肉-nźwīk-(入聲三等) 福-pūk-(入聲,_labial_initials) 育-ẁīk
+const RHYMES =
+  `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with_initial_影) 中-tiūng-(三等) 風-pūng-(三等,_labial_initials) 縮-ṣyūk-(入聲,_with_三等_and_二等_sibilants) 肉-nźwīk-(入聲三等) 福-pūk-(入聲,_labial_initials) 育-ẁīk
 冬-tong 湩-tongˬ 宋-songˎ 沃-ʾok
 模-mo 姥-moˬ 暮-moˎ / 烏-ʾwo-(with_initial_影)
 泰-tʻāiˎ / 會-ghwāiˎ-(合口)
@@ -62,65 +63,91 @@ const RHYMES = `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with
 鹽-yem 琰-yemˬ 豔-yemˎ 葉-yep / 廉-lėm-(三等)
 嚴-ngêm 儼-ngêmˬ 釅-ngêmˎ 業-ngêp
 凡-bâm 范-bâmˬ 梵-bâmˎ 乏-bâp`
-  .split('\n')
-  .map(line => line.split(' / '))
-  .map(([rhymeCharacters, extra]) => {
-    return {
-      rhymeCharacters: rhymeCharacters
-        .split(' ')
-        .map(s => s.split('-')) as [string, string][],
-      extra: extra ? extra.split(' ').map(s => s.split('-')) as ([string, string] | [string, string, string])[] : []
-    }
-  })
-
+    .split("\n")
+    .map((line) => line.split(" / "))
+    .map(([rhymeCharacters, extra]) => {
+      return {
+        rhymeCharacters: rhymeCharacters
+          .split(" ")
+          .map((s) => s.split("-")) as [string, string][],
+        extra: extra
+          ? (extra.split(" ").map((s) => s.split("-")) as (
+              | [string, string]
+              | [string, string, string]
+            )[])
+          : [],
+      };
+    });
 
 function isCharacterExtraGuangyun(character: string) {
-  return character === '湩' || character === '麧'
+  return character === "湩" || character === "麧";
 }
 
 export function GuangyunRhymesTable() {
   return (
     <section id="guangyun-rhymes-table">
-      <h3>The 206 rhymes of the <i>Guangyun</i> transcribed</h3>
+      <h3>
+        The 206 rhymes of the <i>Guangyun</i> transcribed
+      </h3>
       <p>
-        For those with prior knowledge of historical Chinese phonology, here is a reference table
-        of the 206 rhymes of the <i>Guangyun</i> in the notation system used in Kanjisense.
+        For those with prior knowledge of historical Chinese phonology, here is
+        a reference table of the 206 rhymes of the <i>Guangyun</i> in the
+        notation system used in Kanjisense.
       </p>
       <div className="flex flex-col items-center">
         {RHYMES.map((rhymesGroup, i) => {
-          const { rhymeCharacters, extra } = rhymesGroup
+          const { rhymeCharacters, extra } = rhymesGroup;
           return (
             <Fragment key={i}>
               <div key={i} className="md:min-w-[24rem]">
-                {rhymeCharacters.length === 1 ? <>
-                  <div className="inline-block md:min-w-[6rem]"> </div>
-                  <div className="inline-block md:min-w-[6rem]"> </div>
-                </> : null}
+                {rhymeCharacters.length === 1 ? (
+                  <>
+                    <div className="inline-block md:min-w-[6rem]"> </div>
+                    <div className="inline-block md:min-w-[6rem]"> </div>
+                  </>
+                ) : null}
                 {rhymeCharacters.map(([character, romanized], j) => (
-                  <div key={j} className="inline-block md:min-w-[6rem] p-2 md:p-0">
-                    <span className={clsx("md:text-3xl text-xl block", {
-                      'text-gray-400': isCharacterExtraGuangyun(character)
-                    })}>{character}</span> <span className="md:text-xl">{romanized}</span>
+                  <div
+                    key={j}
+                    className="inline-block p-2 md:min-w-[6rem] md:p-0"
+                  >
+                    <span
+                      className={clsx("block text-xl md:text-3xl", {
+                        "text-gray-400": isCharacterExtraGuangyun(character),
+                      })}
+                    >
+                      {character}
+                    </span>{" "}
+                    <span className="md:text-xl">{romanized}</span>
                   </div>
                 ))}
               </div>
-              {extra.length > 0 ? <div className="min-w-[14rem] max-w-[24rem] mb-2 py-1 px-2 rounded-md border-yellow-800/30 border-solid border">
-                variations in this group:{' '}
-                {extra.map(([character, romanized, note], j) => (
-                  <span key={j}>
-                    <span className="">{character}</span> <span className="">{romanized}</span>{
-                      note ? <span className=""> {note.replace(/_/g, ' ')}</span> : ''
-
-                    }{j < extra.length - 1 ? <>,&nbsp;</> : ''}
-                  </span>
-                ))}
-              </div> : null}
-              {<><hr className="w-[21rem] bg-black/10 border-solid border border-black/10 h-px my-2" /></>}
-
+              {extra.length > 0 ? (
+                <div className="mb-2 min-w-[14rem] max-w-[24rem] rounded-md border border-solid border-yellow-800/30 px-2 py-1">
+                  variations in this group:{" "}
+                  {extra.map(([character, romanized, note], j) => (
+                    <span key={j}>
+                      <span className="">{character}</span>{" "}
+                      <span className="">{romanized}</span>
+                      {note ? (
+                        <span className=""> {note.replace(/_/g, " ")}</span>
+                      ) : (
+                        ""
+                      )}
+                      {j < extra.length - 1 ? <>,&nbsp;</> : ""}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+              {
+                <>
+                  <hr className="my-2 h-px w-[21rem] border border-solid border-black/10 bg-black/10" />
+                </>
+              }
             </Fragment>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }

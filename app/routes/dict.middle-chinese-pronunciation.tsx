@@ -169,7 +169,11 @@ const sections = [
     ],
   ),
   section(0, SectionIds["baxter"], "Why not Baxter's transcription?"),
-  section(0, SectionIds["guangyun-rhymes-table"], "The 206 Guangyun rhymes transcribed"),
+  section(
+    0,
+    SectionIds["guangyun-rhymes-table"],
+    "The 206 Guangyun rhymes transcribed",
+  ),
   section(0, SectionIds["references"], "References"),
 ];
 

@@ -242,7 +242,7 @@ export function Finals({
           The pronunciation of the Middle Chinese tones is not known with
           certainty, but it is well documented that there were initially four
           tones recognized in ancient times. These four tones correspond{" "}
-          <em>only sometimes</em> with the tones of Modern mandarin.
+          <em>only sometimes</em> with the tones of modern Mandarin.
         </p>
         <ul>
           <li>

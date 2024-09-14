@@ -48,11 +48,22 @@ export function Diacritics({
           They took every Chinese syllable they could think of, and chose one
           representative character for each. Then, they arranged these
           characters on a series of grids, grouping similar-sounding characters
-          close together. It may sound complicated, but it was actually an
-          ingenious system. It made it possible for any Chinese speaker at the
-          time to easily look up character readings, without having to learn any
-          new writing system.
+          close together. It was a complex system, much more complex than you'll
+          in dictionaries today, but it was an ingenious system for the time. It
+          made it possible for any Chinese speaker at the time to easily look up
+          character readings, without having to learn any new writing system.
         </p>
+        <a
+          href="https://commons.wikimedia.org/wiki/File:Yunjing.jpg"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            className="m-2"
+            src="https://upload.wikimedia.org/wikipedia/commons/4/49/Yunjing.jpg"
+            alt="A page from the Yunjing rime tables"
+          />
+        </a>
         <p>
           Of course, for us moderns, the principles behind this grid system are
           not always clear. We know that the <i>23 columns</i> of each grid
@@ -186,9 +197,9 @@ export function Diacritics({
           As you can see, there are some features of the Four Divisions that are
           clearly manifest in the <i>Kan-on</i> vowel. For instance, syllables
           containing <IpaLink broad sound="j" /> a Y- sound in <i>Kan-on</i>, or
-          one of the vowels /i/ /u/, are invariably in Division III. Therefore,
-          these syllables don't need a diacritic mark to distinguish them as
-          such.
+          one of the main vowels /i/ /u/, are invariably in Division III.
+          Therefore, these syllables don't need a diacritic mark to distinguish
+          them as such.
         </p>
       </section>
       <section
@@ -204,7 +215,8 @@ export function Diacritics({
           <i>on'yomi</i> カ <i>ka</i>. This reading shows up in common words
           like 家族 <i>kazoku</i> "family". But there is another common reading
           ケ <i>ke</i> which predates カ <i>ka</i>, for example in the word 家来{" "}
-          <i>kerai</i> "servant". Older readings like this are called{" "}
+          <i>kerai</i> "servant". The readings belonging to this older set are
+          called{" "}
           <b>
             <i>Go-on</i>
           </b>
