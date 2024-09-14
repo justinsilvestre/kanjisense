@@ -55,7 +55,7 @@ const RHYMES =
 文-mun 吻-munˬ 問-munˎ 物-mut
 欣-khin 隱-ʾinˬ 焮-khinˎ 迄-khit
 元-ngwên 阮-ngwên 願-ngwênˎ 月-ngwêt / 言-ngên-(開口) 飜-pʻân-(labial_initials)
-仙-sėn 獮-sėnˬ 線-sėnˎ 薛-sėt / 篇-pʻyen-(重紐四等) 全-dzwėn-(合口) 娟-ʾẁen-(重紐四等)
+仙-sėn 獮-sėnˬ 線-sėnˎ 薛-sėt / 篇-pʻyen-(重紐四等) 全-dzwėn-(合口) 娟-ʾẁen-(重紐四等合口)
 陽-yang 養-yangˬ 漾-yangˎ 藥-yak / 房-bâng-(labial_and_retroflex_sibilant_initials) 王-wâng-(initial_from_影云以) 狂-gŷang-(合口)
 清-tsʻėng 靜-dzėngˬ 勁-kyengˎ 昔-sėk / 名-myeng-(重紐四等) 騂-swėng-(合口) 傾-kẁeng-(重紐四等合口)
 蒸-tśyŏng 拯-tśyŏngˬ 證-tśyŏngˎ 職-tśyŏk / 洫-khŷŏk 域-wĭk
@@ -72,9 +72,9 @@ const RHYMES =
           .map((s) => s.split("-")) as [string, string][],
         extra: extra
           ? (extra.split(" ").map((s) => s.split("-")) as (
-              | [string, string]
-              | [string, string, string]
-            )[])
+            | [string, string]
+            | [string, string, string]
+          )[])
           : [],
       };
     });
