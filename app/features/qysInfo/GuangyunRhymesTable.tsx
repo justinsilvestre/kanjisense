@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import clsx from "clsx";
 import { Fragment } from "react";
 
@@ -72,9 +73,9 @@ const RHYMES =
           .map((s) => s.split("-")) as [string, string][],
         extra: extra
           ? (extra.split(" ").map((s) => s.split("-")) as (
-            | [string, string]
-            | [string, string, string]
-          )[])
+              | [string, string]
+              | [string, string, string]
+            )[])
           : [],
       };
     });
@@ -92,7 +93,20 @@ export function GuangyunRhymesTable() {
       <p>
         For those with prior knowledge of historical Chinese phonology, here is
         a reference table of the 206 rhymes of the <i>Guangyun</i> in the
-        notation system used in Kanjisense.
+        notation system used in Kanjisense. This is so that you may see at a
+        glance how the various rhymes or <i>finals</i> are represented in this
+        notation system. Each character in the table serves as a section header
+        in the <i>Guangyun</i> dictionary (with the exception of the two
+        characters in grey, which were placed with other sections for space
+        reasons). Each row contains characters which may be said to differ only
+        in tone. As is tradition, characters with final stop consonants (in the
+        so-called "entering tone") are grouped with characters ending in nasal
+        consonants.
+      </p>
+      <p>
+        Some <i>Guangyun</i> rhymes are represented in this notation with a
+        variety of forms. These cases notation, are marked with a note,
+        including an example character and the nature of the divergence.
       </p>
       <div className="flex flex-col items-center">
         {RHYMES.map((rhymesGroup, i) => {
