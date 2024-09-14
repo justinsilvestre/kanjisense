@@ -48,7 +48,7 @@ const RHYMES =
 廢-pâiˎ
 宵-sėu 小-sėuˬ 笑-sėuˎ / 要-ʾyeu-(重紐四等)
 尤-iū 有-iūˬ 宥-iūˎ / 浮-bū-(漢音_vowel_alternation)
-幽-ʾiu 黝-ʾʾiuˬ 幼-ʾiuˎ
+幽-ʾiu 黝-ʾiuˬ 幼-ʾiuˎ
 鍾-tśŷong 腫-tśŷongˬ 用-ŷongˎ 燭-tśŷok
 真-tśīn 軫-tśīnˬ 震-tśīnˎ 質-tśīt / 因-ʾyīn-(重紐四等) 筠-wīn-(合口)
 諄-tśyūn 準-tśyūnˬ 稕-tśyūnˎ 術-źyūt / 均-kẁīn-(重紐四等)
