@@ -36,7 +36,7 @@ const RHYMES = `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with
 蕭-seu 篠-seuˬ 嘯-seuˎ
 青-tsʻeng 迥-ghwengˬ 徑-kengˎ 錫-sek / 熒-ghweng-(合口)
 添-tʻem 忝-tʻemˬ 㮇-tʻemˎ 怗-tʻep
-支-tśï 紙-tśïˬ 寘-tśïˎ / 祇-gyï-(重紐四等) 危-ngwï-(合口) 隓-khẁï-(重紐四等合口) 吹-tśʻuï-(合口,_biomoraic_in_漢音)
+支-tśï 紙-tśïˬ 寘-tśïˎ / 祇-gyï-(重紐四等) 危-ngwï-(合口) 隓-khẁï-(重紐四等合口) 吹-tśʻuï-(合口,_bimoraic_in_漢音)
 脂-tśī 旨-tśīˬ 至-tśīˎ / 伊-ʾyī-(重紐四等) 龜-kwī-(合口) 葵-gẁī-(重紐四等合口) 追-tuī-(合口,_漢音_vowel_alternation)
 之-tśi 止-tśiˬ 志-tśiˎ
 微-mî 尾-mîˬ 未-mîˎ / 揮-khwî-(合口)
