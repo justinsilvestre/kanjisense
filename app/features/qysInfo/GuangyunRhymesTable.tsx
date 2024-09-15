@@ -5,16 +5,16 @@ import { Fragment } from "react";
 const RHYMES =
   `東-tōng 董-tōngˬ 送-sōngˎ 屋-ʾwōk / 翁-ʾwōng-(with_initial_影) 中-tiūng-(三等) 風-pūng-(三等,_labial_initials) 縮-ṣyūk-(入聲,_with_三等_and_二等_sibilants) 肉-nźwīk-(入聲三等) 福-pūk-(入聲,_labial_initials) 育-ẁīk
 冬-tong 湩-tongˬ 宋-songˎ 沃-ʾok
-鍾-tśŷong 腫-tśŷongˬ 用-ŷongˎ 燭-tśŷok
+鍾-tśŷong 腫-tśŷongˬ 用-ŷongˎ 燭-tśŷok / 封-pông-(labial_initials)
 江-kạ̊ng 講-kạ̊ngˬ 絳-kạ̊ngˎ 覺-kạ̊k
-支-tśï 紙-tśïˬ 寘-tśïˎ / 祇-gyï-(重紐四等) 危-ngwï-(合口) 隓-khẁï-(重紐四等合口) 吹-tśʻuï-(合口,_bimoraic_in_漢音)
+支-tśï 紙-tśïˬ 寘-tśïˎ / 祇-gyï-(重紐四等) 危-ngwï-(合口) 隓-khẁï-(重紐四等合口) 吹-tśʻuï-(合口,_漢音_vowel_alternation)
 脂-tśī 旨-tśīˬ 至-tśīˎ / 伊-ʾyī-(重紐四等) 龜-kwī-(合口) 葵-gẁī-(重紐四等合口) 追-tuī-(合口,_漢音_vowel_alternation)
 之-tśi 止-tśiˬ 志-tśiˎ
 微-mî 尾-mîˬ 未-mîˎ / 揮-khwî-(合口)
 魚-ngyo 語-ngyoˬ 御-ngyoˎ
 虞-ngu 麌-nguˬ 遇-nguˎ / 須-syu-(漢音_vowel_alternation)
 模-mo 姥-moˬ 暮-moˎ / 烏-ʾwo-(with_initial_影)
-齊-dzei 薺-dzī 霽-tseiˎ / 圭-kwei-(合口)
+齊-dzei 薺-dzeiˬ 霽-tseiˎ / 圭-kwei-(合口)
 祭-tsėiˎ / 藝-ngyeiˎ-(重紐四等) 歲-swėiˎ-(合口) 銳-ẁeiˎ-(initial_以)
 泰-tʻāiˎ / 會-ghwāiˎ-(合口)
 佳-kạ̈ 蟹-ghạ̈ˬ 卦-kwạ̈ˎ / 媧-kwạ̈-(合口)
@@ -29,7 +29,7 @@ const RHYMES =
 文-mun 吻-munˬ 問-munˎ 物-mut
 欣-khin 隱-ʾinˬ 焮-khinˎ 迄-khit
 元-ngwên 阮-ngwênˬ 願-ngwênˎ 月-ngwêt / 言-ngên-(開口) 飜-pʻân-(labial_initials)
-先-sen 銑-senˬ 霰-senˎ 屑-swot / 淵-ʾwen-(合口)
+先-sen 銑-senˬ 霰-senˎ 屑-set / 淵-ʾwen-(合口)
 仙-sėn 獮-sėnˬ 線-sėnˎ 薛-sėt / 篇-pʻyen-(重紐四等) 全-dzwėn-(合口) 娟-ʾẁen-(重紐四等合口)
 魂-ghwon 混-ghwonˬ 慁-ghwonˎ 沒-mwot
 痕-ghon 很-ghonˬ 恨-ghonˎ 麧-ghot
@@ -120,10 +120,16 @@ export function GuangyunRhymesTable() {
                     <div className="inline-block md:min-w-[6rem]"> </div>
                   </>
                 ) : null}
+
                 {rhymeCharacters.map(([character, romanized], j) => (
                   <div
                     key={j}
-                    className="inline-block p-2 md:min-w-[6rem] md:p-0"
+                    className={clsx(
+                      "inline-block p-2 md:p-0",
+                      character === "臻"
+                        ? "md:min-w-[18rem]"
+                        : "md:min-w-[6rem]",
+                    )}
                   >
                     <span
                       className={clsx("block text-xl md:text-3xl", {
@@ -137,7 +143,7 @@ export function GuangyunRhymesTable() {
                 ))}
               </div>
               {extra.length > 0 ? (
-                <div className="mb-2 min-w-[14rem] max-w-[24rem] rounded-md border border-solid border-yellow-800/30 px-2 py-1">
+                <div className="my-2 min-w-[14rem] max-w-[24rem] rounded-md border border-solid border-yellow-800/30 px-2 py-1">
                   variations in this group:{" "}
                   {extra.map(([character, romanized, note], j) => (
                     <span key={j}>

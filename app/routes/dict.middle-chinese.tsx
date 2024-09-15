@@ -11,6 +11,8 @@ import { useTocHighlighting } from "~/components/useTocHighlighting";
 import css from "~/features/dictionary/middle-chinese.css";
 import { G } from "~/features/dictionary/QysHints";
 import { NavLi } from "~/features/qysInfo/NavLi";
+import screenshot1 from "~/images/mc-screenshot-1.png";
+import screenshot2 from "~/images/mc-screenshot-2.png";
 
 export const meta: MetaFunction = () => [
   { title: "What do I care about Middle Chinese? | Kanjisense" },
@@ -200,11 +202,10 @@ export default function MiddleChinese() {
                 <strong>
                   The <i>on'yomi</i> are Japanese corruptions of Chinese sounds
                 </strong>
-                . Just like the more recent <i>katakana</i> loanwords words
-                borrowed into Japanese, the <i>on'yomi</i> represent Japanese
-                speakers' attempts at pronouncing foreign words within the
-                comparatively tight restrictions of their native sound
-                inventory.
+                . Just like the more recent <i>katakana</i> loanwords borrowed
+                into Japanese, the <i>on'yomi</i> represent Japanese speakers'
+                attempts at pronouncing foreign words within the comparatively
+                tight restrictions of their native sound inventory.
               </li>
               <li>
                 <strong>
@@ -325,13 +326,21 @@ export default function MiddleChinese() {
               Throughout Kanjisense, you will see Middle Chinese readings near
               the <i>on'yomi</i>, like this:
             </p>
-            <p>PICTURE</p>
+            <img
+              className="m-4 max-w-[90%] border-8 border-white shadow-lg shadow-black/30 "
+              src={screenshot1}
+              alt="screenshot"
+            />
             <p>
               If you click on them, you will find some information about the
               Middle Chinese pronunciation, and how it developed into the modern{" "}
               <i>on'yomi</i>.
             </p>
-            <p>PICTURE</p>
+            <img
+              className="m-4 max-w-[90%] border-8 border-white shadow-lg shadow-black/30 "
+              src={screenshot2}
+              alt="screenshot"
+            />
             <p>
               Let's use these to investigate some of the questions we asked
               above. First, let's take a look at those characters which all
