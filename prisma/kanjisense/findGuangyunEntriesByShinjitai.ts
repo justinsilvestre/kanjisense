@@ -1,5 +1,6 @@
-import { PrismaClient, SbgyXiaoyun } from "@prisma/client";
+import { SbgyXiaoyun } from "@prisma/client";
 
+import { SeedInterface } from "prisma/SeedInterface";
 import { FigureKey } from "~/models/figure";
 
 import { toukeiBetsujiMappings } from "../../app/lib/dic/toukeiBetsujiMappings";
@@ -30,7 +31,7 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
 };
 
 export async function findGuangyunEntriesByShinjitai(
-  prisma: PrismaClient,
+  { findManySbgyXiaoyun, findManySbgyXiaoyunByExemplar }: SeedInterface,
   newToOldFiguresKeys: Map<FigureKey, FigureKey[]>,
   sbgyCharactersToXiaoyunNumbers: Map<string, number[]>,
   newToZVariants14: Map<string, string[]>,
@@ -52,9 +53,7 @@ export async function findGuangyunEntriesByShinjitai(
     const jiXiaoyunNumbers = sbgyCharactersToXiaoyunNumbers.get(jiForm);
 
     const jiXiaoyuns = jiXiaoyunNumbers
-      ? await prisma.sbgyXiaoyun.findMany({
-          where: { xiaoyun: { in: jiXiaoyunNumbers } },
-        })
+      ? await findManySbgyXiaoyun(jiXiaoyunNumbers)
       : [];
     for (const jiXiaoyun of jiXiaoyuns) {
       addEntry(jiXiaoyun, jiForm);
@@ -65,11 +64,8 @@ export async function findGuangyunEntriesByShinjitai(
     const zVariantForms = newToZVariants14.get(shinjitai);
     if (zVariantForms) {
       for (const zVariantForm of zVariantForms) {
-        const zVariantEntries = await prisma.sbgyXiaoyun.findMany({
-          where: {
-            exemplars: { has: zVariantForm },
-          },
-        });
+        const zVariantEntries =
+          await findManySbgyXiaoyunByExemplar(zVariantForm);
 
         for (const zVariantEntry of zVariantEntries) {
           addEntry(zVariantEntry, zVariantForm);

@@ -336,9 +336,7 @@ export function Diacritics({
           of the vowels above double as marks of the Four Divisions. For
           instance, <G g="ạ" /> with underdot is a characteristic mark of
           Division II, and <G g="â" /> with circumflex is a characteristic mark
-          of Division III. The circumflex on <G g="î" /> doesn't mark Division
-          III (since that job is done by the main vowel I), but it doubles as a
-          mark of{" "}
+          of Division III. The circumflex doubles as a mark of{" "}
           <ScrollLink hash="dentilabialiation">dentilabialization</ScrollLink>{" "}
           on preceding labial consonants <G g="p" /> <G g="pʻ" /> <G g="b" />{" "}
           <G g="m" />.
@@ -356,15 +354,16 @@ export function Diacritics({
           Sometimes, one Middle Chinese final is rendered in a couple different
           ways in <i>Kan-on</i>. For example, the characters 筠 and 春 both
           probably had the exact same final at early stages of Middle Chinese,
-          but in <i>Kan-on</i>, they are rendered with different vowels as 筠
-          /win/ and 春 /syun/. This might be because, at the time of borrowing,
-          the original Chinese vowel had split into two different vowels, or it
-          may have been that the compilers of <i>Kan-on</i> just interpreted the
-          vowel differently in these different instances. In any case, this sort
-          of <i>vowel alternation</i> is sometimes incorporated into this
-          notation. When this happens, the vowels subject to alternation are
-          usually marked with some kind of diacritic—in the case of our example,
-          the macron is used, giving 筠 <G g="wīn" /> and 春 <G g="tśʻyūn" />.
+          but in <i>Kan-on</i>, they are rendered with different vowels as 筠{" "}
+          <i>win</i> and 春 <i>syun</i>. This might be because, at the time of
+          borrowing, the original Chinese vowel had split into two different
+          vowels, or it may have been that the compilers of <i>Kan-on</i> just
+          interpreted the vowel differently in these different instances. In any
+          case, this sort of <i>vowel alternation</i> is sometimes incorporated
+          into this notation. When this happens, the vowels subject to
+          alternation are usually marked with some kind of diacritic—in the case
+          of our example, the macron is used, giving 筠 <G g="wīn" /> and 春{" "}
+          <G g="tśʻyūn" />.
         </p>
         <p>
           Here are all the patterns of <i>Kan-on</i> vowel alternation that were
