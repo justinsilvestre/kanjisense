@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { files, getShuowenFilePath } from "~/lib/files.server";
 import { getFigureId } from "~/models/figure";
@@ -21,7 +22,7 @@ export async function seedShuowenImages(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     force,
     step: "ShuowenImage",
     version: figuresVersion,

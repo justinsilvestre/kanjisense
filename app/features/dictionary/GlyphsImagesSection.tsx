@@ -96,7 +96,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [height:5rem] [width:5rem]"
+                  className="mb-3 inline-block [width:5rem] [height:5rem]"
                 >
                   <path d={glyphsJson.ns} />
                 </svg>
@@ -108,7 +108,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 0 200 200"
-                  className="mb-3 inline-block [height:5rem] [width:5rem]"
+                  className="mb-3 inline-block [width:5rem] [height:5rem]"
                 >
                   <path d={glyphsJson.gw} />
                 </svg>
@@ -120,7 +120,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [height:5rem] [width:5rem]"
+                  className="mb-3 inline-block [width:5rem] [height:5rem]"
                 >
                   <path d={glyphsJson.twk} />
                 </svg>
@@ -132,7 +132,7 @@ export function GlyphsImagesSection({
               <div className="text-center">
                 <svg
                   viewBox="0 -870 1000 1000"
-                  className="mb-3 inline-block [height:5rem] [width:5rem]"
+                  className="mb-3 inline-block [width:5rem] [height:5rem]"
                 >
                   <path d={glyphsJson.kk} />
                 </svg>

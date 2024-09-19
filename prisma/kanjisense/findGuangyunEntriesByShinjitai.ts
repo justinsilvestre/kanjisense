@@ -31,12 +31,13 @@ const entrySourceOverrides: Partial<Record<string, string[]>> = {
 };
 
 export async function findGuangyunEntriesByShinjitai(
-  { findManySbgyXiaoyun, findManySbgyXiaoyunByExemplar }: SeedInterface,
+  seedInterface: SeedInterface,
   newToOldFiguresKeys: Map<FigureKey, FigureKey[]>,
   sbgyCharactersToXiaoyunNumbers: Map<string, number[]>,
   newToZVariants14: Map<string, string[]>,
   shinjitai: string,
 ) {
+  const { findManySbgyXiaoyun, findManySbgyXiaoyunByExemplar } = seedInterface;
   const entries = new Map<
     number,
     {
@@ -75,7 +76,7 @@ export async function findGuangyunEntriesByShinjitai(
   }
 
   if (!entries.size) {
-    const backupVariants = (await lookUpVariants(prisma, shinkyuuForms))
+    const backupVariants = (await lookUpVariants(seedInterface, shinkyuuForms))
       .filter((a) => variantTypesPrioritySet.has(a.variantType))
       .sort((a, b) => {
         const aTypeIndex = VARIANT_TYPES_PRIORITY.indexOf(a.variantType);
@@ -83,9 +84,9 @@ export async function findGuangyunEntriesByShinjitai(
         return aTypeIndex - bTypeIndex;
       });
     for (const variant of backupVariants) {
-      const backupEntries = await prisma.sbgyXiaoyun.findMany({
-        where: { exemplars: { has: variant.character } },
-      });
+      const backupEntries = await findManySbgyXiaoyunByExemplar(
+        variant.character,
+      );
       for (const backupEntry of backupEntries) {
         addEntry(backupEntry, variant.character);
       }

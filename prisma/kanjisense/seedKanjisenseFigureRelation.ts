@@ -1,5 +1,6 @@
 import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import {
   baseKanji,
   baseKanjiSet,
@@ -27,9 +28,9 @@ export async function seedKanjisenseFigureRelation(
   await runSetupStep({
     version,
     force,
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseFigureRelation",
-    async setup() {
+    async setup(seedInterface, log) {
       const patchedIds = patchIds(
         new PatchedIds(
           async (key) => {
@@ -101,6 +102,7 @@ export async function seedKanjisenseFigureRelation(
                 {
                   isPriority: true,
                 },
+                log,
               );
             },
           });
@@ -126,6 +128,7 @@ export async function seedKanjisenseFigureRelation(
             {
               isPriority: true,
             },
+            log,
           ),
       );
       const nonPriorityVariants = allVariantGroups.flatMap((g) =>
@@ -144,6 +147,7 @@ export async function seedKanjisenseFigureRelation(
             {
               isPriority: false,
             },
+            log,
           ),
       );
 
@@ -164,6 +168,7 @@ export async function seedKanjisenseFigureRelation(
                 {
                   isPriority: false,
                 },
+                log,
               );
             },
           });
@@ -236,6 +241,7 @@ async function analyzeFiguresRelations(
   cache: Map<FigureKey, CreateFigureRelationInput>,
   patchedIds: PatchedIds,
   options: { isPriority: boolean; parentLists?: Set<KanjiListCode> },
+  log: (text: string) => void,
   verbose = false,
 ) {
   for (const figureKey of figureKeys) {
@@ -244,7 +250,7 @@ async function analyzeFiguresRelations(
     const ids = parseIds(figureKey, idsText);
     const jLocaleIndex = ids.locales["J"];
     if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
-      console.log(`Arbitrarily choosing first sequence for ${figureKey}`);
+      log(`Arbitrarily choosing first sequence for ${figureKey}`);
     }
     const selectedIds = ids.sequences[jLocaleIndex ?? 0];
     if (!selectedIds) {
@@ -293,6 +299,7 @@ async function analyzeFiguresRelations(
               ...figureRelation.listsAsComponent,
             ]),
           },
+          log,
         );
       }
       for (const componentKey of selectedIdsComponents) {

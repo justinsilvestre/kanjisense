@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -29,7 +30,7 @@ function fieldNameIsValid(
 
 export async function seedUnihan14(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "Unihan14",
     force,
     version: "KEYLESS STEP",

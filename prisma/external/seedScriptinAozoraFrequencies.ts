@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { files, readJsonSync } from "~/lib/files.server";
 
@@ -8,7 +9,7 @@ export async function seedScriptinAozoraFrequencies(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "ScriptinAozoraFrequency",
     force,
     version: "KEYLESS STEP",

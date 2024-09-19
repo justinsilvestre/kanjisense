@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 import yaml from "yaml";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { baseKanji, baseKanjiSet } from "~/lib/baseKanji";
 import { files } from "~/lib/files.server";
 import { getFigureId, parseFigureId } from "~/models/figure";
@@ -34,7 +35,7 @@ export async function seedKanjisenseFigures(
   await runSetupStep({
     version,
     force,
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseFigure",
     async setup() {
       const readingIds = new Set(

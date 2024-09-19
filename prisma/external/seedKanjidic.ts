@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files, readJsonSync } from "~/lib/files.server";
 
 import { runSetupStep } from "../seedUtils";
@@ -15,7 +16,7 @@ type KanjibankJson = [
 
 export async function seedKanjidic(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjidicEntry",
     force,
     version: "KEYLESS STEP",

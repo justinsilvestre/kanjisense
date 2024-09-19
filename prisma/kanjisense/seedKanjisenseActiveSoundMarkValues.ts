@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 // @ts-expect-error
 import { toKatakana } from "wanakana";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { getActiveSoundMarkValueText } from "~/features/dictionary/getActiveSoundMarkValueText";
 import type { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { InferredOnyomiType } from "~/lib/qys/inferOnyomi";
@@ -18,7 +19,7 @@ export async function seedKanjisenseActiveSoundMarkValues(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseActiveSoundMarkValue",
     version,
     force,

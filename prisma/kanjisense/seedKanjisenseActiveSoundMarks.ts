@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { soundMarksToSimplifications } from "~/lib/dic/simplifiedSoundMarks";
 import { FigureKey, getFigureId } from "~/models/figure";
 
@@ -18,7 +19,7 @@ export async function seedKanjisenseActiveSoundMarks(
   await runSetupStep({
     version,
     force,
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseActiveSoundMark",
     async setup() {
       console.log(`seeding KanjisenseActiveSoundMark...`);

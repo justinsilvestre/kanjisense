@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files, readJsonSync } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -11,7 +12,7 @@ export async function seedKanjiDbComposition(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjiDbComposition",
     force,
     version: "KEYLESS STEP",

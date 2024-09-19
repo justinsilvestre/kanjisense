@@ -1,6 +1,7 @@
 import { FigureSearchPropertyType } from "@prisma/client";
 import { type PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { getFigureId } from "~/models/figure";
 
@@ -20,7 +21,7 @@ export async function seedFigureSearchProperties(
   verbose = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseFigureSearchProperty",
     version,
     force,

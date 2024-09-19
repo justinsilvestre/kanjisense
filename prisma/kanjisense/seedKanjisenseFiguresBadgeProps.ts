@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
+
 import { runSetupStep } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
@@ -18,7 +20,7 @@ export async function seedKanjisenseFigureBadgeProps({
   await runSetupStep({
     version,
     force,
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseFigureBadgeProps",
     async setup() {
       console.log("Seeding figures badge props...");

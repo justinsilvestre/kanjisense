@@ -1,5 +1,6 @@
 import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { baseKanji, lists } from "~/lib/baseKanji";
 import { kanjijumpSpecificVariants } from "~/lib/dic/kanjijumpSpecificVariants";
@@ -27,10 +28,10 @@ export async function seedKanjisenseVariantGroups(
   await runSetupStep({
     version,
     force,
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjisenseVariantGroup",
-    async setup() {
-      console.log(`seeding KanjisenseVariantGroup...`);
+    async setup(seedInterface, log) {
+      log(`seeding KanjisenseVariantGroup...`);
 
       const appearances = Object.fromEntries(
         (await prisma.scriptinAozoraFrequency.findMany()).map(
@@ -130,7 +131,7 @@ export async function seedKanjisenseVariantGroups(
       for (const group of variants) {
         const [char] = group;
         if (repeatedIds.has(char)) {
-          console.log(repeatedIds.get(char), group);
+          log(repeatedIds.get(char), group);
         }
         repeatedIds.set(char, group);
       }

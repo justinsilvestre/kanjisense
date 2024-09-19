@@ -1,6 +1,7 @@
 import { PrismaClient, KanjisenseFigureImageType } from "@prisma/client";
 import SVGPathCommander from "svg-path-commander";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { kanjivgExtractedComponents } from "~/lib/dic/kanjivgExtractedComponents";
 import { getKvgFilePath } from "~/lib/files.server";
@@ -19,7 +20,7 @@ export async function seedFigureImages(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     version,
     step: "KanjisenseFigureImage",
     force,

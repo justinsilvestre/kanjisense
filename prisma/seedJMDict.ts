@@ -6,11 +6,12 @@ import { files } from "~/lib/files.server";
 
 import { executeAndLogTime } from "./kanjisense/executeAndLogTime";
 import { parseXmlChunks } from "./kanjisense/parseXmlChunks";
+import { getSeedInterface } from "./SeedInterface";
 import { runSetupStep } from "./seedUtils";
 
 export async function seedJMDict(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "JMDictEntry",
     force,
     version: "KEYLESS STEP",

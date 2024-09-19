@@ -1,5 +1,6 @@
 import { KanjiDbVariantType, Prisma, PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -11,7 +12,7 @@ const suppressedOldVariants = new Set("糸虫万");
 
 export async function seedKanjiDbVariants(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjiDbVariant",
     force,
     version: "KEYLESS STEP",

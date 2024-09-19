@@ -1,12 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files, readJsonSync } from "~/lib/files.server";
 
 import { runSetupStep } from "../seedUtils";
 
 export async function seedKanjiDbSbgyNotes(prisma: PrismaClient) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "KanjiDbSbgyNote",
     force: false,
     version: "KEYLESS STEP",

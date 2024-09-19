@@ -1,4 +1,6 @@
-import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
+import { KanjiDbVariantType } from "@prisma/client";
+
+import { SeedInterface } from "prisma/SeedInterface";
 
 import {
   Unihan14VariantFieldName,
@@ -23,21 +25,22 @@ export type KanjiVariant =
     };
 
 export async function lookUpVariants(
-  prisma: PrismaClient,
+  {
+    findManyKanjiDbVariantWithBaseIn,
+    findFirstUnihan14WithIdIn,
+    findFirstUnihan12WithIdIn,
+  }: SeedInterface,
   baseCharacters: string[],
 ): Promise<KanjiVariant[]> {
   const variants: KanjiVariant[] = [];
 
-  const kanjiDbVariants = await prisma.kanjiDbVariant.findMany({
-    where: { base: { in: baseCharacters } },
-  });
+  const kanjiDbVariants =
+    await findManyKanjiDbVariantWithBaseIn(baseCharacters);
   for (const { variant, variantType } of kanjiDbVariants) {
     variants.push({ character: variant, variantType, source: "KanjiDb" });
   }
 
-  const unihan14Variants = await prisma.unihan14.findFirst({
-    where: { id: { in: baseCharacters } },
-  });
+  const unihan14Variants = await findFirstUnihan14WithIdIn(baseCharacters);
   if (unihan14Variants) {
     for (const variantType of unihan14VariantFieldNames) {
       for (const variant of unihan14Variants[variantType]) {
@@ -46,9 +49,7 @@ export async function lookUpVariants(
     }
   }
 
-  const unihan12Variants = await prisma.unihan12.findFirst({
-    where: { id: { in: baseCharacters } },
-  });
+  const unihan12Variants = await findFirstUnihan12WithIdIn(baseCharacters);
   if (unihan12Variants) {
     for (const variant of unihan12Variants.kZVariant) {
       variants.push({

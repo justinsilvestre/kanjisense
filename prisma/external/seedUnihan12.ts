@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -12,7 +13,7 @@ export async function seedUnihan12(prisma: PrismaClient, force = false) {
   if (!unihan14Seeded)
     throw new Error("Unihan14 must be seeded before Unihan12.");
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "Unihan12",
     force,
     version: "KEYLESS STEP",

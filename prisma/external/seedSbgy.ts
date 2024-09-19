@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files, readJsonSync } from "~/lib/files.server";
 
 import { runSetupStep } from "../seedUtils";
@@ -42,7 +43,7 @@ const replacementExemplars: Record<number, (text: string) => string> = {
 
 export async function seedSbgy(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "SbgyXiaoyun",
     force,
     version: "KEYLESS STEP",

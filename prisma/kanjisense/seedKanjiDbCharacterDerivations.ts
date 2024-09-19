@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
+
 import { runSetupStep } from "../seedUtils";
 
 import {
@@ -15,7 +17,7 @@ export async function seedKanjiDbCharacterDerivations(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     version: "KEYLESS STEP",
     force,
     step: "KanjiDbCharacterDerivation",

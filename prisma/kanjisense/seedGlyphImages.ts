@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 
 import { PrismaClient } from "@prisma/client";
 
+import { getSeedInterface } from "prisma/SeedInterface";
 import { runSetupStep } from "prisma/seedUtils";
 import { GlyphsJson } from "~/features/dictionary/GlyphsJson";
 import { getGlyphsFilePath } from "~/lib/files.server";
@@ -17,7 +18,7 @@ export async function seedGlyphImages(
   force = false,
 ) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "GlyphImage",
     version,
     force,

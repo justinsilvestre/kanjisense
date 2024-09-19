@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { executeAndLogTime } from "prisma/kanjisense/executeAndLogTime";
 import { inBatchesOf } from "prisma/kanjisense/inBatchesOf";
+import { getSeedInterface } from "prisma/SeedInterface";
 import { files } from "~/lib/files.server";
 import { forEachLine } from "~/lib/forEachLine.server";
 
@@ -9,7 +10,7 @@ import { runSetupStep } from "../seedUtils";
 
 export async function seedUnihan15(prisma: PrismaClient, force = false) {
   await runSetupStep({
-    prisma,
+    seedInterface: getSeedInterface(prisma),
     step: "Unihan15",
     force,
     version: "KEYLESS STEP",
