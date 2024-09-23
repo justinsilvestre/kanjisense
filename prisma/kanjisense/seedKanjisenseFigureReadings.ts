@@ -32,16 +32,16 @@ export async function seedKanjisenseFigureReadings(
     async setup(seedInterface) {
       const kanjidicEntries = new Map(
         Array.from(
-          await seedInterface.findManyKanjidicEntryHavingOnReadings(),
+          await seedInterface.kanjidicEntry.findManyHavingOnReadings(),
           (e) => [e.id, e],
         ),
       );
       const unihan15Keys = new Set(
-        Array.from(await seedInterface.findManyUnihan15(), (e) => e.id),
+        Array.from(await seedInterface.unihan15.findMany(), (e) => e.id),
       );
 
       const figuresNeedingReadingsKeys = Array.from(
-        await seedInterface.findManyKanjisenseFigureBeingStandaloneCharacterOrSoundComponent(
+        await seedInterface.kanjisenseFigure.findManyBeingStandaloneCharacterOrSoundComponent(
           version,
         ),
         (f) => f.key,
@@ -58,7 +58,7 @@ export async function seedKanjisenseFigureReadings(
       for (const {
         base: newFigure,
         variant: oldFigure,
-      } of await seedInterface.findManyKanjiDbVariantBeingOldVariantOf(
+      } of await seedInterface.kanjiDbVariant.findManyBeingOldVariantOf(
         figuresNeedingReadingsKeys,
       )) {
         allOldFiguresKeys.add(oldFigure);
@@ -72,7 +72,7 @@ export async function seedKanjisenseFigureReadings(
       for (const {
         xiaoyun,
         exemplars,
-      } of await seedInterface.findManySbgyXiaoyunAll()) {
+      } of await seedInterface.sbgyXiaoyun.findManyAll()) {
         for (const exemplar of exemplars) {
           if (!sbgyCharactersToXiaoyunNumbers.has(exemplar)) {
             sbgyCharactersToXiaoyunNumbers.set(exemplar, []);
@@ -84,7 +84,7 @@ export async function seedKanjisenseFigureReadings(
       for (const {
         id: newFigure,
         kZVariant,
-      } of await seedInterface.findManyUnihan14HavingKZVariantWithin(
+      } of await seedInterface.unihan14.findManyHavingKZVariantWithin(
         figuresNeedingReadingsKeys,
       )) {
         if (!newToZVariants14.has(newFigure)) {
@@ -118,28 +118,31 @@ export async function seedKanjisenseFigureReadings(
       );
 
       await executeAndLogTime("deleting old readings", () =>
-        seedInterface.deleteManyKanjisenseFigureReading(version),
+        seedInterface.kanjisenseFigureReading.deleteMany(version),
       );
 
       await executeAndLogTime("creating readings", () =>
-        seedInterface.createManyKanjisenseFigureReading(dbInput),
+        seedInterface.kanjisenseFigureReading.createMany(dbInput),
       );
 
       await executeAndLogTime("hooking up figures", async () => {
-        const readingsIds = await seedInterface
-          .findManyKanjisenseFigureReadingSelectIds(version)
+        const readingsIds = await seedInterface.kanjisenseFigureReading
+          .findManySelectIds(version)
           .then((rs) => rs.map((r) => r.id));
-        const figuresIds = await seedInterface
-          .findManyKanjisenseFigureByIdsSelectIds(version, readingsIds)
+        const figuresIds = await seedInterface.kanjisenseFigure
+          .findManyByIdsSelectIds(version, readingsIds)
           .then((fs) => fs.map((f) => f.id));
 
         for (const id of figuresIds) {
-          await seedInterface.updateKanjisenseFigureReadingId(id, id);
+          await seedInterface.kanjisenseFigureReading.updateKanjisenseFigureReadingId(
+            id,
+            id,
+          );
         }
       });
 
       await executeAndLogTime("hooking up guangyun entries", async () => {
-        await seedInterface.createManyKanjisenseFigureReadingToSbgyXiaoyun(
+        await seedInterface.kanjisenseFigureReadingToSbgyXiaoyun.createMany(
           [...figuresKeysToXiaoyunsWithMatchingExemplars].flatMap(
             ([figureKey, xiaoyuns]) =>
               Array.from(xiaoyuns.keys(), (sbgyXiaoyunId) => ({
@@ -223,35 +226,35 @@ export async function seedKanjisenseFigureReadings(
       }
 
       const selectedOnReadings: string[] = [];
+
+      const katakanaKanjidicOnReadings =
+        kanjidicEntries.get(readingFigureKey)?.onReadings;
+
       if (
-        isSingleCharacter(readingFigureKey) &&
-        (kanjidicEntries.get(readingFigureKey)?.onReadings?.length ?? 0) > 1
+        katakanaKanjidicOnReadings &&
+        katakanaKanjidicOnReadings.length > 1 &&
+        isSingleCharacter(readingFigureKey)
       ) {
         const joyoReadings = joyoWikipedia.get(readingFigureKey);
         if (joyoReadings?.length) {
           selectedOnReadings.push(...joyoReadings);
         } else {
-          const jmdictEntriesWithKanjiArePresent =
-            await seedInterface.checkIfAnyJmdictEntryContains(readingFigureKey);
-          if (jmdictEntriesWithKanjiArePresent) {
-            const katakanaKanjidicOnReadings =
-              kanjidicEntries.get(readingFigureKey)?.onReadings || [];
-            const jmdictEntriesWithKanjidicOnReadings =
-              await seedInterface.findManyJmDictEntriesWithHeadContainingStringAndOnReadingMatching(
-                readingFigureKey,
-                katakanaKanjidicOnReadings,
-                katakanaOnyomiToHiragana,
-              );
-            for (const katakanaKanjidicOnReading of katakanaKanjidicOnReadings) {
-              if (
-                jmdictEntriesWithKanjidicOnReadings.some((jmdictEntry) =>
-                  jmdictEntry.readingText.includes(
-                    katakanaOnyomiToHiragana(katakanaKanjidicOnReading),
-                  ),
-                )
+          const jmdictEntriesWithKanjidicOnReadings =
+            await seedInterface.jmDictEntry.findManyWithHeadContainingStringAndOnReadingMatching(
+              readingFigureKey,
+              katakanaKanjidicOnReadings,
+              katakanaOnyomiToHiragana,
+            );
+          for (const katakanaKanjidicOnReading of katakanaKanjidicOnReadings) {
+            const hiraganaOnReading = katakanaOnyomiToHiragana(
+              katakanaKanjidicOnReading,
+            );
+            if (
+              jmdictEntriesWithKanjidicOnReadings.some((jmdictEntry) =>
+                jmdictEntry.readingText.includes(hiraganaOnReading),
               )
-                selectedOnReadings.push(katakanaKanjidicOnReading);
-            }
+            )
+              selectedOnReadings.push(katakanaKanjidicOnReading);
           }
         }
       }
@@ -410,10 +413,9 @@ const katakanaToHiraganaOnCache = new Map<string, string>();
 function katakanaOnyomiToHiragana(katakanaOnReading: string) {
   const cached = katakanaToHiraganaOnCache.get(katakanaOnReading);
   if (cached) return cached;
-  const hiragana = katakanaOnReading
-    .split("")
-    .map((c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
-    .join("");
+  const hiragana = Array.from(katakanaOnReading, (c) =>
+    String.fromCharCode(c.charCodeAt(0) - 0x60),
+  ).join("");
   katakanaToHiraganaOnCache.set(katakanaOnReading, hiragana);
   return hiragana;
 }

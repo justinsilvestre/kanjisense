@@ -37,7 +37,6 @@ export async function findGuangyunEntriesByShinjitai(
   newToZVariants14: Map<string, string[]>,
   shinjitai: string,
 ) {
-  const { findManySbgyXiaoyun, findManySbgyXiaoyunByExemplar } = seedInterface;
   const entries = new Map<
     number,
     {
@@ -54,7 +53,9 @@ export async function findGuangyunEntriesByShinjitai(
     const jiXiaoyunNumbers = sbgyCharactersToXiaoyunNumbers.get(jiForm);
 
     const jiXiaoyuns = jiXiaoyunNumbers
-      ? await findManySbgyXiaoyun(jiXiaoyunNumbers)
+      ? await seedInterface.sbgyXiaoyun.findManyByXiaoyunNumbers(
+          jiXiaoyunNumbers,
+        )
       : [];
     for (const jiXiaoyun of jiXiaoyuns) {
       addEntry(jiXiaoyun, jiForm);
@@ -66,7 +67,7 @@ export async function findGuangyunEntriesByShinjitai(
     if (zVariantForms) {
       for (const zVariantForm of zVariantForms) {
         const zVariantEntries =
-          await findManySbgyXiaoyunByExemplar(zVariantForm);
+          await seedInterface.sbgyXiaoyun.findManyByExemplar(zVariantForm);
 
         for (const zVariantEntry of zVariantEntries) {
           addEntry(zVariantEntry, zVariantForm);
@@ -84,7 +85,7 @@ export async function findGuangyunEntriesByShinjitai(
         return aTypeIndex - bTypeIndex;
       });
     for (const variant of backupVariants) {
-      const backupEntries = await findManySbgyXiaoyunByExemplar(
+      const backupEntries = await seedInterface.sbgyXiaoyun.findManyByExemplar(
         variant.character,
       );
       for (const backupEntry of backupEntries) {

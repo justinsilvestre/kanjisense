@@ -24,53 +24,89 @@ export interface SeedInterface {
     version: number | "KEYLESS STEP",
     step: SetupStep,
   ) => Promise<void>;
-  findManyKanjidicEntryHavingOnReadings: () => Promise<
-    Pick<KanjidicEntry, "id" | "onReadings">[]
-  >;
-  findManyUnihan15: () => Promise<Pick<Unihan15, "id">[]>;
-  findManyKanjisenseFigureBeingStandaloneCharacterOrSoundComponent: (
-    version: number,
-  ) => Promise<Pick<KanjisenseFigure, "key">[]>;
-  findManyKanjiDbVariantBeingOldVariantOf: (
-    baseCharacters: string[],
-  ) => Promise<KanjiDbVariant[]>;
-  findManySbgyXiaoyunAll: () => Promise<SbgyXiaoyun[]>;
-  findManyUnihan14HavingKZVariantWithin: (
-    ids: string[],
-  ) => Promise<Pick<Unihan14, "id" | "kZVariant">[]>;
-  deleteManyKanjisenseFigureReading: (
-    version: number,
-  ) => Promise<Prisma.BatchPayload>;
-  createManyKanjisenseFigureReading: (
-    data: Prisma.KanjisenseFigureReadingCreateManyInput[],
-  ) => Promise<Prisma.BatchPayload>;
-  findManyKanjisenseFigureReadingSelectIds: (
-    version: number,
-  ) => Promise<Pick<KanjisenseFigureReading, "id">[]>;
-  findManyKanjisenseFigureByIdsSelectIds: (
-    version: number,
-    ids: string[],
-  ) => Promise<Pick<KanjisenseFigure, "id">[]>;
-  updateKanjisenseFigureReadingId: (
-    id: string,
-    newReadingId: string,
-  ) => Promise<KanjisenseFigure>;
-  checkIfAnyJmdictEntryContains: (string: string) => Promise<number>;
-  findManyJmDictEntriesWithHeadContainingStringAndOnReadingMatching: (
-    string: string,
-    katakanaOnReadings: string[],
-    katakanaOnyomiToHiragana: (katakanaOnReading: string) => string,
-  ) => Promise<Pick<JmDictEntry, "id" | "head" | "readingText">[]>;
-  createManyKanjisenseFigureReadingToSbgyXiaoyun: (
-    data: Prisma.KanjisenseFigureReadingToSbgyXiaoyunCreateManyInput[],
-  ) => Promise<Prisma.BatchPayload>;
-  findManySbgyXiaoyun: (xiaoyunNumbers: number[]) => Promise<SbgyXiaoyun[]>;
-  findManySbgyXiaoyunByExemplar: (exemplar: string) => Promise<SbgyXiaoyun[]>;
-  findManyKanjiDbVariantWithBaseIn: (
-    baseCharacters: string[],
-  ) => Promise<KanjiDbVariant[]>;
-  findFirstUnihan14WithIdIn: (ids: string[]) => Promise<Unihan14 | null>;
-  findFirstUnihan12WithIdIn: (ids: string[]) => Promise<Unihan12 | null>;
+
+  kanjidicEntry: {
+    findManyHavingOnReadings: () => Promise<
+      Pick<KanjidicEntry, "id" | "onReadings">[]
+    >;
+  };
+  unihan15: {
+    findMany: () => Promise<Pick<Unihan15, "id">[]>;
+  };
+  kanjisenseFigure: {
+    findManyBeingStandaloneCharacterOrSoundComponent: (
+      version: number,
+    ) => Promise<Pick<KanjisenseFigure, "key">[]>;
+    findManyByIdsSelectIds: (
+      version: number,
+      ids: string[],
+    ) => Promise<Pick<KanjisenseFigure, "id">[]>;
+  };
+  kanjiDbVariant: {
+    findManyBeingOldVariantOf: (
+      baseCharacters: string[],
+    ) => Promise<KanjiDbVariant[]>;
+    findManyWithBaseIn: (baseCharacters: string[]) => Promise<KanjiDbVariant[]>;
+  };
+  sbgyXiaoyun: {
+    findManyAll: () => Promise<SbgyXiaoyun[]>;
+    findManyByExemplar: (exemplar: string) => Promise<SbgyXiaoyun[]>;
+    findManyByXiaoyunNumbers: (
+      xiaoyunNumbers: number[],
+    ) => Promise<SbgyXiaoyun[]>;
+  };
+  unihan14: {
+    findManyHavingKZVariantWithin: (
+      ids: string[],
+    ) => Promise<Pick<Unihan14, "id" | "kZVariant">[]>;
+    findFirstWithIdIn: (ids: string[]) => Promise<Unihan14 | null>;
+  };
+  unihan12: {
+    findFirstWithIdIn: (ids: string[]) => Promise<Unihan12 | null>;
+  };
+  kanjisenseFigureReading: {
+    deleteMany: (version: number) => Promise<Prisma.BatchPayload>;
+    createMany: (
+      data: {
+        id: string;
+        key: string;
+        version: number;
+        sbgyXiaoyunsMatchingExemplars?:
+          | Prisma.NullableJsonNullValueInput
+          | Prisma.InputJsonValue;
+        inferredOnReadingCandidates:
+          | Prisma.JsonNullValueInput
+          | Prisma.InputJsonValue;
+        kanjidicEntryId?: string | null;
+        unihan15Id?: string | null;
+        selectedOnReadings?:
+          | Prisma.KanjisenseFigureReadingCreateselectedOnReadingsInput
+          | string[];
+      }[],
+    ) => Promise<Prisma.BatchPayload>;
+    findManySelectIds: (
+      version: number,
+    ) => Promise<Pick<KanjisenseFigureReading, "id">[]>;
+    updateKanjisenseFigureReadingId: (
+      id: string,
+      newReadingId: string,
+    ) => Promise<KanjisenseFigure>;
+  };
+  kanjisenseFigureReadingToSbgyXiaoyun: {
+    createMany: (
+      data: {
+        figureReadingId: string;
+        sbgyXiaoyunId: number;
+      }[],
+    ) => Promise<Prisma.BatchPayload>;
+  };
+  jmDictEntry: {
+    findManyWithHeadContainingStringAndOnReadingMatching: (
+      string: string,
+      katakanaOnReadings: string[],
+      katakanaOnyomiToHiragana: (katakanaOnReading: string) => string,
+    ) => Promise<Pick<JmDictEntry, "id" | "head" | "readingText">[]>;
+  };
 }
 
 export function getSeedInterface(prisma: PrismaClient): SeedInterface {
@@ -103,122 +139,138 @@ export function getSeedInterface(prisma: PrismaClient): SeedInterface {
       )
         await prisma.setup.create({ data: { step, version } });
     },
-    findManyKanjidicEntryHavingOnReadings: () =>
-      prisma.kanjidicEntry.findMany({
-        select: { id: true, onReadings: true },
-      }),
-    findManyUnihan15: () =>
-      prisma.unihan15.findMany({
-        select: { id: true },
-      }),
-    findManyKanjisenseFigureBeingStandaloneCharacterOrSoundComponent: (
-      version,
-    ) =>
-      prisma.kanjisenseFigure.findMany({
-        select: { key: true },
-        where: {
-          version,
-          OR: [
-            {
-              isStandaloneCharacter: true,
-            },
-            {
-              asComponent: {
-                soundMarkUses: {
-                  some: {},
+
+    kanjidicEntry: {
+      findManyHavingOnReadings: () =>
+        prisma.kanjidicEntry.findMany({
+          select: { id: true, onReadings: true },
+        }),
+    },
+
+    unihan12: {
+      findFirstWithIdIn: (ids) =>
+        prisma.unihan12.findFirst({
+          where: { id: { in: ids } },
+        }),
+    },
+    unihan14: {
+      findManyHavingKZVariantWithin: (ids) =>
+        prisma.unihan14.findMany({
+          where: {
+            kZVariant: { isEmpty: false },
+            id: { in: ids },
+          },
+          select: { kZVariant: true, id: true },
+        }),
+      findFirstWithIdIn: (ids) =>
+        prisma.unihan14.findFirst({
+          where: { id: { in: ids } },
+        }),
+    },
+    unihan15: {
+      findMany: () =>
+        prisma.unihan15.findMany({
+          select: { id: true },
+        }),
+    },
+    kanjisenseFigureReading: {
+      deleteMany: (version) =>
+        prisma.kanjisenseFigureReading.deleteMany({
+          where: { version },
+        }),
+      createMany: (data) =>
+        prisma.kanjisenseFigureReading.createMany({
+          data,
+        }),
+      findManySelectIds: (version) =>
+        prisma.kanjisenseFigureReading.findMany({
+          select: { id: true },
+          where: { version },
+        }),
+      updateKanjisenseFigureReadingId: (id, newReadingId) =>
+        prisma.kanjisenseFigure.update({
+          where: { id },
+          data: { readingId: newReadingId },
+        }),
+    },
+    kanjisenseFigure: {
+      findManyBeingStandaloneCharacterOrSoundComponent: (version) =>
+        prisma.kanjisenseFigure.findMany({
+          select: { key: true },
+          where: {
+            version,
+            OR: [
+              {
+                isStandaloneCharacter: true,
+              },
+              {
+                asComponent: {
+                  soundMarkUses: {
+                    some: {},
+                  },
                 },
               },
-            },
-          ],
-        },
-      }),
-    findManyKanjiDbVariantBeingOldVariantOf: (characters) =>
-      prisma.kanjiDbVariant.findMany({
-        where: {
-          variantType: KanjiDbVariantType.OldStyle,
-          base: { in: characters },
-        },
-      }),
-    findManySbgyXiaoyunAll: () => prisma.sbgyXiaoyun.findMany(),
-    findManyUnihan14HavingKZVariantWithin: (ids) =>
-      prisma.unihan14.findMany({
-        where: {
-          kZVariant: { isEmpty: false },
-          id: { in: ids },
-        },
-        select: { kZVariant: true, id: true },
-      }),
-    deleteManyKanjisenseFigureReading: (version) =>
-      prisma.kanjisenseFigureReading.deleteMany({
-        where: { version },
-      }),
-    createManyKanjisenseFigureReading: (data) =>
-      prisma.kanjisenseFigureReading.createMany({
-        data,
-      }),
-    findManyKanjisenseFigureReadingSelectIds: (version) =>
-      prisma.kanjisenseFigureReading.findMany({
-        select: { id: true },
-        where: { version },
-      }),
-    findManyKanjisenseFigureByIdsSelectIds: (version, ids) =>
-      prisma.kanjisenseFigure.findMany({
-        select: { id: true },
-        where: {
-          version,
-          id: {
-            in: ids,
+            ],
           },
-        },
-      }),
-    updateKanjisenseFigureReadingId: (id, readingId) =>
-      prisma.kanjisenseFigure.update({
-        where: { id },
-        data: { readingId },
-      }),
-    checkIfAnyJmdictEntryContains: (string) =>
-      prisma.jmDictEntry.count({
-        where: { head: { contains: string } },
-        take: 1,
-      }),
-    findManyJmDictEntriesWithHeadContainingStringAndOnReadingMatching: (
-      string,
-      katakanaOnReadings,
-      katakanaOnyomiToHiragana,
-    ) =>
-      prisma.jmDictEntry.findMany({
-        where: {
-          head: { contains: string },
-          OR: katakanaOnReadings.map((katakanaReading) => ({
-            readingText: {
-              contains: katakanaOnyomiToHiragana(katakanaReading),
+        }),
+      findManyByIdsSelectIds: (version, ids) =>
+        prisma.kanjisenseFigure.findMany({
+          select: { id: true },
+          where: {
+            version,
+            id: {
+              in: ids,
             },
-          })),
-        },
-      }),
-    createManyKanjisenseFigureReadingToSbgyXiaoyun: (data) =>
-      prisma.kanjisenseFigureReadingToSbgyXiaoyun.createMany({
-        data,
-      }),
-    findManySbgyXiaoyun: (xiaoyunNumbers) =>
-      prisma.sbgyXiaoyun.findMany({
-        where: { xiaoyun: { in: xiaoyunNumbers } },
-      }),
-    findManySbgyXiaoyunByExemplar: (exemplar) =>
-      prisma.sbgyXiaoyun.findMany({
-        where: { exemplars: { has: exemplar } },
-      }),
-    findManyKanjiDbVariantWithBaseIn: (baseCharacters) =>
-      prisma.kanjiDbVariant.findMany({
-        where: { base: { in: baseCharacters } },
-      }),
-    findFirstUnihan14WithIdIn: (ids) =>
-      prisma.unihan14.findFirst({
-        where: { id: { in: ids } },
-      }),
-    findFirstUnihan12WithIdIn: (ids) =>
-      prisma.unihan12.findFirst({
-        where: { id: { in: ids } },
-      }),
+          },
+        }),
+    },
+    kanjiDbVariant: {
+      findManyBeingOldVariantOf: (baseCharacters) =>
+        prisma.kanjiDbVariant.findMany({
+          where: {
+            variantType: KanjiDbVariantType.OldStyle,
+            base: { in: baseCharacters },
+          },
+        }),
+      findManyWithBaseIn: (baseCharacters) =>
+        prisma.kanjiDbVariant.findMany({
+          where: { base: { in: baseCharacters } },
+        }),
+    },
+
+    sbgyXiaoyun: {
+      findManyAll: () => prisma.sbgyXiaoyun.findMany(),
+      findManyByExemplar: (exemplar) =>
+        prisma.sbgyXiaoyun.findMany({
+          where: { exemplars: { has: exemplar } },
+        }),
+      findManyByXiaoyunNumbers: (xiaoyunNumbers) =>
+        prisma.sbgyXiaoyun.findMany({
+          where: { xiaoyun: { in: xiaoyunNumbers } },
+        }),
+    },
+    jmDictEntry: {
+      findManyWithHeadContainingStringAndOnReadingMatching: (
+        string,
+        katakanaOnReadings,
+        katakanaOnyomiToHiragana,
+      ) =>
+        prisma.jmDictEntry.findMany({
+          where: {
+            head: { contains: string },
+            OR: katakanaOnReadings.map((katakanaReading) => ({
+              readingText: {
+                contains: katakanaOnyomiToHiragana(katakanaReading),
+              },
+            })),
+          },
+        }),
+    },
+    kanjisenseFigureReadingToSbgyXiaoyun: {
+      createMany: (data) =>
+        prisma.kanjisenseFigureReadingToSbgyXiaoyun.createMany({
+          data,
+        }),
+    },
   };
 }
