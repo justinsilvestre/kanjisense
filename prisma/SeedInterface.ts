@@ -144,6 +144,7 @@ export function getSeedInterface(prisma: PrismaClient): SeedInterface {
       findManyHavingOnReadings: () =>
         prisma.kanjidicEntry.findMany({
           select: { id: true, onReadings: true },
+          where: { onReadings: { isEmpty: false } },
         }),
     },
 
