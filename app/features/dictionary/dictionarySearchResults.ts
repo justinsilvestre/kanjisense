@@ -50,6 +50,7 @@ export async function getDictionarySearchResults(searchQueries: string[]) {
 async function collectSearchResults<T extends { id: string }>(
   batchSize: number,
   steps: {
+    continue: boolean;
     findMany: (returnedIds: string[], take: number) => Promise<T[]>;
   }[],
 ) {
@@ -66,6 +67,10 @@ async function collectSearchResults<T extends { id: string }>(
 
     for (const figure of stepResults) {
       returnedIds.push(figure.id);
+    }
+
+    if (results.length && !step.continue) {
+      return results;
     }
   }
   return results;
@@ -103,6 +108,30 @@ export async function getDictionarySearchResultsFigures(
   };
   const figures = await collectSearchResults(RESULTS_BATCH_SIZE, [
     {
+      continue: false,
+      findMany: () =>
+        prisma.kanjisenseFigure
+          .findMany({
+            where: {
+              version: FIGURES_VERSION,
+              id: {
+                in: searchQueries.flatMap((qs) =>
+                  Array.from(qs, (key) => getFigureId(FIGURES_VERSION, key)),
+                ),
+              },
+            },
+            select: selectFigures,
+            take: RESULTS_BATCH_SIZE,
+          })
+          .then((f) =>
+            f.sort(
+              (a, b) =>
+                searchQueries.indexOf(a.id) - searchQueries.indexOf(b.id),
+            ),
+          ),
+    },
+    {
+      continue: true,
       findMany: () =>
         prisma.kanjisenseFigure.findMany({
           where: {
@@ -119,10 +148,12 @@ export async function getDictionarySearchResultsFigures(
         }),
     },
     {
+      continue: true,
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
             version: FIGURES_VERSION,
+            isPriority: true,
             searchProperties: {
               some: formSearchPropertiesWhereQuery2(searchQueries),
             },
@@ -138,10 +169,12 @@ export async function getDictionarySearchResultsFigures(
         }),
     },
     {
+      continue: true,
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
             version: FIGURES_VERSION,
+            isPriority: true,
             searchProperties: {
               some: formSearchPropertiesWhereQuery3(searchQueries),
             },
@@ -157,12 +190,14 @@ export async function getDictionarySearchResultsFigures(
         }),
     },
     {
+      continue: true,
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
             version: FIGURES_VERSION,
+            isPriority: false,
             searchProperties: {
-              some: formSearchPropertiesWhereQuery2(searchQueries, false),
+              some: formSearchPropertiesWhereQuery2(searchQueries),
             },
             id: {
               notIn: returnedFigureIds,
@@ -176,12 +211,14 @@ export async function getDictionarySearchResultsFigures(
         }),
     },
     {
+      continue: true,
       findMany: (returnedFigureIds, take) =>
         prisma.kanjisenseFigure.findMany({
           where: {
             version: FIGURES_VERSION,
+            isPriority: false,
             searchProperties: {
-              some: formSearchPropertiesWhereQuery3(searchQueries, false),
+              some: formSearchPropertiesWhereQuery3(searchQueries),
             },
             id: {
               notIn: returnedFigureIds,
@@ -203,145 +240,88 @@ function formSearchPropertiesWhereQuery1(
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     version: FIGURES_VERSION,
-    OR: [
-      {
-        figure: { isPriority: true },
-        searchProperty: {
-          type: {
-            in: WANTED_SEARCH_PROPERTY_TYPES,
-          },
 
-          text: {
-            in: searchQueries,
-            mode: "insensitive",
-          },
-        },
+    figure: { isPriority: true },
+    searchProperty: {
+      type: {
+        in: WANTED_SEARCH_PROPERTY_TYPES,
       },
-      {
-        figureId: {
-          in: searchQueries.flatMap((qs) =>
-            Array.from(qs, (key) => getFigureId(FIGURES_VERSION, key)),
-          ),
-        },
+
+      text: {
+        in: searchQueries,
+        mode: "insensitive",
       },
-    ],
+    },
   };
 }
+
+const JAPANESE_TYPES = [
+  FigureSearchPropertyType.KUNYOMI_KANA,
+  FigureSearchPropertyType.KUNYOMI_LATIN,
+  FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA,
+  FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA,
+  FigureSearchPropertyType.ONYOMI_KANA,
+  FigureSearchPropertyType.ONYOMI_LATIN,
+];
+const ENGLISH_TYPES = [
+  FigureSearchPropertyType.TRANSLATION_ENGLISH,
+  FigureSearchPropertyType.MNEMONIC_ENGLISH,
+];
+
+const COMBINED_TYPES = [...JAPANESE_TYPES, ...ENGLISH_TYPES];
 
 function formSearchPropertiesWhereQuery2(
   searchQueries: string[],
-  isPriority = true,
+  // isPriority: boolean,
+  // excludeIds: string[],
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     version: FIGURES_VERSION,
-    OR: searchQueries.flatMap((query) =>
-      formSearchPropertiesWhereQuery2Component(query, isPriority),
-    ),
-  };
-}
-function formSearchPropertiesWhereQuery3(
-  searchQueries: string[],
-  isPriority = true,
-): Prisma.SearchPropertiesOnFigureWhereInput {
-  return {
-    version: FIGURES_VERSION,
-    OR: searchQueries.flatMap((query) =>
-      formSearchPropertiesWhereQuery3Component(query, isPriority),
-    ),
-  };
-}
-
-function formSearchPropertiesWhereQuery2Component(
-  searchQuery: string,
-  isPriority = true,
-) {
-  const or: Prisma.SearchPropertiesOnFigureWhereInput[] = [
-    {
-      figure: { isPriority: true },
+    // figure: {
+    //   isPriority: isPriority,
+    //   // maybe unnecessary
+    //   // key: {
+    //   //   notIn: excludeIds,
+    //   // },
+    // },
+    OR: searchQueries.map((query) => ({
       searchProperty: {
         text: {
-          startsWith: searchQuery,
+          startsWith: query,
           mode: "insensitive",
         },
         type: {
-          in: [
-            FigureSearchPropertyType.KUNYOMI_KANA,
-            FigureSearchPropertyType.KUNYOMI_LATIN,
-            FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA,
-            FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA,
-            FigureSearchPropertyType.ONYOMI_KANA,
-            FigureSearchPropertyType.ONYOMI_LATIN,
-          ],
+          in: query.length > 3 ? COMBINED_TYPES : JAPANESE_TYPES,
         },
       },
-    },
-
-    ...(searchQuery.length > 3
-      ? [
-          {
-            figure: { isPriority: isPriority },
-            searchProperty: {
-              text: {
-                contains: searchQuery,
-                mode: "insensitive" as const,
-              },
-              type: {
-                in: [
-                  FigureSearchPropertyType.TRANSLATION_ENGLISH,
-                  FigureSearchPropertyType.MNEMONIC_ENGLISH,
-                ],
-              },
-            },
-          },
-        ]
-      : []),
-  ];
-  return or;
+    })),
+  };
 }
-function formSearchPropertiesWhereQuery3Component(
-  searchQuery: string,
-  isPriority = true,
+
+function formSearchPropertiesWhereQuery3(
+  searchQueries: string[],
+  // isPriority: boolean,
+  // excludeIds: string[],
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
-    OR: [
-      {
-        figure: { isPriority: isPriority },
-        searchProperty: {
-          text: {
-            contains: searchQuery,
-            mode: "insensitive",
-          },
-          type: {
-            in: [
-              FigureSearchPropertyType.KUNYOMI_KANA,
-              FigureSearchPropertyType.KUNYOMI_LATIN,
-              FigureSearchPropertyType.KUNYOMI_KANA_WITH_OKURIGANA,
-              FigureSearchPropertyType.KUNYOMI_LATIN_WITH_OKURIGANA,
-              FigureSearchPropertyType.ONYOMI_KANA,
-              FigureSearchPropertyType.ONYOMI_LATIN,
-            ],
-          },
+    version: FIGURES_VERSION,
+    // figure: {
+    //   isPriority: isPriority,
+    //   // maybe unnecessary
+    //   // key: {
+    //   //   notIn: excludeIds,
+    //   // },
+    // },
+    OR: searchQueries.map((query) => ({
+      searchProperty: {
+        text: {
+          contains: query,
+          mode: "insensitive",
+        },
+        type: {
+          in: query.length > 3 ? COMBINED_TYPES : JAPANESE_TYPES,
         },
       },
-      ...(searchQuery.length > 3
-        ? [
-            {
-              figure: { isPriority: true },
-              searchProperty: {
-                text: {
-                  contains: searchQuery,
-                  mode: "insensitive" as const,
-                },
-                type: {
-                  in: [
-                    FigureSearchPropertyType.TRANSLATION_ENGLISH,
-                    FigureSearchPropertyType.MNEMONIC_ENGLISH,
-                  ],
-                },
-              },
-            },
-          ]
-        : []),
-    ],
+    })),
   };
 }
