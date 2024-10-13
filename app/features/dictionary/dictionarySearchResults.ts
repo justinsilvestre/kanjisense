@@ -110,25 +110,18 @@ export async function getDictionarySearchResultsFigures(
     {
       continue: false,
       findMany: () =>
-        prisma.kanjisenseFigure
-          .findMany({
-            where: {
-              version: FIGURES_VERSION,
-              id: {
-                in: searchQueries.flatMap((qs) =>
-                  Array.from(qs, (key) => getFigureId(FIGURES_VERSION, key)),
-                ),
-              },
+        prisma.kanjisenseFigure.findMany({
+          where: {
+            version: FIGURES_VERSION,
+            id: {
+              in: searchQueries.flatMap((qs) =>
+                Array.from(qs, (key) => getFigureId(FIGURES_VERSION, key)),
+              ),
             },
-            select: selectFigures,
-            take: RESULTS_BATCH_SIZE,
-          })
-          .then((f) =>
-            f.sort(
-              (a, b) =>
-                searchQueries.indexOf(a.id) - searchQueries.indexOf(b.id),
-            ),
-          ),
+          },
+          select: selectFigures,
+          take: RESULTS_BATCH_SIZE,
+        }),
     },
     {
       continue: true,
@@ -272,18 +265,9 @@ const COMBINED_TYPES = [...JAPANESE_TYPES, ...ENGLISH_TYPES];
 
 function formSearchPropertiesWhereQuery2(
   searchQueries: string[],
-  // isPriority: boolean,
-  // excludeIds: string[],
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     version: FIGURES_VERSION,
-    // figure: {
-    //   isPriority: isPriority,
-    //   // maybe unnecessary
-    //   // key: {
-    //   //   notIn: excludeIds,
-    //   // },
-    // },
     OR: searchQueries.map((query) => ({
       searchProperty: {
         text: {
@@ -300,18 +284,9 @@ function formSearchPropertiesWhereQuery2(
 
 function formSearchPropertiesWhereQuery3(
   searchQueries: string[],
-  // isPriority: boolean,
-  // excludeIds: string[],
 ): Prisma.SearchPropertiesOnFigureWhereInput {
   return {
     version: FIGURES_VERSION,
-    // figure: {
-    //   isPriority: isPriority,
-    //   // maybe unnecessary
-    //   // key: {
-    //   //   notIn: excludeIds,
-    //   // },
-    // },
     OR: searchQueries.map((query) => ({
       searchProperty: {
         text: {

@@ -123,7 +123,6 @@ export function isSecondaryVariant(
   figureId: string,
   variantGroupId: KanjisenseFigure["variantGroupId"],
 ) {
-  console.log({ figureId, variantGroupId });
   return Boolean(variantGroupId && variantGroupId !== figureId);
 }
 
