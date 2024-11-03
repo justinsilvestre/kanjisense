@@ -682,6 +682,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceEverywhere("⺄", "乙")
 
       .replaceEverywhere("丅", "丁")
+      .replaceEverywhere("起", "⿺走巳[GK]	⿺走己[JTV]")
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

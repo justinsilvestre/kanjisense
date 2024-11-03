@@ -123,7 +123,7 @@ export function CharactersProgress({
   //   return (
   //     figure.keyword &&
   //     figure.isKanjisenseMeaningfulComponent() &&
-  //     !seenComponents.some(c=>c.id === char)
+  //     !seenComponents.some(c=>c.key === char)
   //   );
   // });
   const remainingMeaningfulAtomicComponents =
@@ -150,7 +150,7 @@ export function CharactersProgress({
             return b.aozoraAppearances - a.aozoraAppearances;
           })
           .map((entry, i) => {
-            const char = typeof entry === "string" ? entry : entry.id;
+            const char = typeof entry === "string" ? entry : entry.key;
             if (allFiguresKeysSet.has(char))
               return (
                 <span key={char + i}>
@@ -178,10 +178,10 @@ export function CharactersProgress({
           })
           .map((c, i) => (
             <ColorCodedFigure
-              key={c.id + i}
-              display={c.id}
+              key={c.key + i}
+              display={c.key}
               lists={c.listsAsComponent}
-              onClick={getOnClickFigure(c.id)}
+              onClick={getOnClickFigure(c.key)}
             />
           ))}
       </p>
@@ -189,10 +189,10 @@ export function CharactersProgress({
         {seenMeaningfulAtomicComponents.length} atomic components seen:
         {seenMeaningfulAtomicComponents.map((c, i) => (
           <ColorCodedFigure
-            key={c.id + i}
-            display={c.id}
+            key={c.key + i}
+            display={c.key}
             lists={c.listsAsComponent}
-            onClick={getOnClickFigure(c.id)}
+            onClick={getOnClickFigure(c.key)}
           />
         ))}
         <br />
@@ -215,7 +215,7 @@ export function CharactersProgress({
           {remainingMeaningfulAtomicComponents.map((figure) => {
             return (
               <ColorCodedComponentWithUses
-                key={figure.id}
+                key={figure.key}
                 figure={figure}
                 getOnClickFigure={getOnClickFigure}
               />
@@ -253,16 +253,16 @@ export function CharactersProgress({
           {sortedRemainingKanjisenseCharacters.map((c, i) => {
             return (
               <span
-                key={c.id + i}
+                key={c.key + i}
                 className={
-                  seenFigures.some((sc) => sc.id === c.id)
+                  seenFigures.some((sc) => sc.key === c.key)
                     ? "text-opacity-50"
                     : ""
                 }
               >
                 <ColorCodedFigure
-                  display={c.id}
-                  onClick={getOnClickFigure(c.id)}
+                  display={c.key}
+                  onClick={getOnClickFigure(c.key)}
                   lists={c.listsAsCharacter}
                 />
               </span>
@@ -286,14 +286,14 @@ export function CharactersProgress({
           {remainingMeaningfulComponents
             .filter((c) => !c.isStandaloneCharacter)
             .map((c) => {
-              const primaryVariant = c.variantGroupId ?? c.id;
+              const primaryVariantId = c.variantGroupId ?? c.id;
               return (
                 <span
-                  key={c.id}
+                  key={c.key}
                   className={
-                    primaryVariant &&
-                    (seenChars.some((sc) => sc.id === primaryVariant) ||
-                      seenFigures.some((sc) => sc.id === primaryVariant))
+                    primaryVariantId &&
+                    (seenChars.some((sc) => sc.id === primaryVariantId) ||
+                      seenFigures.some((sc) => sc.id === primaryVariantId))
                       ? "bg-slate-300 opacity-50"
                       : ""
                   }
@@ -315,21 +315,21 @@ export function CharactersProgress({
           {remainingMeaningfulComponents
             .filter((c) => c.isStandaloneCharacter)
             .map((c) => {
-              const primaryVariant = c.variantGroupId ?? c.id;
+              const primaryVariantId = c.variantGroupId ?? c.id;
               return (
                 <span
-                  key={c.id}
+                  key={c.key}
                   className={
-                    primaryVariant &&
-                    (seenChars.some((sc) => sc.id === primaryVariant) ||
-                      seenFigures.some((sc) => sc.id === primaryVariant))
+                    primaryVariantId &&
+                    (seenChars.some((sc) => sc.id === primaryVariantId) ||
+                      seenFigures.some((sc) => sc.id === primaryVariantId))
                       ? "opacity-30"
                       : ""
                   }
                 >
                   <ColorCodedFigure
-                    display={c.id}
-                    onClick={getOnClickFigure(c.id)}
+                    display={c.key}
+                    onClick={getOnClickFigure(c.key)}
                     lists={c.listsAsComponent}
                   />
                 </span>
@@ -351,19 +351,19 @@ function ColorCodedComponentWithUses({
   return (
     <div className="border-1 mx-1 inline-block border border-blue-300 ">
       <ColorCodedFigure
-        display={figure.id}
-        onClick={getOnClickFigure(figure.id)}
+        display={figure.key}
+        onClick={getOnClickFigure(figure.key)}
         lists={figure.listsAsComponent}
       />{" "}
       -{" "}
       {figure.asComponent?.allUses.map((u, i) => {
         return (
-          <span key={u.id + i}>
+          <span key={u.key + i}>
             <ColorCodedFigure
-              display={u.id}
+              display={u.key}
               lists={u.listsAsCharacter || u.listsAsComponent || []}
-              key={u + " " + u.id}
-              onClick={getOnClickFigure(u.id)}
+              key={u + " " + u.key}
+              onClick={getOnClickFigure(u.key)}
             />
           </span>
         );

@@ -6,7 +6,6 @@ import {
   KanjiDbVariantType,
   SbgyXiaoyun,
 } from "@prisma/client";
-import { VERSION } from "ts-node";
 
 import { prisma } from "~/db.server";
 import {
@@ -14,7 +13,7 @@ import {
   isAtomicFigure,
 } from "~/features/dictionary/badgeFigure";
 import { baseKanji, baseKanjiSet, joyoKanji } from "~/lib/baseKanji";
-import { getLatestFigureId } from "~/models/figure";
+import { FIGURES_VERSION, getLatestFigureId } from "~/models/figure";
 
 import { BadgeFigure } from "../dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "../dictionary/transcribeSbgyXiaoyun";
@@ -97,7 +96,7 @@ export async function getCurationState(courseId: string, page: number) {
 
   const joyoKanjiWithVariants = await prisma.kanjisenseFigure.findMany({
     where: {
-      version: VERSION,
+      version: FIGURES_VERSION,
       isPriority: true,
       listsAsCharacter: { has: "j" },
       variantGroupId: {
@@ -131,7 +130,7 @@ export async function getCurationState(courseId: string, page: number) {
   const nonJoyoPriorityCharsWithVariants =
     await prisma.kanjisenseFigure.findMany({
       where: {
-        version: VERSION,
+        version: FIGURES_VERSION,
         isPriority: true,
         listsAsCharacter: { isEmpty: false },
         variantGroupId: {
@@ -182,8 +181,8 @@ export async function getCurationState(courseId: string, page: number) {
     if (variants.length > 1) {
       const [mostCommonVariant, ...otherVariants] = variants;
       for (const variant of otherVariants) {
-        nonJoyoLessCommonPriorityToMoreCommonPriority[variant.id] =
-          mostCommonVariant.id;
+        nonJoyoLessCommonPriorityToMoreCommonPriority[variant.key] =
+          mostCommonVariant.key;
       }
     }
   }
@@ -201,10 +200,10 @@ export async function getCurationState(courseId: string, page: number) {
   const allFiguresKeys = await prisma.kanjisenseFigure
     .findMany({
       select: {
-        id: true,
+        key: true,
       },
     })
-    .then((figures) => figures.map((f) => f.id));
+    .then((figures) => figures.map((f) => f.key));
   const course = await prisma.course.findUnique({
     where: {
       id: courseId,
@@ -239,8 +238,8 @@ export async function getCurationState(courseId: string, page: number) {
   // excluding characters not in kanjisense
   const seenCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
-      version: VERSION,
-      id: {
+      version: FIGURES_VERSION,
+      key: {
         in: [
           ...new Set(
             seenTexts
@@ -255,7 +254,8 @@ export async function getCurationState(courseId: string, page: number) {
   });
   const seenFigures = await prisma.kanjisenseFigure.findMany({
     where: {
-      id: {
+      version: FIGURES_VERSION,
+      key: {
         in: [
           ...new Set(
             await getComponentsFromCharsAsync(
@@ -283,8 +283,9 @@ export async function getCurationState(courseId: string, page: number) {
 
   const seenCharsTangReadings = await prisma.kanjisenseFigureReading.findMany({
     where: {
-      id: {
-        in: seenCharacters.map((c) => c.id),
+      version: FIGURES_VERSION,
+      key: {
+        in: seenCharacters.map((c) => c.key),
       },
       sbgyXiaoyuns: {
         some: {},
@@ -292,6 +293,7 @@ export async function getCurationState(courseId: string, page: number) {
     },
     select: {
       id: true,
+      key: true,
       sbgyXiaoyunsMatchingExemplars: true,
       sbgyXiaoyuns: {
         select: {
@@ -301,16 +303,16 @@ export async function getCurationState(courseId: string, page: number) {
     },
   });
   const seenCharsTangReadingsMap = new Map(
-    seenCharsTangReadings.map((r) => [r.id, r]),
+    seenCharsTangReadings.map((r) => [r.key, r]),
   );
   const defaultTangReadings = Object.fromEntries(
     seenTexts.flat().map((text) => {
       return [
         text.key,
-        getDefaultTangReadings(text.normalizedText, (id) => {
+        getDefaultTangReadings(text.normalizedText, (key) => {
           return (
             seenCharsTangReadingsMap
-              .get(id)
+              .get(key)
               ?.sbgyXiaoyuns.map((x) => x.sbgyXiaoyun) || []
           );
         }),
@@ -320,9 +322,9 @@ export async function getCurationState(courseId: string, page: number) {
 
   const remainingKanjisenseCharacters = await prisma.kanjisenseFigure.findMany({
     where: {
-      version: VERSION,
-      id: {
-        notIn: seenCharacters.map((c) => c.id),
+      version: FIGURES_VERSION,
+      key: {
+        notIn: seenCharacters.map((c) => c.key),
       },
       isPriority: true,
       // should include those without directUses
@@ -337,10 +339,10 @@ export async function getCurationState(courseId: string, page: number) {
       image: true,
       asComponent: {
         select: {
-          id: true,
+          key: true,
           allUses: {
             select: {
-              id: true,
+              key: true,
               aozoraAppearances: true,
             },
             where: {
@@ -357,9 +359,9 @@ export async function getCurationState(courseId: string, page: number) {
 
   const remainingMeaningfulComponents = await prisma.kanjisenseFigure.findMany({
     where: {
-      version: VERSION,
-      id: {
-        notIn: seenFigures.map((c) => c.id),
+      version: FIGURES_VERSION,
+      key: {
+        notIn: seenFigures.map((c) => c.key),
       },
       isPriority: true,
       // should include those without directUses
@@ -386,6 +388,7 @@ export async function getCurationState(courseId: string, page: number) {
           allUses: {
             select: {
               id: true,
+              key: true,
               aozoraAppearances: true,
               listsAsCharacter: true,
               listsAsComponent: true,
@@ -413,13 +416,13 @@ export async function getCurationState(courseId: string, page: number) {
       : null;
 
   console.log({
-    seenCharacters: seenCharacters.map((c) => c.id).join(""),
-    seenFigures: seenFigures.map((c) => c.id).join(" "),
+    seenCharacters: seenCharacters.map((c) => c.key).join(""),
+    seenFigures: seenFigures.map((c) => c.key).join(" "),
     remainingKanjisenseCharacters: remainingKanjisenseCharacters
-      .map((c) => c.id)
+      .map((c) => c.key)
       .join(""),
     remainingMeaningfulComponents: remainingMeaningfulComponents
-      .map((c) => c.id)
+      .map((c) => c.key)
       .join(" "),
   });
 
@@ -446,8 +449,8 @@ export async function getCurationState(courseId: string, page: number) {
     : null;
 
   const charactersNotNeededAnymore = seenCharacters
-    .map((c) => c.id)
-    .filter((id) => !soughtCharacters?.includes(id));
+    .map((c) => c.key)
+    .filter((key) => !soughtCharacters?.includes(key));
 
   // todo: extract querying for reuse with count below
   const textGroups = await prisma.characterUsagesOnBaseCorpusText.groupBy({

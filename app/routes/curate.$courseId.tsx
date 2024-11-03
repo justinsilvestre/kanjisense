@@ -140,14 +140,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     priorityFiguresIds: await prisma.kanjisenseFigure
       .findMany({
         select: {
-          id: true,
+          key: true,
         },
         where: {
           version: FIGURES_VERSION,
           isPriority: true,
         },
       })
-      .then((figures) => figures.map((f) => f.id)),
+      .then((figures) => figures.map((f) => f.key)),
   });
 };
 
@@ -173,15 +173,15 @@ export default function CuratePage() {
   );
 
   const seenFiguresMap = useMemo(
-    () => new Map(seenFigures.map((c) => [c.id, c])),
+    () => new Map(seenFigures.map((c) => [c.key, c])),
     [seenFigures],
   );
   const remainingComponentsMap = useMemo(
-    () => new Map(remainingMeaningfulComponents.map((c) => [c.id, c])),
+    () => new Map(remainingMeaningfulComponents.map((c) => [c.key, c])),
     [remainingMeaningfulComponents],
   );
   const remainingKanjisenseCharactersMap = useMemo(
-    () => new Map(remainingKanjisenseCharacters.map((c) => [c.id, c])),
+    () => new Map(remainingKanjisenseCharacters.map((c) => [c.key, c])),
     [remainingKanjisenseCharacters],
   );
 
@@ -216,7 +216,7 @@ export default function CuratePage() {
     [filterState.wantedCharacters],
   );
   const seenCharactersSet = useMemo(
-    () => new Set(seenCharacters.map((c) => c.id)),
+    () => new Set(seenCharacters.map((c) => c.key)),
     [seenCharacters],
   );
   const priorityCharactersSet = useMemo(
@@ -233,15 +233,15 @@ export default function CuratePage() {
   const nonAtomicCharactersSeenOnlyAsComponents = new Set(
     remainingKanjisenseCharacters.flatMap((c) => {
       return seenMeaningfulFigures
-        .filter((sc) => sc.id === c.id && !isFigureAtomic(sc))
-        .map((sc) => sc.id);
+        .filter((sc) => sc.key === c.key && !isFigureAtomic(sc))
+        .map((sc) => sc.key);
     }),
   );
   const atomicCharactersSeenOnlyAsComponents = new Set(
     remainingKanjisenseCharacters.flatMap((c) => {
       return seenMeaningfulAtomicComponents
-        .filter((sc) => sc.id === c.id)
-        .map((sc) => sc.id);
+        .filter((sc) => sc.key === c.key)
+        .map((sc) => sc.key);
     }),
   );
 
@@ -381,11 +381,11 @@ export default function CuratePage() {
                               <div className="m-2">
                                 <TextUniqueComponents
                                   text={seenText}
-                                  getFigure={(id) => {
-                                    const seen = seenFiguresMap.get(id);
+                                  getFigure={(key) => {
+                                    const seen = seenFiguresMap.get(key);
                                     if (!seen) return null;
                                     if (
-                                      componentsToFirstSighting.get(id)
+                                      componentsToFirstSighting.get(key)
                                         ?.textKey !== seenText.key
                                     )
                                       return null;
@@ -683,8 +683,8 @@ export default function CuratePage() {
                     <div className="m-2">
                       <TextUniqueComponents
                         text={unseenText}
-                        getFigure={(id) =>
-                          remainingComponentsMap.get(id) || null
+                        getFigure={(key) =>
+                          remainingComponentsMap.get(key) || null
                         }
                         newAtomicCharactersSeenOnlyAsComponents={
                           new Set(
@@ -817,7 +817,7 @@ function TextUniqueComponents({
           figureKey={c.figureKey}
           newWindow
           badgeProps={
-            figure.id.length === 1
+            figure.key.length === 1
               ? {
                   ...badgeProps,
                   image: undefined,
@@ -1156,7 +1156,7 @@ const useSeenTextsState = (
     const formData = new FormData();
     formData.append(
       "sc",
-      seenCharacters.length ? seenCharacters.map((c) => c.id).join("") : "",
+      seenCharacters.length ? seenCharacters.map((c) => c.key).join("") : "",
     );
     formData.append("wc", filterState.wantedCharacters);
 
