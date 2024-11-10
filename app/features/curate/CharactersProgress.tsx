@@ -2,6 +2,8 @@ import { KanjisenseFigure } from "@prisma/client";
 import { useState, Fragment } from "react";
 import type { PropsWithChildren, ReactNode } from "react";
 
+import { getListsMembership } from "prisma/kanjisense/seedKanjisenseFigureRelation";
+
 import { CurationState } from "./getCurationState";
 
 export function CharactersProgress({
@@ -198,12 +200,30 @@ export function CharactersProgress({
         <br />
         <br />
         {atomicCharactersSeenOnlyAsComponents.size} atomic characters
-        encountered only as components:
-        {atomicCharactersSeenOnlyAsComponents}
+        encountered only as components (color coded by lists as character):
+        {Array.from(atomicCharactersSeenOnlyAsComponents, (char, i) => {
+          return (
+            <ColorCodedFigure
+              key={char + i}
+              display={char}
+              lists={[...getListsMembership(char)]}
+              onClick={getOnClickFigure(char)}
+            />
+          );
+        })}
         <br />
         {nonAtomicCharactersSeenOnlyAsComponents.size} other characters
         encountered only as components:
-        {nonAtomicCharactersSeenOnlyAsComponents}
+        {Array.from(nonAtomicCharactersSeenOnlyAsComponents, (char, i) => {
+          return (
+            <ColorCodedFigure
+              key={char + i}
+              display={char}
+              lists={[...getListsMembership(char)]}
+              onClick={getOnClickFigure(char)}
+            />
+          );
+        })}
         <br />
         <br />
         {/* TODO: only count those non-joyo components which are used in non-joyo kanji that are NOT variants of joyo kanji */}

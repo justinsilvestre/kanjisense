@@ -201,6 +201,7 @@ export default function CuratePage() {
     insertTextGroup,
     removeTextGroup,
     moveTextGroup,
+    moveTextGroupTo,
   } = useSeenTextsState(course, seenTexts, seenCharacters, unseenTexts);
 
   const [mouseovered, setMouseovered] = useState<Set<number>>(new Set());
@@ -274,12 +275,32 @@ export default function CuratePage() {
                           消
                         </button>
                       ) : null}
+                      {groupIndex !== 0 ? (
+                        <button
+                          className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
+                          onClick={() =>
+                            moveTextGroupTo(groupIndex, groupIndex - 1)
+                          }
+                        >
+                          前移
+                        </button>
+                      ) : null}
                       <button
                         className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
                         onClick={() => moveTextGroup(groupIndex)}
                       >
                         移
                       </button>
+                      {groupIndex !== seenTextsState.length - 1 ? (
+                        <button
+                          className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
+                          onClick={() =>
+                            moveTextGroupTo(groupIndex, groupIndex + 1)
+                          }
+                        >
+                          後移
+                        </button>
+                      ) : null}
                       <button
                         className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
                         onClick={() => insertTextGroup(groupIndex + 1)}
@@ -602,8 +623,9 @@ export default function CuratePage() {
             }
             remainingKanjisenseCharacters={remainingKanjisenseCharacters}
             remainingMeaningfulComponents={remainingMeaningfulComponents}
-            getOnClickFigure={() => () => {
+            getOnClickFigure={(key) => () => {
               console.log("clicked figure");
+              window.open(`/dict/${key}`, "_blank");
             }}
           />
         ) : null}
@@ -1221,6 +1243,15 @@ const useSeenTextsState = (
       alert("Invalid group number");
     }
   };
+  const moveTextGroupTo = (groupIndex: number, newGroupIndex: number) => {
+    const group = seenTextsState[groupIndex];
+    const newSeenTextsState = [...seenTextsState];
+    newSeenTextsState.splice(groupIndex, 1);
+    newSeenTextsState.splice(newGroupIndex, 0, group);
+
+    setSeenTextsState(newSeenTextsState);
+    console.log(newSeenTextsState);
+  };
 
   return {
     seenTextsFlat,
@@ -1237,6 +1268,7 @@ const useSeenTextsState = (
     insertTextGroup,
     removeTextGroup,
     moveTextGroup,
+    moveTextGroupTo,
   };
 };
 

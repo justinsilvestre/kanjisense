@@ -448,7 +448,7 @@ export function transcribe(
   else if (
     母組 === "端" &&
     // 2nd or 3rd row
-    /^r|^w?([viuy])|^w?e/.test(asciiFinals[韻母 as keyof typeof asciiFinals])
+    /^r|^w?[viuy]/.test(asciiFinals[韻母 as keyof typeof asciiFinals])
   ) {
     initialRealization = initials[母] + "h";
   } else if (!separator && 母 === "以" && /^[yŷẁ]/.test(韻母))
