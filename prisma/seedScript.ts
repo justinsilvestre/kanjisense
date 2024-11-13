@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { FIGURES_VERSION } from "~/models/figure";
-// import { deleteOldFiguresData } from "~/models/versionedFigureData.server";
+import { deleteOldFiguresData } from "~/models/versionedFigureData.server";
 
 import { seedKanjiDbComposition } from "./external/seedKanjiDbComposition";
 import { seedKanjiDbVariants } from "./external/seedKanjiDbVariants";
@@ -107,9 +107,9 @@ export async function seed(prisma: PrismaClient) {
       seedFigureSearchProperties(prisma, version, 100, false),
     );
 
-    // await executeAndLogTime("deleting old figures data", () =>
-    //   deleteOldFiguresData(prisma, version),
-    // );
+    await executeAndLogTime("deleting old figures data", () =>
+      deleteOldFiguresData(prisma, version),
+    );
 
     console.log(
       "disk usage after:",
