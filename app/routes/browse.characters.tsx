@@ -397,11 +397,11 @@ function CollapsiblePreviewList({
         {characters.slice(0, isOpen ? undefined : 100).map((c) => {
           return (
             <DictPreviewLink
-              key={c.id}
-              figureKey={c.id}
+              key={c.key}
+              figureKey={c.key}
               popoverAttributes={popover.getAnchorAttributes(c)}
             >
-              <FigureBadge key={c.id} badgeProps={c} />
+              <FigureBadge key={c.key} badgeProps={c} />
             </DictPreviewLink>
           );
         })}
@@ -442,8 +442,8 @@ function KyoikuCollapsiblePreviewList({
         {characters.slice(0, isOpen ? undefined : 50).map((c) => {
           const anchorAttributes = popover.getAnchorAttributes(c);
           return (
-            <a key={c.id} href={`/dict/${c.key}`} {...anchorAttributes}>
-              <FigureBadge key={c.id} badgeProps={c} />
+            <a key={c.key} href={`/dict/${c.key}`} {...anchorAttributes}>
+              <FigureBadge key={c.key} badgeProps={c} />
             </a>
           );
         })}

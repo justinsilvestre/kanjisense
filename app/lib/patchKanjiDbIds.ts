@@ -1,11 +1,16 @@
-import { joyoKanji } from "./baseKanji";
+import { hyogaiKanji, joyoKanji } from "./baseKanji";
 import { joyoKanjiAddedIn2010 } from "./dic/joyoAddedIn2010";
 import { kanjijumpForcedAtomicFigures } from "./dic/kanjijumpForcedAtomicFigures";
 import { PatchedIds } from "./PatchedIds.server";
 
-const simplifiedJoyo = joyoKanji.replaceAll(
-  new RegExp(`[${joyoKanjiAddedIn2010}]`, "g"),
-  "",
+// TODO: 頻免 badge color
+
+const pre2010Joyo = new Set(
+  joyoKanji.replace(new RegExp(`[${joyoKanjiAddedIn2010}]`, "g"), ""),
+);
+
+const jis2004Changes = new Set(
+  "逢芦飴溢茨鰯淫迂厩噂餌襖迦牙廻恢晦蟹葛鞄釜翰翫徽祇汲灸笈卿饗僅喰櫛屑粂祁隙倦捲牽鍵諺巷梗膏鵠甑叉榊薩鯖錆鮫餐杓灼酋楯薯藷哨鞘杖蝕訊逗摺撰煎煽穿箭詮噌遡揃遜腿蛸辿樽歎註瀦捗槌鎚辻挺鄭擢溺兎堵屠賭瀞遁謎灘楢禰牌這秤駁箸叛挽誹樋稗逼謬豹廟瀕斧蔽瞥蔑篇娩鞭庖蓬鱒迄儲餅籾爺鑓愈猷漣煉簾榔屢冤叟咬嘲囀徘扁棘橙狡甕甦疼祟竈筵篝腱艘芒虔蜃蠅訝靄靱騙鴉",
 );
 
 function encodeFigure(key: string) {
@@ -16,8 +21,6 @@ function encodeFigure(key: string) {
 // ⿰ ⿱ ⿲ ⿳ ⿴ ⿵ ⿶ ⿷ ⿸ ⿹ ⿺ ⿻
 
 // TODO:
-// - CDP-8BF8 really not the same glyph as CDP-876E here (top stroke pokes out/doesn't):
-//    .replaceIds("CDP-8BF8", "⿱&CDP-876E;十")
 // - perhaps should have crown and not cover
 //    睿 top part
 
@@ -162,9 +165,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("㡀", "⿻丷⿻巾八[GT]	⿱小⿵冂小[JK]	⿱⺌⿵冂小[X]")
       .addIdsAfterTransforms("GWS-U3840-G", "⿱⺌⿵冂小")
       .addIdsAfterTransforms("GWS-U655D-G", "⿰&GWS-U3840-G;攵")
+      .replaceComponentOfFigures(pre2010Joyo, "敝", "&GWS-U655D-G;")
 
-      .replaceIds("幣", "⿱&GWS-U655D-G;巾")
-      .replaceIds("弊", "⿱&GWS-U655D-G;廾")
       .addIdsAfterTransforms("GWS-AJ1-13890", "⿱入王")
       .replaceIds("詮", "⿰言&GWS-AJ1-13890;")
       .addIdsAfterTransforms("GWS-AJ1-13811", "⿰⿹弓&CDP-89A6;⿹弓&CDP-89A6;")
@@ -175,7 +177,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
 
       .addIdsAfterTransforms("GWS-U672E-VAR-001", "⿺朩丶")
       .replaceIds("術", "⿴行&GWS-U672E-VAR-001;")
-      .replaceIds("述", "⿺辶&GWS-U672E-VAR-001;")
+      .replaceIds("述", "⿺⻌&GWS-U672E-VAR-001;")
 
       .addIdsAfterTransforms(
         "GWS-KOSEKI-321030",
@@ -207,7 +209,6 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["雚", "⿱艹𨾴"],
         ["薨", "⿳𦭝冖死"],
         ["CDP-8BCB", "⿻口儿"],
-        ["兔", "⿷免丶[GTJV]	⿷免丶[K]"],
         ["CDP-8C7A", "⿱口⿰丨二"],
         ["CDP-8D6B", "⿱丱一"],
         ["CDP-8CE4", "⿻⿱丿⿰丨二丶"],
@@ -262,7 +263,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["倦", "⿰亻卷"],
         ["鯖", "⿰魚青[GT]	⿰魚靑[KJ]"],
         ["錆", "⿰金青[GTV]	⿰金靑[KJ]"],
-        ["愈", "⿱兪心[K]"],
+        ["愈", "⿱俞心[GTJV]	⿱兪心[JK]"],
         ["修", "⿸攸彡"],
         ["倏", "⿸攸犬"],
         ["儵", "⿸攸黑"],
@@ -517,28 +518,32 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("尃", "⿱&GWS-U752B-03-VAR-001;寸")
 
       .addIdsAfterTransforms("GWS-U514D-G", "⿱𠂊&CDP-8BCB;")
-      .replaceComponentOfNonSimplifiedCharacters("免", "&GWS-U514D-G;")
+      .replaceComponentOfAllFiguresExcept(pre2010Joyo, "免", "&GWS-U514D-G;")
 
-      .replaceComponentOfSimplifiedCharacters("辶", "⻌")
+      .replaceComponentOfFigures(joyoKanjiAddedIn2010, "⻌", "辶")
+      .replaceComponentOfFigures(jis2004Changes, "⻌", "辶")
+      .replaceComponentOfFigures(pre2010Joyo, "辶", "⻌")
+      .replaceComponentOfFigures("遥遼迪", "辶", "⻌")
 
-      .replaceComponentOfNonSimplifiedCharacters("者", "者")
+      .replaceComponentOfAllFiguresExcept(pre2010Joyo, "者", "者")
+      .replaceComponentOfFigures(jis2004Changes, "者", "者")
+      .replaceComponentOfFigures("猪渚", "者", "者")
       .replaceIds("者", "⿻者丶")
       .replaceIds("著", "⿱艹者")
-      .replaceComponentOfFigures(simplifiedJoyo, "𩙿", "飠")
-      .replaceComponentOfNonSimplifiedCharacters("飠", "𩙿")
-      .replaceComponentOfNonSimplifiedCharacters("謁", "謁")
-      .replaceComponentOfSimplifiedCharacters("爫", "⺤")
+      .replaceComponentOfFigures(joyoKanjiAddedIn2010, "飠", "𩙿")
+      .replaceComponentOfFigures(jis2004Changes, "飠", "𩙿")
+      .replaceComponentOfFigures(pre2010Joyo, "爫", "⺤")
 
       .addIdsAfterTransforms("GWS-U5B5A-G", "⿱⺤子")
-      .replaceComponentOfSimplifiedCharacters("孚", "&GWS-U5B5A-G;")
+      .replaceComponentOfFigures(pre2010Joyo, "孚", "&GWS-U5B5A-G;")
 
       .addIdsAfterTransforms("GWS-U7230-G", "⿳⺤一友")
       .replaceIds("媛", "⿰女&GWS-U7230-G;")
-      .replaceComponentOfSimplifiedCharacters("爰", "&GWS-U7230-G;")
+      .replaceComponentOfFigures(pre2010Joyo, "爰", "&GWS-U7230-G;")
       .addIdsAfterTransforms("GWS-U5BFD-G", "⿱⺤寸")
-      .replaceComponentOfSimplifiedCharacters("寽", "&GWS-U5BFD-G;")
+      .replaceComponentOfFigures(pre2010Joyo, "寽", "&GWS-U5BFD-G;")
       .addIdsAfterTransforms("GWS-U914B-G", "⿱丷酉")
-      .replaceComponentOfSimplifiedCharacters("酋", "&GWS-U914B-G;")
+      .replaceComponentOfFigures(pre2010Joyo, "酋", "&GWS-U914B-G;")
 
       .addIdsAfterTransforms("GWS-U4E35-G", "⿱业𢆉")
       .replaceEverywhere("丵", "&GWS-U4E35-G;")
@@ -682,7 +687,267 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceEverywhere("⺄", "乙")
 
       .replaceEverywhere("丅", "丁")
-      .replaceEverywhere("起", "⿺走巳[GK]	⿺走己[JTV]")
+
+      // apparently an error
+      .replaceIds("起", "⿺走巳[GK]	⿺走己[JTV]")
+
+      .replaceComponentOfAllFiguresExcept(
+        pre2010Joyo,
+        "次",
+        "&GWS-U6B21-VAR-002;",
+      )
+      .addIdsAfterTransforms("GWS-U6B21-VAR-002", "⿰二欠")
+      .replaceIds("諮", "⿰言⿱次口")
+
+      .addIdsAfterTransforms("GWS-U5DF7-UE0100", "⿱共己")
+      .replaceIds("港", "⿰氵&GWS-U5DF7-UE0100;")
+
+      // JIS 2004
+      // checking via https://www.asahi-net.or.jp/~ax2s-kmtn/ref/jis2000-2004.html
+      // 逢 - correct in ids-cdp
+      // 芦
+      .replaceIds("芦", "⿱艹户[G]	⿱艹戶[TJK]")
+      // 飴 - covered with 飠 mass replacement
+      // 溢
+      .replaceIds("溢", "⿰氵&GWS-U76CA-K;")
+      .addIdsAfterTransforms("GWS-U76CA-K", "⿱⿳八一八皿")
+      // 茨 - correct in 次 mass replacement
+      // 鰯 - fixed above
+      // 淫
+      .replaceIds("㸒", "⿱爫壬[G]	⿱爫𡈼[JTK]")
+      // 迂 - correct in ids-cdp
+      // 厩
+      .replaceIds("厩", "⿸厂既[G]	⿸厂旣[TK]	⿸厂既[J]")
+      // 噂
+      .replaceIds("噂", "⿰口&GWS-U5C0A-K;")
+      .addIdsAfterTransforms("GWS-U5C0A-K", "⿱酋寸")
+      // 餌 - covered with 飠 mass replacement
+      // 襖
+      .replaceIds("襖", "⿰衤奧")
+      // 迦 - correct in ids-cdp
+      // 牙 - seems fine
+      // 廻 - seems fine
+      // 恢
+      .replaceIds("恢", "⿰忄&GWS-U7070-K;")
+      .addIdsAfterTransforms("GWS-U7070-K", "⿸𠂇火")
+      // 晦
+      .replaceIds("晦", "⿰日每")
+      // 蟹 - seems fine
+      // 葛 - fixed above
+      // 鞄
+      .replaceComponentOfFigures(hyogaiKanji, "包", "&GWS-U5305-K;")
+      .addIdsAfterTransforms("GWS-U5305-K", "⿱勹巳")
+      // 釜 - seems fine
+      // 翰 - fixed above
+      // 翫
+      .replaceComponentOfFigures(jis2004Changes, "習", "&GWS-U7FD2-K;")
+      .addIdsAfterTransforms("GWS-U7FD2-K", "⿱羽白")
+      // 徽 - fixed above
+      // 祇 - correct in ids-cdp
+      // 汲
+      .replaceComponentOfFigures(jis2004Changes, "及", "&GWS-U53CA-K;")
+      .addIdsAfterTransforms("GWS-U53CA-K", "⿰丿⿱乛又")
+      // 灸 - seems fine
+      // 笈 - covered with 及 mass replacement
+      // 卿 - fixed above
+      // 饗 -  graphic has dot instead of line for shoku.
+      .replaceIds("饗", "⿱鄉食[GT]	⿱鄕&GWS-U98DF-K;[JK]")
+      .addIdsAfterTransforms("GWS-U98DF-K", "⿱𠆢⿱一艮")
+      // 僅 - fixed above
+      // 喰
+      .replaceIds("喰", "⿰口&GWS-U98DF-K;")
+
+      // 櫛
+      .replaceComponentOfFigures(jis2004Changes, "節", "節")
+      // 屑
+      .replaceComponentOfFigures(hyogaiKanji, "肖", "&GWS-U8096-K;")
+      .addIdsAfterTransforms("GWS-U8096-K", "⿱小月")
+      // 粂 - seems fine
+      // 祁
+      .replaceComponentOfFigures(jis2004Changes, "礻", "示")
+      // 隙 - seems fine; only a hane difference
+      // 倦 - fixed above
+      // 捲 - fixed above
+      // 牽 - seems fine
+      // 鍵 - seems fine
+      // 諺 - fixed above
+      // 巷
+      .replaceIds("巷", "⿱共巳")
+      // 梗 - seems fine
+      // 膏 - seems fine
+      // 鵠
+      .replaceIds("鵠", "⿰告鳥[GTJ]	⿰吿鳥[JK]")
+      // 甑
+      .replaceComponentOfFigures(jis2004Changes, "曽", "曾")
+      // 叉 - seems fine
+      // 榊
+      .replaceComponentOfFigures(jis2004Changes, "神", "神")
+      // 薩 - fixed above
+      // 鯖 - fixed above
+      // 錆 - fixed above
+      // 鮫 - seems fine
+      // 餐 - fixed with 饗 fix
+      // 杓 - fixed above
+      // 灼 - fixed above
+      // 酋 - fixed above
+      // 楯 - seems fine
+      // 薯
+      .replaceIds("薯", "⿱艹署")
+      // 藷
+      .replaceIds("藷", "⿰言者")
+      // 哨 - fixed with 屑 fix
+      // 鞘 - fixed with 鞄 fix
+      // 杖 - seems fine
+      // 蝕 - covered with 飠 mass replacement
+      // 訊 - fixed above
+      // 逗 - covered with shinnyou mass replacement
+      // 摺 - fixed with 習 mass replacement
+      // 撰
+      .replaceIds("撰", "⿰扌&GWS-U5DFD-K;")
+      .addIdsAfterTransforms("GWS-U5DFD-K", "⿱⿰巳巳共")
+      // 煎 - fixed above
+      // 煽
+      .replaceIds("煽", "⿰火&GWS-U6247-K;")
+      .addIdsAfterTransforms("GWS-U6247-K", "⿸戶羽")
+      // 穿 - seems fine
+      // 箭 - fixed above
+      // 詮 - fixed above
+      // 噌 - covered with 曽 mass replacement
+      // 遡 - covered with shinnyou mass replacement
+      // 揃 - fixed above
+      // 遜 - covered with shinnyou mass replacement
+      // 腿
+      .replaceIds("腿", "⿰月&GWS-U9000-K;")
+      .addIdsAfterTransforms("GWS-U9000-K", "⿺辶艮")
+      // 蛸 - covered with 肖 mass replacement
+      // 辿 - covered with shinnyou mass replacement
+      // 樽
+      .replaceComponentOfFigures(jis2004Changes, "尊", "&GWS-U5C0A-K;")
+      // 歎
+      .replaceIds("歎", "⿰&CDP-8BD3;欠")
+      // 註 - seems fine; dot versus small vertical line
+      // 瀦
+      .replaceIds("豬", "⿰豕者")
+      // 捗 - correct in ids-cdp
+      // 槌
+      .replaceIds("槌", "⿰木&GWS-U8FFD-VAR-001;")
+      .addIdsAfterTransforms("GWS-U8FFD-VAR-001", "⿺辶𠂤")
+      // 鎚
+      .replaceIds("鎚", "⿰金&GWS-U8FFD-VAR-001;")
+      // 辻 - covered with shinnyou mass replacement
+      // 挺 - seems fine
+      // 鄭 - correct in ids-cdp
+      // 擢 - fixed above
+      // 溺 - fixed above
+      // 兎 - probably fixed somewhere above; TODO: check after rebuild
+      // 堵 - covered with 者 mass replacement
+      // 屠 - covered with 者 mass replacement
+      // 賭 - covered with 者 mass replacement
+      // 瀞
+      .replaceIds("瀞", "⿰氵静[G]	⿰氵靜[JTKT]")
+      // 遁 - covered with shinnyou mass replacement
+      // 謎 - fixed above
+      // 灘
+      .replaceIds("灘", "⿰氵難")
+      // 楢 - correct in ids-cdp
+      // 禰 - covered with 礻 mass replacement
+      // 牌 - probably fixed somewhere above; TODO: check after rebuild
+      // 這 - covered with shinnyou mass replacement
+      // 秤
+      .replaceIds("秤", "⿰禾&GWS-U5E73-K;")
+      .addIdsAfterTransforms("GWS-U5E73-K", "⿻干八")
+      // 駁 - seems fine
+      // 箸 - covered with mono mass replacement
+      // 叛
+      .replaceIds("叛", "⿰&GWS-U534A-K;反")
+      .addIdsAfterTransforms("GWS-U534A-K", "⿱八&CDP-8BF1;")
+      // 挽 - covered with men mass replacement
+      // 誹 - seems fine
+      // 樋
+      .replaceIds("樋", "⿰木&GWS-U901A-K;")
+      .addIdsAfterTransforms("GWS-U901A-K", "⿺辶甬")
+      // 稗 - probably fixed somewhere above; TODO: check after rebuild
+      // 逼 - covered with shinnyou mass replacement
+      // 謬 - fixed above
+      // 豹 - fixed above
+      // 廟
+      .replaceIds("廟", "⿸广&GWS-U671D-UE0101;")
+      // 瀕
+      .replaceIds("瀕", "⿰氵頻")
+      // 斧 - seems fine
+      // 蔽 - correct in ids-cdp
+      // 瞥 - correct in ids-cdp
+      // 蔑
+      .replaceIds("蔑", "⿱𦭝戌")
+      // 篇
+      .replaceComponentOfFigures(pre2010Joyo, "扁", "&GWS-U6241-UE0100;")
+      .addIdsAfterTransforms("GWS-U6241-UE0100", "⿸戸𠕁")
+      .replaceIds("扁", "⿸户𠕁[G]	⿸戶𠕁[JTKV]")
+      // 娩 - covered with men mass replacement
+      // 鞭 - seems fine
+      // 庖 - fixed above
+      // 蓬
+      // the problem here is actually 縫
+      .replaceIds("縫", "⿰糸&GWS-U9022-UE0100;")
+      .addIdsAfterTransforms("GWS-U9022-UE0100", "⿺⻌逢")
+      // 鱒 - covered with 尊 mass replacement
+      // 迄 - covered with shinnyou mass replacement
+      // 儲
+      .replaceIds("儲", "⿰亻&GWS-UFA22-J;")
+      .addIdsAfterTransforms("GWS-UFA22-J", "⿰言者")
+      // 餅 - covered with shokuhen mass replacement
+      // 籾 - fixed above
+      // 爺 - seems fine
+      // 鑓
+      .replaceIds("鑓", "⿰金&GWS-U9063-K;")
+      .addIdsAfterTransforms("GWS-U9063-K", "⿺辶𠳋")
+      // 愈
+      .replaceIds("癒", "⿸疒&GWS-U6108-G;")
+      .addIdsAfterTransforms("GWS-U6108-G", "⿱兪心")
+      // 猷 - covered with yuu mass replacement
+      // 漣
+      .replaceIds("漣", "⿰氵連")
+      .addIdsAfterTransforms("連", "⿺辶車")
+      // 煉 - fixed above
+      // 簾
+      .replaceIds("簾", "⿱竹⿸广&GWS-U517C-VAR-001;")
+      .addIdsAfterTransforms("GWS-U517C-VAR-001", "⿻⿳⿰㇀㇀一⺕&CDP-8CB5;")
+      // 榔
+      .replaceIds("榔", "⿰木郎[GTV]	⿰木郞[JK]")
+      // 屢 - seems fine
+      // 冤
+      .replaceIds("兔", "⿷&GWS-U514D-G;丶")
+      .replaceIds("冤", "⿱冖⿷免丶")
+      // 叟
+      .replaceIds("搜", "⿰扌&GWS-U53DF-G;")
+      .addIdsAfterTransforms("GWS-U53DF-G", "⿱⿻臼丨又")
+      // 咬 - seems fine
+      // 嘲 - fixed above
+      // 囀 - perhaps fixed above
+      // 徘 - seems fine
+      // 扁 - fixed with 篇 fix
+      // 棘 - seems fine
+      // 橙 - seems fine
+      // 狡 - seems fine
+      // 甕 - seems fine
+      // 甦 - seems fine
+      // 疼 - seems fine
+      // 祟 - seems fine
+      // 竈 - seems fine
+      // 筵 - seems fine; two lines are connected
+      // 篝 - seems fine; the vertical line inside "gutter" is crossing
+      // 腱 - seems fine
+      // 艘 - seems fine
+      // 芒 - seems fine; the curving line is a bit to the left
+      // 虔 - seems fine
+      // 蜃 - seems fine
+      // 蠅 - seems fine
+      // 訝 - seems fine
+      // 靄
+      .replaceIds("靄", "⿱雨謁")
+      // 靱 - seems fine
+      // 騙 - correct in ids-cdp
+      // 鴉 - seems fine
 
       .forceAtomic(kanjijumpForcedAtomicFigures)
   );

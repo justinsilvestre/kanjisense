@@ -61,7 +61,7 @@ export function getGlyphwikiSvgFilePath(figureKey: string) {
   return path.resolve(__dirname, "vendor", "glyphwiki", "svgs", filename);
 }
 
-function getGlyphWikiCode(key: string) {
+export function getGlyphWikiCode(key: string) {
   if ([...key].length === 1) {
     const uCode = key.codePointAt(0)?.toString(16);
     return `u${uCode}`;

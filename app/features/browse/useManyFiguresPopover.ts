@@ -15,10 +15,10 @@ export function useManyFiguresPopover() {
         e.preventDefault();
         if (figurePopover.popper.isOpen) {
           figurePopover.popper.close();
-          figurePopover.loadFigure(badgeProps.id, badgeProps);
+          figurePopover.loadFigure(badgeProps.key, badgeProps);
         } else {
-          console.log("load figure", badgeProps.id);
-          figurePopover.loadFigure(badgeProps.id, badgeProps);
+          console.log("load figure", badgeProps.key);
+          figurePopover.loadFigure(badgeProps.key, badgeProps);
           figurePopover.popper.open();
         }
         figurePopover.popper.setReferenceElement(

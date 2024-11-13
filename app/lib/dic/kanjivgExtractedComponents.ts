@@ -52,7 +52,7 @@ export const kanjivgExtractedComponents: {
   }],
   夅: ["降", [4, 10], takeWideRightElement],
   粦: ["隣", [4, 16], takeWideRightElement],
-  'GWS-U8FF7-K': ["謎", [8, 17]],
+  'GWS-U8FF7-K': ["謎", [8, 17], takeWideRightElement],
   'GWS-U6728-01': ["林", [1, 4]],
   '⻗': ['雲', [1, 8]],
   '𠂭': ['鹵', [5, 10]],
@@ -60,5 +60,7 @@ export const kanjivgExtractedComponents: {
   'GWS-U20087-11': ['右', [1, 2]],
   '耒': ['耕', [1, 6]],
   'GWS-U3AC3-05': ['旅', [1, 6]],
+  "迶": ['随', [4, 12]],
+  'GWS-U76CA-K': ["溢", [4, 13], takeWideRightElement],
 };
 

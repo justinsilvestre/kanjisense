@@ -10,13 +10,9 @@ type IdsTransform =
       replacement: string;
     }
   | {
-      type: "NON_SIMPLIFIED_FIGURES";
-      pattern: string | RegExp;
-      replacement: string;
-    }
-  | {
-      type: "SIMPLIFIED_FIGURES";
-      pattern: string | RegExp;
+      type: "ALL_FIGURES_EXCEPT";
+      figuresToExclude: Set<string>;
+      pattern: string;
       replacement: string;
     };
 
@@ -28,12 +24,7 @@ export class PatchedIds {
   _lookupCache = new Map<FigureKey, string>();
 
   constructor(
-    // use shorthand for this.getOriginalIds
     private getOriginalIds: (key: FigureKey) => Promise<string | null>,
-    private variantsHelpers: {
-      figureIsSimplifiedInStandardForm: (key: FigureKey) => Promise<boolean>;
-      figureIsNonSimplified: (key: FigureKey) => Promise<boolean>;
-    },
   ) {}
 
   private cache(key: FigureKey, ids: string) {
@@ -52,35 +43,9 @@ export class PatchedIds {
     if (!originalIds) throw new Error(`No ids found in original for ${key}`);
     let transformed = originalIds;
 
-    const figuresSimpliiedInStandardForm = new Map<FigureKey, boolean>();
-    const figuresNotSimplifiedInStandardForm = new Map<FigureKey, boolean>();
-
-    const memoizedVariantsHelpers = {
-      figureIsSimplifiedInStandardForm: async (key: FigureKey) => {
-        if (figuresSimpliiedInStandardForm.has(key))
-          return figuresSimpliiedInStandardForm.get(key)!;
-        const result =
-          await this.variantsHelpers.figureIsSimplifiedInStandardForm(key);
-        figuresSimpliiedInStandardForm.set(key, result);
-        return result;
-      },
-      figureIsNonSimplified: async (key: FigureKey) => {
-        if (figuresNotSimplifiedInStandardForm.has(key))
-          return figuresNotSimplifiedInStandardForm.get(key)!;
-        const result = await this.variantsHelpers.figureIsNonSimplified(key);
-        figuresNotSimplifiedInStandardForm.set(key, result);
-        return result;
-      },
-    };
-
     for (const transform of this._transforms) {
       try {
-        transformed = await applyTransform(
-          memoizedVariantsHelpers,
-          transform,
-          transformed,
-          key,
-        );
+        transformed = await applyTransform(transform, transformed, key);
       } catch (err) {
         console.error(err);
         throw new Error(
@@ -155,6 +120,19 @@ export class PatchedIds {
     });
   }
 
+  replaceComponentOfAllFiguresExcept(
+    figuresToExclude: Iterable<string>,
+    componentIds: string,
+    replacement: string,
+  ) {
+    return this.transform({
+      type: "ALL_FIGURES_EXCEPT",
+      figuresToExclude: new Set(figuresToExclude),
+      pattern: componentIds,
+      replacement,
+    });
+  }
+
   extractFigureFromIdsSegment({
     componentIdsSegment,
     replacementIdsSegment,
@@ -177,25 +155,6 @@ export class PatchedIds {
     return this;
   }
 
-  replaceComponentOfNonSimplifiedCharacters(
-    pattern: string,
-    replacement: string,
-  ) {
-    return this.transform({
-      type: "NON_SIMPLIFIED_FIGURES",
-      pattern,
-      replacement,
-    });
-  }
-
-  replaceComponentOfSimplifiedCharacters(pattern: string, replacement: string) {
-    return this.transform({
-      type: "SIMPLIFIED_FIGURES",
-      pattern,
-      replacement,
-    });
-  }
-
   forceAtomic(figures: Iterable<string>) {
     for (const figure of figures) {
       this.addAtomicIdsLine(figure);
@@ -206,10 +165,6 @@ export class PatchedIds {
 }
 
 async function applyTransform(
-  variantsHelpers: {
-    figureIsSimplifiedInStandardForm: (key: FigureKey) => Promise<boolean>;
-    figureIsNonSimplified: (key: FigureKey) => Promise<boolean>;
-  },
   transform: IdsTransform,
   transformed: string,
   key: string,
@@ -224,20 +179,11 @@ async function applyTransform(
       if (transform.figures.has(key))
         return transformed.replaceAll(transform.pattern, transform.replacement);
       return transformed;
-    case "NON_SIMPLIFIED_FIGURES": {
-      if (await variantsHelpers.figureIsNonSimplified(key)) {
+    case "ALL_FIGURES_EXCEPT":
+      if (!transform.figuresToExclude.has(key))
         return transformed.replaceAll(transform.pattern, transform.replacement);
-      }
       return transformed;
-    }
-    case "SIMPLIFIED_FIGURES": {
-      if (await variantsHelpers.figureIsSimplifiedInStandardForm(key)) {
-        return transformed.replaceAll(transform.pattern, transform.replacement);
-      }
-    }
   }
-
-  return transformed;
 }
 
 function encodeFigure(key: string) {

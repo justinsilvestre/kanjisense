@@ -259,7 +259,7 @@ function AtomicComponentsPageContent({
                   className="inline-flex flex-col flex-wrap gap-2 p-1"
                 >
                   <DictPreviewLink
-                    figureKey={figures[0].figure.id}
+                    figureKey={figures[0].figure.key}
                     popoverAttributes={popover.getAnchorAttributes(
                       figures[0].figure,
                     )}

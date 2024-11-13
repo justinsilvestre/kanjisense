@@ -61,8 +61,8 @@ export function FigureSearchResultsList({
       {isOpen
         ? items
             .sort((a, b) => {
-              const aExactInputKeyMatch = inputValue.indexOf(a.id);
-              const bExactInputKeyMatch = inputValue.indexOf(b.id);
+              const aExactInputKeyMatch = inputValue.indexOf(a.key);
+              const bExactInputKeyMatch = inputValue.indexOf(b.key);
               if (aExactInputKeyMatch !== -1 && bExactInputKeyMatch !== -1) {
                 return aExactInputKeyMatch - bExactInputKeyMatch;
               }
@@ -72,7 +72,7 @@ export function FigureSearchResultsList({
               const itemProps = getItemProps?.({ item: figure, index });
               return (
                 <li
-                  key={`${figure.id}${index}`}
+                  key={`${figure.key}${index}`}
                   {...itemProps}
                   className={cx(searchIsPending ? "opacity-70" : "")}
                 >

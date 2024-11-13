@@ -80,8 +80,8 @@ export async function getAtomicFigureBadgeFigures(prisma: PrismaClient) {
       figures: {
         where: {
           version: FIGURES_VERSION,
-          id: {
-            notIn: [...priorityAtomicComponents.map((figure) => figure.id)],
+          key: {
+            notIn: [...priorityAtomicComponents.map((figure) => figure.key)],
           },
           listsAsComponent: { isEmpty: false },
         },

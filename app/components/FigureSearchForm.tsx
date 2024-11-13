@@ -88,7 +88,9 @@ export function FigureSearchForm({
     itemToString(item) {
       if (!item) return "";
 
-      return item?.id.charAt(0) === item.id ? item.id : item.keyword || item.id;
+      return item?.key.charAt(0) === item.key
+        ? item.key
+        : item.keyword || item.key;
     },
   });
 

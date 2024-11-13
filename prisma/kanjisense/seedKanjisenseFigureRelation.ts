@@ -32,48 +32,14 @@ export async function seedKanjisenseFigureRelation(
     step: "KanjisenseFigureRelation",
     async setup(seedInterface, log) {
       const patchedIds = patchIds(
-        new PatchedIds(
-          async (key) => {
-            const kanjiDbComposition =
-              await prisma.kanjiDbComposition.findUnique({
-                where: { id: key },
-              });
-            return kanjiDbComposition?.ids ?? null;
-          },
-          {
-            async figureIsSimplifiedInStandardForm(key) {
-              const kanjiDbVariants = await prisma.kanjiDbVariant.count({
-                where: {
-                  base: key,
-                  variantType: {
-                    in: [
-                      KanjiDbVariantType.OldStyle,
-                      KanjiDbVariantType.VariationSelectorVariant,
-                    ],
-                  },
-                },
-              });
-
-              return kanjiDbVariants > 0;
+        new PatchedIds(async (key) => {
+          const kanjiDbComposition = await prisma.kanjiDbComposition.findUnique(
+            {
+              where: { id: key },
             },
-            async figureIsNonSimplified(key) {
-              const allVariants = await prisma.kanjiDbVariant.count({
-                where: {
-                  base: key,
-                },
-              });
-              if (allVariants === 0) return true;
-
-              const newStyleVariants = await prisma.kanjiDbVariant.count({
-                where: {
-                  base: key,
-                  variantType: KanjiDbVariantType.NewStyle,
-                },
-              });
-              return newStyleVariants !== 0;
-            },
-          },
-        ),
+          );
+          return kanjiDbComposition?.ids ?? null;
+        }),
       );
 
       const allVariantGroups = (
@@ -249,6 +215,7 @@ async function analyzeFiguresRelations(
     const idsText = cached?.idsText ?? (await patchedIds.getIds(figureKey));
     const ids = parseIds(figureKey, idsText);
     const jLocaleIndex = ids.locales["J"];
+
     if (verbose && !jLocaleIndex && ids.sequences.length > 1) {
       log(`Arbitrarily choosing first sequence for ${figureKey}`);
     }

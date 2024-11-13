@@ -1,4 +1,4 @@
-export const FIGURES_VERSION = 1;
+export const FIGURES_VERSION = 2;
 
 export type FigureKey = string;
 

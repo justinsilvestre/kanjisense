@@ -55,7 +55,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json<LoaderData>(
       {
         errorMessage: `No figure ${JSON.stringify(
-          figureId,
+          figureKey,
         )} could be found in the database. `,
       },
       { status: 404 },
