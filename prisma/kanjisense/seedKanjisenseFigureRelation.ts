@@ -1,4 +1,4 @@
-import { KanjiDbVariantType, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import { getSeedInterface } from "prisma/SeedInterface";
 import {
