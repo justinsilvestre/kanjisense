@@ -102,14 +102,14 @@ export function Baxter() {
         all, a design problem here.
       </p>
       <p>
-        This problem is essentially one that Baxter shares with all actual
-        reconstructions of Middle Chinese: the selection of symbols is largely
-        arbitrary. In the case of actual phonetic reconstructions, this is
-        inescapable, since there are so many grey areas in these
-        reconstructions, yet you've got to choose <em>some</em> particular
-        symbols if you're going to put your ideas to paper. But at least in an
-        actual reconstruction, that arbitrariness in symbol choice is mitigated
-        by a <strong>strong guiding principle</strong>: the reconstructor's
+        This problem is essentially one that Baxter's notation shares with all
+        actual reconstructions of Middle Chinese: the selection of symbols is
+        largely arbitrary. In the case of actual phonetic reconstructions, this
+        is inescapable; there are so many grey areas in these reconstructions,
+        yet you've got to choose <em>some</em> particular symbols if you're
+        going to put your ideas to paper. But at least in an actual
+        reconstruction, that arbitrariness in symbol choice is mitigated by a{" "}
+        <strong>strong guiding principle</strong>: the reconstructor's
         motivation to put forth a clear, internally consistent argument about
         the sounds of the language. Since Baxter had no such argument to make,
         he thought it right to dispense with any strong guiding principle. But a

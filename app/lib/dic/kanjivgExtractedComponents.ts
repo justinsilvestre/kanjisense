@@ -10,6 +10,14 @@ const takeWideRightElement: Partial<TransformObject>= {
   scale: [1.25, 1],
   origin: [109, 0],
 }
+const takeTallBottomElement: Partial<TransformObject>= {
+  scale: [1, 1.25],
+  origin: [109 / 2, 109],
+}
+const takeBottomRightElement: Partial<TransformObject>= {
+  scale: [1.25, 1.25],
+  origin: [109, 109],
+}
 
 export const kanjivgExtractedComponents: {
   [key: string]:
@@ -62,5 +70,11 @@ export const kanjivgExtractedComponents: {
   'GWS-U3AC3-05': ['旅', [1, 6]],
   "迶": ['随', [4, 12]],
   'GWS-U76CA-K': ["溢", [4, 13], takeWideRightElement],
+  '乑': ['衆', [7, 12], takeTallBottomElement],
+  "𠂢": ['派', [4, 9], takeWideRightElement],
+  "GWS-U27607-VAR-010": ['派', [6, 9], takeWideRightElement],
+  'GWS-CDP-8C66-VAR-001': ['旅', [7, 10], takeBottomRightElement],
+  'GWS-U22F04-03-VAR-001': ["啓", [1, 8]],
+  '𠂆': ['盾', [1, 2]]
 };
 

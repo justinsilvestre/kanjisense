@@ -40,18 +40,19 @@ export function Diacritics({
         <h4>The four rows of the rime tables {showContentsButton()}</h4>
         <p>
           I briefly mentioned above that one of the foundational sources for
-          Middle Chinese phonology was something called the "rime tables". These
+          Middle Chinese phonology is something called the "rime tables". These
           tables were basically a tool used for looking up words'
           pronunciations, much like you might use a dictionary for today. But
-          instead of writing out pronunciations somehow in phonetic symbols, the
+          instead of writing out pronunciations in phonetic symbols somehow, the
           compilers of these tables invented a sophisticated <i>grid system</i>.
           They took every Chinese syllable they could think of, and chose one
           representative character for each. Then, they arranged these
           characters on a series of grids, grouping similar-sounding characters
           close together. It was a complex system, much more complex than you'll
-          in dictionaries today, but it was an ingenious system for the time. It
-          made it possible for any Chinese speaker at the time to easily look up
-          character readings, without having to learn any new writing system.
+          find in dictionaries today, but it was an ingenious system for the
+          time. It made it possible for any Chinese speaker at the time to
+          easily look up character readings, without having to learn any new
+          writing system.
         </p>
         <a
           href="https://commons.wikimedia.org/wiki/File:Yunjing.jpg"

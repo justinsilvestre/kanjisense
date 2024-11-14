@@ -293,12 +293,12 @@ export default function MiddleChinese() {
               the words コンピューター <i>konpyūtā</i>, インターネット{" "}
               <i>intānetto</i>, and スマートフォン <i>sumātofon</i>. Of course,
               this only works with words that happen to have been borrowed from
-              English, but it's still extremely helpful for a language-learner,
-              especially when you're dealing with words like these that were
-              invented recently. If you're at the beginning of your Japanese
-              studies, and that sounds like some kind of wizardry, rest
-              assured&mdash;you will gain this skill soon enough. It's just a
-              matter of{" "}
+              English (or another language you happen know), but it's still
+              extremely helpful for a language-learner, especially when you're
+              dealing with words like these that were invented recently. If
+              you're at the beginning of your Japanese studies, and that sounds
+              like some kind of wizardry, rest assured&mdash;you will gain this
+              skill soon enough. It's just a matter of{" "}
               <strong>
                 being exposed to enough English loanwords for the patterns to
                 become clear

@@ -19,7 +19,7 @@ const RHYMES =
 泰-tʻāiˎ / 會-ghwāiˎ-(合口)
 佳-kạ̈ 蟹-ghạ̈ˬ 卦-kwạ̈ˎ / 媧-kwạ̈-(合口)
 皆-kạ̈i 駭-ghạ̈iˬ 怪-kwạ̈iˎ / 乖-kwạ̈i-(合口)
-夬-kwạˎ / 欼-tsʻwạˎ
+夬-kwạiˎ / 欼-tsʻwạiˎ
 灰-khwai 賄-khwaiˬ 隊-dwaiˎ
 咍-khai 海-khaiˬ 代-daiˎ
 廢-pâiˎ
@@ -51,7 +51,7 @@ const RHYMES =
 清-tsʻėng 靜-dzėngˬ 勁-kyengˎ 昔-sėk / 名-myeng-(重紐四等) 騂-swėng-(合口) 傾-kẁeng-(重紐四等合口)
 青-tsʻeng 迥-ghwengˬ 徑-kengˎ 錫-sek / 熒-ghweng-(合口)
 蒸-tśyŏng 拯-tśyŏngˬ 證-tśyŏngˎ 職-tśyŏk / 洫-khŷŏk 域-wĭk
-登-tŏng 等-taiˬ 嶝-tŏngˎ 德-tŏk / 弘-ghwŏng-(合口)
+登-tŏng 等-tŏngˬ 嶝-tŏngˎ 德-tŏk / 弘-ghwŏng-(合口)
 尤-iū 有-iūˬ 宥-iūˎ / 浮-bū-(漢音_vowel_alternation)
 侯-ghou 厚-ghouˬ 候-ghouˎ
 幽-ʾiu 黝-ʾiuˬ 幼-ʾiuˎ
@@ -98,10 +98,10 @@ export function GuangyunRhymesTable() {
         notation system. Each character in the table serves as a section header
         in the <i>Guangyun</i> dictionary (with the exception of the two
         characters in grey, which were placed with other sections for space
-        reasons). Each row contains characters which may be said to differ only
-        in tone. As is tradition, characters with final stop consonants (in the
-        so-called "entering tone") are grouped with characters ending in nasal
-        consonants.
+        reasons). Each row contains characters whose finals may be said to
+        differ only in tone. As is tradition, characters with final stop
+        consonants (in the so-called "entering tone") are grouped with
+        characters ending in nasal consonants.
       </p>
       <p>
         Some <i>Guangyun</i> rhymes are represented in this notation with a

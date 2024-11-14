@@ -251,5 +251,6 @@ export const kanjijumpSpecificVariants = [
   ["兼", "GWS-U517C-VAR-001"],
   ["叟", "GWS-U53DF-G"],
   ["巷", "GWS-U5DF7-UE0100"],
-  ["猪", "猪", "豬"]
+  ["猪", "猪", "豬"],
+  ["啓", "GWS-U22F04-03-VAR-001"]
 ]

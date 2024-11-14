@@ -42,6 +42,21 @@ export function FigureStrokesAnimation({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      if (strokesProgress > 0) stopAnimation();
+    };
+    const handleWindowFocus = () => {
+      if (strokesProgress > 0) startAnimation();
+    };
+    window.addEventListener("blur", handleWindowBlur);
+    window.addEventListener("focus", handleWindowFocus);
+    return () => {
+      window.removeEventListener("blur", handleWindowBlur);
+      window.removeEventListener("focus", handleWindowFocus);
+    };
+  }, [strokesProgress, startAnimation, stopAnimation]);
+
   const strokeProgressForStrokeAtIndex = (index: number) => index + 2;
   const fadeTransition = {
     opacity: showBackground ? 1 : 0,

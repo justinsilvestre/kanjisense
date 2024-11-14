@@ -86,7 +86,11 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["旛", "⿸&GWS-U3AC3-05;番"],
       ])
 
-      .addAtomicIdsLine("GWS-CDP-8C66-VAR-001")
+      .replaceIds("戾", "⿸户犬[G]	⿸戶犬[JTKV]")
+
+      .replaceIds("丘", "⿱斤一")
+
+      .addIdsAfterTransforms("GWS-CDP-8C66-VAR-001", "⿰亻⿱㇀丶")
       .addIdsAfterTransforms("GWS-U2FF3-U5405-U2000E-U27607", "⿱&CDP-8CA3;𧘇")
       .replaceIds("囊", "⿳&CDP-8DDD;冖&GWS-U2FF3-U5405-U2000E-U27607;")
 
@@ -398,9 +402,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["夬", "⿻ユ人"],
 
         // bird
-        ["鳥", "⿻⿱㇀ヨ&CDP-8DBF;"],
+        ["鳥", "⿻白&CDP-8DBF;"],
         // bird without fire
-        ["CDP-8CBB", "⿻⿱㇀ヨ&CDP-8BBF;"],
+        ["CDP-8CBB", "⿻⿱㇀口&CDP-8BBF;"],
         // crow
         ["烏", "⿻⿱㇀コ&CDP-8DBF;"],
 
@@ -702,6 +706,15 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .addIdsAfterTransforms("GWS-U5DF7-UE0100", "⿱共己")
       .replaceIds("港", "⿰氵&GWS-U5DF7-UE0100;")
 
+      .replaceIds("肇", "⿱&GWS-U22F04-03-VAR-001;聿")
+      .replaceIds("啓", "⿱𢼄口[G]	⿱⿰戶攵口[TK]	⿱⿰戸攵口[J]")
+      .extractFigureFromIdsSegment({
+        componentIdsSegment: "⿰戸攵",
+        replacementIdsSegment: "&GWS-U22F04-03-VAR-001;",
+        extractedFigureId: "GWS-U22F04-03-VAR-001",
+        newCompleteIds: "⿰戸攵",
+      })
+
       // JIS 2004
       // checking via https://www.asahi-net.or.jp/~ax2s-kmtn/ref/jis2000-2004.html
       // 逢 - correct in ids-cdp
@@ -786,7 +799,8 @@ export const patchIds = (patchedIds: PatchedIds) => {
       // 鯖 - fixed above
       // 錆 - fixed above
       // 鮫 - seems fine
-      // 餐 - fixed with 饗 fix
+      // 餐
+      .replaceComponentOfFigures("餐", "食", "&GWS-U98DF-K;")
       // 杓 - fixed above
       // 灼 - fixed above
       // 酋 - fixed above
