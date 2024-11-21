@@ -399,6 +399,8 @@ CDP-89AE: # CDP-8C41,氺,楽,渋,CDP-88D2,摂,率,塁,函,𠕒,CDP-8D6F,褱,CDP-
   tag: animals
 西:
   historical: west
+  mnemonic: empty jug
+  reference: 酉
   tag: nature
 長:
   historical: long
