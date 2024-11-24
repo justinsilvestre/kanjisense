@@ -13,7 +13,7 @@ import {
   Fragment,
 } from "react";
 
-import css from "app/features/dictionary/middle-chinese.css?url";
+import css from "app/features/dictionary/middle-chinese.css";
 import { MiddleChineseLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { useTocHighlighting } from "~/components/useTocHighlighting";

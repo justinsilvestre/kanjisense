@@ -17,7 +17,7 @@ import {
 import { DictionaryPageFigureWithPriorityUses } from "./getDictionaryPageFigure.server";
 import { kanjidicKanaToRomaji } from "./kanjidicKanaToRomaji";
 import { QysDialogContent } from "./QysDialogContent";
-import scallopBorder from "./scallopBorder.css?url";
+import scallopBorder from "./scallopBorder.css";
 import slideDownStyles from "./slideDown.module.css";
 import { transcribeSbgyXiaoyun } from "./transcribeSbgyXiaoyun";
 

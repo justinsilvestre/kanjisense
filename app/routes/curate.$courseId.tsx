@@ -5,6 +5,7 @@ import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
+  json,
 } from "@remix-run/server-runtime";
 import {
   Fragment,
@@ -83,9 +84,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   });
 
-  return {
+  return json({
     courseId,
-  };
+  });
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -120,7 +121,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     textGroupsCount,
   } = await getCurationState(courseId, page);
 
-  return {
+  return json({
     course,
     page,
     seenTexts,
@@ -147,7 +148,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         },
       })
       .then((figures) => figures.map((f) => f.key)),
-  };
+  });
 };
 
 export default function CuratePage() {

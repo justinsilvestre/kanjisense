@@ -11,7 +11,7 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
-import stylesheet from "~/tailwind.css?url";
+import stylesheet from "~/tailwind.css";
 
 import Index from "./routes/_index";
 

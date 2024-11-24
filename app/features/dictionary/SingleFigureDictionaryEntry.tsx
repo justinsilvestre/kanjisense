@@ -28,7 +28,7 @@ import { FigureTags } from "./FigureTags";
 import { GlyphsImagesSection } from "./GlyphsImagesSection";
 import { GlyphsJson } from "./GlyphsJson";
 import { kangxiRadicals } from "./kangxiRadicals";
-import kvgStyles from "./kvg.css?url";
+import kvgStyles from "./kvg.css";
 import type { KvgJsonData } from "./KvgJsonData";
 import { RadicalSection } from "./RadicalSection";
 

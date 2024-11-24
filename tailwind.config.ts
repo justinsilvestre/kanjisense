@@ -4,7 +4,6 @@ import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
-
   theme: {
     extend: {
       fontFamily: {
@@ -20,15 +19,5 @@ export default {
       },
     },
   },
-
-  safelist: [
-    { pattern: /bg-(kyoiku|joyo|jinmeiyo|hyogai|extra).*/ },
-
-    "[transform-origin:bottom]",
-    "[transform-origin:top]",
-    "opacity-0",
-    "transition-opacity",
-    "duration-300",
-  ],
   plugins: [],
 } satisfies Config;
