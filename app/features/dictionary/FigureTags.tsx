@@ -8,7 +8,6 @@ import {
   BrowseCharactersLink,
   BrowseCompoundComponentsLink,
 } from "~/components/AppLink";
-import fadeInOutStyles from "~/components/fadeInOut.module.css";
 import { PopperOptions } from "~/components/usePaddedPopper";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
 import { KanjiListCode, isKyoikuCode } from "~/lib/dic/KanjiListCode";
