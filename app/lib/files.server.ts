@@ -3,6 +3,16 @@ import path from "path";
 
 import { kanjivgExtractedComponents } from "./dic/kanjivgExtractedComponents";
 
+const libDirectory = (function () {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return __dirname;
+  } catch (e) {
+    return import.meta.url.replace("file:/", "");
+  }
+})();
+
 export const files = {
   kanjidicInput1: vendor("kanjidic/kanji_bank_1.json"),
   kanjidicInput2: vendor("kanjidic/kanji_bank_2.json"),
@@ -32,17 +42,13 @@ export const files = {
 
 function vendor<S extends string>(string: S) {
   return path.resolve(
-    import.meta.url,
+    libDirectory,
     "vendor",
     string,
   ) as `${string}/vendor/${S}`;
 }
 function dic<S extends string>(string: S) {
-  return path.resolve(
-    import.meta.url,
-    "dic",
-    string,
-  ) as `${string}/vendor/${S}`;
+  return path.resolve(libDirectory, "dic", string) as `${string}/vendor/${S}`;
 }
 
 function readTextFileSync<T>(filepath: string) {
@@ -59,14 +65,14 @@ export function getKvgFilePath(character: string) {
     .codePointAt(0)
     ?.toString(16)
     .padStart(5, "0")}.svg`;
-  return path.resolve(import.meta.url, "vendor", "kanjivg", "svgs", filename);
+  return path.resolve(libDirectory, "vendor", "kanjivg", "svgs", filename);
 }
 
 export function getGlyphwikiSvgFilePath(figureKey: string) {
   const filename = `${
     [...figureKey].length === 1 ? getGlyphWikiCode(figureKey) : figureKey
   }.svg`;
-  return path.resolve(import.meta.url, "vendor", "glyphwiki", "svgs", filename);
+  return path.resolve(libDirectory, "vendor", "glyphwiki", "svgs", filename);
 }
 
 export function getGlyphWikiCode(key: string) {
@@ -84,7 +90,7 @@ export function getGlyphWikiCode(key: string) {
 
 export function getShuowenFilePath(filenameCharacters: string) {
   return path.resolve(
-    import.meta.url,
+    libDirectory,
     "dic",
     "shuowenSvgs",
     Array.from(filenameCharacters, (char) =>
@@ -95,7 +101,7 @@ export function getShuowenFilePath(filenameCharacters: string) {
 
 export function getGlyphsFilePath(char: string) {
   return path.resolve(
-    import.meta.url,
+    libDirectory,
     "dic",
     "glyphs",
     char.codePointAt(0)!.toString(16) + ".json",
