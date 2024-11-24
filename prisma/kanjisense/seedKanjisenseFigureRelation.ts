@@ -1,14 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import { getSeedInterface } from "prisma/SeedInterface";
-import {
-  baseKanji,
-  baseKanjiSet,
-  hyogaiKanji,
-  jinmeiyoKanji,
-  joyoKanji,
-  kyoikuKanji,
-} from "~/lib/baseKanji";
+import { baseKanji, baseKanjiSet } from "~/lib/baseKanji";
 import { KanjiListCode } from "~/lib/dic/KanjiListCode";
 import { PatchedIds } from "~/lib/PatchedIds.server";
 import { patchIds } from "~/lib/patchKanjiDbIds";
@@ -349,14 +342,3 @@ function parseIds(figure: string, idsText: string) {
   const idsSequences = idsText.split("\t");
   return parseLocaleTaggedIdss(figure, idsSequences);
 }
-
-export const joyo = new Set(joyoKanji);
-export const jinmeiyo = new Set(jinmeiyoKanji);
-export const hyogai = new Set(hyogaiKanji);
-
-export const kyoiku1 = new Set(kyoikuKanji[0]);
-export const kyoiku2 = new Set(kyoikuKanji[1]);
-export const kyoiku3 = new Set(kyoikuKanji[2]);
-export const kyoiku4 = new Set(kyoikuKanji[3]);
-export const kyoiku5 = new Set(kyoikuKanji[4]);
-export const kyoiku6 = new Set(kyoikuKanji[5]);
