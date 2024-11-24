@@ -4,7 +4,14 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import { redirect, data , Form, Link, useActionData, useSearchParams } from "react-router";
+import {
+  redirect,
+  data,
+  Form,
+  Link,
+  useActionData,
+  useSearchParams,
+} from "react-router";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
@@ -76,12 +83,22 @@ export default function Join() {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (!(actionData && "errors" in actionData)) return;
+
     if (actionData?.errors?.email) {
       emailRef.current?.focus();
     } else if (actionData?.errors?.password) {
       passwordRef.current?.focus();
     }
   }, [actionData]);
+
+  const errors =
+    actionData && "errors" in actionData
+      ? actionData.errors
+      : {
+          email: null,
+          password: null,
+        };
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -104,13 +121,13 @@ export default function Join() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
+                aria-invalid={errors?.email ? true : undefined}
                 aria-describedby="email-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.email ? (
+              {errors?.email ? (
                 <div className="pt-1 text-red-700" id="email-error">
-                  {actionData.errors.email}
+                  {errors.email}
                 </div>
               ) : null}
             </div>
@@ -130,13 +147,13 @@ export default function Join() {
                 name="password"
                 type="password"
                 autoComplete="new-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
+                aria-invalid={errors.password ? true : undefined}
                 aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.password ? (
+              {errors.password ? (
                 <div className="pt-1 text-red-700" id="password-error">
-                  {actionData.errors.password}
+                  {errors.password}
                 </div>
               ) : null}
             </div>

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "react-router";
+import { data, type LoaderFunction } from "react-router";
 
 import { prisma } from "~/db.server";
 import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";
@@ -74,7 +74,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await analyzeFigureComponents(figureKey);
 
   if (!figure) {
-    return json<FigureComponentsAnalysisLoaderData>(
+    return data<FigureComponentsAnalysisLoaderData>(
       {
         error: `No figure ${JSON.stringify(
           figureKey,
@@ -84,7 +84,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<FigureComponentsAnalysisLoaderData>({
+  return data<FigureComponentsAnalysisLoaderData>({
     figure,
   });
 };

@@ -1,5 +1,6 @@
 import type { LinksFunction, LoaderFunction, MetaFunction } from "react-router";
-import { data ,
+import {
+  data,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
@@ -28,7 +29,12 @@ type LoaderData =
 
 export const meta: MetaFunction<typeof loader> = (a) => [
   {
-    title: getPageTitle(a.params.figureKey, a.data.searchedFigure),
+    title: getPageTitle(
+      a.params.figureKey,
+      a.data && "searchedFigure" in a.data
+        ? (a.data.searchedFigure as DictionaryPageSearchedFigure)
+        : null,
+    ),
   },
 ];
 
@@ -57,14 +63,14 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return data<LoaderData>({
+  return {
     searchedFigure,
-  });
+  };
 };
 
 function getPageTitle(
   figureKey: string | null | undefined,
-  figure: DictionaryPageSearchedFigure,
+  figure: DictionaryPageSearchedFigure | null,
 ): unknown | string {
   if ([...(figureKey || "")].length === 1)
     return `${figureKey} - definition, components, readings, and more | Kanjisense`;

@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<DictPreviewLoaderData>({
+  return {
     figure,
-  });
+  };
 };

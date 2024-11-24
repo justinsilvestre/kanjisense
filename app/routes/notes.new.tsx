@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { ActionFunctionArgs } from "react-router";
-import { data, redirect , Form, useActionData } from "react-router";
+import { data, redirect, Form, useActionData } from "react-router";
 
 import { createNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
@@ -37,12 +37,22 @@ export default function NewNotePage() {
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    if (!(actionData && "errors" in actionData)) return;
+
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
       bodyRef.current?.focus();
     }
   }, [actionData]);
+
+  const errors =
+    actionData && "errors" in actionData
+      ? actionData.errors
+      : {
+          title: null,
+          body: null,
+        };
 
   return (
     <Form
@@ -61,15 +71,13 @@ export default function NewNotePage() {
             ref={titleRef}
             name="title"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
-            }
+            aria-invalid={errors?.title ? true : undefined}
+            aria-errormessage={errors?.title ? "title-error" : undefined}
           />
         </label>
-        {actionData?.errors?.title ? (
+        {errors?.title ? (
           <div className="pt-1 text-red-700" id="title-error">
-            {actionData.errors.title}
+            {errors.title}
           </div>
         ) : null}
       </div>
@@ -82,15 +90,13 @@ export default function NewNotePage() {
             name="body"
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
-            }
+            aria-invalid={errors?.body ? true : undefined}
+            aria-errormessage={errors?.body ? "body-error" : undefined}
           />
         </label>
-        {actionData?.errors?.body ? (
+        {errors?.body ? (
           <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.body}
+            {errors.body}
           </div>
         ) : null}
       </div>
