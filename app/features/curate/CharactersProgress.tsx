@@ -2,7 +2,7 @@ import { KanjisenseFigure } from "@prisma/client";
 import { useState, Fragment } from "react";
 import type { PropsWithChildren, ReactNode } from "react";
 
-import { getListsMembership } from "prisma/kanjisense/seedKanjisenseFigureRelation";
+import { getListsMembership } from "prisma/kanjisense/getListsMembership";
 
 import { CurationState } from "./getCurationState";
 
