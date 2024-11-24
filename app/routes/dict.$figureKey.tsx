@@ -1,14 +1,9 @@
-import type {
-  LinksFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
-import { json } from "@remix-run/node";
-import {
+import type { LinksFunction, LoaderFunction, MetaFunction } from "react-router";
+import { data ,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
-} from "@remix-run/react";
+} from "react-router";
 
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
@@ -52,7 +47,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     ? await getDictionaryPageFigure(figureId)
     : null;
   if (!searchedFigure) {
-    return json<LoaderData>(
+    return data<LoaderData>(
       {
         errorMessage: `No figure ${JSON.stringify(
           figureKey,
@@ -62,7 +57,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<LoaderData>({
+  return data<LoaderData>({
     searchedFigure,
   });
 };

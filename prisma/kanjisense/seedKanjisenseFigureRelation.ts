@@ -11,8 +11,8 @@ import { FigureKey, getFigureId } from "~/models/figure";
 import { runSetupStep } from "../seedUtils";
 
 import { executeAndLogTime } from "./executeAndLogTime";
-import { inBatchesOf } from "./inBatchesOf";
 import { getListsMembership } from "./getListsMembership";
+import { inBatchesOf } from "./inBatchesOf";
 
 export async function seedKanjisenseFigureRelation(
   prisma: PrismaClient,

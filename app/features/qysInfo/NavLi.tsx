@@ -1,5 +1,5 @@
-import { Link } from "@remix-run/react";
 import type { PropsWithChildren, ReactNode } from "react";
+import { Link } from "react-router";
 
 export function NavLi({
   hash,

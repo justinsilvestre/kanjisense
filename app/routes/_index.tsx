@@ -1,5 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
 import { ReactNode } from "react";
+import type { MetaFunction } from "react-router";
 
 import {
   BrowseAtomicComponentsLink,

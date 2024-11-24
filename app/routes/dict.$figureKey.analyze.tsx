@@ -1,5 +1,4 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "react-router";
 
 import { prisma } from "~/db.server";
 import { badgeFigureSelect } from "~/features/dictionary/badgeFigure";

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import { MetaFunction } from "@remix-run/node";
 import { PropsWithChildren, ReactNode, SetStateAction, useState } from "react";
+import { MetaFunction } from "react-router";
 
 import {
   BrowseSoundComponentsLink,

@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 import { PrismaClient } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { Fragment } from "react";
+import type { LoaderFunction } from "react-router";
 import {
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
-} from "@remix-run/react";
-import { Fragment } from "react";
+} from "react-router";
 
 import {
   BrowseAtomicComponentsLink,
@@ -136,7 +135,7 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
 export const loader: LoaderFunction = async () => {
   const allBadgeFigures = await getAllListCharacterBadgeFigures(prisma);
 
-  return json<LoaderData>(allBadgeFigures);
+  return allBadgeFigures;
 };
 
 export default function FigureDetailsPage() {

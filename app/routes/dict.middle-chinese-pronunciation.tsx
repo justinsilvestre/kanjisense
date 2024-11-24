@@ -1,17 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import {
-  MetaFunction,
-  isRouteErrorResponse,
-  useRouteError,
-} from "@remix-run/react";
-import {
   ReactNode,
   useState,
   SetStateAction,
   PropsWithChildren,
   Fragment,
 } from "react";
+import { MetaFunction, isRouteErrorResponse, useRouteError } from "react-router";
 
 import css from "app/features/dictionary/middle-chinese.css?url";
 import { MiddleChineseLink } from "~/components/AppLink";

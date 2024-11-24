@@ -1,7 +1,7 @@
-import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
 import { PropsWithChildren, useEffect, createElement, useState } from "react";
 import { createPortal } from "react-dom";
+import { useFetcher } from "react-router";
 
 import { BadgeProps, getBadgeProps } from "~/features/dictionary/badgeFigure";
 import { DictionaryHeadingMeanings } from "~/features/dictionary/DictionaryHeadingMeanings";
@@ -145,7 +145,7 @@ export function FigurePopoverWindow({
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-    <div
+    (<div
       ref={setPopperElement}
       style={styles.popper}
       {...attributes.popper}
@@ -234,7 +234,7 @@ export function FigurePopoverWindow({
           />
         </div>
       </div>
-    </div>
+    </div>)
   );
 }
 

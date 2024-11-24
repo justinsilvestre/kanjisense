@@ -1,5 +1,5 @@
-import { Link } from "@remix-run/react";
 import { PropsWithChildren } from "react";
+import { Link } from "react-router";
 
 export function ScrollLink({
   hash,

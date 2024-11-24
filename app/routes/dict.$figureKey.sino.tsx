@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "react-router";
+import { data } from "react-router";
 
 import { prisma } from "~/db.server";
 import { getLatestFigureId } from "~/models/figure";
@@ -42,7 +42,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getSinoCharacterReadings(figureKey);
 
   if (!figure) {
-    return json<FigureSinoReadingsLoaderData>(
+    return data<FigureSinoReadingsLoaderData>(
       {
         error: `No figure ${JSON.stringify(
           figureKey,
@@ -52,7 +52,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<FigureSinoReadingsLoaderData>({
+  return data<FigureSinoReadingsLoaderData>({
     readings: figure.reading || null,
   });
 };

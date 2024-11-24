@@ -1,5 +1,5 @@
-import { ScrollRestoration, Scripts } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
+import { ScrollRestoration, Scripts } from "react-router";
 
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 

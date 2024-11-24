@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "react-router";
+import { data } from "react-router";
 
 import { prisma } from "~/db.server";
 import {
@@ -39,7 +39,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getComponentPriorityUses(figureKey);
 
   if (!figure) {
-    return json<FigurePriorityUsesLoaderData>(
+    return data<FigurePriorityUsesLoaderData>(
       {
         error: `No figure ${JSON.stringify(
           figureKey,
@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     );
   }
 
-  return json<FigurePriorityUsesLoaderData>({
+  return data<FigurePriorityUsesLoaderData>({
     id: figure.id,
     key: figureKey,
     firstClassUses: figure.firstClassUses || null,

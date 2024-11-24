@@ -1,5 +1,5 @@
-import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
+import { useFetcher } from "react-router";
 
 import { FigurePopoverBadge } from "~/components/FigurePopover";
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";

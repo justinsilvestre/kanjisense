@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import clsx from "clsx";
+import { createPortal } from "react-dom";
+import type { LoaderFunction, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
-} from "@remix-run/react";
-import clsx from "clsx";
-import { createPortal } from "react-dom";
+} from "react-router";
 
 import {
   AboutLink,
@@ -39,7 +38,7 @@ type LoaderData = Awaited<ReturnType<typeof getAtomicFigureBadgeFigures>>;
 export const loader: LoaderFunction = async () => {
   const allBadgeFigures = await getAtomicFigureBadgeFigures(prisma);
 
-  return json<LoaderData>(allBadgeFigures);
+  return allBadgeFigures;
 };
 
 export default function FigureDetailsPage() {

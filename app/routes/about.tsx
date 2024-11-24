@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import type { MetaFunction } from "@remix-run/node";
 import { ReactNode } from "react";
+import type { MetaFunction } from "react-router";
 
 import { BrowseSoundComponentsLink } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";

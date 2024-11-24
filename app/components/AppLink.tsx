@@ -1,5 +1,5 @@
-import { Link } from "@remix-run/react";
 import { useEffect, type ReactNode, useRef } from "react";
+import { Link } from "react-router";
 
 type LinkProps<T = object> = T & {
   children: ReactNode;

@@ -23,9 +23,9 @@ import {
   ComponentMeaning,
   getFigureMeaningsText,
 } from "./getFigureMeaningsText";
+import { getListsMembership } from "./getListsMembership";
 import { inBatchesOf } from "./inBatchesOf";
 import { isComponentFirstClass } from "./isComponentFirstClass";
-import { getListsMembership } from "./getListsMembership";
 
 export async function seedKanjisenseFigures(
   prisma: PrismaClient,

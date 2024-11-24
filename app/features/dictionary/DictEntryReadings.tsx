@@ -1,8 +1,7 @@
 import { SbgyXiaoyun } from "@prisma/client";
-import { LinksFunction } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
 import { convert as toRevisedKoreanRomanization } from "hangul-romanization";
 import { Fragment, useRef, useState } from "react";
+import { LinksFunction , useFetcher } from "react-router";
 
 import { OnReadingToTypeToXiaoyuns } from "~/lib/OnReadingToTypeToXiaoyuns";
 import { FigureSinoReadingsLoaderData } from "~/routes/dict.$figureKey.sino";
@@ -318,7 +317,7 @@ function OnReading({
   rare?: boolean;
 }) {
   return (
-    <span key={onReading} className="inline-block">
+    (<span key={onReading} className="inline-block">
       <span className={`block ${rare ? "text-yellow-950/60" : ""}`}>
         {i !== 0 ? "・" : ""}
         {rare ? <span className="text-yellow-950/30">(</span> : null}
@@ -332,7 +331,7 @@ function OnReading({
         </span>
         {rare ? <span className="text-yellow-950/50">)</span> : null}{" "}
       </span>
-    </span>
+    </span>)
   );
 }
 

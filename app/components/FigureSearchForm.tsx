@@ -1,9 +1,9 @@
 import { KanjisenseFigureImage } from "@prisma/client";
-import { useFetcher, useNavigate } from "@remix-run/react";
 import { clsx } from "clsx";
 import { useCombobox } from "downshift";
 import type { PropsWithChildren } from "react";
 import { useEffect, useId, useMemo, useState } from "react";
+import { useFetcher, useNavigate } from "react-router";
 
 import {
   FigureSearchResult,

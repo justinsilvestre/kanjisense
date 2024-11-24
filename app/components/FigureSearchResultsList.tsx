@@ -1,7 +1,7 @@
 import { FigureSearchProperty, FigureSearchPropertyType } from "@prisma/client";
-import { FetcherWithComponents, Link } from "@remix-run/react";
 import cx, { clsx } from "clsx";
 import { useCombobox } from "downshift";
+import { FetcherWithComponents, Link } from "react-router";
 
 import { getBadgeProps } from "~/features/dictionary/badgeFigure";
 import { FigureSearchResult } from "~/features/dictionary/dictionarySearchResults";

@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "react-router";
+import { data } from "react-router";
 
 import {
   PopoverFigure,
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const figure = await getPopoverFigure(figureKey);
 
   if (!figure) {
-    return json<DictPreviewLoaderData>(
+    return data<DictPreviewLoaderData>(
       {
         error: `No figure ${JSON.stringify(
           figureKey,

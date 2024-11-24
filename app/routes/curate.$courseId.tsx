@@ -1,12 +1,6 @@
 import { writeFileSync } from "fs";
 
 import type { BaseCorpusText, KanjisenseFigure } from "@prisma/client";
-import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
-} from "@remix-run/server-runtime";
 import {
   Fragment,
   ReactNode,
@@ -15,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useActionData, useLoaderData, useSubmit , ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 
 import { FigureBadgeLink } from "~/components/FigureBadgeLink";
 import { prisma } from "~/db.server";
@@ -84,9 +79,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   });
 
-  return json({
+  return {
     courseId,
-  });
+  };
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -121,7 +116,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     textGroupsCount,
   } = await getCurationState(courseId, page);
 
-  return json({
+  return {
     course,
     page,
     seenTexts,
@@ -148,7 +143,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         },
       })
       .then((figures) => figures.map((f) => f.key)),
-  });
+  };
 };
 
 export default function CuratePage() {

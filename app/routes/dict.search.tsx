@@ -1,5 +1,5 @@
-import type { LoaderFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import type { LoaderFunction } from "react-router";
+import { data } from "react-router";
 
 import {
   FigureSearchResults,
@@ -20,9 +20,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const results = await getDictionarySearchResults(searchQueries);
 
-    return json<DictSearchLoaderData>({ results });
+    return data<DictSearchLoaderData>({ results });
   } catch (error) {
-    return json<DictSearchLoaderData>({
+    return data<DictSearchLoaderData>({
       results: {
         figures: [],
         images: [],
