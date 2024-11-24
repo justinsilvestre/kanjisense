@@ -41,7 +41,7 @@ function getPrismaClient() {
         url: databaseUrl.toString(),
       },
     },
-  });
+  }) as PrismaClient;
   // connect eagerly
   client.$connect();
 
