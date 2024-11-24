@@ -5,7 +5,7 @@ import url from "node:url";
 import prom from "@isaacs/express-prometheus-middleware";
 import { createRequestHandler } from "@remix-run/express";
 import type { ServerBuild } from "@remix-run/node";
-import { broadcastDevReady, installGlobals } from "@remix-run/node";
+import { broadcastDevReady } from "@remix-run/node";
 import compression from "compression";
 import type { RequestHandler } from "express";
 import express from "express";
@@ -13,7 +13,6 @@ import morgan from "morgan";
 import sourceMapSupport from "source-map-support";
 
 sourceMapSupport.install();
-installGlobals();
 run();
 
 async function run() {
