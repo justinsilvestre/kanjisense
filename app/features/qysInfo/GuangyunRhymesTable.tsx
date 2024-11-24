@@ -19,7 +19,7 @@ const RHYMES =
 泰-tʻāiˎ / 會-ghwāiˎ-(合口)
 佳-kạ̈ 蟹-ghạ̈ˬ 卦-kwạ̈ˎ / 媧-kwạ̈-(合口)
 皆-kạ̈i 駭-ghạ̈iˬ 怪-kwạ̈iˎ / 乖-kwạ̈i-(合口)
-夬-kwạiˎ / 蠆-tʻại-(開口)ˎ
+夬-kwạiˎ / 蠆-tʻạiˎ-(開口)
 灰-khwai 賄-khwaiˬ 隊-dwaiˎ
 咍-khai 海-khaiˬ 代-daiˎ
 廢-pâiˎ

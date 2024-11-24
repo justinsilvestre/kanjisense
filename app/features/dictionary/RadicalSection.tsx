@@ -95,15 +95,17 @@ export function RadicalSection({
               <i>bushu</i>, literally meaning "section headers". These 部首{" "}
               <i>bushu</i> are 214 kanji components that act as a system for
               looking up kanji in traditional paper dictionaries. This system
-              was devised all the way back in 1716, the compilers of the
+              was devised all the way back in 1716, when the compilers of the
               authoritative 康熙字典 <i>Kangxi Dictionary</i> (Japanese:{" "}
               <i>Kōki Jiten</i>) looked at each kanji and chose{" "}
               <strong>one single component</strong> as its 部首 <i>bushu</i>.
-              The idea is that users of the dictionary can look up an unknown
-              kanji by first identifying its <em>section header</em> component,
-              which will point them to the appropriate section of the
-              dictionary. This is not always straightforward in practice, but
-              this method of organizing dictionaries is still used today.
+              The idea is that users of the dictionary can find an unknown
+              character by first identifying its <em>section header</em>{" "}
+              component, and looking in the corresponding section of the
+              dictionary, where characters containing that component are sorted
+              according to the number of strokes needed to write them. This is
+              not always straightforward in practice, but this method of
+              organizing dictionaries is still used today.
             </p>
             <h3 className=" mb-2 text-center font-bold">
               What do these numbers mean?
