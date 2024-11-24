@@ -9,7 +9,7 @@ const libDirectory = (function () {
     // @ts-ignore
     return __dirname;
   } catch (e) {
-    return import.meta.url.replace("file:/", "");
+    return import.meta.url.replace("file:/", "").replace("files.server.ts", "");
   }
 })();
 
