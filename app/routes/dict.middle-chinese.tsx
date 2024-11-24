@@ -8,7 +8,7 @@ import {
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import { useTocHighlighting } from "~/components/useTocHighlighting";
-import css from "~/features/dictionary/middle-chinese.css";
+import css from "~/features/dictionary/middle-chinese.css?url";
 import { G } from "~/features/dictionary/QysHints";
 import { NavLi } from "~/features/qysInfo/NavLi";
 import screenshot1 from "~/images/mc-screenshot-1.png";
