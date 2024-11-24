@@ -69,6 +69,8 @@
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
     "@remix-run/dev": "^2.15.0",
+    "@remix-run/fs-routes": "^2.15.0",
+    "@remix-run/route-config": "^2.15.0",
     "@testing-library/cypress": "^10.0.1",
     "@testing-library/jest-dom": "^6.1.4",
     "@types/compression": "^1.7.4",
@@ -109,7 +111,7 @@
     "prettier-plugin-tailwindcss": "^0.5.7",
     "prisma": "^5.7.0",
     "start-server-and-test": "^2.0.1",
-    "tailwindcss": "^3.4.15",
+    "tailwindcss": "^3.4.3",
     "vite": "^4.5.5",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^0.34.6"
@@ -118,7 +120,7 @@
     "node": ">=20.0.0"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only -r tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} -r tsconfig-paths/register prisma/seed.ts"
   },
   "lint-staged": {
     "**/*.{ts,js,tsx,jsx}": [
