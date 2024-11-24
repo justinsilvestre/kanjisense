@@ -31,10 +31,18 @@ export const files = {
 };
 
 function vendor<S extends string>(string: S) {
-  return path.resolve(__dirname, "vendor", string) as `${string}/vendor/${S}`;
+  return path.resolve(
+    import.meta.url,
+    "vendor",
+    string,
+  ) as `${string}/vendor/${S}`;
 }
 function dic<S extends string>(string: S) {
-  return path.resolve(__dirname, "dic", string) as `${string}/vendor/${S}`;
+  return path.resolve(
+    import.meta.url,
+    "dic",
+    string,
+  ) as `${string}/vendor/${S}`;
 }
 
 function readTextFileSync<T>(filepath: string) {
@@ -51,14 +59,14 @@ export function getKvgFilePath(character: string) {
     .codePointAt(0)
     ?.toString(16)
     .padStart(5, "0")}.svg`;
-  return path.resolve(__dirname, "vendor", "kanjivg", "svgs", filename);
+  return path.resolve(import.meta.url, "vendor", "kanjivg", "svgs", filename);
 }
 
 export function getGlyphwikiSvgFilePath(figureKey: string) {
   const filename = `${
     [...figureKey].length === 1 ? getGlyphWikiCode(figureKey) : figureKey
   }.svg`;
-  return path.resolve(__dirname, "vendor", "glyphwiki", "svgs", filename);
+  return path.resolve(import.meta.url, "vendor", "glyphwiki", "svgs", filename);
 }
 
 export function getGlyphWikiCode(key: string) {
@@ -76,7 +84,7 @@ export function getGlyphWikiCode(key: string) {
 
 export function getShuowenFilePath(filenameCharacters: string) {
   return path.resolve(
-    __dirname,
+    import.meta.url,
     "dic",
     "shuowenSvgs",
     Array.from(filenameCharacters, (char) =>
@@ -87,7 +95,7 @@ export function getShuowenFilePath(filenameCharacters: string) {
 
 export function getGlyphsFilePath(char: string) {
   return path.resolve(
-    __dirname,
+    import.meta.url,
     "dic",
     "glyphs",
     char.codePointAt(0)!.toString(16) + ".json",

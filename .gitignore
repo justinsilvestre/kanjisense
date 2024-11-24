@@ -12,3 +12,5 @@ node_modules
 *.log.json
 
 .DS_Store
+
+.react-router
