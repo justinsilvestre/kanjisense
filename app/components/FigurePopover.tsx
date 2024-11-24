@@ -146,9 +146,6 @@ export function FigurePopoverWindow({
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
-      className={clsx(
-        `[border:2px inset #afafaf33] pointer-events-auto max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
-      )}
       ref={setPopperElement}
       style={styles.popper}
       {...attributes.popper}
@@ -157,83 +154,85 @@ export function FigurePopoverWindow({
       <div
         className={clsx(
           popoverFadeinStyles.fadeIn,
-          "flex flex-row flex-wrap items-center  gap-4",
+          `[border:2px inset #afafaf33] pointer-events-auto max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
         )}
       >
-        <DictLink figureKey={popperFigureKey} focusOnLoad className="">
-          <FigureBadge badgeProps={badgeProps} width={6} />
-        </DictLink>
-        {loading ? (
-          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
-            <div className="text-center">
-              <p className="animate-pulse italic text-gray-900/75">
-                loading...
-              </p>
+        <div className={clsx("flex flex-row flex-wrap items-center  gap-4")}>
+          <DictLink figureKey={popperFigureKey} focusOnLoad className="">
+            <FigureBadge badgeProps={badgeProps} width={6} />
+          </DictLink>
+          {loading ? (
+            <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
+              <div className="text-center">
+                <p className="animate-pulse italic text-gray-900/75">
+                  loading...
+                </p>
+              </div>
             </div>
-          </div>
-        ) : null}
-        {!loading && firstClassComponents?.length ? (
-          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
-            {firstClassComponents.map((c, i) => (
-              <a
-                key={c.component.id + String(i)}
-                className="inline-flex cursor-pointer items-center"
-                onClick={(e) => {
-                  e.preventDefault();
-                  loadFigure(c.component.key, getBadgeProps(c.component));
-                }}
-                role="button"
-                href={`/dict/${c.component.key}`}
-              >
-                <FigureBadge
-                  badgeProps={getBadgeProps(c.component)}
-                  width={3}
-                  className="mr-4 align-middle"
-                />
-                <span className="i align-middle">
-                  <FigureKeywordDisplay figure={c.component} />
-                </span>
-              </a>
-            ))}
-          </div>
-        ) : null}
-        {!loading && fetcher.data?.error ? (
-          <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
-            <div className="text-center">
-              <p className=" italic text-red-900/75">
-                problem loading components data
-              </p>
+          ) : null}
+          {!loading && firstClassComponents?.length ? (
+            <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
+              {firstClassComponents.map((c, i) => (
+                <a
+                  key={c.component.id + String(i)}
+                  className="inline-flex cursor-pointer items-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    loadFigure(c.component.key, getBadgeProps(c.component));
+                  }}
+                  role="button"
+                  href={`/dict/${c.component.key}`}
+                >
+                  <FigureBadge
+                    badgeProps={getBadgeProps(c.component)}
+                    width={3}
+                    className="mr-4 align-middle"
+                  />
+                  <span className="i align-middle">
+                    <FigureKeywordDisplay figure={c.component} />
+                  </span>
+                </a>
+              ))}
             </div>
-          </div>
-        ) : null}
+          ) : null}
+          {!loading && fetcher.data?.error ? (
+            <div className="flex flex-grow basis-0 flex-wrap items-center justify-evenly gap-4 self-stretch rounded-md border-2 border-gray-300 p-4">
+              <div className="text-center">
+                <p className=" italic text-red-900/75">
+                  problem loading components data
+                </p>
+              </div>
+            </div>
+          ) : null}
 
-        {!loading && figure && headingsMeanings ? (
-          <DictionaryHeadingMeanings
-            headingsMeanings={headingsMeanings}
-            className={clsx(
-              "grid basis-0 grid-flow-col gap-4 text-lg [grid-template-columns:1fr_auto]",
-              {
-                "basis-full": figure.firstClassComponents?.length != 0,
-                "flex-grow items-center self-stretch rounded-md border-2 border-gray-200 p-4 ":
-                  figure.firstClassComponents?.length === 0,
-                "text-center":
-                  (figure.firstClassComponents?.length === 0 &&
-                    !headingsMeanings.componentMnemonic) ||
-                  (headingsMeanings.componentMnemonic &&
-                    !headingsMeanings.currentCharacter),
-              },
-            )}
+          {!loading && figure && headingsMeanings ? (
+            <DictionaryHeadingMeanings
+              headingsMeanings={headingsMeanings}
+              className={clsx(
+                "grid basis-0 grid-flow-col gap-4 text-lg [grid-template-columns:1fr_auto]",
+                {
+                  "basis-full": figure.firstClassComponents?.length != 0,
+                  "flex-grow items-center self-stretch rounded-md border-2 border-gray-200 p-4 ":
+                    figure.firstClassComponents?.length === 0,
+                  "text-center":
+                    (figure.firstClassComponents?.length === 0 &&
+                      !headingsMeanings.componentMnemonic) ||
+                    (headingsMeanings.componentMnemonic &&
+                      !headingsMeanings.currentCharacter),
+                },
+              )}
+            />
+          ) : null}
+          <FigureTags
+            className="basis-full"
+            badgeProps={badgeProps}
+            isAtomic={
+              figure?.isPriority
+                ? figure.firstClassComponents.length === 0
+                : false
+            }
           />
-        ) : null}
-        <FigureTags
-          className="basis-full"
-          badgeProps={badgeProps}
-          isAtomic={
-            figure?.isPriority
-              ? figure.firstClassComponents.length === 0
-              : false
-          }
-        />
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,7 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -13,13 +11,12 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
-import stylesheet from "~/tailwind.css";
+import stylesheet from "~/tailwind.css?url";
 
 import Index from "./routes/_index";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -39,7 +36,6 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
         <div
           id="overlay"
           className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-10 h-full w-full overflow-hidden"
@@ -74,7 +70,6 @@ export function ErrorBoundary() {
         />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
         <div
           id="overlay"
           className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-30 h-full w-full overflow-hidden"

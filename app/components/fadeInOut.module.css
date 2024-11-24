@@ -2,19 +2,26 @@
   0% {
     opacity: 0;
     pointer-events: none;
+    transform: scaleY(0%) scaleX(0%)
   }
 
   80% {
-    opacity: 1;
     pointer-events: none;
+    transform: scaleY(1)
+
   }
   81% {
     pointer-events: all;
   }
+  100% {
+    opacity: 1;
+
+  }
 }
 
 .fadeIn {
-  animation: fadeIn 0.3s;
+  animation: fadeIn 0.4s;
+
 }
 
 .fadeOut {

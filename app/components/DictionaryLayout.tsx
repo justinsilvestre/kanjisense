@@ -84,7 +84,6 @@ export default function DictionaryLayout({
       </footer>
       <ScrollRestoration />
       <Scripts />
-      <LiveReload />
     </div>
   );
 }

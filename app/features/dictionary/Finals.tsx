@@ -305,13 +305,13 @@ export function Finals({
                 <td>ap</td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)āi</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>ām</td>
                 <td>āp</td>
               </tr>
@@ -335,23 +335,23 @@ export function Finals({
                 <td>(w)ạ̈</td>
                 <td>(w)ạ̈ng</td>
                 <td>(w)ạ̈k</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)ạ̈n</td>
                 <td>(w)ạ̈t</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>ạ̈m</td>
                 <td>ạ̈p</td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>ạ̊ng</td>
                 <td>ạ̊k</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <th rowSpan={3}>
@@ -360,34 +360,34 @@ export function Finals({
                   y- ẃ- ◌̂
                 </th>
                 <td>ya/ẃa</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>yạ</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w/y/ŷ)âng</td>
                 <td>(w/y)âk</td>
                 <td>(w)âi</td>
                 <td>ân</td>
                 <td>ât</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>âm</td>
                 <td>âp</td>
               </tr>
@@ -444,9 +444,11 @@ export function Finals({
             {vowelTableHeader}
             <tbody>
               <tr>
-                <th rowSpan={3}>Div. III</th>
-                ◌̇ y- ẁ-
-                <td className="bg-gray-400"></td>
+                <th rowSpan={3}>
+                  Div. III <br />
+                  ◌̇ y- ẁ-
+                </th>
+                <td className="bg-orange-900/10"></td>
                 <td>(w/y/ẁ)ėng</td>
                 <td>(w/y/ẁ)ėk</td>
                 <td>(w/y/ẁ)ėi</td>
@@ -457,33 +459,33 @@ export function Finals({
                 <td>(y)ėp</td>
               </tr>{" "}
               <tr>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)ên</td>
                 <td>(w)êt</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>êm</td>
                 <td>êp</td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)ẹng</td>
                 <td>(w)ẹk</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <th rowSpan={1}>
                   Div. IV
                   <br />
                 </th>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)eng</td>
                 <td>(w)ek</td>
                 <td>(w)ei</td>
@@ -530,7 +532,7 @@ export function Finals({
             <tbody>
               <tr>
                 <th rowSpan={1}>Chongniu III</th>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)eng</td>
                 <td>(w)ek</td>
                 <td>(w)ei</td>
@@ -546,7 +548,7 @@ export function Finals({
                   <br />
                   y- ẁ-
                 </th>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>
                   yeng/
                   <br />
@@ -608,13 +610,13 @@ export function Finals({
             {vowelTableHeader}
             <tbody>
               <tr>
-                <th rowSpan={5}>Div. III</th>
+                <th rowSpan={6}>Div. III</th>
               </tr>
               <tr>
                 <td>i</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>in</td>
                 <td>it</td>
                 <td>iu</td>
@@ -623,47 +625,47 @@ export function Finals({
               </tr>
               <tr>
                 <td>(w/y/ẁ/u)ī</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>wīk</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w/y/ẁ)īt</td>
                 <td>(w/y/ẁ)īn</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>(w/y/ẁ/u)ï</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>(w)î</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>{" "}
               <tr>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>wĭk</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
             </tbody>
           </table>
@@ -703,40 +705,40 @@ export function Finals({
             <tbody>
               <tr>
                 <th rowSpan={3}>Chongniu III</th>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>im</td>
                 <td>ip</td>
               </tr>
               <tr>
                 <td>(w)ī</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)īt</td>
                 <td>(w)īn</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>(w)ï</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <th rowSpan={3}>
@@ -744,14 +746,14 @@ export function Finals({
                   <br />
                   y- ẁ- u-
                 </th>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>yim</td>
                 <td>yip</td>
               </tr>
@@ -761,9 +763,9 @@ export function Finals({
                   <br />
                   ẁī/uī
                 </td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
 
                 <td>
                   yīn/
@@ -775,10 +777,10 @@ export function Finals({
                   <br />
                   ẁīt
                 </td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>
@@ -786,15 +788,15 @@ export function Finals({
                   <br />
                   ẁï/uï
                 </td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
             </tbody>
           </table>
@@ -839,34 +841,34 @@ export function Finals({
                 <td>(w)o</td>
                 <td>ong</td>
                 <td>ok</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)on</td>
                 <td>(w)ot</td>
                 <td>ou</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)ōng</td>
                 <td>(w)ōk</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(w)ŏng</td>
                 <td>(w)ŏk</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <th rowSpan={3}>
@@ -875,36 +877,36 @@ export function Finals({
                   y- ◌̂
                 </th>
                 <td>yo</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>yŏng/ŷŏng</td>
                 <td>yŏk/ŷŏk </td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>(ŷ)ông</td>
                 <td>(ŷ)ôk</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
             </tbody>
           </table>
@@ -958,25 +960,25 @@ export function Finals({
               <tr>
                 <th rowSpan={2}>Div. III</th>
                 <td>(y)u</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>un</td>
                 <td>ut</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
               <tr>
                 <td>(i)ū</td>
                 <td>(i)ūng</td>
                 <td>(y)ūk</td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
                 <td>yūn</td>
                 <td>yūt</td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
-                <td className="bg-gray-400"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
+                <td className="bg-orange-900/10"></td>
               </tr>
             </tbody>
           </table>

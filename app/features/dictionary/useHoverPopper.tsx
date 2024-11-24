@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useRef, useState } from "react";
 
 import fadeInOutStyles from "~/components/fadeInOut.module.css";
@@ -43,9 +44,13 @@ export function useHoverPopper(options: PopperOptions) {
     isClosing,
     open: open,
     close: close,
-    animationClassName: isClosing
-      ? fadeInOutStyles.fadeOut
-      : fadeInOutStyles.fadeIn,
+
+    popoverContentClassNames: clsx(
+      popper.state?.placement.includes("top") && "[transform-origin:bottom]",
+      popper.state?.placement.includes("bottom") && "[transform-origin:top]",
+      !isClosing && fadeInOutStyles.fadeIn,
+      isClosing && "opacity-0 transition-opacity duration-300",
+    ),
 
     openEventHandlers: {
       onMouseMove: () => {

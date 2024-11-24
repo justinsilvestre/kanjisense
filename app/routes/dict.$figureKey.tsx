@@ -21,7 +21,7 @@ import {
   links as kvgLinks,
   SingleFigureDictionaryEntry,
 } from "~/features/dictionary/SingleFigureDictionaryEntry";
-import css from "~/features/dictionary/styles.css";
+import css from "~/features/dictionary/styles.css?url";
 import { getLatestFigureId } from "~/models/figure";
 
 type LoaderData =

@@ -37,17 +37,17 @@ export function AncientCharacterFormSection({
   const popper = useHoverPopper(popperOptions);
   return (
     <div
-      className={clsx(
-        `align-center relative flex flex-col justify-center gap-4 text-center`,
-
-        className,
-      )}
+      className={clsx(className)}
       ref={popper.setReferenceElement}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}
       {...popper.openEventHandlers}
     >
-      <div>
+      <div
+        className={clsx(
+          `align-center relative flex flex-col justify-center gap-4 text-center`,
+        )}
+      >
         {paths.map((path, i) => (
           <div
             key={String(i)}
@@ -59,44 +59,48 @@ export function AncientCharacterFormSection({
       </div>
       {popper.isOpen ? (
         <div
-          className={clsx(
-            `[border:2px inset #afafaf33]  z-20 -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em]  [box-sizing:border-box] [max-height:88v] [background-color:rgba(247,247,247,0.95)]  [overflow-y:auto] [width:18rem] md:max-w-7xl`,
-            popper.animationClassName,
-          )}
           ref={popper.setPopperElement}
           {...popper.attributes.popper}
           style={popper.styles.popper}
+          className="fixed z-20"
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         >
-          <p className="mb-4 text-sm">
-            These ancient <strong>&quot;seal script&quot;</strong> character
-            forms are provided here to help you understand the{" "}
-            <strong>historical evolution of the kanji</strong>. They are mostly
-            obsolete, but can still be found on <i>hanko</i> seals (stamps) used
-            in Japan as a way of signing documents.
-          </p>
-          <div className="mx-auto mb-4 text-center">
-            {paths.map((path) => (
-              <Fragment key={path}>
-                <div className="inline-block rounded-md border-2 border-solid border-red-900/80 bg-white [height:7rem] [width:7rem]">
-                  <ShuowenSvg path={path} />
-                </div>
-                {paths.length > 1 ? " " : null}
-              </Fragment>
-            ))}
-          </div>
+          <div
+            className={clsx(
+              `[border:2px inset #afafaf33] -m-2 p-3 text-left text-sm shadow shadow-gray-400 transition-opacity duration-300 [background-color:rgba(247,247,247,0.95)]  [border-radius:0.3em] [box-sizing:border-box] [max-height:88v]  [overflow-y:auto] [width:18rem] md:max-w-7xl`,
+              popper.popoverContentClassNames,
+            )}
+          >
+            <p className="mb-4 text-sm">
+              These ancient <strong>&quot;seal script&quot;</strong> character
+              forms are provided here to help you understand the{" "}
+              <strong>historical evolution of the kanji</strong>. They are
+              mostly obsolete, but can still be found on <i>hanko</i> seals
+              (stamps) used in Japan as a way of signing documents.
+            </p>
+            <div className="mx-auto mb-4 text-center">
+              {paths.map((path) => (
+                <Fragment key={path}>
+                  <div className="inline-block rounded-md border-2 border-solid border-red-900/80 bg-white [height:7rem] [width:7rem]">
+                    <ShuowenSvg path={path} />
+                  </div>
+                  {paths.length > 1 ? " " : null}
+                </Fragment>
+              ))}
+            </div>
 
-          <p className="mb-4 text-sm">
-            The seal script forms in Kanjisense are based on the writing of the
-            Qin dynasty (ca. 200{" "}
-            <span className="[font-variant:small-caps]">BCE</span>), when
-            Chinese writing was first standardized. They are taken from the
-            ancient character dictionary 說文解字 <i>Shuowen Jiezi</i>{" "}
-            (Japanese: <i>Setsumon Kaiji</i>
-            ), which was compiled a couple centuries later, during the Eastern
-            Han dynasty (25-206{" "}
-            <span className="[font-variant:small-caps]">CE</span>).
-          </p>
+            <p className="mb-4 text-sm">
+              The seal script forms in Kanjisense are based on the writing of
+              the Qin dynasty (ca. 200{" "}
+              <span className="[font-variant:small-caps]">BCE</span>), when
+              Chinese writing was first standardized. They are taken from the
+              ancient character dictionary 說文解字 <i>Shuowen Jiezi</i>{" "}
+              (Japanese: <i>Setsumon Kaiji</i>
+              ), which was compiled a couple centuries later, during the Eastern
+              Han dynasty (25-206{" "}
+              <span className="[font-variant:small-caps]">CE</span>).
+            </p>
+          </div>
         </div>
       ) : null}
     </div>

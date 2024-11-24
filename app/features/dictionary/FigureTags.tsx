@@ -47,7 +47,7 @@ export function FigureTags({
       />
       {isPriorityComponent && !isStandaloneCharacter ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          className={`rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -71,7 +71,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && !isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -104,7 +104,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -130,7 +130,7 @@ export function FigureTags({
       ) : null}
       {variantGroupId && variantGroupId !== id ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline  outline-1 -outline-offset-2 [padding-top:0.1rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline outline-1  -outline-offset-2 [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <VariantPopoverContent
               isStandaloneCharacter={isStandaloneCharacter}
@@ -143,7 +143,7 @@ export function FigureTags({
       ) : null}
       {isAtomic ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem]`}
+          className={` rounded-sm border border-solid border-black bg-slate-800  px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               The {TOTAL_ATOMIC_COMPONENTS_COUNT} atomic components are the
@@ -166,7 +166,7 @@ export function FigureTags({
       ) : null}
       {isPrioritySoundMark ? (
         <FigureTag
-          className={`rounded-sm border border-solid border-yellow-400 bg-yellow-100 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
+          className={`rounded-sm border border-solid border-yellow-400 bg-yellow-200 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.1rem] group-[ppo]:border-yellow-300 group-[ppo]:bg-yellow-50`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -223,12 +223,16 @@ function FigureTag({
     isOpen,
     openEventHandlers,
     isClosing,
+    popoverContentClassNames,
   } = useHoverPopper(popperOptions);
 
   return (
     <>
       <li
-        className={clsx(" cursor-default", className)}
+        className={clsx(
+          " cursor-default ",
+          isOpen && !isClosing ? "groupppo" : null,
+        )}
         {...openEventHandlers}
         ref={setReferenceElement}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -236,7 +240,8 @@ function FigureTag({
       >
         <span
           className={clsx(
-            "[transition-duration:100ms]  [transition-property:transform] hover:[transform:scale(1.03)] ",
+            className,
+            "inline-block cursor-pointer [transition:background-color_0.3s]",
           )}
         >
           {children}
@@ -244,17 +249,20 @@ function FigureTag({
         {isOpen ? (
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
           <div
-            className={clsx(
-              " [color:initial] ",
-              `  pointer-events-auto fixed z-20  bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] [width:18rem]  [border:2px_inset_#afafaf33] [text-transform:none] md:max-w-xl`,
-              !isClosing && fadeInOutStyles.fadeIn,
-              isClosing && "opacity-0 transition-opacity duration-300",
-            )}
+            className={clsx(`pointer-events-auto fixed  z-20 `)}
             ref={setPopperElement}
             style={styles.popper}
             {...attributes.popper}
           >
-            {popoverContent()}
+            <div
+              className={clsx(
+                " [color:initial] ",
+                "bg-white p-3 text-sm font-normal shadow shadow-gray-400 transition-opacity duration-300 [border-radius:0.3em] [border:2px_inset_#afafaf33]  [box-sizing:border-box] [max-height:88v]  [text-transform:none] [width:18rem] md:max-w-xl",
+                popoverContentClassNames,
+              )}
+            >
+              {popoverContent()}
+            </div>
           </div>
         ) : null}
       </li>
@@ -523,25 +531,26 @@ function KanjiListTag({
     case "6":
       return (
         <FigureTag
-          className={`${className} border-kyoiku-900 bg-kyoiku-700  text-white`}
+          className={`${className} border-kyoiku-900 bg-kyoiku-700 text-white  group-[ppo]:bg-kyoiku-600`}
           popoverContent={popoverContent}
         >
           primary grade {code}
         </FigureTag>
       );
-    case "j":
+    case "j": {
       return (
         <FigureTag
-          className={`${className} border-joyo-900 bg-joyo-700  text-white`}
+          className={`${className} border-joyo-900 bg-joyo-700 text-white  group-[ppo]:bg-joyo-600`}
           popoverContent={popoverContent}
         >
           Jōyō
         </FigureTag>
       );
+    }
     case "h":
       return (
         <FigureTag
-          className={`${className} border-hyogai-900 bg-hyogai-700  text-white`}
+          className={`${className} border-hyogai-900 bg-hyogai-700  text-white group-[ppo]:bg-hyogai-600`}
           popoverContent={popoverContent}
         >
           extra-Jōyō
@@ -550,7 +559,7 @@ function KanjiListTag({
     case "m":
       return (
         <FigureTag
-          className={`${className} border-jinmeiyo-900 bg-jinmeiyo-700  text-white`}
+          className={`${className} border-jinmeiyo-900 bg-jinmeiyo-700 text-white  group-[ppo]:bg-jinmeiyo-600`}
           popoverContent={popoverContent}
         >
           Jinmeiyō
