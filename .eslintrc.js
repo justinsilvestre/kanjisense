@@ -79,7 +79,7 @@ module.exports = {
       rules: {
         "import/no-cycle": "error",
         "import/order": [
-          "error",
+          "warn",
           {
             alphabetize: { caseInsensitive: true, order: "asc" },
             groups: ["builtin", "external", "internal", "parent", "sibling"],
