@@ -42,11 +42,11 @@ export function FigureTags({
       <ListTags
         lists={lists}
         isStandaloneCharacter={isStandaloneCharacter}
-        className={` rounded-sm border border-solid px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
+        className={` rounded-sm border-2 border-solid px-1 text-sm font-bold uppercase [padding-top:0.1rem]`}
       />
       {isPriorityComponent && !isStandaloneCharacter ? (
         <FigureTag
-          className={`rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
+          className={`rounded-sm border-2 border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:border-slate-300 group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -70,7 +70,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && !isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
+          className={` rounded-sm border-2 border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:border-slate-300 group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -103,7 +103,7 @@ export function FigureTags({
       ) : null}
       {isStandaloneCharacter && isPriorityComponent ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
+          className={` rounded-sm border-2 border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:border-slate-300 group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -129,7 +129,7 @@ export function FigureTags({
       ) : null}
       {variantGroupId && variantGroupId !== id ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline outline-1  -outline-offset-2 [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
+          className={` rounded-sm border-2 border-solid border-black bg-slate-800 px-1 text-sm font-bold uppercase text-white outline outline-1  -outline-offset-2 [padding-top:0.1rem] group-[ppo]:border-slate-300 group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <VariantPopoverContent
               isStandaloneCharacter={isStandaloneCharacter}
@@ -142,7 +142,7 @@ export function FigureTags({
       ) : null}
       {isAtomic ? (
         <FigureTag
-          className={` rounded-sm border border-solid border-black bg-slate-800  px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:bg-slate-600`}
+          className={` rounded-sm border-2 border-solid border-black bg-slate-800  px-1 text-sm font-bold uppercase text-white [padding-top:0.1rem] group-[ppo]:border-slate-300 group-[ppo]:bg-slate-600`}
           popoverContent={() => (
             <>
               The {TOTAL_ATOMIC_COMPONENTS_COUNT} atomic components are the
@@ -165,7 +165,7 @@ export function FigureTags({
       ) : null}
       {isPrioritySoundMark ? (
         <FigureTag
-          className={`rounded-sm border border-solid border-yellow-400 bg-yellow-200 bg-opacity-50 px-1 text-sm font-bold uppercase [padding-top:0.1rem] group-[ppo]:border-yellow-300 group-[ppo]:bg-yellow-50`}
+          className={`[bg-top:0 group-[ppo]:border-der-300.1rem] group-[ppo]:bg-yellow-30 rounded-sm border-2 border-solid border-yellow-400 bg-yellow-200 bg-opacity-50 px-1 text-sm font-bold uppercase group-[ppo]:border-yellow-600 group-[ppo]:bg-yellow-300`}
           popoverContent={() => (
             <>
               <p className="mb-3 mt-0">
@@ -228,10 +228,7 @@ function FigureTag({
   return (
     <>
       <li
-        className={clsx(
-          " cursor-default ",
-          isOpen && !isClosing ? "groupppo" : null,
-        )}
+        className={clsx(isOpen && !isClosing ? "groupppo" : null)}
         {...openEventHandlers}
         ref={setReferenceElement}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
@@ -530,7 +527,7 @@ function KanjiListTag({
     case "6":
       return (
         <FigureTag
-          className={`${className} border-kyoiku-900 bg-kyoiku-700 text-white  group-[ppo]:bg-kyoiku-600`}
+          className={`${className} border-kyoiku-800 bg-kyoiku-700 text-white  group-[ppo]:border-kyoiku-300 group-[ppo]:bg-kyoiku-600`}
           popoverContent={popoverContent}
         >
           primary grade {code}
@@ -539,7 +536,7 @@ function KanjiListTag({
     case "j": {
       return (
         <FigureTag
-          className={`${className} border-joyo-900 bg-joyo-700 text-white  group-[ppo]:bg-joyo-600`}
+          className={`${className} border-joyo-800 bg-joyo-700 text-white  group-[ppo]:border-joyo-300 group-[ppo]:bg-joyo-600`}
           popoverContent={popoverContent}
         >
           Jōyō
@@ -549,7 +546,7 @@ function KanjiListTag({
     case "h":
       return (
         <FigureTag
-          className={`${className} border-hyogai-900 bg-hyogai-700  text-white group-[ppo]:bg-hyogai-600`}
+          className={`${className} border-hyogai-800 bg-hyogai-700  text-white group-[ppo]:border-hyogai-300 group-[ppo]:bg-hyogai-600`}
           popoverContent={popoverContent}
         >
           extra-Jōyō
@@ -558,7 +555,7 @@ function KanjiListTag({
     case "m":
       return (
         <FigureTag
-          className={`${className} border-jinmeiyo-900 bg-jinmeiyo-700 text-white  group-[ppo]:bg-jinmeiyo-600`}
+          className={`${className} border-jinmeiyo-800 bg-jinmeiyo-700 text-white  group-[ppo]:border-jinmeiyo-300 group-[ppo]:bg-jinmeiyo-600`}
           popoverContent={popoverContent}
         >
           Jinmeiyō

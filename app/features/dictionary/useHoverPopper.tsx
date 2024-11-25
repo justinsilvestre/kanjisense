@@ -56,11 +56,12 @@ export function useHoverPopper(options: PopperOptions) {
       onMouseMove: () => {
         !popper.isOpen ? open() : undefined;
       },
-      onMouseDown: (e: React.MouseEvent) => {
-        if (popper.isOpen) {
+      onClick: (e: React.MouseEvent) => {
+        if (!popper.isOpen) {
+          open();
+        } else if (!popper.state?.elements.popper?.contains(e.target as Node)) {
           close();
-          e.preventDefault();
-        } else open();
+        }
       },
       onFocus: () => {
         open();

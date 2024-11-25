@@ -92,20 +92,21 @@ export function RadicalSection({
             <p className="mb-4">
               Some English speakers refer to all kanji components as "radicals",
               but traditionally, the term "radicals" is a translation of 部首{" "}
-              <i>bushu</i>, literally meaning "section headers". These 部首{" "}
-              <i>bushu</i> are 214 kanji components that act as a system for
-              looking up kanji in traditional paper dictionaries. This system
+              <i>bushu</i>, literally meaning "section headers". These{" "}
+              <i>bushu</i> are 214 kanji components used for looking up kanji in
+              traditional paper dictionaries. This system of 214 <i>bushu</i>{" "}
               was devised all the way back in 1716, when the compilers of the
               authoritative 康熙字典 <i>Kangxi Dictionary</i> (Japanese:{" "}
               <i>Kōki Jiten</i>) looked at each kanji and chose{" "}
-              <strong>one single component</strong> as its 部首 <i>bushu</i>.
-              The idea is that users of the dictionary can find an unknown
+              <strong>one single component</strong> as its <i>bushu</i>. The
+              idea is that users of the dictionary could find an unknown
               character by first identifying its <em>section header</em>{" "}
-              component, and looking in the corresponding section of the
-              dictionary, where characters containing that component are sorted
-              according to the number of strokes needed to write them. This is
-              not always straightforward in practice, but this method of
-              organizing dictionaries is still used today.
+              component. By looking in the corresponding section of the
+              dictionary, they could find all the characters containing that{" "}
+              <i>bushu</i> component sorted according to the number of strokes
+              needed to write them. This is not always straightforward in
+              practice, but this method of organizing dictionaries is still used
+              today.
             </p>
             <h3 className=" mb-2 text-center font-bold">
               What do these numbers mean?
@@ -113,12 +114,13 @@ export function RadicalSection({
             <p className="mb-4">
               The first number given with the 部首 <i>bushu</i> here refers to
               that section's order in the <i>Kangxi Dictionary</i>, which has
-              become the standard ordering throughout Asia. The second number is
-              the <i>traditional</i> number of strokes in the character{" "}
-              <em>outside</em> the <i>bushu</i> component (which may differ from
-              the modern stroke count). You can use this information to find
-              this kanji in any traditional paper dictionary which organizes
-              characters by <i>bushu</i> and stroke count.
+              become the standard ordering for kanji dictionaries throughout
+              Asia. The second number is the <i>traditional</i> number of
+              strokes in the character <em>outside</em> the <i>bushu</i>{" "}
+              component, as counted in the Kangxi Dictionary (which may differ
+              from the modern stroke count). You can use this information to
+              find this kanji in any traditional paper dictionary which
+              organizes characters by <i>bushu</i> and stroke count.
             </p>
             {radicalIndexes.length > 1 ? (
               <p className="mb-4">
