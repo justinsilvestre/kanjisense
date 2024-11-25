@@ -187,16 +187,6 @@ export async function getCurationState(courseId: string, page: number) {
     }
   }
 
-  await prisma.course.upsert({
-    where: {
-      id: "kj2x",
-    },
-    update: {},
-    create: {
-      id: "kj2x",
-    },
-  });
-
   const allFiguresKeys = await prisma.kanjisenseFigure
     .findMany({
       select: {
@@ -699,7 +689,7 @@ function getDefaultTangReadings(
   return Array.from(normalizedShinjitai, (char) => {
     const readings = getFigureReadings(char);
     const tangReadings = readings.map((r) => transcribeSbgyXiaoyun(r));
-    if (char === "不") return tangReadings[1];
+    if (char === "不") return tangReadings[2];
 
     if (!tangReadings.length) return "X";
     if (tangReadings.length === 1) return tangReadings[0];

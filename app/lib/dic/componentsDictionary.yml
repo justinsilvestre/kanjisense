@@ -1696,7 +1696,7 @@ CDP-8DBF: # 廌,焉,薦
   historical: tongue
   tag: body
 重:
-  historical: heaps
+  historical: stacks
   tag: geo
 尚:
   historical: still, yet; ancient; exalt
@@ -2858,6 +2858,7 @@ GWS-U914B-G:
   tag: fabric
 屯:
   historical: stationing
+  mnemonic: heapings
   tag: place
 察:
   historical: examine

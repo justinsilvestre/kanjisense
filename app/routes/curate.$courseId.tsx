@@ -9,7 +9,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { useActionData, useLoaderData, useSubmit , ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import {
+  useActionData,
+  useLoaderData,
+  useSubmit,
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "react-router";
 
 import { FigureBadgeLink } from "~/components/FigureBadgeLink";
 import { prisma } from "~/db.server";
@@ -93,7 +99,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     : 1;
 
   writeFileSync(
-    __dirname + "/curatorCoursesArchive.json",
+    process.cwd() + "/curatorCoursesArchive.json",
     JSON.stringify(
       (await prisma.course.findMany()).map((c) => ({
         id: c.id,
@@ -101,7 +107,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       })),
     ),
   );
-  console.log(__dirname + "/curatorCoursesArchive.json");
+  console.log(process.cwd() + "/curatorCoursesArchive.json");
   const {
     course,
     seenTexts,
@@ -346,7 +352,19 @@ export default function CuratePage() {
                             ) : null}
                             <h3>
                               #{acc.runningTotalTexts} {seenText.author} -{" "}
-                              {seenText.title} ({seenText.source})
+                              {seenText.title} ({seenText.source}){" "}
+                              {seenText.urls.map((url, i) => (
+                                <a
+                                  href={url}
+                                  key={url}
+                                  target="_blank"
+                                  className="underline"
+                                  rel="noreferrer"
+                                  title={url}
+                                >
+                                  [{i + 1}]
+                                </a>
+                              ))}
                             </h3>
                             {seenText.text}
                             <div className="text-right">
@@ -510,98 +528,11 @@ export default function CuratePage() {
         </div>
       </section>
       <section className="overflow-auto [flex:1_1_50%]">
-        <div>
-          <input
-            placeholder="filter by characters"
-            className="border border-gray-400"
-            type="text"
-            value={filterState.wantedCharacters}
-            onChange={(e) =>
-              setFilterState((s) => ({
-                ...s,
-                wantedCharacters: [...new Set(e.target.value)].join(""),
-              }))
-            }
-          />
-          <br />
-          <label htmlFor="text-length">text length: </label>
-          <input
-            id="text-length"
-            type="number"
-            className=" w-16 border border-gray-400"
-            value={filterState.lengthRange[0]}
-            onChange={(e) => {
-              const number = parseInt(e.target.value);
-              if (
-                !Number.isNaN(number) &&
-                number <= filterState.lengthRange[1] &&
-                number >= 0
-              ) {
-                setFilterState((s) => ({
-                  ...s,
-                  lengthRange: [number, s.lengthRange[1]],
-                }));
-              }
-            }}
-          />
-          <input
-            type="number"
-            className=" w-16 border border-gray-400"
-            value={filterState.lengthRange[1]}
-            onChange={(e) => {
-              const number = parseInt(e.target.value);
-              if (
-                !Number.isNaN(number) &&
-                number >= filterState.lengthRange[0]
-              ) {
-                setFilterState((s) => ({
-                  ...s,
-                  lengthRange: [s.lengthRange[0], number],
-                }));
-              }
-            }}
-          />
-          <br />
-          <input
-            type="text"
-            placeholder="filter by authors"
-            value={filterState.authors.join(",")}
-            onChange={(e) => {
-              setFilterState((s) => ({
-                ...s,
-                authors: e.target.value.split(","),
-              }));
-            }}
-          />
-          <br />
-          <input
-            type="text"
-            placeholder="filter by sources"
-            value={filterState.sources.join(",")}
-            onChange={(e) => {
-              setFilterState((s) => ({
-                ...s,
-                sources: e.target.value.split(","),
-              }));
-            }}
-          />
-          <br />
-          <input
-            type="text"
-            placeholder="search normalized text"
-            value={filterState.normalizedTextSearchQuery}
-            onChange={(e) => {
-              setFilterState((s) => ({
-                ...s,
-                normalizedTextSearchQuery: e.target.value,
-              }));
-            }}
-          />
-          <br />
-          <button onClick={() => handleSubmit()}>
-            submit and save seen texts
-          </button>
-        </div>
+        <Form
+          filterState={filterState}
+          setFilterState={setFilterState}
+          handleSubmit={handleSubmit}
+        />
 
         {loaderData ? (
           <CharactersProgress
@@ -678,6 +609,18 @@ export default function CuratePage() {
                 <h3>
                   {unseenText.author} - {unseenText.title} ({unseenText.source})
                   <br />
+                  {unseenText.urls.map((url, i) => (
+                    <a
+                      href={url}
+                      key={url}
+                      target="_blank"
+                      className="underline"
+                      rel="noreferrer"
+                      title={url}
+                    >
+                      [{i + 1}]
+                    </a>
+                  ))}
                 </h3>
                 <p className="">{unseenText.text}</p>
                 <div className="text-right">
@@ -739,6 +682,124 @@ export default function CuratePage() {
           })}
         </div>
       </section>
+    </div>
+  );
+}
+
+function Form({
+  filterState,
+  setFilterState,
+  handleSubmit,
+}: {
+  filterState: ReturnType<typeof useSeenTextsState>["filterState"];
+  setFilterState: ReturnType<typeof useSeenTextsState>["setFilterState"];
+  handleSubmit: () => void;
+}) {
+  const [localFilterState, setLocalFilterState] = useState(filterState);
+
+  useEffect(() => {
+    setLocalFilterState(filterState);
+  }, [filterState]);
+
+  // call setFilterState with localFilterState after 400ms of no changes
+  const timeoutRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => {
+      setFilterState(localFilterState);
+    }, 400);
+  }, [localFilterState, setFilterState]);
+
+  return (
+    <div>
+      <input
+        placeholder="filter by characters"
+        className="border border-gray-400"
+        type="text"
+        value={localFilterState.wantedCharacters}
+        onChange={(e) =>
+          setLocalFilterState((s) => ({
+            ...s,
+            wantedCharacters: [...new Set(e.target.value)].join(""),
+          }))
+        }
+      />
+      <br />
+      <label htmlFor="text-length">text length: </label>
+      <input
+        id="text-length"
+        type="number"
+        className=" w-16 border border-gray-400"
+        value={localFilterState.lengthRange[0]}
+        onChange={(e) => {
+          const number = parseInt(e.target.value);
+          if (
+            !Number.isNaN(number) &&
+            number <= localFilterState.lengthRange[1] &&
+            number >= 0
+          ) {
+            setLocalFilterState((s) => ({
+              ...s,
+              lengthRange: [number, s.lengthRange[1]],
+            }));
+          }
+        }}
+      />
+      <input
+        type="number"
+        className=" w-16 border border-gray-400"
+        value={localFilterState.lengthRange[1]}
+        onChange={(e) => {
+          const number = parseInt(e.target.value);
+          if (
+            !Number.isNaN(number) &&
+            number >= localFilterState.lengthRange[0]
+          ) {
+            setLocalFilterState((s) => ({
+              ...s,
+              lengthRange: [s.lengthRange[0], number],
+            }));
+          }
+        }}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="filter by authors"
+        value={localFilterState.authors.join(",")}
+        onChange={(e) => {
+          setLocalFilterState((s) => ({
+            ...s,
+            authors: e.target.value.split(","),
+          }));
+        }}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="filter by sources"
+        value={localFilterState.sources.join(",")}
+        onChange={(e) => {
+          setLocalFilterState((s) => ({
+            ...s,
+            sources: e.target.value.split(","),
+          }));
+        }}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="search normalized text"
+        value={localFilterState.normalizedTextSearchQuery}
+        onChange={(e) => {
+          setLocalFilterState((s) => ({
+            ...s,
+            normalizedTextSearchQuery: e.target.value,
+          }));
+        }}
+      />
+      <br />
+      <button onClick={() => handleSubmit()}>submit and save seen texts</button>
     </div>
   );
 }
@@ -987,6 +1048,13 @@ const useSeenTextsState = (
   }, [course.id, seenTextsState, storageKey]);
 
   useEffect(() => {
+    console.log("summary!!");
+    const storageKey = `seenTextsGroupsDescriptions-${course.id}`;
+    const descriptionsFromLocalStorage: string[] = localStorage.getItem(
+      storageKey,
+    )
+      ? JSON.parse(localStorage.getItem(storageKey)!)
+      : [];
     Object.assign(
       window as unknown as {
         summary: {
@@ -999,23 +1067,21 @@ const useSeenTextsState = (
       {
         summary: seenTextsState.map((group, i) => ({
           groupNumber: i + 1,
-          description: group.description,
+          description: descriptionsFromLocalStorage[i] || "",
           texts: group.texts,
         })),
         getPrettySummary: () =>
           seenTexts
-            .flatMap((group, groupIndex) => {
-              const description = seenTextsState[groupIndex]?.description || "";
+            .flatMap((group, i) => {
+              const description = descriptionsFromLocalStorage[i] || "";
               return [
-                `# ${groupIndex + 1}. ${description}`,
+                `## ${description}`,
                 "",
-                ...group.map((text, textIndex) => {
+                ...group.map((text) => {
                   return [
-                    `## ${textIndex + 1}. (${text.author} - ${text.title} (${
-                      text.source
-                    }))`,
-                    "",
-                    text.normalizedText,
+                    `### (${text.author} - ${text.title} (${text.source}))`,
+                    // "",
+                    // text.normalizedText,
                     "",
                     text.text,
                     "",
@@ -1027,7 +1093,7 @@ const useSeenTextsState = (
             .join("\n"),
       },
     );
-  });
+  }, [seenTexts, seenTextsState, course.id]);
 
   const addToSeenTexts = ({
     textKey,
@@ -1191,7 +1257,7 @@ const useSeenTextsState = (
       JSON.stringify(seenTextsState.map(({ texts }) => texts) || []),
     );
 
-    submit(formData, { method: "post" });
+    submit(formData, { method: "post", action: `/curate/${course.id}` });
   }
 
   const setTextGroupDescription = (groupIndex: number, description: string) => {
