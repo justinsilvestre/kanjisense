@@ -185,5 +185,6 @@ export const kanjijumpForcedAtomicFigures = new Set<string>([
   "乇",
   "了",
   "毛",
-  "𢆉"
+  "𢆉",
+  "屯"
 ])

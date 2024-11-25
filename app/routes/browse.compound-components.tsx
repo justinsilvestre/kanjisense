@@ -170,10 +170,6 @@ function CompoundComponentsPageContent({
     nonCharacterCompoundComponents.matchedFiguresCount +
     totalCompoundComponentCharacters;
 
-  const totalCompoundNonCharacterVariantComponents =
-    compoundComponentCharacterVariants.matchedFiguresCount +
-    nonCharacterCompoundComponents.matchedFiguresCount;
-
   const popover = useManyFiguresPopover();
 
   const content = (
