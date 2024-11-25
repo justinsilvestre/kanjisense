@@ -1,5 +1,11 @@
 import clsx from "clsx";
-import { PropsWithChildren, useEffect, createElement, useState } from "react";
+import {
+  PropsWithChildren,
+  useEffect,
+  createElement,
+  useState,
+  useRef,
+} from "react";
 import { createPortal } from "react-dom";
 import { useFetcher } from "react-router";
 
@@ -79,6 +85,31 @@ export function useFigurePopover({
   const popper = usePaddedPopper();
   const { setReferenceElement, isOpen, open, close, update } = popper;
 
+  const [isClosing, setClosing] = useState(false);
+  const closeWarnTimer = useRef<number | null>(null);
+  const closeTimer = useRef<number | null>(null);
+  const scheduleClose = () => {
+    cancelClose();
+
+    closeWarnTimer.current = window.setTimeout(() => {
+      setClosing(true);
+      closeTimer.current = window.setTimeout(() => {
+        close();
+      }, 2000);
+    }, 15000);
+  };
+  const cancelClose = () => {
+    if (closeWarnTimer.current) {
+      window.clearTimeout(closeWarnTimer.current);
+      closeWarnTimer.current = null;
+    }
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setClosing(false);
+  };
+
   const { fetcher, loadFigure, badgeProps } =
     usePopoverFigureFetcher(initialBadgeProps);
 
@@ -108,10 +139,17 @@ export function useFigurePopover({
         open();
       }
     },
+    onMouseLeave: () => {
+      scheduleClose();
+    },
+    onMouseOver: () => {
+      cancelClose();
+    },
   });
 
   return {
     figure: fetchedFigure,
+    isClosing,
     loadFigure,
     fetcher,
     badgeProps,
@@ -127,12 +165,14 @@ export function FigurePopoverWindow({
   figure,
   popper,
   fetcher,
+  isClosing,
 }: {
   badgeProps?: BadgeProps | null;
   loadFigure: ReturnType<typeof usePopoverFigureFetcher>["loadFigure"];
   figure: PopoverFigure | undefined;
   popper: ReturnType<typeof usePaddedPopper>;
   fetcher: ReturnType<typeof usePopoverFigureFetcher>["fetcher"];
+  isClosing?: boolean;
 }) {
   const firstClassComponents = figure?.firstClassComponents;
   const headingsMeanings = figure ? getHeadingsMeanings(figure) : null;
@@ -145,7 +185,7 @@ export function FigurePopoverWindow({
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-    (<div
+    <div
       ref={setPopperElement}
       style={styles.popper}
       {...attributes.popper}
@@ -154,6 +194,9 @@ export function FigurePopoverWindow({
       <div
         className={clsx(
           popoverFadeinStyles.fadeIn,
+          isClosing
+            ? "opacity-0 [transition:opacity_2s] hover:opacity-100 hover:[transition:opacity_.2s]"
+            : "",
           `[border:2px inset #afafaf33] pointer-events-auto max-w-xl bg-gray-50/90 p-3 shadow-xl shadow-black/30  backdrop-blur-sm [border-radius:0.3em] [box-sizing:border-box]  [max-height:88v] `,
         )}
       >
@@ -234,7 +277,7 @@ export function FigurePopoverWindow({
           />
         </div>
       </div>
-    </div>)
+    </div>
   );
 }
 

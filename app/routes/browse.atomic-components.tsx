@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import clsx from "clsx";
 import { createPortal } from "react-dom";
 import type { LoaderFunction, MetaFunction } from "react-router";
 import {
@@ -13,19 +12,18 @@ import {
   BrowseCharactersLink,
   BrowseCompoundComponentsLink,
   DictLink,
-  DictPreviewLink,
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
-import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverWindow } from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
 import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
 import { useManyFiguresPopover } from "~/features/browse/useManyFiguresPopover";
-import { parseAnnotatedKeywordText } from "~/features/dictionary/getHeadingsMeanings";
 import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMIC_COMPONENTS_COUNT";
 
 import { getAtomicFigureBadgeFigures } from "../features/browse/getAtomicFigureBadgeFigures";
+
+import { FiguresGroupedByVariantsList } from "./FiguresGroupedByVariantsList";
 
 export const meta: MetaFunction = () => [
   {
@@ -55,7 +53,10 @@ function AtomicComponentsPageContent({
 }: {
   loaderData: LoaderData;
 }) {
-  const { atomicComponentsAndVariants, totalAtomicComponents } = loaderData;
+  const {
+    matchedFiguresAndVariants: atomicComponentsAndVariants,
+    matchedFiguresCount: totalAtomicComponents,
+  } = loaderData;
   const popover = useManyFiguresPopover();
   const content = (
     <>
@@ -211,73 +212,10 @@ function AtomicComponentsPageContent({
         <h2>
           (not counting variants: {atomicComponentsAndVariants.length} total)
         </h2>
-        <section className="flex flex-row flex-wrap gap-2 gap-y-8">
-          {atomicComponentsAndVariants.map(
-            ({ figures, keyword, mnemonicKeyword }, i) => {
-              const keywordDisplay = (
-                <div className="text-center">
-                  {mnemonicKeyword ? (
-                    <>"{parseAnnotatedKeywordText(mnemonicKeyword)?.text}"</>
-                  ) : (
-                    <>{keyword}</>
-                  )}
-                </div>
-              );
-              return figures.length > 1 ? (
-                <div
-                  key={String(i)}
-                  className="inline-flex flex-col gap-2 border border-solid border-gray-400 bg-gray-100 p-1"
-                >
-                  <div className="flex flex-row gap-2">
-                    {figures.map(({ figure, isAtomic }) => (
-                      // <FigureBadgeLink
-                      //   key={figure.id}
-                      //   id={figure.id}
-                      //   badgeProps={figure}
-                      //   className={clsx("", {
-                      //     "opacity-30": !isAtomic,
-                      //   })}
-                      // />
-                      <DictPreviewLink
-                        key={figure.id}
-                        figureKey={figure.key}
-                        popoverAttributes={popover.getAnchorAttributes(figure)}
-                        className={clsx({
-                          "opacity-30": !isAtomic,
-                        })}
-                      >
-                        <FigureBadge badgeProps={figure} />
-                      </DictPreviewLink>
-                    ))}
-                  </div>
-                  {keywordDisplay}
-                </div>
-              ) : (
-                <div
-                  key={String(i)}
-                  className="inline-flex flex-col flex-wrap gap-2 p-1"
-                >
-                  <DictPreviewLink
-                    figureKey={figures[0].figure.key}
-                    popoverAttributes={popover.getAnchorAttributes(
-                      figures[0].figure,
-                    )}
-                    className={"text-center"}
-                  >
-                    <FigureBadge badgeProps={figures[0].figure} />
-                  </DictPreviewLink>
-                  {/* <FigureBadgeLink
-                      key={figures[0].figure.id}
-                      id={figures[0].figure.id}
-                      badgeProps={figures[0].figure}
-                      className="text-center"
-                    /> */}
-                  {keywordDisplay}
-                </div>
-              );
-            },
-          )}
-        </section>
+        <FiguresGroupedByVariantsList
+          figuresAndVariants={atomicComponentsAndVariants}
+          popover={popover}
+        />
       </main>
     </>
   );

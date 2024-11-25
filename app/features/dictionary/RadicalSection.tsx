@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import clsx from "clsx";
+import { Fragment } from "react";
 
 import { DictLink } from "~/components/AppLink";
 import { PopperOptions } from "~/components/usePaddedPopper";
@@ -73,12 +74,14 @@ export function RadicalSection({
             )}
           >
             <h3 className=" mb-4 text-center text-lg">
-              {radicalIndexes
-                .map(
-                  (r) =>
-                    `radical #${r.radical.number} ${r.radical.character} + ${r.remainder} additional strokes`,
-                )
-                .join(", ")}
+              {radicalIndexes.map((r, i) => (
+                <Fragment key={i}>
+                  Kangxi radical: {r.radical.character} (number{" "}
+                  {r.radical.number})
+                  <br />
+                  <small>additional strokes: {r.remainder}</small>
+                </Fragment>
+              ))}
             </h3>
             <p className="mb-4">
               Knowing a character's traditional "radical" is not as useful today

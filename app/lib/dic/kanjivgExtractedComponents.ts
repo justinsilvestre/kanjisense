@@ -75,6 +75,8 @@ export const kanjivgExtractedComponents: {
   "GWS-U27607-VAR-010": ['派', [6, 9], takeWideRightElement],
   'GWS-CDP-8C66-VAR-001': ['旅', [7, 10], takeBottomRightElement],
   'GWS-U22F04-03-VAR-001': ["啓", [1, 8]],
-  '𠂆': ['盾', [1, 2]]
+  '𠂆': ['盾', [1, 2]],
+  "𦉰": ["岡", [1, 5]],
+  "𦉪": ["冏", [1, 4]],
 };
 

@@ -782,8 +782,8 @@ CDP-8BD6: # 奥,向,CDP-8D7C,襖,奧
   mnemonic: chopping hand
   tag: hands
 夭:
-  historical: youth
-  tag: null
+  historical: calamity
+  tag: nature
 CDP-8BB8: # 愛,受,舜,曖,授,綬,瞬
   historical: (various)
   mnemonic: crown of thorns
@@ -793,8 +793,7 @@ CDP-8BB8: # 愛,受,舜,曖,授,綬,瞬
   mnemonic: opening mouth
   tag: body
 㑒:
-  historical: everyone
-  mnemonic: unanimous
+  historical: unanimous
   tag: personal
 坴:
   historical: clod of earth
@@ -833,7 +832,7 @@ CDP-8BE8: # 竜,電,滝,奄,CDP-89BD,俺,庵,亀,縄
   standin: 咲
   tag: plants
 𠀎:
-  mnemonic: straw
+  mnemonic: guardrail
   tag: place
 枼:
   historical: leafy tree
@@ -925,9 +924,8 @@ GWS-U2FFA-U200CA-U7C73: # 継,断,繼,斷
   tag: geo
 𠂢:
   historical: tributary
-  mnemonic: vein
-  standin: 脈
-  tag: body
+  standin: 派
+  tag: geo
 亚:
   historical: (various)
   mnemonic: trimmed hedge
@@ -1061,8 +1059,7 @@ GWS-U4343-VAR-001: # 揺,謡,遥,瑶,搖,遙,謠
   mnemonic: open jar
   tag: tools
 GWS-U5B5A-G:
-  historical: trust
-  mnemonic: suckling babe
+  historical: brood over eggs
   reference: 乳
   tag: personal
 离:
@@ -1175,9 +1172,8 @@ GWS-U6EA5-VAR-003:
   standin: 塞
   tag: place
 冏:
-  historical: jute plant
-  mnemonic: merchant
-  reference: 商
+  historical: window
+  mnemonic: window curtains
   tag: personal
 GWS-CDP-8CA9-07: # 隋,惰,楕,遀,墮,隨,髓
   historical: (various)
@@ -1483,7 +1479,7 @@ GWS-U97F1-VAR-001: # 繊,懺,纖
   tag: plants
 CDP-8C6A: # 款,隷
   historical: crabapple
-  mnemonic: dirty altar
+  mnemonic: noble priest
   tag: place
 癸:
   historical: tenth Heavenly Stem

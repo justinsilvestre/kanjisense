@@ -18,6 +18,7 @@ import DictionaryLayout from "~/components/DictionaryLayout";
 import { FigureBadge } from "~/components/FigureBadge";
 import { FigurePopoverWindow } from "~/components/FigurePopover";
 import { prisma } from "~/db.server";
+import { getBadgeFiguresByPriorityGroupedWithVariants } from "~/features/browse/getBadgeFiguresByPriorityGroupedWithVariants";
 import {
   BadgePropsFigure,
   badgeFigureSelect,
@@ -31,6 +32,8 @@ import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "~/features/dictionary/TOTAL_ATOMI
 import { FIGURES_VERSION } from "~/models/figure";
 
 import { useManyFiguresPopover } from "../features/browse/useManyFiguresPopover";
+
+import { FiguresGroupedByVariantsList } from "./FiguresGroupedByVariantsList";
 
 type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
@@ -68,39 +71,68 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
         ],
       },
     });
-  const priorityCompoundComponents = await prisma.kanjisenseFigure.findMany({
-    select: commonSelect,
-    orderBy: { aozoraAppearances: "desc" },
-    where: {
+  const compoundComponentCharactersMap: Record<
+    string,
+    BadgePropsFigure & KeywordDisplayFigure
+  > = {};
+
+  for (const figure of priorityCompoundComponentCharacters) {
+    compoundComponentCharactersMap[figure.id] = figure;
+  }
+
+  const compoundComponentsWithStandaloneCharactersAsVariant =
+    await getBadgeFiguresByPriorityGroupedWithVariants(prisma, {
       version: FIGURES_VERSION,
       ...isPriorityComponentWhere,
       componentsTree: { not: [] },
       id: {
         notIn: priorityCompoundComponentCharacters.map((c) => c.id),
       },
-    },
-  });
-  const compoundComponentsMap: Record<
-    string,
-    BadgePropsFigure & KeywordDisplayFigure
-  > = {};
-  const compoundComponentCharactersMap: Record<
-    string,
-    BadgePropsFigure & KeywordDisplayFigure
-  > = {};
+      variantGroup: {
+        // TODO: confirm no group has "head" which is not standalone, while also having a standalone variant
+        figures: {
+          some: {
+            listsAsCharacter: { isEmpty: false },
+          },
+        },
+      },
+    });
 
-  for (const figure of priorityCompoundComponents) {
-    compoundComponentsMap[figure.id] = figure;
-  }
-  for (const figure of priorityCompoundComponentCharacters) {
-    compoundComponentCharactersMap[figure.id] = figure;
-  }
+  const compoundComponentsWithNoStandaloneCharacterVariants =
+    await getBadgeFiguresByPriorityGroupedWithVariants(prisma, {
+      version: FIGURES_VERSION,
+      ...isPriorityComponentWhere,
+      componentsTree: { not: [] },
+      key: {
+        notIn: priorityCompoundComponentCharacters
+          .map((c) => c.key)
+          .concat(
+            compoundComponentsWithStandaloneCharactersAsVariant.matchedFiguresAndVariants.map(
+              (f) => f.key,
+            ),
+          ),
+      },
+      OR: [
+        { variantGroup: null },
+        {
+          variantGroup: {
+            // TODO: confirm no group has "head" which is not standalone, while also having a standalone variant
+            figures: {
+              none: {
+                listsAsCharacter: { isEmpty: false },
+              },
+            },
+          },
+        },
+      ],
+    });
+
   return {
-    compoundComponents: compoundComponentsMap,
     compoundComponentCharacters: compoundComponentCharactersMap,
-    totalCompoundComponents: priorityCompoundComponents.length,
     totalCompoundComponentCharacters:
       priorityCompoundComponentCharacters.length,
+    compoundComponentsWithNoStandaloneCharacterVariants,
+    compoundComponentsWithStandaloneCharactersAsVariant,
   };
 }
 
@@ -125,11 +157,22 @@ function CompoundComponentsPageContent({
   loaderData: LoaderData;
 }) {
   const {
-    compoundComponents,
+    compoundComponentsWithNoStandaloneCharacterVariants:
+      nonCharacterCompoundComponents,
+    compoundComponentsWithStandaloneCharactersAsVariant:
+      compoundComponentCharacterVariants,
     compoundComponentCharacters,
-    totalCompoundComponents,
     totalCompoundComponentCharacters,
   } = loaderData;
+
+  const totalCompoundComponents =
+    compoundComponentCharacterVariants.matchedFiguresCount +
+    nonCharacterCompoundComponents.matchedFiguresCount +
+    totalCompoundComponentCharacters;
+
+  const totalCompoundNonCharacterVariantComponents =
+    compoundComponentCharacterVariants.matchedFiguresCount +
+    nonCharacterCompoundComponents.matchedFiguresCount;
 
   const popover = useManyFiguresPopover();
 
@@ -144,15 +187,12 @@ function CompoundComponentsPageContent({
         : null}
       <main className="flex flex-col gap-2">
         <h1 className="my-2 text-center font-sans text-2xl font-bold">
-          The{" "}
-          {(
-            totalCompoundComponents + totalCompoundComponentCharacters
-          ).toLocaleString()}{" "}
-          "compound" kanji components
+          The {totalCompoundComponents.toLocaleString()} "compound" kanji
+          components
         </h1>
 
         <section>
-          <p className="mx-auto my-3 max-w-lg text-justify text-sm leading-7">
+          <p className="text-md mx-auto my-3 max-w-lg  leading-6">
             All the {(3530).toLocaleString()} most important kanji can be broken
             down into just{" "}
             <BrowseAtomicComponentsLink>
@@ -164,11 +204,10 @@ function CompoundComponentsPageContent({
             atomic components, learning to recognize these "compound" components
             will help you to learn new kanji much more easily.
           </p>
-          <p className="mx-auto my-3 max-w-lg text-justify text-sm leading-7">
-            The problem is that, as with the characters themselves, there are
-            more than a thousand of these compound components. Therefore, they
-            don't lend themselves well to rote memorization. But the good news
-            is that{" "}
+          <p className="text-md mx-auto my-3 max-w-lg  leading-6">
+            The problem is that, as with the characters themselves, there are a
+            multitude of these compound components. Therefore, they don't lend
+            themselves well to rote memorization. But the good news is that{" "}
             <strong>
               most of the compound kanji components double as standalone
               characters
@@ -178,8 +217,8 @@ function CompoundComponentsPageContent({
           </p>
           <h2 className="my-4 text-center">
             {" "}
-            {totalCompoundComponentCharacters} compound components doubling as
-            standalone characters
+            {totalCompoundComponentCharacters} compound components{" "}
+            <strong>doubling as standalone characters</strong>
           </h2>
           <CollapsiblePreviewList>
             <section>
@@ -206,49 +245,66 @@ function CompoundComponentsPageContent({
               )}
             </section>
           </CollapsiblePreviewList>
-          <p className="mx-auto my-3 max-w-lg text-justify text-sm leading-7">
-            As for the remaining compound components in the{" "}
-            {(3530).toLocaleString()} most important kanji, which{" "}
-            <strong>do not</strong> appear as standalone characters in modern
-            Japanese, there are just {totalCompoundComponents} of them listed in
-            Kanjisense. Many of these components were indeed once used as
-            characters long ago, but have since fallen out of use. Others are
-            simply graphic elements that appear in multiple characters at once
-            for historical reasons.
+          <p className="text-md mx-auto my-3 max-w-lg  leading-6">
+            About a quarter of the remaining compound components may be
+            considered <strong>variants</strong> of standalone characters.
+            Sometimes they are identical in form, minus a few strokes&mdash;in
+            other words, an abbreviated form. Other times, the variant form is a
+            more complex historical form of the currently used character.
+            Sometimes, the historical relationship between variant forms is more
+            complicated. But in any case, it's usually easy to see the relation
+            between the two once it's pointed out.
           </p>
-          <p className="mx-auto my-3 max-w-lg text-justify text-sm leading-7">
-            In any case, I still don't recommend trying to memorize these
-            compounds by rote. Rather, it would probably be easiest to focus on
-            these components{" "}
-            <strong>as you come across them "in the wild"</strong>. If you 1)
-            learn one character containing one of these components, and 2) have
-            that component pointed out to you as such, that should be enough to
-            help you recognize the component in other characters.
+          <p className="text-md mx-auto my-3 max-w-lg  leading-6">
+            Again, I don't recommend trying to memorize these variants by rote.
+            But as you learn more and more characters, you might find it helpful
+            to return to this list and take note of the patterns in these
+            variations, to reinforce the connections between characters in your
+            memory.
           </p>
         </section>
         <h2 className="my-4 text-center">
-          {totalCompoundComponents} compound components <em>not</em> doubling as
-          standalone characters
+          {compoundComponentCharacterVariants.matchedFiguresCount} compound
+          components which are{" "}
+          <strong>variants of standalone characters</strong>
         </h2>
         <CollapsiblePreviewList>
-          <section>
-            {Object.entries(compoundComponents).map(([id, figure]) => {
-              const badgeProps = getBadgeProps(figure);
-              return (
-                <div key={id} className="inline-block p-1 text-center">
-                  <DictPreviewLink
-                    figureKey={id}
-                    popoverAttributes={popover.getAnchorAttributes(badgeProps)}
-                  >
-                    <FigureBadge badgeProps={badgeProps} />
-                  </DictPreviewLink>
-                  <div>
-                    <FigureKeywordDisplay figure={figure} />
-                  </div>
-                </div>
-              );
-            })}
-          </section>
+          <FiguresGroupedByVariantsList
+            figuresAndVariants={
+              compoundComponentCharacterVariants.matchedFiguresAndVariants
+            }
+            popover={popover}
+          />
+        </CollapsiblePreviewList>
+
+        <p className="text-md mx-auto my-3 max-w-lg  leading-6">
+          As for the remaining compound components in the{" "}
+          {(3530).toLocaleString()} most important kanji, which{" "}
+          <strong>do not</strong> appear as standalone characters in everyday
+          modern Japanese, in any form, they are listed below.
+        </p>
+        <p className="text-md mx-auto my-3 max-w-lg  leading-6">
+          In many cases, these components originally derive from standalone
+          characters. When the graphical form of the component is especially
+          evocative and easy to relate to the original character's meaning, I
+          have used in in Kanjisense as the mnemonic keyword for that character.
+          But in so many cases, the modern forms are so hard to visually relate
+          their archaic meanings, that the effort to do so outweighs the
+          benefit. So, for the most part, the mnemonic keywords here relate to
+          the modern form of the character, and to the context in which you are
+          likely to encounter it as a beginner in Japanese.
+        </p>
+        <h2 className="my-4 text-center">
+          {nonCharacterCompoundComponents.matchedFiguresCount} compound
+          components <strong>without standalone characters as variants</strong>
+        </h2>
+        <CollapsiblePreviewList>
+          <FiguresGroupedByVariantsList
+            figuresAndVariants={
+              nonCharacterCompoundComponents.matchedFiguresAndVariants
+            }
+            popover={popover}
+          />
         </CollapsiblePreviewList>
       </main>
     </>

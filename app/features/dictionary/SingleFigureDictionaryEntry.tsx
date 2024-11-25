@@ -68,12 +68,12 @@ export function SingleFigureDictionaryEntry({
     >
       <div className="SingleFigureDictionaryEntry_left flex flex-grow flex-col gap-4 [min-width:calc(100%-20rem)] max-lg:basis-full ">
         <div className="SingleFigureDictionaryEntry_top flex flex-row flex-wrap  justify-center gap-4 md:flex-nowrap ">
-          <div className="SingleFigureDictionaryEntry_topLeft flex flex-grow basis-1/3 flex-col  items-center gap-4 [min-width:15.05rem]">
+          <div className="SingleFigureDictionaryEntry_topLeft flex flex-grow basis-1/3 flex-col  items-center gap-4 [min-width:15.25rem]">
             <div
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={kvgImage ? 0 : -1}
               className={clsx(
-                "group relative  [height:15.05em] [width:15.05em]",
+                "group relative  [height:15.25em] [width:15.25em]",
                 kvgImage ? "cursor-pointer" : null,
               )}
               onClick={() => setAnimationIsShowing((b) => !b)}

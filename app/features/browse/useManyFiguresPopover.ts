@@ -3,6 +3,8 @@ import React from "react";
 import { useFigurePopover } from "~/components/FigurePopover";
 import { BadgeProps } from "~/features/dictionary/badgeFigure";
 
+export type ManyFiguresPopover = ReturnType<typeof useManyFiguresPopover>;
+
 export function useManyFiguresPopover() {
   const figurePopover = useFigurePopover();
 

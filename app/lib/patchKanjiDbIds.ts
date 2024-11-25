@@ -374,8 +374,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
         ["黙", "⿺黒犬"],
         ["勲", "⿺𤋱力"],
         ["菫", "⿻𦰌一"],
-        ["𦰌", "⿱艹⿻⿱口一土"],
-        ["𦰌", "⿱廿⿻⿱口一土"],
+        ["𦰌", "⿱艹⿻口龶"],
+        ["堇", "⿱廿⿻中龶"],
+        ["菫", "⿳艹一⿻中龶"],
         ["營", "⿱𤇾呂"],
         ["串", "⿻中口"],
         ["捌", "⿰扌別"],
@@ -418,7 +419,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
         // CDP-8BD1	&CDP-8BD1;	⿹耳壬	⿹耳王
         ["CDP-8BD1", "⿹耳王"],
 
-        ["鬲", "⿱𠮛⿵冂⿱儿丁[J]"],
+        ["鬲", "⿳一口⿵𦉪丅[GTJ]	⿳一口⿵冂&CDP-89C4;[K]"],
+        ["冏", "⿵冂㕣[G]	⿵冂⿱儿口[K]	⿵𦉪口[J]"],
+        ["册", "⿻⿰冂冂一"],
       ])
       .extractFigureFromIdsSegment({
         componentIdsSegment: "⿰王",
@@ -608,9 +611,9 @@ export const patchIds = (patchedIds: PatchedIds) => {
       })
 
       .replaceIds("艮", "⿻ヨ&CDP-8CC6;")
-      .replaceIds("CDP-8B7C", "⿻日厶")
-      .addIdsAfterTransforms("GWS-CDP-8B7C-VAR-001", "⿻日⿰丨二")
-      .replaceIds("CDP-89CE", "⿻日丿")
+      .replaceIds("CDP-8B7C", "⿻ヨ厶")
+      .addIdsAfterTransforms("GWS-CDP-8B7C-VAR-001", "⿻ヨ⿰丨二")
+      .replaceIds("CDP-89CE", "⿻ヨ丿")
 
       // U+810A	脊	⿱&CDP-88D2;月[GJK]	⿱&CDP-88D2;⺼[T]
       .replaceIds("脊", "⿱⿻人⿰二二月")
@@ -657,7 +660,7 @@ export const patchIds = (patchedIds: PatchedIds) => {
       .replaceIds("⺼", "⿵冂⺀")
       .replaceEverywhere("⺆", "冂")
 
-      .replaceIds("𠀎", "⿻艹二")
+      .replaceIds("𠀎", "⿱井一")
 
       .replaceManyIds([
         ["豹", "⿰豸勺"],
@@ -714,6 +717,12 @@ export const patchIds = (patchedIds: PatchedIds) => {
         extractedFigureId: "GWS-U22F04-03-VAR-001",
         newCompleteIds: "⿰戸攵",
       })
+
+      .replaceIds("罔", "⿵𦉰亡")
+      .replaceIds("岡", "⿵𦉰山")
+
+      .replaceIds("CDP-89C6", "⿴&CDP-8BF5;二")
+      //
 
       // JIS 2004
       // checking via https://www.asahi-net.or.jp/~ax2s-kmtn/ref/jis2000-2004.html
