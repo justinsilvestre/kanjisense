@@ -19,6 +19,7 @@ import { BadgeFigure } from "../dictionary/getDictionaryPageFigure.server";
 import { transcribeSbgyXiaoyun } from "../dictionary/transcribeSbgyXiaoyun";
 
 export type CurationState = Awaited<ReturnType<typeof getCurationState>>;
+export type CurationStateTextGroup = CurationState["textGroups"][number];
 
 export async function getCurationState(courseId: string, page: number) {
   const priorityCharacters = [...baseKanji];
@@ -395,15 +396,15 @@ export async function getCurationState(courseId: string, page: number) {
     },
   });
 
-  const soughtCharacters =
-    course?.wantedCharacters || course.normalizedTextSearchQuery
-      ? [
-          ...new Set([
-            ...course.wantedCharacters,
-            ...course.normalizedTextSearchQuery.replaceAll("|", ""),
-          ]),
-        ]
-      : null;
+  // const soughtCharacters =
+  //   course?.wantedCharacters || course.normalizedTextSearchQuery
+  //     ? [
+  //         ...new Set([
+  //           ...course.wantedCharacters,
+  //           ...course.normalizedTextSearchQuery.replaceAll("|", ""),
+  //         ]),
+  //       ]
+  //     : null;
 
   console.log({
     seenCharacters: seenCharacters.map((c) => c.key).join(""),
@@ -438,9 +439,9 @@ export async function getCurationState(courseId: string, page: number) {
     ? course.sources.filter((s) => s.startsWith("-")).map((s) => s.slice(1))
     : null;
 
-  const charactersNotNeededAnymore = seenCharacters
-    .map((c) => c.key)
-    .filter((key) => !soughtCharacters?.includes(key));
+  // const charactersNotNeededAnymore = seenCharacters
+  //   .map((c) => c.key)
+  //   .filter((key) => !soughtCharacters?.includes(key));
 
   // todo: extract querying for reuse with count below
   const textGroups = await prisma.characterUsagesOnBaseCorpusText.groupBy({
@@ -464,7 +465,7 @@ export async function getCurationState(courseId: string, page: number) {
         id: {
           notIn: seenTexts.flatMap((ts) => ts.map((t) => t.id)),
         },
-        AND: [
+        OR: [
           {
             author:
               wantedAuthors?.length || unwantedAuthors?.length
@@ -487,46 +488,15 @@ export async function getCurationState(courseId: string, page: number) {
                   }
                 : undefined,
           },
+          ...(course?.normalizedTextSearchQuery
+            ? course.normalizedTextSearchQuery
+                .split("|")
+                .map((q) => ({ normalizedText: { contains: q } }))
+            : []),
         ],
-        // uniqueCharacters: {
-        //   none: {
-        //     figure: {
-        //       isPriority: false,
-        //     },
-        //   },
-        // },
-        // uniqueCharacters: soughtCharacters
-        //   ? {
-        //       some: {
-        //         figureId: {
-        //           in: soughtCharacters?.length ? soughtCharacters : undefined,
-        //           notIn: charactersNotNeededAnymore,
-        //         },
-        //       },
-        //     }
-        //   : undefined,
-        // author:
-        //   wantedAuthors?.length || unwantedAuthors?.length
-        //     ? {
-        //         in: wantedAuthors?.length ? wantedAuthors : undefined,
-        //         notIn: unwantedAuthors?.length ? unwantedAuthors : undefined,
-        //       }
-        //     : undefined,
-        // source:
-        //   wantedSources?.length || unwantedSources?.length
-        //     ? {
-        //         in: wantedSources?.length ? wantedSources : undefined,
-        //         notIn: unwantedSources?.length ? unwantedSources : undefined,
-        //       }
-        //     : undefined,
-        OR: course?.normalizedTextSearchQuery
-          ? course.normalizedTextSearchQuery
-              .split("|")
-              .map((q) => ({ normalizedText: { contains: q } }))
-          : undefined,
       },
       character: {
-        notIn: charactersNotNeededAnymore,
+        // notIn: charactersNotNeededAnymore,
         in: course?.wantedCharacters.length
           ? course.wantedCharacters.split("")
           : undefined,
@@ -546,15 +516,15 @@ export async function getCurationState(courseId: string, page: number) {
       {
         baseCorpusUniqueCharactersCount: "asc",
       },
+      { baseCorpusTextLength: "asc" },
       {
         _sum: {
           frequencyScore: "desc",
         },
       },
-      { baseCorpusTextLength: "desc" },
     ],
-    take: 500,
-    skip: (page - 1) * 500,
+    take: 1000,
+    skip: (page - 1) * 1000,
   });
 
   console.log("geting text groups");
@@ -574,7 +544,7 @@ export async function getCurationState(courseId: string, page: number) {
           id: {
             notIn: seenTexts.flatMap((ts) => ts.map((t) => t.id)),
           },
-          AND: [
+          OR: [
             {
               author:
                 wantedAuthors?.length || unwantedAuthors?.length
@@ -597,46 +567,49 @@ export async function getCurationState(courseId: string, page: number) {
                     }
                   : undefined,
             },
+
+            // uniqueCharacters: {
+            //   none: {
+            //     figure: {
+            //       isPriority: false,
+            //     },
+            //   },
+            // },
+            // uniqueCharacters: soughtCharacters
+            //   ? {
+            //       some: {
+            //         figureId: {
+            //           in: soughtCharacters?.length ? soughtCharacters : undefined,
+            //           notIn: charactersNotNeededAnymore,
+            //         },
+            //       },
+            //     }
+            //   : undefined,
+            // author:
+            //   wantedAuthors?.length || unwantedAuthors?.length
+            //     ? {
+            //         in: wantedAuthors?.length ? wantedAuthors : undefined,
+            //         notIn: unwantedAuthors?.length ? unwantedAuthors : undefined,
+            //       }
+            //     : undefined,
+            // source:
+            //   wantedSources?.length || unwantedSources?.length
+            //     ? {
+            //         in: wantedSources?.length ? wantedSources : undefined,
+            //         notIn: unwantedSources?.length ? unwantedSources : undefined,
+            //       }
+            //     : undefined,
+            // },
+            ...(course?.normalizedTextSearchQuery
+              ? course.normalizedTextSearchQuery
+                  .split("|")
+                  .map((q) => ({ normalizedText: { contains: q } }))
+              : []),
           ],
-          // uniqueCharacters: {
-          //   none: {
-          //     figure: {
-          //       isPriority: false,
-          //     },
-          //   },
-          // },
-          // uniqueCharacters: soughtCharacters
-          //   ? {
-          //       some: {
-          //         figureId: {
-          //           in: soughtCharacters?.length ? soughtCharacters : undefined,
-          //           notIn: charactersNotNeededAnymore,
-          //         },
-          //       },
-          //     }
-          //   : undefined,
-          // author:
-          //   wantedAuthors?.length || unwantedAuthors?.length
-          //     ? {
-          //         in: wantedAuthors?.length ? wantedAuthors : undefined,
-          //         notIn: unwantedAuthors?.length ? unwantedAuthors : undefined,
-          //       }
-          //     : undefined,
-          // source:
-          //   wantedSources?.length || unwantedSources?.length
-          //     ? {
-          //         in: wantedSources?.length ? wantedSources : undefined,
-          //         notIn: unwantedSources?.length ? unwantedSources : undefined,
-          //       }
-          //     : undefined,
-          OR: course?.normalizedTextSearchQuery
-            ? course.normalizedTextSearchQuery
-                .split("|")
-                .map((q) => ({ normalizedText: { contains: q } }))
-            : undefined,
         },
+
         character: {
-          notIn: charactersNotNeededAnymore,
+          // notIn: charactersNotNeededAnymore,
           in: course?.wantedCharacters.length
             ? course.wantedCharacters.split("")
             : undefined,
@@ -645,7 +618,7 @@ export async function getCurationState(courseId: string, page: number) {
     })
   ).length;
 
-  console.log("geting texts");
+  console.log("getting texts");
   const unseenTexts = await prisma.baseCorpusText.findMany({
     where: {
       id: {
@@ -666,6 +639,50 @@ export async function getCurationState(courseId: string, page: number) {
       uniqueComponents: true,
     },
   });
+  console.log(`got ${unseenTexts.length} texts`);
+  // const unseenCharactersCountCache = new Map<number, number>();
+
+  // function getUnseenCharactersCount(textId: number) {
+  //   if (unseenCharactersCountCache.has(textId)) {
+  //     return unseenCharactersCountCache.get(textId)!;
+  //   }
+  //   const text = unseenTexts.find((g) => g.id === textId)!;
+  //   const unseenCharacters = new Set<string>();
+  //   for (const char of text.uniqueCharacters) {
+  //     if (!seenCharacters.some((c) => c.key === char.character)) {
+  //       unseenCharacters.add(char.character);
+  //     }
+  //   }
+
+  //   return unseenCharacters.size;
+  // }
+
+  // unseenTexts.sort((a, b) => {
+  //   // prioritize texts more unseen characters
+  //   const unseenCharactersCountA = getUnseenCharactersCount(a.id);
+  //   const unseenCharactersCountB = getUnseenCharactersCount(b.id);
+  //   if (unseenCharactersCountA !== unseenCharactersCountB)
+  //     return unseenCharactersCountA - unseenCharactersCountB;
+
+  //   return 0;
+  // });
+
+  // // sort by seen characters count desc
+  // const wantedCharacterSet = new Set(course.wantedCharacters);
+  // const unseenTextsWantedCharactersCount = new Map(
+  //   unseenTexts.map((t) => [
+  //     t.id,
+  //     t.uniqueCharacters.filter((c) => wantedCharacterSet.has(c.character))
+  //       .length,
+  //   ]),
+  // );
+  // textGroups.sort(
+  //   (a, b) =>
+  //     unseenTextsWantedCharactersCount.get(b.baseCorpusTextId)! /
+  //       b.baseCorpusUniqueCharactersCount -
+  //     unseenTextsWantedCharactersCount.get(a.baseCorpusTextId)! /
+  //       a.baseCorpusUniqueCharactersCount,
+  // );
 
   return {
     course,

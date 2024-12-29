@@ -29,6 +29,7 @@ import { FIGURES_VERSION } from "~/models/figure";
 
 import {
   CurationState,
+  CurationStateTextGroup,
   getCurationState,
 } from "../features/curate/getCurationState";
 
@@ -182,7 +183,10 @@ export default function CuratePage() {
     [remainingMeaningfulComponents],
   );
   const remainingKanjisenseCharactersMap = useMemo(
-    () => new Map(remainingKanjisenseCharacters.map((c) => [c.key, c])),
+    () =>
+      new Map<string, KanjisenseFigure>(
+        remainingKanjisenseCharacters.map((c) => [c.key, c]),
+      ),
     [remainingKanjisenseCharacters],
   );
 
@@ -258,6 +262,39 @@ export default function CuratePage() {
           {
             seenTextsState.reduce(
               (acc, group, groupIndex) => {
+                let groupNewComponentsCount = 0;
+                const firstTextKey = group.texts[0];
+                const seenCharactersSoFar = firstTextKey
+                  ? runningSeenCharacters[firstTextKey]
+                  : null;
+                const groupNewCharacters = new Set<string>();
+                if (seenCharactersSoFar)
+                  group.texts.forEach((textKey, textIndex) => {
+                    const seenText = seenTextsFlat.find(
+                      (t) => t.key === textKey,
+                    );
+                    for (const seenTextCharacter of seenText?.uniqueCharacters ||
+                      []) {
+                      if (
+                        !seenCharactersSoFar.has(seenTextCharacter.character)
+                      ) {
+                        groupNewCharacters.add(seenTextCharacter.character);
+                      }
+                    }
+
+                    for (const component of seenText?.uniqueComponents || []) {
+                      const componentFirstSighting =
+                        componentsToFirstSighting.get(component.figureKey);
+                      if (
+                        componentFirstSighting &&
+                        componentFirstSighting.textGroupIndex === groupIndex &&
+                        componentFirstSighting.textIndex === textIndex
+                      ) {
+                        groupNewComponentsCount++;
+                      }
+                    }
+                  });
+
                 acc.nodes.push(
                   <section key={groupIndex}>
                     <h2 className="mb-4 mt-16 text-center">
@@ -310,6 +347,10 @@ export default function CuratePage() {
                       </button>
                       <br />
                       {group.texts.length} texts
+                      <br />
+                      {groupNewCharacters.size} new characters (+{" "}
+                      {runningSeenCharacters[firstTextKey]?.size} so far),{" "}
+                      {groupNewComponentsCount} new components
                     </h2>
                     <div className="mb-4">
                       <TextGroupDescriptionInput
@@ -329,185 +370,32 @@ export default function CuratePage() {
                           );
                         if (!seenText) return null;
 
-                        const tg = loaderData?.textGroups.find(
+                        const runningTotalTexts = acc.runningTotalTexts;
+
+                        const tg = loaderData.textGroups.find(
                           (tg) => tg.baseCorpusTextId === seenText.id,
                         );
-                        // const unseenCharactersRegex = new RegExp(
-                        //   `([^${[...runningSeenCharacters[textKey]].join("")}])`,
-                        //   "g",
-                        // );
 
                         return (
-                          <section key={seenText.id} className="mb-4">
-                            {tg ? (
-                              <h3>
-                                unique chars:{" "}
-                                {tg.baseCorpusUniqueCharactersCount};{" "}
-                                components: {tg.baseCorpusUniqueComponentsCount}
-                                ; total length: {tg.baseCorpusTextLength} score:{" "}
-                                {tg._sum?.frequencyScore?.toLocaleString(
-                                  "en-US",
-                                )}
-                              </h3>
-                            ) : null}
-                            <h3>
-                              #{acc.runningTotalTexts} {seenText.author} -{" "}
-                              {seenText.title} ({seenText.source}){" "}
-                              {seenText.urls.map((url, i) => (
-                                <a
-                                  href={url}
-                                  key={url}
-                                  target="_blank"
-                                  className="underline"
-                                  rel="noreferrer"
-                                  title={url}
-                                >
-                                  [{i + 1}]
-                                </a>
-                              ))}
-                            </h3>
-                            {seenText.text}
-                            <div className="text-right">
-                              <button
-                                className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
-                                onClick={() =>
-                                  removeFromSeenTexts(seenText.key)
-                                }
-                              >
-                                remove
-                              </button>
-                              <button
-                                className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
-                                onClick={() =>
-                                  moveWithinSeenTexts(
-                                    seenText.key,
-                                    groupIndex + 1,
-                                  )
-                                }
-                              >
-                                move
-                              </button>
-                              <CopyYmlButton
-                                text={seenText}
-                                defaultTangReadings={
-                                  defaultTangReadings?.[seenText.key]
-                                }
-                              />
-                            </div>
-                            <div>
-                              {/* <p
-                            dangerouslySetInnerHTML={{
-                              __html: t.normalizedText.replaceAll(
-                                unseenCharactersRegex,
-                                '<span class="text-sky-600">$&</span>',
-                              ),
-                            }}
-                          /> */}
-                              <ColoredCharactersByInterest
-                                normalizedText={seenText.normalizedText}
-                                wantedCharacters={wantedCharactersSet}
-                                seenCharacters={runningSeenCharacters[textKey]}
-                                priorityFiguresIds={priorityCharactersSet}
-                                defaultTangReadings={
-                                  defaultTangReadings?.[seenText.key]
-                                }
-                              />
-                              <div className="m-2">
-                                <TextUniqueComponents
-                                  text={seenText}
-                                  getFigure={(key) => {
-                                    const seen = seenFiguresMap.get(key);
-                                    if (!seen) return null;
-                                    if (
-                                      componentsToFirstSighting.get(key)
-                                        ?.textKey !== seenText.key
-                                    )
-                                      return null;
-                                    return seen || null;
-                                  }}
-                                  newAtomicCharactersSeenOnlyAsComponents={
-                                    // get characters from uniqueCharacters which are NOT in runningSeenCharacters
-                                    // and which are NOT in seenFigures
-                                    new Set(
-                                      seenText.uniqueCharacters.flatMap(
-                                        ({ character }) => {
-                                          if (
-                                            !runningSeenCharacters[textKey].has(
-                                              character,
-                                            )
-                                          ) {
-                                            const figureFirstSighting =
-                                              componentsToFirstSighting.get(
-                                                character,
-                                              );
-                                            const firstSightingWasBeforeThisText =
-                                              figureFirstSighting &&
-                                              (figureFirstSighting.textGroupIndex <
-                                                groupIndex ||
-                                                (figureFirstSighting.textGroupIndex ===
-                                                  groupIndex &&
-                                                  figureFirstSighting.textIndex <
-                                                    seenTextIndex));
-                                            if (
-                                              firstSightingWasBeforeThisText
-                                            ) {
-                                              const figure =
-                                                seenFiguresMap.get(character) ||
-                                                null;
-                                              return figure &&
-                                                isAtomicFigure(figure)
-                                                ? [character]
-                                                : [];
-                                            }
-                                          }
-                                          return [];
-                                        },
-                                      ),
-                                    )
-                                  }
-                                  newNonAtomicCharactersSeenOnlyAsComponents={
-                                    new Set(
-                                      seenText.uniqueCharacters.flatMap(
-                                        ({ character }) => {
-                                          if (
-                                            !runningSeenCharacters[textKey].has(
-                                              character,
-                                            )
-                                          ) {
-                                            const figureFirstSighting =
-                                              componentsToFirstSighting.get(
-                                                character,
-                                              );
-                                            const firstSightingWasBeforeThisText =
-                                              figureFirstSighting &&
-                                              (figureFirstSighting.textGroupIndex <
-                                                groupIndex ||
-                                                (figureFirstSighting.textGroupIndex ===
-                                                  groupIndex &&
-                                                  figureFirstSighting.textIndex <
-                                                    seenTextIndex));
-
-                                            if (
-                                              firstSightingWasBeforeThisText
-                                            ) {
-                                              const figure =
-                                                seenFiguresMap.get(character) ||
-                                                null;
-                                              return figure &&
-                                                !isAtomicFigure(figure)
-                                                ? [character]
-                                                : [];
-                                            }
-                                          }
-                                          return [];
-                                        },
-                                      ),
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </section>
+                          <CuratorSeenTextDisplay
+                            key={String(textKey) + seenTextIndex}
+                            seenText={seenText}
+                            groupIndex={groupIndex}
+                            seenTextIndex={seenTextIndex}
+                            seenFiguresMap={seenFiguresMap}
+                            runningSeenCharacters={runningSeenCharacters}
+                            componentsToFirstSighting={
+                              componentsToFirstSighting
+                            }
+                            removeFromSeenTexts={removeFromSeenTexts}
+                            moveWithinSeenTexts={moveWithinSeenTexts}
+                            wantedCharactersSet={wantedCharactersSet}
+                            priorityCharactersSet={priorityCharactersSet}
+                            defaultTangReadings={defaultTangReadings}
+                            textKey={textKey}
+                            textGroup={tg}
+                            runningTotalTexts={runningTotalTexts}
+                          />
                         );
                       })}
                     </div>
@@ -522,6 +410,8 @@ export default function CuratePage() {
               {
                 nodes: [] as ReactNode[],
                 runningTotalTexts: 0,
+                runningTotalCharactersEncountered: 0,
+                runningTotalComponentsEncountered: 0,
               },
             ).nodes
           }
@@ -582,106 +472,217 @@ export default function CuratePage() {
             )!;
             const unseenText = loaderData.unseenTexts[ti];
             return (
-              // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-              <section
+              <UnseenTextDisplay
                 key={unseenText.id}
-                className="mb-4"
-                onMouseOver={getOnMouseoverText(unseenText.id)}
-              >
-                <h3 className="text-center">
-                  #{tgi + 1} unique chars ={" "}
-                  <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
-                    {tg.baseCorpusUniqueCharactersCount}
-                  </b>{" "}
-                  components ={" "}
-                  <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
-                    {tg.baseCorpusUniqueComponentsCount}
-                  </b>{" "}
-                  <br />
-                  non-priority chars ={" "}
-                  <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
-                    {tg.baseCorpusTextNonPriorityCharactersCount}
-                  </b>{" "}
-                  <br />
-                  length = {tg.baseCorpusTextLength}; score ={" "}
-                  {tg._sum?.frequencyScore?.toLocaleString("en-US")}
-                </h3>
-                <h3>
-                  {unseenText.author} - {unseenText.title} ({unseenText.source})
-                  <br />
-                  {unseenText.urls.map((url, i) => (
-                    <a
-                      href={url}
-                      key={url}
-                      target="_blank"
-                      className="underline"
-                      rel="noreferrer"
-                      title={url}
-                    >
-                      [{i + 1}]
-                    </a>
-                  ))}
-                </h3>
-                <p className="">{unseenText.text}</p>
-                <div className="text-right">
-                  <CopyYmlButton text={unseenText} />
-                  <button
-                    className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
-                    onClick={() => addToSeenTexts({ textKey: unseenText.key })}
-                  >
-                    add
-                  </button>
-                </div>
-                {mouseovered.has(unseenText.id) ? (
-                  <div>
-                    <ColoredCharactersByInterest
-                      normalizedText={unseenText.normalizedText}
-                      wantedCharacters={wantedCharactersSet}
-                      seenCharacters={seenCharactersSet}
-                      priorityFiguresIds={priorityCharactersSet}
-                    />
-                    <div className="m-2">
-                      <TextUniqueComponents
-                        text={unseenText}
-                        getFigure={(key) =>
-                          remainingComponentsMap.get(key) || null
-                        }
-                        newAtomicCharactersSeenOnlyAsComponents={
-                          new Set(
-                            unseenText.uniqueCharacters.flatMap(
-                              ({ character }) =>
-                                atomicCharactersSeenOnlyAsComponents.has(
-                                  character,
-                                )
-                                  ? [character]
-                                  : [],
-                            ),
-                          )
-                        }
-                        newNonAtomicCharactersSeenOnlyAsComponents={
-                          new Set(
-                            unseenText.uniqueCharacters.flatMap(
-                              ({ character }) =>
-                                nonAtomicCharactersSeenOnlyAsComponents.has(
-                                  character,
-                                ) &&
-                                remainingKanjisenseCharactersMap.get(character)
-                                  ? [character]
-                                  : [],
-                            ),
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <p>{unseenText.normalizedText}</p>
-                )}
-              </section>
+                unseenText={unseenText}
+                getOnMouseoverText={getOnMouseoverText}
+                textGroupIndex={tgi}
+                textGroup={tg}
+                addToSeenTexts={addToSeenTexts}
+                mouseovered={mouseovered}
+                wantedCharactersSet={wantedCharactersSet}
+                seenCharactersSet={seenCharactersSet}
+                priorityCharactersSet={priorityCharactersSet}
+                remainingComponentsMap={remainingComponentsMap}
+                atomicCharactersSeenOnlyAsComponents={
+                  atomicCharactersSeenOnlyAsComponents
+                }
+                nonAtomicCharactersSeenOnlyAsComponents={
+                  nonAtomicCharactersSeenOnlyAsComponents
+                }
+                remainingKanjisenseCharactersMap={
+                  remainingKanjisenseCharactersMap
+                }
+              />
             );
           })}
         </div>
       </section>
+    </div>
+  );
+}
+
+function UnseenTextDisplay({
+  unseenText,
+  getOnMouseoverText,
+  textGroupIndex: tgi,
+  textGroup: tg,
+  addToSeenTexts,
+  mouseovered,
+  wantedCharactersSet,
+  seenCharactersSet,
+  priorityCharactersSet,
+  remainingComponentsMap,
+  atomicCharactersSeenOnlyAsComponents,
+  nonAtomicCharactersSeenOnlyAsComponents,
+  remainingKanjisenseCharactersMap,
+}: {
+  unseenText: {
+    uniqueCharacters: {
+      character: string;
+      baseCorpusTextId: number;
+      frequencyScore: number;
+      baseCorpusTextLength: number;
+      baseCorpusUniqueCharactersCount: number;
+      baseCorpusUniqueComponentsCount: number;
+      baseCorpusTextNonPriorityCharactersCount: number;
+    }[];
+    uniqueComponents: {
+      figureKey: string;
+      baseCorpusTextId: number;
+      frequencyScore: number;
+      baseCorpusTextLength: number;
+      baseCorpusUniqueCharactersCount: number;
+      baseCorpusUniqueComponentsCount: number;
+    }[];
+  } & {
+    id: number;
+    course: string;
+    key: string;
+    title: string | null;
+    author: string | null;
+    source: string;
+    section: string | null;
+    dynasty: string | null;
+    urls: string[];
+    text: string;
+    normalizedText: string;
+    normalizedLength: number;
+    nonPriorityCharactersCount: number;
+  };
+  getOnMouseoverText: (id: number) => () => void;
+  textGroupIndex: number;
+  textGroup: CurationStateTextGroup;
+  addToSeenTexts: ({
+    textKey,
+    defaultGroupNumber,
+  }: {
+    textKey: string;
+    defaultGroupNumber?: number;
+  }) => void;
+  mouseovered: Set<number>;
+  wantedCharactersSet: Set<string>;
+  seenCharactersSet: Set<string>;
+  priorityCharactersSet: Set<string>;
+  remainingComponentsMap: Map<string, BadgePropsFigure>;
+  atomicCharactersSeenOnlyAsComponents: Set<string>;
+  nonAtomicCharactersSeenOnlyAsComponents: Set<string>;
+  remainingKanjisenseCharactersMap: Map<string, KanjisenseFigure>;
+}) {
+  return (
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    <section className="mb-4" onMouseOver={getOnMouseoverText(unseenText.id)}>
+      <h3 className="text-center">
+        #{tgi + 1} unique chars ={" "}
+        <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
+          {tg.baseCorpusUniqueCharactersCount}
+        </b>{" "}
+        components ={" "}
+        <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
+          {tg.baseCorpusUniqueComponentsCount}
+        </b>{" "}
+        <br />
+        non-priority chars ={" "}
+        <b className=" rounded-md border-2 border-solid border-blue-200 p-1 ">
+          {tg.baseCorpusTextNonPriorityCharactersCount}
+        </b>{" "}
+        <br />
+        length = {tg.baseCorpusTextLength}; score ={" "}
+        {tg._sum?.frequencyScore?.toLocaleString("en-US")}
+      </h3>
+      <h3>
+        {unseenText.author} - {unseenText.title} ({unseenText.source})
+        <br />
+        {unseenText.urls.map((url, i) => (
+          <a
+            href={url}
+            key={url}
+            target="_blank"
+            className="underline"
+            rel="noreferrer"
+            title={url}
+          >
+            [{i + 1}]
+          </a>
+        ))}
+      </h3>
+      <p className="">{unseenText.text}</p>
+      <div className="text-right">
+        <CopyYmlButton text={unseenText} />
+        <button
+          className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
+          onClick={() => addToSeenTexts({ textKey: unseenText.key })}
+        >
+          add
+        </button>
+      </div>
+      {mouseovered.has(unseenText.id) ? (
+        <UnseenTextNewFiguresDisplay
+          {...{
+            unseenText,
+            wantedCharactersSet,
+            seenCharactersSet,
+            priorityCharactersSet,
+            remainingComponentsMap,
+            atomicCharactersSeenOnlyAsComponents,
+            nonAtomicCharactersSeenOnlyAsComponents,
+            remainingKanjisenseCharactersMap,
+          }}
+        />
+      ) : (
+        <p>{unseenText.normalizedText}</p>
+      )}
+    </section>
+  );
+}
+
+function UnseenTextNewFiguresDisplay({
+  unseenText,
+  wantedCharactersSet,
+  seenCharactersSet,
+  priorityCharactersSet,
+  remainingComponentsMap,
+  atomicCharactersSeenOnlyAsComponents,
+  nonAtomicCharactersSeenOnlyAsComponents,
+  remainingKanjisenseCharactersMap,
+}: {
+  unseenText: CurationState["unseenTexts"][number];
+  wantedCharactersSet: Set<string>;
+  seenCharactersSet: Set<string>;
+  priorityCharactersSet: Set<string>;
+  remainingComponentsMap: Map<string, BadgePropsFigure>;
+  atomicCharactersSeenOnlyAsComponents: Set<string>;
+  nonAtomicCharactersSeenOnlyAsComponents: Set<string>;
+  remainingKanjisenseCharactersMap: Map<string, KanjisenseFigure>;
+}) {
+  const textNewFigures = useTextNewFigures({
+    text: unseenText,
+    getFigure: (key) => remainingComponentsMap.get(key) || null,
+    newAtomicCharactersSeenOnlyAsComponents: new Set(
+      unseenText.uniqueCharacters.flatMap(({ character }) =>
+        atomicCharactersSeenOnlyAsComponents.has(character) ? [character] : [],
+      ),
+    ),
+    newNonAtomicCharactersSeenOnlyAsComponents: new Set(
+      unseenText.uniqueCharacters.flatMap(({ character }) =>
+        nonAtomicCharactersSeenOnlyAsComponents.has(character) &&
+        remainingKanjisenseCharactersMap.get(character)
+          ? [character]
+          : [],
+      ),
+    ),
+  });
+  return (
+    <div>
+      <ColoredCharactersByInterest
+        normalizedText={unseenText.normalizedText}
+        wantedCharacters={wantedCharactersSet}
+        seenCharacters={seenCharactersSet}
+        priorityFiguresIds={priorityCharactersSet}
+      />
+      <div className="m-2">
+        <TextUniqueComponents {...textNewFigures} />
+      </div>
     </div>
   );
 }
@@ -868,7 +869,8 @@ function ColoredCharactersByInterest({
     </div>
   );
 }
-function TextUniqueComponents({
+
+function useTextNewFigures({
   text,
   getFigure,
   newAtomicCharactersSeenOnlyAsComponents,
@@ -915,6 +917,24 @@ function TextUniqueComponents({
       }
     }
   });
+
+  return {
+    newAtomic,
+    newNonAtomic,
+    newAtomicCharactersSeenOnlyAsComponents,
+    newNonAtomicCharactersSeenOnlyAsComponents,
+  };
+}
+
+function TextUniqueComponents(
+  textNewFigures: ReturnType<typeof useTextNewFigures>,
+) {
+  const {
+    newAtomic,
+    newNonAtomic,
+    newAtomicCharactersSeenOnlyAsComponents,
+    newNonAtomicCharactersSeenOnlyAsComponents,
+  } = textNewFigures;
 
   return (
     <>
@@ -1383,4 +1403,168 @@ function isFigureAtomic(
   return Array.isArray(figure.componentsTree)
     ? figure.componentsTree.length === 0
     : false;
+}
+
+function CuratorSeenTextDisplay({
+  seenText,
+  groupIndex,
+  seenTextIndex,
+  seenFiguresMap,
+  runningSeenCharacters,
+  componentsToFirstSighting,
+  removeFromSeenTexts,
+  moveWithinSeenTexts,
+  wantedCharactersSet,
+  priorityCharactersSet,
+  defaultTangReadings,
+  textKey,
+  textGroup: tg,
+  runningTotalTexts,
+}: {
+  seenText: CurationState["seenTexts"][number][number];
+  groupIndex: number;
+  seenTextIndex: number;
+  seenFiguresMap: Map<string, BadgePropsFigure>;
+  runningSeenCharacters: Record<string, Set<string>>;
+  componentsToFirstSighting: Map<
+    string,
+    {
+      textGroupIndex: number;
+      textIndex: number;
+      textKey: string;
+    }
+  >;
+  removeFromSeenTexts: (textKey: string) => void;
+  moveWithinSeenTexts: (textKey: string, defaultGroupNumber?: number) => void;
+  wantedCharactersSet: Set<string>;
+  priorityCharactersSet: Set<string>;
+  defaultTangReadings?: Record<string, string>;
+  textKey: string;
+  textGroup: CurationStateTextGroup | undefined;
+  runningTotalTexts: number;
+}) {
+  /***
+                         *  characters from uniqueCharacters which are NOT in runningSeenCharacters
+                            and which are NOT in seenFigures
+                         */
+  const newAtomicCharactersSeenOnlyAsComponents = new Set(
+    seenText.uniqueCharacters.flatMap(({ character }) => {
+      if (!runningSeenCharacters[textKey].has(character)) {
+        const figureFirstSighting = componentsToFirstSighting.get(character);
+        const firstSightingWasBeforeThisText =
+          figureFirstSighting &&
+          (figureFirstSighting.textGroupIndex < groupIndex ||
+            (figureFirstSighting.textGroupIndex === groupIndex &&
+              figureFirstSighting.textIndex < seenTextIndex));
+        if (firstSightingWasBeforeThisText) {
+          const figure = seenFiguresMap.get(character) || null;
+          return figure && isAtomicFigure(figure) ? [character] : [];
+        }
+      }
+      return [];
+    }),
+  );
+  const newNonAtomicCharactersSeenOnlyAsComponents = new Set(
+    seenText.uniqueCharacters.flatMap(({ character }) => {
+      if (!runningSeenCharacters[textKey].has(character)) {
+        const figureFirstSighting = componentsToFirstSighting.get(character);
+        const firstSightingWasBeforeThisText =
+          figureFirstSighting &&
+          (figureFirstSighting.textGroupIndex < groupIndex ||
+            (figureFirstSighting.textGroupIndex === groupIndex &&
+              figureFirstSighting.textIndex < seenTextIndex));
+
+        if (firstSightingWasBeforeThisText) {
+          const figure = seenFiguresMap.get(character) || null;
+          return figure && !isAtomicFigure(figure) ? [character] : [];
+        }
+      }
+      return [];
+    }),
+  );
+  // const unseenCharactersRegex = new RegExp(
+  //   `([^${[...runningSeenCharacters[textKey]].join("")}])`,
+  //   "g",
+  // );
+
+  const textNewFigures = useTextNewFigures({
+    text: seenText,
+    getFigure: (key) => {
+      const seen = seenFiguresMap.get(key);
+      if (!seen) return null;
+      if (componentsToFirstSighting.get(key)?.textKey !== seenText.key)
+        return null;
+      return seen || null;
+    },
+    newAtomicCharactersSeenOnlyAsComponents,
+    newNonAtomicCharactersSeenOnlyAsComponents,
+  });
+
+  return (
+    <section key={seenText.id} className="mb-4">
+      {tg ? (
+        <h3>
+          unique chars: {tg.baseCorpusUniqueCharactersCount}; components:{" "}
+          {tg.baseCorpusUniqueComponentsCount}; total length:{" "}
+          {tg.baseCorpusTextLength} score:{" "}
+          {tg._sum?.frequencyScore?.toLocaleString("en-US")}
+        </h3>
+      ) : null}
+      <h3>
+        #{runningTotalTexts} {seenText.author} - {seenText.title} (
+        {seenText.source}){" "}
+        {seenText.urls.map((url, i) => (
+          <a
+            href={url}
+            key={url}
+            target="_blank"
+            className="underline"
+            rel="noreferrer"
+            title={url}
+          >
+            [{i + 1}]
+          </a>
+        ))}
+      </h3>
+      {seenText.text}
+      <div className="text-right">
+        <button
+          className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
+          onClick={() => removeFromSeenTexts(seenText.key)}
+        >
+          remove
+        </button>
+        <button
+          className="m-1 border border-slate-300 bg-slate-100 p-1 text-xs"
+          onClick={() => moveWithinSeenTexts(seenText.key, groupIndex + 1)}
+        >
+          move
+        </button>
+        <CopyYmlButton
+          text={seenText}
+          defaultTangReadings={defaultTangReadings?.[seenText.key]}
+        />
+      </div>
+      <div>
+        {/* <p
+      dangerouslySetInnerHTML={{
+        __html: t.normalizedText.replaceAll(
+          unseenCharactersRegex,
+          '<span class="text-sky-600">$&</span>',
+        ),
+      }}
+    /> */}
+        <ColoredCharactersByInterest
+          normalizedText={seenText.normalizedText}
+          wantedCharacters={wantedCharactersSet}
+          seenCharacters={runningSeenCharacters[textKey]}
+          priorityFiguresIds={priorityCharactersSet}
+          defaultTangReadings={defaultTangReadings?.[seenText.key]}
+        />
+        <div className="m-2">
+          <TextUniqueComponents {...textNewFigures} />
+        </div>
+      </div>
+    </section>
+  );
 }
