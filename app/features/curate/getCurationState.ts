@@ -396,15 +396,15 @@ export async function getCurationState(courseId: string, page: number) {
     },
   });
 
-  // const soughtCharacters =
-  //   course?.wantedCharacters || course.normalizedTextSearchQuery
-  //     ? [
-  //         ...new Set([
-  //           ...course.wantedCharacters,
-  //           ...course.normalizedTextSearchQuery.replaceAll("|", ""),
-  //         ]),
-  //       ]
-  //     : null;
+  const soughtCharacters =
+    course?.wantedCharacters || course.normalizedTextSearchQuery
+      ? [
+          ...new Set([
+            ...course.wantedCharacters,
+            ...course.normalizedTextSearchQuery.replaceAll("|", ""),
+          ]),
+        ]
+      : null;
 
   console.log({
     seenCharacters: seenCharacters.map((c) => c.key).join(""),
@@ -683,6 +683,23 @@ export async function getCurationState(courseId: string, page: number) {
   //     unseenTextsWantedCharactersCount.get(a.baseCorpusTextId)! /
   //       a.baseCorpusUniqueCharactersCount,
   // );
+
+  // sort by characters in soughtCharacters
+  const soughtCharactersSet = new Set(soughtCharacters);
+  const unseenTextsSoughtCharactersCount = new Map(
+    unseenTexts.map((t) => [
+      t.id,
+      t.uniqueCharacters.filter((c) => soughtCharactersSet.has(c.character))
+        .length,
+    ]),
+  );
+  textGroups.sort(
+    (a, b) =>
+      unseenTextsSoughtCharactersCount.get(b.baseCorpusTextId)! /
+        b.baseCorpusUniqueCharactersCount -
+      unseenTextsSoughtCharactersCount.get(a.baseCorpusTextId)! /
+        a.baseCorpusUniqueCharactersCount,
+  );
 
   return {
     course,

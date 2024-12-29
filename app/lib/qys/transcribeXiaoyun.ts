@@ -1,21 +1,11 @@
 // https://nk2028.shn.hk/qieyun-js/classes/____.html
 
-import {
-  initialGroups,
-  getInitialGroup,
-  QysInitial,
-} from "~/lib/qys/QysInitial";
+import { initialGroups, getInitialGroup } from "~/lib/qys/QysInitial";
 
+import { asciiRhymes } from "./asciiRhymes";
+import { QieyunRhymeCycleHead } from "./QieyunRhymeCycleHead.1";
 import { Kaihe, QysSyllableProfile } from "./QysSyllableProfile";
-
-export interface QysTranscriptionProfile {
-  is合口: boolean;
-  canonical母: QysInitial;
-  tone聲: "平" | "上" | "去" | "入";
-  is重紐A類: boolean;
-  qieyunCycleHead韻: string;
-  contrastiveRow等: string | null;
-}
+import { QysTranscriptionProfile } from "./QysTranscriptionProfile";
 
 function changeRuShengCoda(isRuSheng: boolean, final: string) {
   if (!isRuSheng) return final;
@@ -25,136 +15,12 @@ function changeRuShengCoda(isRuSheng: boolean, final: string) {
   else return final;
 }
 
-const asciiFinals = {
-  iūng: "iuung",
-  ūng: "uung",
-  ūk: "uuk",
-  yūk: "yuuk",
-  ẁīk: "ywiik",
-  wīk: "wiik",
-  wōng: "woong",
-  ōng: "oong",
-  ong: "ong",
-  wo: "wo",
-  o: "o",
-  wāi: "waai",
-  āi: "aai",
-  wai: "wai",
-  ai: "ai",
-  won: "won",
-  on: "on",
-  an: "an",
-  wan: "wan",
-  au: "au",
-  wȧ: "wia",
-  wa: "wa",
-  ya: "ya",
-  a: "a",
-  wang: "wang",
-  ang: "ang",
-  wŏng: "wcong",
-  ŏng: "cong",
-  ou: "ou",
-  am: "am",
-  ām: "aam",
-  ạ̊ng: "roang",
-  wạ̈: "rwae",
-  ạ̈: "rae",
-  wạ̈i: "rwaei",
-  ạ̈i: "raei",
-  wại: "rwai",
-  ại: "rai",
-  wạn: "rwan",
-  ạn: "ran",
-  wạ̈n: "rwaen",
-  ạ̈n: "raen",
-  ạu: "rau",
-  yạ: "yra",
-  wạ: "rwa",
-  ạ: "ra",
-  wâng: "wvang",
-  ŷang: "vyang",
-  wẹng: "rweng",
-  ẹng: "reng",
-  wạng: "rwang",
-  wạ̈ng: "rwaeng",
-  ạng: "rang",
-  ạ̈ng: "raeng",
-  äm: "aem",
-  ạm: "ram",
-  wei: "wei",
-  ei: "ei",
-  em: "em",
-  wen: "wen",
-  en: "en",
-  eu: "eu",
-  weng: "weng",
-  eng: "eng",
-  uï: "uie",
-  ẁï: "ywie",
-  wï: "wie",
-  yï: "yie",
-  ï: "ie",
-  i: "i",
-  uī: "uii",
-  ẁī: "ywii",
-  wī: "wii",
-  yī: "yii",
-  ī: "ii",
-  wî: "wvi",
-  î: "vi",
-  yo: "yo",
-  iu: "iu",
-  ạ̈m: "raem",
-  u: "u",
-  yu: "yu",
-  ẁei: "ywei",
-  wėi: "wiei",
-  yei: "yei",
-  ėi: "iei",
-  âi: "vai",
-  yeu: "yeu",
-  ėu: "ieu",
-  ū: "uu",
-  iū: "iuu",
-  ông: "vong",
-  ŷong: "vyong",
-  yūn: "yuun",
-  ẁīn: "ywiin",
-  wīn: "wiin",
-  yīn: "yiin",
-  īn: "iin",
-  ịn: "rin",
-  un: "un",
-  in: "in",
-  ân: "van",
-  wên: "wven",
-  ên: "ven",
-  ẁen: "ywen",
-  wėn: "wien",
-  yen: "yen",
-  ėn: "ien",
-  âng: "vang",
-  yang: "yang",
-  ẁeng: "yweng",
-  wėng: "wieng",
-  yeng: "yeng",
-  ėng: "ieng",
-  wĭng: "wcing",
-  ŷŏng: "vycong",
-  yŏng: "ycong",
-  yim: "yim",
-  im: "im",
-  yem: "yem",
-  ėm: "iem",
-  êm: "vem",
-  âm: "vam",
-};
+// prettier-ignore
+type Final =  "iūng" | "ūng" | "ūk" | "yūk" | "ẁīk" | "wīk" | "wōng" | "ōng" | "ong" | "wo" | "o" | "wāi" | "āi" | "wai" | "ai" | "won" | "on" | "an" | "wan" | "au" | "wȧ" | "wa" | "ya" | "a" | "wang" | "ang" | "wŏng" | "ŏng" | "ou" | "am" | "ām" | "ạ̊ng" | "wạ̈" | "ạ̈" | "wạ̈i" | "ạ̈i" | "wại" | "ại" | "wạn" | "ạn" | "wạ̈n" | "ạ̈n" | "ạu" | "yạ" | "wạ" | "ạ" | "wâng" | "ŷang" | "wẹng" | "ẹng" | "wạng" | "wạ̈ng" | "ạng" | "ạ̈ng" | "äm" | "ạm" | "wei" | "ei" | "em" | "wen" | "en" | "eu" | "weng" | "eng" | "uï" | "ẁï" | "wï" | "yï" | "ï" | "i" | "uī" | "ẁī" | "wī" | "yī" | "ī" | "wî" | "î" | "yo" | "iu" | "ạ̈m" | "u" | "yu" | "ẁei" | "wėi" | "yei" | "ėi" | "âi" | "yeu" | "ėu" | "ū" | "iū" | "ông" | "ŷong" | "yūn" | "ẁīn" | "wīn" | "yīn" | "īn" | "ịn" | "un" | "in" | "ân" | "wên" | "ên" | "ẁen" | "wėn" | "yen" | "ėn" | "âng" | "yang" | "ẁeng" | "wėng" | "yeng" | "ėng" | "wĭng" | "ŷŏng" | "yŏng" | "yim" | "im" | "yem" | "ėm" | "êm" | "âm"
 
 const rhymes: Record<
   QieyunRhymeCycleHead,
-  | keyof typeof asciiFinals
-  | ((syllable: QysTranscriptionProfile) => keyof typeof asciiFinals)
+  Final | ((syllable: QysTranscriptionProfile) => Final)
 > = {
   東: (s) => {
     if (s.tone聲 === "入" && s.contrastiveRow等 === "三") {
@@ -427,7 +293,9 @@ export function transcribe(
   { ascii = false, separator = "" }: TranscriptionOptions = {},
 ) {
   const { canonical母, tone聲: 聲, qieyunCycleHead韻: 韻 } = syllable;
-  const transcribe韻母 = rhymes[韻 as QieyunRhymeCycleHead];
+  const transcribe韻母 = (ascii ? asciiRhymes : rhymes)[
+    韻 as QieyunRhymeCycleHead
+  ];
   const 母 = canonical母;
 
   const 母組 = getInitialGroup(母);
@@ -438,17 +306,13 @@ export function transcribe(
       : transcribe韻母!(syllable);
 
   let initialRealization: string;
+
   if (
-    母組 === "莊" &&
-    // 2rd row or having underdot 臻庚
-    asciiFinals[韻母 as keyof typeof asciiFinals].startsWith("r")
-  )
-    initialRealization =
-      initials[retroflexToDental[母 as keyof typeof retroflexToDental]];
-  else if (
     母組 === "端" &&
     // 2nd or 3rd row
-    /^r|^w?[viuy]/.test(asciiFinals[韻母 as keyof typeof asciiFinals])
+    (syllable.qieyunCycleHead韻 === "庚" ||
+      syllable.qieyunCycleHead韻 === "之" ||
+      syllable.qieyunCycleHead韻 === "脂")
   ) {
     initialRealization = initials[母] + "h";
   } else if (!separator && 母 === "以" && /^[yŷẁ]/.test(韻母))
@@ -463,14 +327,34 @@ export function transcribe(
       入: "",
     }[聲];
 
+    let asciiInitialRealization =
+      asciiInitials[母 as keyof typeof asciiInitials];
+
+    let asciiFinalRealization = changeRuShengCoda(聲 === "入", 韻母);
+    if (asciiFinalRealization.includes("r"))
+      asciiInitialRealization = asciiInitialRealization.replace(/r/g, "");
+    if (asciiInitialRealization.includes("j"))
+      asciiFinalRealization = asciiFinalRealization.replace(
+        /y(?=[aeiouy])/,
+        "",
+      );
+
+    if (
+      母組 === "端" &&
+      (syllable.qieyunCycleHead韻 === "庚" ||
+        syllable.qieyunCycleHead韻 === "之" ||
+        syllable.qieyunCycleHead韻 === "脂")
+    ) {
+      asciiInitialRealization += "h";
+    }
+
     return (
-      (asciiInitials[initialRealization as keyof typeof asciiInitials] ||
-        initialRealization) +
-      separator +
-      changeRuShengCoda(
-        聲 === "入",
-        asciiFinals[韻母 as keyof typeof asciiFinals],
-      ) +
+      (asciiInitialRealization + separator + asciiFinalRealization)
+        .replace("yy", "y")
+        .replace(/r(?=.*r)/, "")
+        .replace(/(j['ʻ]?w?)i(?=[aeo]|uu|u[nk])/, "$1")
+        .replace(/(r['ʻ]?)i(?=[aeo]|uu|u[nk])/, "$1")
+        .replace(/(y['ʻ]?)i(?=[aeo]|uu|u[nk])/, "$1") +
       separator +
       聲調
     );
@@ -489,7 +373,9 @@ export function transcribe(
     changeRuShengCoda(聲 === "入", 韻母) +
     separator +
     聲調
-  );
+  )
+    .replace(/ẓ(?=.*[äạẹå])/, "z")
+    .replace(/ṣ(?=.*[äạẹå])/, "s");
 }
 export function transcribeSyllableProfile(
   syllableProfile: QysSyllableProfile,
@@ -507,14 +393,6 @@ export function transcribeSyllableProfile(
     options,
   );
 }
-
-const retroflexToDental = {
-  莊: "精",
-  初: "清",
-  崇: "從",
-  生: "心",
-  俟: "邪",
-} as const;
 
 const initials = {
   幫: "p",
@@ -556,79 +434,44 @@ const initials = {
   匣: "gh",
   云: "",
 };
-const asciiInitials = {
-  tʻ: "tx",
-  kʻ: "kx",
-  tṣʻ: "tsxr",
-  pʻ: "px",
-  ʾ: "q",
-  ẓ: "zr",
-  dẓ: "dzr",
-  ṣ: "sr",
-  tṣ: "tsr",
-  ź: "zj",
-  dź: "dzj",
-  tś: "tsj",
-  tśʻ: "tsxj",
-  ś: "sj",
-};
 
-export type QieyunRhymeCycleHead =
-  | "東"
-  | "冬"
-  | "模"
-  | "泰"
-  | "灰"
-  | "咍"
-  | "魂"
-  | "痕"
-  | "寒"
-  | "豪"
-  | "歌"
-  | "唐"
-  | "登"
-  | "侯"
-  | "覃"
-  | "談"
-  | "江"
-  | "佳"
-  | "皆"
-  | "夬"
-  | "刪"
-  | "山"
-  | "肴"
-  | "麻"
-  | "庚"
-  | "耕"
-  | "咸"
-  | "銜"
-  | "齊"
-  | "先"
-  | "蕭"
-  | "青"
-  | "添"
-  | "支"
-  | "脂"
-  | "之"
-  | "微"
-  | "魚"
-  | "虞"
-  | "祭"
-  | "廢"
-  | "宵"
-  | "尤"
-  | "幽"
-  | "鍾"
-  | "眞"
-  | "臻"
-  | "文"
-  | "欣"
-  | "元"
-  | "仙"
-  | "陽"
-  | "清"
-  | "蒸"
-  | "侵"
-  | "鹽"
-  | "嚴"
-  | "凡";
+const asciiInitials = {
+  幫: "p",
+  滂: "p'",
+  並: "b",
+  明: "m",
+  端: "t",
+  透: "t'",
+  定: "d",
+  泥: "n",
+  來: "l",
+  知: "t",
+  徹: "t'",
+  澄: "d",
+  孃: "n",
+  精: "ts",
+  清: "ts'",
+  從: "dz",
+  心: "s",
+  邪: "z",
+  莊: "tsr",
+  初: "tsr'",
+  崇: "dzr",
+  生: "sr",
+  俟: "zr",
+  章: "tj",
+  昌: "tj'",
+  常: "dj",
+  日: "nj",
+  書: "sj",
+  船: "zj",
+  以: "y",
+  見: "k",
+  溪: "k'",
+  羣: "g",
+  疑: "ng",
+  影: "'",
+  曉: "h",
+  匣: "g",
+  云: "",
+};

@@ -2,11 +2,8 @@ import type { SbgyXiaoyun } from "@prisma/client";
 
 import { QysInitial } from "~/lib/qys/QysInitial";
 import { Kaihe } from "~/lib/qys/QysSyllableProfile";
-import {
-  QysTranscriptionProfile,
-  transcribe,
-  TranscriptionOptions,
-} from "~/lib/qys/transcribeXiaoyun";
+import { QysTranscriptionProfile } from "~/lib/qys/QysTranscriptionProfile";
+import { transcribe, TranscriptionOptions } from "~/lib/qys/transcribeXiaoyun";
 
 export function transcribeSbgyXiaoyun(
   sbgyXiaoyun: Pick<
