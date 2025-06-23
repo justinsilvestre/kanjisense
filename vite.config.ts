@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   build: {
     watch: {
-      exclude: ["./app/lib/vendor/**", "./app/lib/dic/glyphs/**"],
+      exclude: ["**/app/lib/vendor/**", "**/app/lib/dic/glyphs/**"],
     },
   },
   plugins: [reactRouter(), tsconfigPaths()],
