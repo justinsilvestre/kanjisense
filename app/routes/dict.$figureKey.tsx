@@ -1,6 +1,5 @@
 import type {
   LinksFunction,
-  LoaderFunction,
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
