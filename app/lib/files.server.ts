@@ -91,6 +91,8 @@ export function getGlyphWikiCode(key: string) {
 export function getShuowenFilePath(filenameCharacters: string) {
   return path.resolve(
     libDirectory,
+    "..",
+    "..",
     "dic",
     "shuowenSvgs",
     Array.from(filenameCharacters, (char) =>
@@ -102,6 +104,8 @@ export function getShuowenFilePath(filenameCharacters: string) {
 export function getGlyphsFilePath(char: string) {
   return path.resolve(
     libDirectory,
+    "..",
+    "..",
     "dic",
     "glyphs",
     char.codePointAt(0)!.toString(16) + ".json",
