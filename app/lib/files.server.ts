@@ -93,7 +93,7 @@ export function getShuowenFilePath(filenameCharacters: string) {
     libDirectory,
     "..",
     "..",
-    "dic",
+    "assets",
     "shuowenSvgs",
     Array.from(filenameCharacters, (char) =>
       char.codePointAt(0)!.toString(16),
@@ -106,7 +106,7 @@ export function getGlyphsFilePath(char: string) {
     libDirectory,
     "..",
     "..",
-    "dic",
+    "assets",
     "glyphs",
     char.codePointAt(0)!.toString(16) + ".json",
   );
