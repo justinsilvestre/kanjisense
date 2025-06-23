@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       watch: {
-        exclude: ["**/app/lib/vendor/**", "**/app/lib/dic/glyphs/**"],
+        exclude: ["**/assets/**"],
       },
     },
   },
