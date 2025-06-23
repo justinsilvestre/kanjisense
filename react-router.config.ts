@@ -5,7 +5,7 @@ export default {
     "/browse/sound-components",
     "/browse/atomic-components",
     "/browse/compound-components",
-    "/dic/middle-chinese",
-    "/dic/middle-chinese-pronunciation",
+    "/dict/middle-chinese",
+    "/dict/middle-chinese-pronunciation",
   ],
 } satisfies Config;
