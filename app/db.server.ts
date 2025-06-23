@@ -8,12 +8,7 @@ const prisma = singleton("prisma", getPrismaClient);
 
 function getPrismaClient() {
   const { DATABASE_URL } = process.env;
-  try {
-    invariant(typeof DATABASE_URL === "string", "DATABASE_URL env var not set");
-  } catch (error) {
-    console.log(DATABASE_URL);
-    throw error;
-  }
+  invariant(typeof DATABASE_URL === "string", "DATABASE_URL env var not set");
 
   const databaseUrl = new URL(DATABASE_URL);
 

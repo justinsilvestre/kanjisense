@@ -38,6 +38,9 @@ RUN npx prisma generate
 
 ENV DATABASE_URL=${DATABASE_URL}
 
+RUN echo "DBURL"
+RUN echo $DATABASE_URL
+
 ADD . .
 RUN npm run build
 
