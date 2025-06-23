@@ -3,9 +3,9 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  server: {
+  build: {
     watch: {
-      ignored: ["./app/lib/vendor/**", "./app/lib/dic/glyphs/**"],
+      exclude: ["./app/lib/vendor/**", "./app/lib/dic/glyphs/**"],
     },
   },
   plugins: [reactRouter(), tsconfigPaths()],
@@ -18,3 +18,6 @@ export default defineConfig({
     },
   },
 });
+
+// kern.maxfiles: 245760
+// kern.maxfilesperproc: 122880
