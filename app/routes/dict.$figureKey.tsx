@@ -1,4 +1,9 @@
-import type { LinksFunction, LoaderFunction, MetaFunction } from "react-router";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "react-router";
 import {
   data,
   isRouteErrorResponse,
@@ -46,7 +51,7 @@ export const links: LinksFunction = () => [
   ...kvgLinks(),
 ];
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { figureKey } = params;
   const figureId = figureKey && getLatestFigureId(figureKey);
   const searchedFigure = figureId
