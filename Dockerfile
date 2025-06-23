@@ -34,15 +34,8 @@ COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD prisma .
 RUN npx prisma generate
 
-# Set DATABASE_URL from environment
-
-ENV DATABASE_URL=${DATABASE_URL}
-
-RUN echo "DBURL"
-RUN echo $DATABASE_URL
-
 ADD . .
-RUN npm run build
+# RUN npm run build
 
 # Finally, build the production image with minimal footprint
 FROM base
@@ -52,8 +45,8 @@ WORKDIR /myapp
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
 COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
 
-COPY --from=build /myapp/build/server /myapp/build/server
-COPY --from=build /myapp/build/client /myapp/build/client
+# COPY --from=build /myapp/build/server /myapp/build/server
+# COPY --from=build /myapp/build/client /myapp/build/client
 ADD . .
 
 CMD ["npm", "start"]
