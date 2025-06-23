@@ -34,6 +34,10 @@ COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD prisma .
 RUN npx prisma generate
 
+# Set DATABASE_URL from environment
+
+ENV DATABASE_URL=${DATABASE_URL}
+
 ADD . .
 RUN npm run build
 
