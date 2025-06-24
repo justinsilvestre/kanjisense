@@ -17,6 +17,9 @@ release_command = "bash ./scripts/migrate.sh"
 release_command_timeout = "60m"
 wait_timeout = "60m"
 
+  [deploy.release_command_vm]
+    memory = "1024MB"
+
 [experimental]
 allowed_public_ports = [ ]
 auto_rollback = true

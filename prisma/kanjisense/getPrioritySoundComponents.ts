@@ -102,6 +102,7 @@ export async function getPrioritySoundComponents(prisma: PrismaClient) {
       aozoraAppearances: "desc",
     },
     where: {
+      version: FIGURES_VERSION,
       key: {
         in: soundComponentKeys.map((f) => f.key),
       },
