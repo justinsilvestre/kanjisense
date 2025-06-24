@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import { PrismaClient } from "@prisma/client";
-import { Fragment } from "react";
 import type { LoaderFunction } from "react-router";
 import {
   isRouteErrorResponse,
@@ -16,87 +15,57 @@ import {
 } from "~/components/AppLink";
 import DictionaryLayout from "~/components/DictionaryLayout";
 import A from "~/components/ExternalLink";
+import { SoundComponentGroup } from "~/components/SoundComponentGroup";
 import { prisma } from "~/db.server";
 import CollapsibleInfoSection from "~/features/browse/CollapsibleInfoSection";
-import { abbreviateTranscriptions } from "~/features/dictionary/abbreviateTranscriptions";
-import {
-  BadgeProps,
-  badgeFigureSelect,
-  getBadgeProps,
-} from "~/features/dictionary/badgeFigure";
-import {
-  parseActiveSoundMarkValue,
-  transcribeSerializedXiaoyunProfile,
-} from "~/features/dictionary/getActiveSoundMarkValueText";
-import { FIGURES_VERSION, FigureKey, parseFigureId } from "~/models/figure";
+import { BadgeProps, getBadgeProps } from "~/features/dictionary/badgeFigure";
+import { FigureKey, parseFigureId } from "~/models/figure";
 
-import { FigureBadgeLink } from "../components/FigureBadgeLink";
+import { getPrioritySoundComponents } from "../../prisma/kanjisense/getPrioritySoundComponents";
 
 type LoaderData = Awaited<ReturnType<typeof getAllListCharacterBadgeFigures>>;
 
 const groupsThresholds = [10, 8, 7, 5, 4, 3, 2, 1];
 
-async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
-  const prioritySoundComponents = await prisma.kanjisenseFigure.findMany({
-    select: {
-      ...badgeFigureSelect,
-      image: true,
+function groupSoundComponents(
+  groupsThresholds: number[],
+  soundComponents: SoundComponentsForDisplay,
+): {
+  groupMemberUsesCount: number;
+  figures: SoundComponentForDisplay[];
+}[] {
+  const groupsMap = new Map(
+    groupsThresholds.map((t) => [
+      t,
+      {
+        groupMemberUsesCount: t,
+        figures: [] as SoundComponentForDisplay[],
+      },
+    ]),
+  );
 
-      asComponent: {
-        ...badgeFigureSelect.asComponent,
-        where: {
-          soundMarkUses: {
-            some: {
-              isPriority: true,
-            },
-          },
-        },
-        select: {
-          ...badgeFigureSelect.asComponent.select,
-          soundMarkUses: {
-            orderBy: {
-              aozoraAppearances: "desc",
-            },
-            where: {
-              isPriority: true,
-            },
-            select: {
-              id: true,
-              activeSoundMarkValue: true,
-            },
-          },
-        },
-      },
-      reading: {
-        select: {
-          selectedOnReadings: true,
-          sbgyXiaoyuns: {
-            select: { sbgyXiaoyun: true },
-          },
-          kanjidicEntry: {
-            select: {
-              onReadings: true,
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      aozoraAppearances: "desc",
-    },
-    where: {
-      version: FIGURES_VERSION,
-      isPriority: true,
-      listsAsComponent: { isEmpty: false },
-      asComponent: {
-        soundMarkUses: {
-          some: {
-            isPriority: true,
-          },
-        },
-      },
-    },
-  });
+  for (const figure of Object.values(soundComponents)) {
+    const usesCount = figure.usesCount;
+    const groupThreshold = groupsThresholds.find((t) => t <= usesCount);
+    if (groupThreshold) {
+      const group = groupsMap.get(groupThreshold);
+      if (group) {
+        group.figures.push(figure);
+      }
+    }
+  }
+
+  return [...groupsMap.values()];
+}
+
+type SoundComponentsForDisplay = Awaited<
+  ReturnType<typeof getAllListCharacterBadgeFigures>
+>["soundComponents"];
+export type SoundComponentForDisplay = SoundComponentsForDisplay[FigureKey];
+
+async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
+  const { figures: prioritySoundComponents, images } =
+    await getPrioritySoundComponents(prisma);
 
   const map: Record<
     FigureKey,
@@ -111,7 +80,10 @@ async function getAllListCharacterBadgeFigures(prisma: PrismaClient) {
 
   for (const figure of prioritySoundComponents) {
     map[figure.key] = {
-      badge: getBadgeProps(figure),
+      badge: getBadgeProps({
+        ...figure,
+        image: images[figure.key] || undefined,
+      }),
       readings: figure.reading,
       usesCount: figure.asComponent!.soundMarkUses.length,
       uses: figure.asComponent!.soundMarkUses.map(
@@ -142,7 +114,8 @@ export default function FigureDetailsPage() {
   const loaderData = useLoaderData<LoaderData>();
   const { soundComponents, totalSoundComponents } = loaderData;
 
-  let groupThreshold: number | null = null;
+  // let groupThreshold: number | null = null;
+  const groups = groupSoundComponents(groupsThresholds, soundComponents);
 
   return (
     <DictionaryLayout>
@@ -485,75 +458,15 @@ export default function FigureDetailsPage() {
               mark or, at times, with respect to each other.
             </p>
           </div>
-          {Object.entries(soundComponents)
-            .sort(([, a], [, b]) => b.usesCount - a.usesCount)
-
-            .map(([id, { badge, uses, values }]) => {
-              const parsedValues = values.map((v) =>
-                parseActiveSoundMarkValue(v),
-              );
-
-              const newGroup =
-                !groupThreshold || uses.length < groupThreshold
-                  ? groupsThresholds.find((t) => t <= uses.length)
-                  : null;
-
-              if (newGroup) groupThreshold = newGroup;
-              return (
-                <Fragment key={id}>
-                  {newGroup ? (
-                    <h2 className="m-4 basis-full text-center text-lg">
-                      Seen in {newGroup} or more places
-                    </h2>
-                  ) : null}
-                  <div className="m-1 inline-flex flex-row gap-2" key={id}>
-                    <FigureBadgeLink
-                      key={id}
-                      figureKey={badge.key}
-                      badgeProps={badge}
-                    />
-                    <div className="flex flex-col">
-                      <div>
-                        {parsedValues.map((v, i) => (
-                          <span key={i}>
-                            {v.katakana}{" "}
-                            {v.xiaoyunsByMatchingType
-                              ? abbreviateTranscriptions(
-                                  Array.from(
-                                    new Set(
-                                      Object.values(
-                                        v.xiaoyunsByMatchingType,
-                                      ).flatMap((xs) =>
-                                        xs.map((x) => x.profile),
-                                      ),
-                                    ),
-                                    (p) =>
-                                      transcribeSerializedXiaoyunProfile(p),
-                                  ),
-                                )
-                              : null}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className=" max-w-[10rem] text-lg">
-                        {uses.map((u) => (
-                          <span key={u}>
-                            <DictLink
-                              key={u}
-                              figureKey={u}
-                              className=" no-underline hover:underline"
-                            >
-                              {u}
-                            </DictLink>{" "}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Fragment>
-              );
-            })}
+          {groups.map(({ groupMemberUsesCount, figures }, i) =>
+            !figures.length ? null : (
+              <SoundComponentGroup
+                key={String(i)}
+                groupMemberUsesCount={groupMemberUsesCount}
+                figures={figures}
+              />
+            ),
+          )}
         </section>
       </main>
     </DictionaryLayout>
