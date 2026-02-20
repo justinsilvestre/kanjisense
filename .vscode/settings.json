@@ -1,7 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
+  "editor.defaultFormatter": "biomejs.biome",
   "eslint.validate": ["javascript"]
 }

@@ -1,15 +1,16 @@
 {
-  "name": "kanjisense",
-  "type": "module",
-  "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
-  },
-  "dependencies": {
-    "hono": "^4.12.0"
-  },
-  "devDependencies": {
-    "wrangler": "^4.4.0"
-  }
+	"name": "kanjisense",
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
+	},
+	"dependencies": {
+		"hono": "^4.12.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.3",
+		"wrangler": "^4.4.0"
+	}
 }
