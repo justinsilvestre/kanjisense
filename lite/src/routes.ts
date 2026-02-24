@@ -4,12 +4,13 @@ export const about = () => "/about" as const;
 
 export const search = () => "/search" as const;
 
-export const dict = (figureKey: string) => `/dict/${figureKey}` as const;
-export const dictAnalyze = (figureKey: string) =>
+export const dict = <S extends string>(figureKey: S) =>
+	`/dict/${figureKey}` as const;
+export const dictAnalyze = <S extends string>(figureKey: S) =>
 	`/dict/${figureKey}/analyze` as const;
-export const dictPreview = (figureKey: string) =>
+export const dictPreview = <S extends string>(figureKey: S) =>
 	`/dict/${figureKey}/preview` as const;
-export const dictUses = (figureKey: string) =>
+export const dictUses = <S extends string>(figureKey: S) =>
 	`/dict/${figureKey}/uses` as const;
 
 export const browseAtomicComponents = () =>

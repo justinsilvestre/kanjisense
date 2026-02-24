@@ -1,15 +1,11 @@
 import type { PropsWithChildren } from "react";
-import * as routes from "../routes";
-import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "../TOTAL_ATOMIC_COMPONENTS_COUNT";
+import * as routes from "@/routes";
+import { TOTAL_ATOMIC_COMPONENTS_COUNT } from "@/TOTAL_ATOMIC_COMPONENTS_COUNT";
 import { AppLink } from "./AppLink";
 import A from "./ExternalLink";
 
 function FigureSearchForm({ className }: { className?: string }) {
-	return (
-		<form className={className}>
-			placeholder
-		</form>
-	);
+	return <form className={className}>placeholder</form>;
 }
 
 export default function DictionaryLayout({
@@ -29,7 +25,7 @@ export default function DictionaryLayout({
 						<span className=" text-blue-900">sense</span>
 					</AppLink>
 				</h1>
-				<FigureSearchForm className="w-full flex-grow self-center sm:w-auto" />
+				<FigureSearchForm className="w-full grow self-center sm:w-auto" />
 			</header>
 			{children}
 			<footer className=" bg-gray-50 p-8  sm:gap-4">

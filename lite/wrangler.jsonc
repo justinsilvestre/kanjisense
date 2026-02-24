@@ -1,11 +1,20 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "kanjisense",
-	"main": "src/index.tsx",
-	"compatibility_date": "2026-02-20"
-	// "compatibility_flags": [
-	//   "nodejs_compat"
-	// ],
+	"main": "src/index.ts",
+	"compatibility_date": "2026-02-20",
+	"assets": {
+		"directory": "public",
+		"binding": "ASSETS"
+	},
+	"compatibility_flags": ["nodejs_compat"],
+	"d1_databases": [
+		{
+			"binding": "kanjisense_db",
+			"database_name": "kanjisense-db",
+			"database_id": "df451f46-b2ed-4b7e-9ad1-3bf62a1ab06b"
+		}
+	]
 	// "vars": {
 	//   "MY_VAR": "my-variable"
 	// },

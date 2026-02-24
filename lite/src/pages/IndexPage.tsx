@@ -1,5 +1,5 @@
-import DictionaryLayout from "../components/DictionaryLayout";
-import { RootLayout } from "../components/RootLayout";
+import DictionaryLayout from "@/components/DictionaryLayout";
+import { RootLayout } from "@/components/RootLayout";
 
 export function IndexPage() {
 	return (
